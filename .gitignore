@@ -1,0 +1,6 @@
+.vs/*
+.git/*
+target/*
+src/frontend/node_modules/*
+src/frontend/dist/*
+src/frontend/target/*
