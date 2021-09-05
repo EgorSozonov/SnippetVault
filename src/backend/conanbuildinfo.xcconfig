@@ -1,0 +1,9 @@
+
+HEADER_SEARCH_PATHS = $(inherited) "/Users/zrx/.conan/data/oatpp/1.2.5/_/_/package/c36572cdc38be7dbc966c1f9dd7cc86c518bcb6c/include/oatpp-1.2.5/oatpp" "/Users/zrx/.conan/data/taocpp-taopq/20200222/_/_/package/072e5a4fd6ed9e859c42707d1d5027e6f9fbb299/include" "/Users/zrx/.conan/data/libpq/12.2/_/_/package/8fafab5ebfba468fd21a497cfee65cafe294bd9e/include"
+LIBRARY_SEARCH_PATHS = $(inherited) "/Users/zrx/.conan/data/oatpp/1.2.5/_/_/package/c36572cdc38be7dbc966c1f9dd7cc86c518bcb6c/lib/oatpp-1.2.5" "/Users/zrx/.conan/data/taocpp-taopq/20200222/_/_/package/072e5a4fd6ed9e859c42707d1d5027e6f9fbb299/lib" "/Users/zrx/.conan/data/libpq/12.2/_/_/package/8fafab5ebfba468fd21a497cfee65cafe294bd9e/lib"
+OTHER_LDFLAGS = $(inherited)  -loatpp-test -loatpp -ltaopq -lpq -lpgcommon -lpgcommon_shlib -lpgport -lpgport_shlib  
+
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) 
+OTHER_CFLAGS = $(inherited) 
+OTHER_CPLUSPLUSFLAGS = $(inherited) 
+FRAMEWORK_SEARCH_PATHS = $(inherited) "/Users/zrx/.conan/data/oatpp/1.2.5/_/_/package/c36572cdc38be7dbc966c1f9dd7cc86c518bcb6c" "/Users/zrx/.conan/data/taocpp-taopq/20200222/_/_/package/072e5a4fd6ed9e859c42707d1d5027e6f9fbb299" "/Users/zrx/.conan/data/libpq/12.2/_/_/package/8fafab5ebfba468fd21a497cfee65cafe294bd9e" 

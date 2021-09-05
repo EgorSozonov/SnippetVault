@@ -1,0 +1,50 @@
+.editableListContainer {
+    margin: 10px;
+    background-color: #C0C0C0;
+}
+
+.editableListContainer h5 {
+    margin: 20px;
+}
+
+.editableListContainer ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.editableListRow {
+    background-color: white;
+    cursor: pointer;
+    padding: 6px;
+}
+
+.editableListRowActive {
+    background-color: aqua;
+}
+
+.editableListCell {
+    margin-left: 10px;
+}
+
+.editableListEdit {
+    margin-left: 25px;
+    display: flex;
+}
+
+.editableListHeader {
+    display: flex;
+}
+
+.editableListTitle {
+    font-size: 1.5rem;
+}
+
+.editableListHeaderButton {
+    margin-left: auto;
+    margin-right: 20px;
+    font-size: 2rem;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;
+}

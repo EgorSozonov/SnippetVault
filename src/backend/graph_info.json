@@ -1,0 +1,42 @@
+{
+ "options": [
+  [
+   "libpq:disable_rpath",
+   "False"
+  ],
+  [
+   "libpq:fPIC",
+   "True"
+  ],
+  [
+   "libpq:shared",
+   "False"
+  ],
+  [
+   "libpq:with_openssl",
+   "False"
+  ],
+  [
+   "oatpp:fPIC",
+   "True"
+  ],
+  [
+   "oatpp:shared",
+   "False"
+  ],
+  [
+   "taocpp-taopq:fPIC",
+   "True"
+  ],
+  [
+   "taocpp-taopq:shared",
+   "False"
+  ]
+ ],
+ "root": {
+  "name": null,
+  "version": null,
+  "user": null,
+  "channel": null
+ }
+}

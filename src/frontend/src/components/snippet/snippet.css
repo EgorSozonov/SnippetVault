@@ -1,0 +1,246 @@
+/* Menu header: the inputs for choices */
+
+.headerContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
+}
+
+.adminHeader {
+    width: 150px;
+    height: 3em;
+    color: #F0F0F0;
+    border-style: groove;
+    border-width: 1px;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.choiceInput {
+    margin-left: 10px;
+    display: flex;
+    height: 4.5rem;
+    flex-direction: column;
+    justify-content: space-evenly;
+    color: white;
+    border-width: 1px;
+    border-style: groove;
+    padding-top: 0.5rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    padding-bottom: 0;
+}
+
+.choiceInputButton {
+    margin-left: 10px;
+    height: 4em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-width: 1px;
+    border-style: groove;
+    padding: 8px;
+    cursor: pointer;
+    color: white;
+}
+
+.headerRightmost {
+    border-top-right-radius: 10px;
+}
+
+.headerLeftmost {
+    border-top-left-radius: 10px;
+}
+
+/* Body header */
+
+.snippetsHeader {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 2.5em;
+}
+
+.taskForHeader {
+    width: 16vw;
+    text-align: center;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;    
+    border-color: #707070;
+}
+
+.snippetLeftHeader {
+    width: 40vw;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #40FF40;
+    border-style: solid;
+    border-top-left-radius: 12px;
+    border-width: 1px;
+    border-color: #20C020;
+    padding: 5px;
+    font-size: 1.2em;
+    font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
+}
+
+.snippetRightHeader {
+    width: 40vw;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #FFFF30;
+    border-style: solid;
+    border-top-right-radius: 12px;
+    border-width: 1px;
+    border-color: #ba9510;
+    padding: 5px;
+    font-size: 1.2em;
+    font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
+}
+
+/* Snippets body */
+
+.snippetsBody {
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
+
+.snippetsContainer {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    width: 100%;
+    /* overflow-y: scroll; */
+}
+
+.snippetRow {
+    display: flex;
+    flex-direction: row;
+    align-content: stretch;
+    width: 100%;
+    min-height: 4rem;
+    background-color: #303030;
+}
+
+.snippetContentContainer {
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+}
+
+.snippetButtons {
+    width: 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.snippetButtonsRight {
+    margin-left: auto;
+}
+
+.snippetContent {
+    width: 40vw;
+    border-style: solid;
+    border-width: 1px;
+    border-top-width: 0;
+    padding: 5px;
+}
+
+.snippetCode {
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+.taskContainer {
+    width: 16vw;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: #707070;
+    min-height: 4em;
+    text-align: center;
+}
+
+/* Comments */
+
+.commentButton {
+    height: 1.5rem;
+    cursor: pointer;
+    font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
+    border-width: 1px;
+    border-style: solid;
+    background-color: black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+
+/* Common elements */
+p {
+    margin: 0;
+}
+
+select {
+    border-radius: 8px;
+    background-color: #303030;
+    color: white;
+    padding-left: 5px;
+}
+
+.evenRow {
+    background-color: #404040;
+}
+
+.leftSide {
+    border-color: #20C020;
+}
+
+.rightSide {
+    border-color: #ba9510;
+}
+
+/* a tag corrections */
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+/* Text input */
+.snippetTextArea {
+    height: 4rem;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.snippetButton {
+    background-color: #303030;
+    border-color: white;
+    border-style: groove;
+    border-width: 1px;
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+}
+
