@@ -2,6 +2,7 @@
 .git/*
 target/*
 src/frontend/node_modules/*
+**/.vscode/*
 src/frontend/dist/*
 src/frontend/target/*
 src/frontend/include/*
