@@ -23,35 +23,48 @@ public:
 
 void getFromDB() {
     // open a connection to the database
-    const auto conn = tao::pq::connection::create( "dbname=template1" );
+    // "jdbc:postgresql://127.0.0.1:5432/bloglocal", "zrx", "asdf!22POIU"
+    
+    const auto conn = tao::pq::connection::create( "postgres://zrx:asdf!22POIU@localhost:5432/bloglocal" );
 
     // execute statements
-    conn->execute( "DROP TABLE IF EXISTS users" );
-    conn->execute( "CREATE TABLE users ( name TEXT PRIMARY KEY, age INTEGER NOT NULL )" );
+//    conn->execute( "DROP TABLE IF EXISTS users" );
+//    conn->execute( "CREATE TABLE users ( name TEXT PRIMARY KEY, age INTEGER NOT NULL )" );
 
     // prepare statements
-    conn->prepare( "insert_user", "INSERT INTO users ( name, age ) VALUES ( $1, $2 )" );
-
-    {
-       // begin transaction
-       const auto tr = conn->transaction();
-
-       // execute previously prepared statements
-       tr->execute( "insert_user", "Daniel", 42 );
-       tr->execute( "insert_user", "Tom", 41 );
-       tr->execute( "insert_user", "Jerry", 29 );
-
-       // commit transaction
-       tr->commit();
-    }
+//    conn->prepare( "insert_user", "INSERT INTO users ( name, age ) VALUES ( $1, $2 )" );
+//
+//    {
+//       // begin transaction
+//       const auto tr = conn->transaction();
+//
+//       // execute previously prepared statements
+//       tr->execute( "insert_user", "Daniel", 42 );
+//       tr->execute( "insert_user", "Tom", 41 );
+//       tr->execute( "insert_user", "Jerry", 29 );
+//
+//       // commit transaction
+//       tr->commit();
+//    }
 
     // query data
-    const auto users = conn->execute( "SELECT name, age FROM users WHERE age >= $1", 40 );
-
+    const auto users = conn->execute( "SELECT sn1.id as \"leftId\", sn1.content as \"leftCode\",\
+                                     t.id AS \"taskId\", t.name AS \"taskName\",                \
+                                     sn2.id AS \"rightId\", sn2.content AS \"rightCode\"            \
+                              FROM snippet.\"task\" AS t \
+                              LEFT JOIN snippet.\"taskLanguage\" tl1 ON tl1.\"taskId\"=t.id AND tl1.\"languageId\"=0 \
+                              LEFT JOIN snippet.\"taskLanguage\" tl2 ON tl2.\"taskId\"=t.id AND tl2.\"languageId\"=11 \
+                              JOIN snippet.language l1 ON l1.id=tl1.\"languageId\" \
+                              JOIN snippet.language l2 ON l2.id=tl2.\"languageId\" \
+                              LEFT JOIN snippet.snippet sn1 ON sn1.id=tl1.\"primarySnippetId\" \
+                              LEFT JOIN snippet.snippet sn2 ON sn2.id=tl2.\"primarySnippetId\" \
+                              WHERE t.\"taskGroupId\"=$1;", 3 );
+    cout << "Users.size = " << users.size() << std::endl;
     // iterate and convert results
-    for ( const auto& row : users ) {
-       cout << row[ "name" ].as<string>() << " is "
-            << row[ "age" ].as< unsigned >() << " years old.\n";
+    for (const auto& row : users) {
+        cout << row.name(0) << " " << row.name(1) << endl;
+        cout << row[0].as<int>() << " is "
+            << row[1].as<string>() << endl;
     }
 }
 
@@ -60,6 +73,8 @@ void run() {
     auto router = oatpp::web::server::HttpRouter::createShared();
     /* Route GET - "/hello" requests to Handler */
     router->route("GET", "/hw", std::make_shared<Handler>());
+    
+    getFromDB();
 
     /* Create HTTP connection handler with router */
     auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
