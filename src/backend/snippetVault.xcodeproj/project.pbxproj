@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		673BCA8226B9D01C009663EC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673BCA8126B9D01C009663EC /* main.cpp */; };
 		67D4394926E55035004B361E /* libpq.5.13.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D4394826E55035004B361E /* libpq.5.13.dylib */; };
+		67F6BA2626E7E6E50046B9F5 /* Service.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F6BA2426E7E6E50046B9F5 /* Service.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +36,8 @@
 		67D4394626E55004004B361E /* conanfile.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = conanfile.txt; sourceTree = "<group>"; };
 		67D4394726E55004004B361E /* conan.lock */ = {isa = PBXFileReference; lastKnownFileType = text; path = conan.lock; sourceTree = "<group>"; };
 		67D4394826E55035004B361E /* libpq.5.13.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpq.5.13.dylib; sourceTree = "<group>"; };
+		67F6BA2426E7E6E50046B9F5 /* Service.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Service.cpp; sourceTree = "<group>"; };
+		67F6BA2526E7E6E50046B9F5 /* Service.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Service.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +81,8 @@
 			children = (
 				6776209D26BEAAD40014E16D /* prelude */,
 				673BCA8126B9D01C009663EC /* main.cpp */,
+				67F6BA2426E7E6E50046B9F5 /* Service.cpp */,
+				67F6BA2526E7E6E50046B9F5 /* Service.hpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -131,7 +136,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 673BCA7926B9D01C009663EC /* Build configuration list for PBXProject "cplay" */;
+			buildConfigurationList = 673BCA7926B9D01C009663EC /* Build configuration list for PBXProject "snippetVault" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -155,6 +160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				673BCA8226B9D01C009663EC /* main.cpp in Sources */,
+				67F6BA2626E7E6E50046B9F5 /* Service.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,7 +309,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		673BCA7926B9D01C009663EC /* Build configuration list for PBXProject "cplay" */ = {
+		673BCA7926B9D01C009663EC /* Build configuration list for PBXProject "snippetVault" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				673BCA8326B9D01C009663EC /* Debug */,

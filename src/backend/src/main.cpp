@@ -3,21 +3,22 @@
 #include "oatpp/network/tcp/server/ConnectionProvider.hpp"
 #include <iostream>
 #include <tao/pq.hpp>
+#include <tao/pq/connection_pool.hpp>
 #include "prelude/prelude.h"
+
 using namespace Prelude;
+
 /**
  * Custom Request Handler
  */
 class Handler : public oatpp::web::server::HttpRequestHandler {
 public:
-
     /**
     * Handle incoming request and return outgoing response.
     */
     std::shared_ptr<OutgoingResponse> handle(const std::shared_ptr<IncomingRequest>& request) override {
         return ResponseFactory::createResponse(Status::CODE_200, "Hello World!");
     }
-
 };
 
 
@@ -25,7 +26,7 @@ void getFromDB() {
     // open a connection to the database
     // "jdbc:postgresql://127.0.0.1:5432/bloglocal", "zrx", "asdf!22POIU"
     
-    const auto conn = tao::pq::connection::create( "postgres://zrx:asdf!22POIU@localhost:5432/bloglocal" );
+    const std::shared_ptr< tao::pq::connection_pool > connPool = tao::pq::connection_pool::create( "postgres://sv_user:asdf!querty@localhost:5432/bloglocal" );
 
     // execute statements
 //    conn->execute( "DROP TABLE IF EXISTS users" );
@@ -48,6 +49,7 @@ void getFromDB() {
 //    }
 
     // query data
+    const auto conn = connPool->connection();
     const auto users = conn->execute( "SELECT sn1.id as \"leftId\", sn1.content as \"leftCode\",\
                                      t.id AS \"taskId\", t.name AS \"taskName\",                \
                                      sn2.id AS \"rightId\", sn2.content AS \"rightCode\"            \
