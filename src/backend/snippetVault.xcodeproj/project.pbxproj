@@ -10,6 +10,7 @@
 		673BCA8226B9D01C009663EC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 673BCA8126B9D01C009663EC /* main.cpp */; };
 		67D4394926E55035004B361E /* libpq.5.13.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D4394826E55035004B361E /* libpq.5.13.dylib */; };
 		67F6BA2626E7E6E50046B9F5 /* Service.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F6BA2426E7E6E50046B9F5 /* Service.cpp */; };
+		67F6BA2A26EAA31C0046B9F5 /* DBSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F6BA2826EAA31C0046B9F5 /* DBSource.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,6 +39,9 @@
 		67D4394826E55035004B361E /* libpq.5.13.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpq.5.13.dylib; sourceTree = "<group>"; };
 		67F6BA2426E7E6E50046B9F5 /* Service.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Service.cpp; sourceTree = "<group>"; };
 		67F6BA2526E7E6E50046B9F5 /* Service.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Service.hpp; sourceTree = "<group>"; };
+		67F6BA2826EAA31C0046B9F5 /* DBSource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DBSource.cpp; sourceTree = "<group>"; };
+		67F6BA2926EAA31C0046B9F5 /* DBSource.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DBSource.hpp; sourceTree = "<group>"; };
+		67F6BA2E26EAA3580046B9F5 /* GetDTO.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GetDTO.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +83,8 @@
 		673BCA8026B9D01C009663EC /* src */ = {
 			isa = PBXGroup;
 			children = (
+				67F6BA2B26EAA3360046B9F5 /* dto */,
+				67F6BA2726EAA2FE0046B9F5 /* datasource */,
 				6776209D26BEAAD40014E16D /* prelude */,
 				673BCA8126B9D01C009663EC /* main.cpp */,
 				67F6BA2426E7E6E50046B9F5 /* Service.cpp */,
@@ -101,6 +107,23 @@
 				67D4394826E55035004B361E /* libpq.5.13.dylib */,
 			);
 			path = lib;
+			sourceTree = "<group>";
+		};
+		67F6BA2726EAA2FE0046B9F5 /* datasource */ = {
+			isa = PBXGroup;
+			children = (
+				67F6BA2826EAA31C0046B9F5 /* DBSource.cpp */,
+				67F6BA2926EAA31C0046B9F5 /* DBSource.hpp */,
+			);
+			path = datasource;
+			sourceTree = "<group>";
+		};
+		67F6BA2B26EAA3360046B9F5 /* dto */ = {
+			isa = PBXGroup;
+			children = (
+				67F6BA2E26EAA3580046B9F5 /* GetDTO.hpp */,
+			);
+			path = dto;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,6 +184,7 @@
 			files = (
 				673BCA8226B9D01C009663EC /* main.cpp in Sources */,
 				67F6BA2626E7E6E50046B9F5 /* Service.cpp in Sources */,
+				67F6BA2A26EAA31C0046B9F5 /* DBSource.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
