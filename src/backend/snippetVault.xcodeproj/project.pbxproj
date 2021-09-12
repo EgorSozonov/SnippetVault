@@ -11,6 +11,7 @@
 		67D4394926E55035004B361E /* libpq.5.13.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D4394826E55035004B361E /* libpq.5.13.dylib */; };
 		67F6BA2626E7E6E50046B9F5 /* Service.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F6BA2426E7E6E50046B9F5 /* Service.cpp */; };
 		67F6BA2A26EAA31C0046B9F5 /* DBSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F6BA2826EAA31C0046B9F5 /* DBSource.cpp */; };
+		67F6BA3226EB31B50046B9F5 /* SnippetController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67F6BA3026EB31B50046B9F5 /* SnippetController.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,6 +43,8 @@
 		67F6BA2826EAA31C0046B9F5 /* DBSource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DBSource.cpp; sourceTree = "<group>"; };
 		67F6BA2926EAA31C0046B9F5 /* DBSource.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DBSource.hpp; sourceTree = "<group>"; };
 		67F6BA2E26EAA3580046B9F5 /* GetDTO.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GetDTO.hpp; sourceTree = "<group>"; };
+		67F6BA3026EB31B50046B9F5 /* SnippetController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SnippetController.cpp; sourceTree = "<group>"; };
+		67F6BA3126EB31B50046B9F5 /* SnippetController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SnippetController.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +62,7 @@
 		673BCA7526B9D01C009663EC = {
 			isa = PBXGroup;
 			children = (
+				676963F026EE18E40032FC08 /* tests */,
 				67D1A2B226BEEE8100D2AD23 /* include */,
 				67D4394326E55004004B361E /* graph_info.json */,
 				67D4394726E55004004B361E /* conan.lock */,
@@ -89,8 +93,17 @@
 				673BCA8126B9D01C009663EC /* main.cpp */,
 				67F6BA2426E7E6E50046B9F5 /* Service.cpp */,
 				67F6BA2526E7E6E50046B9F5 /* Service.hpp */,
+				67F6BA3026EB31B50046B9F5 /* SnippetController.cpp */,
+				67F6BA3126EB31B50046B9F5 /* SnippetController.hpp */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		676963F026EE18E40032FC08 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = tests;
 			sourceTree = "<group>";
 		};
 		6776209D26BEAAD40014E16D /* prelude */ = {
@@ -183,6 +196,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				673BCA8226B9D01C009663EC /* main.cpp in Sources */,
+				67F6BA3226EB31B50046B9F5 /* SnippetController.cpp in Sources */,
 				67F6BA2626E7E6E50046B9F5 /* Service.cpp in Sources */,
 				67F6BA2A26EAA31C0046B9F5 /* DBSource.cpp in Sources */,
 			);

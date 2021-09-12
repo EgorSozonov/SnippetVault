@@ -4,5 +4,5 @@
 
 class DBSource {
 public:
-    std::vector<SnippetDTO> unpackSnippets(tao::pq::result rSet);
+    static std::vector<SnippetDTO> unpackSnippets(tao::pq::result rSet);
 };
