@@ -1,5 +1,5 @@
 #include "SimpleArenaAllocator.hpp"
-#include "prelude/Prelude.hpp"
+#include "../prelude/Prelude.hpp"
 using namespace Prelude;
 
 #define MIN_SLAB_SIZE 8000

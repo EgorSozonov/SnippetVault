@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <forward_list>
 
 
 namespace Prelude {
@@ -13,4 +14,5 @@ namespace Prelude {
     using std::unique_ptr;
     using std::make_unique;
     using std::vector;
+    using std::forward_list;
 }
