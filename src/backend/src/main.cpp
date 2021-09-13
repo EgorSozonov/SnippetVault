@@ -2,10 +2,10 @@
 #include "oatpp/network/Server.hpp"
 #include "oatpp/network/tcp/server/ConnectionProvider.hpp"
 #include <iostream>
-#include <tao/pq.hpp>
-#include <tao/pq/connection_pool.hpp>
-#include "prelude/prelude.h"
-
+// #include <tao/pq.hpp>
+// #include <tao/pq/connection_pool.hpp>
+#include "utils/prelude/prelude.hpp"
+#include "SnippetController.hpp"
 using namespace Prelude;
 
 /**
@@ -28,18 +28,16 @@ void run() {
     /* Route GET - "/hello" requests to Handler */
     router->route("GET", "/hw", std::make_shared<Handler>());
     
-
-
     /* Create HTTP connection handler with router */
-    auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
-    
+    auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);    
     auto userController = SnippetController::createShared();
     userController->addEndpointsToRouter(router);
 
-    docEndpoints->pushBackAll(userController->getEndpoints()); // Add userController to swagger
 
-    auto swaggerController = oatpp::swagger::Controller::createShared(docEndpoints);
-    swaggerController->addEndpointsToRouter(router);
+    // docEndpoints->pushBackAll(userController->getEndpoints()); // Add userController to swagger
+
+    // auto swaggerController = oatpp::swagger::Controller::createShared(docEndpoints);
+    // swaggerController->addEndpointsToRouter(router);
 
     /* Create TCP connection provider */
     auto connectionProvider = oatpp::network::tcp::server::ConnectionProvider::createShared({"localhost", 47000, oatpp::network::Address::IP_4});
