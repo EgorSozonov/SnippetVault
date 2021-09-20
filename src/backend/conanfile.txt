@@ -1,5 +1,0 @@
-[requires]
-oatpp/1.2.5
-taocpp-taopq/20200222
-[generators]
-xcode
