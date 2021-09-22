@@ -7,5 +7,8 @@ src/frontend/dist/*
 src/frontend/target/*
 src/frontend/include/*
 src/backend/lib/*
+src/backend/build
 src/backend/target
+src/backend/src/DBAccess/Creds.go
 include/*
+config/creds*
