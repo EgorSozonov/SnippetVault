@@ -8,6 +8,7 @@ import (
 	"os"
 	"strconv"
 
+	_ "github.com/lib/pq"
 	dbaccess "sozonov.tech/sv/src/DBAccess"
 
 	"github.com/gorilla/mux"
@@ -20,12 +21,12 @@ type foo struct {
 }
 
 type SnippetDTO struct {
-	LeftId    int
-	LeftCode  string
+	LeftId    sql.NullInt64
+	LeftCode  sql.NullString
 	TaskId    int
 	TaskName  string
-	RightId   int
-	RightCode string
+	RightId   sql.NullInt64
+	RightCode sql.NullString
 }
 
 func HwHandlerParam(w http.ResponseWriter, req *http.Request) {
@@ -69,6 +70,7 @@ func HwHandlerParam(w http.ResponseWriter, req *http.Request) {
 			var snippet SnippetDTO
 			if err := rows.Scan(&snippet.LeftId, &snippet.LeftCode, &snippet.TaskId, &snippet.TaskName,
 				&snippet.RightId, &snippet.RightCode); err != nil {
+				fmt.Fprintf(os.Stdout, err.Error())
 				return
 			}
 			fmt.Printf("Scanned row %d\n", rowCounter)
@@ -77,6 +79,7 @@ func HwHandlerParam(w http.ResponseWriter, req *http.Request) {
 		}
 		json.NewEncoder(w).Encode(snippets)
 	} else {
+		fmt.Fprintf(os.Stdout, err.Error())
 		res := foo{id, "no DB", true}
 		json.NewEncoder(w).Encode(res)
 		// if err != nil {
