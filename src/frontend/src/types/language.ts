@@ -1,7 +1,7 @@
 type Language = {
     id: number,
     name: string,
-    code: string,
+    languageGroup: string,
 }
 
 export default Language

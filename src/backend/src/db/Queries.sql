@@ -18,16 +18,7 @@ LEFT JOIN snippet.snippet sn1 ON sn1.id=tl1."primarySnippetId"
 LEFT JOIN snippet.snippet sn2 ON sn2.id=tl2."primarySnippetId"
 WHERE t."taskGroupId"=3;
 
-SELECT sn1.id as "leftId", sn1.content as "leftCode", t.id AS "taskId", t.name AS "taskName", 
-       sn2.id AS "rightId", sn2.content AS "rightCode"
-FROM snippet."task" AS t
-LEFT JOIN snippet."taskLanguage" tl1 ON tl1."taskId"=t.id AND tl1."languageId"=0
-LEFT JOIN snippet."taskLanguage" tl2 ON tl2."taskId"=t.id AND tl2."languageId"=11
-JOIN snippet.language l1 ON l1.id=tl1."languageId"
-JOIN snippet.language l2 ON l2.id=tl2."languageId"
-LEFT JOIN snippet.snippet sn1 ON sn1.id=tl1."primarySnippetId"
-LEFT JOIN snippet.snippet sn2 ON sn2.id=tl2."primarySnippetId"
-WHERE t."taskGroupId"=3;
+
 
 -- POST QUERIES
 -- 1. New snippet
@@ -88,7 +79,47 @@ INSERT INTO snippet."languageGroup"(code, name) VALUES (?, ?);
 
 -- GET QUERIES
 -- 1. Language list
-SELECT l.code, l.name, lg.name FROM snippet.language l
+SELECT l.code, l.name, lg.name AS "languageGroup" FROM snippet.language l
 JOIN snippet."languageGroup" lg ON l."languageGroupId"=lg.id;
 
 -- 2. Task group list
+SELECT id, name FROM snippet."taskGroup" WHERE "isDeleted"=0::bit;
+
+-- 3. Task list (taskGroupId)
+SELECT id, name, description FROM snippet."task" WHERE "taskGroupId"=1;
+
+-- 4. Snippets
+SELECT sn1.id as "leftId", sn1.content as "leftCode", t.id AS "taskId", t.name AS "taskName", 
+       sn2.id AS "rightId", sn2.content AS "rightCode"
+FROM snippet."task" AS t
+LEFT JOIN snippet."taskLanguage" tl1 ON tl1."taskId"=t.id AND tl1."languageId"=0
+LEFT JOIN snippet."taskLanguage" tl2 ON tl2."taskId"=t.id AND tl2."languageId"=11
+JOIN snippet.language l1 ON l1.id=tl1."languageId"
+JOIN snippet.language l2 ON l2.id=tl2."languageId"
+LEFT JOIN snippet.snippet sn1 ON sn1.id=tl1."primarySnippetId"
+LEFT JOIN snippet.snippet sn2 ON sn2.id=tl2."primarySnippetId"
+WHERE t."taskGroupId"=3;
+
+-- 5. Alternatives (taskLanguageId)
+SELECT sn2.id AS "primaryId", sn2.content AS "primaryCode",
+	   sn1.id AS "alternativeId", sn1.content AS "alternativeCode", sn1.score, sn1."tsUpload"
+FROM snippet.snippet sn1
+JOIN snippet."taskLanguage" tl ON tl.id=sn1."taskLanguageId"
+JOIN snippet.snippet sn2 ON sn2.id=tl."primarySnippetId"
+WHERE sn1."taskLanguageId"=1 
+  AND sn1."isApproved"=1::bit AND sn1.id != tl."primarySnippetId";
+
+-- 6. Fresh proposals for premoderation 
+SELECT lang.name AS "language", task.name AS "task", 
+	   sn1.id AS "proposalId", sn1.content AS "proposalCode", sn1."tsUpload"
+FROM snippet.snippet sn1
+JOIN snippet."taskLanguage" tl ON tl.id=sn1."taskLanguageId"
+JOIN snippet.task task ON task.id=tl."taskId"
+JOIN snippet.language lang ON lang.id=tl."languageId"
+WHERE sn1."isApproved"=0::bit;
+
+-- 7. Comments (snippetId)
+SELECT c.content, c."tsUpload", u.id AS "userId", u.name AS "userName"
+FROM snippet.comment c
+JOIN snippet.user u ON u.id=c."userId"
+WHERE c."snippetId"=1;

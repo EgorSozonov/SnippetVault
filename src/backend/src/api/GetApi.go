@@ -13,12 +13,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type foo struct {
-	X int
-	Y string
-	Z bool
-}
-
 type SnippetDTO struct {
 	LeftId    sql.NullInt64
 	LeftCode  sql.NullString
@@ -73,4 +67,25 @@ func HwHandlerParam(connPool *sql.DB, w http.ResponseWriter, req *http.Request) 
 	}
 	json.NewEncoder(w).Encode(snippets)
 
+}
+
+func GetLanguages(connPool *sql.DB, w http.ResponseWriter, req *http.Request) {
+	// 	SELECT l.code, l.name, lg.name AS "languageGroup" FROM snippet.language l
+	// JOIN snippet."languageGroup" lg ON l."languageGroupId"=lg.id;
+
+}
+
+func GetTaskGroups(connPool *sql.DB, w http.ResponseWriter, req *http.Request) {
+}
+
+func GetTasks(connPool *sql.DB, w http.ResponseWriter, req *http.Request) {
+}
+
+func GetAlternatives(connPool *sql.DB, w http.ResponseWriter, req *http.Request) {
+}
+
+func GetProposals(connPool *sql.DB, w http.ResponseWriter, req *http.Request) {
+}
+
+func GetComments(connPool *sql.DB, w http.ResponseWriter, req *http.Request) {
 }
