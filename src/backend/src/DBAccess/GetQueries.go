@@ -1,0 +1,41 @@
+package dbaccess
+
+type GetQueries struct {
+	Language string 
+	TaskGroup string
+	Task string
+	Snippet string
+	Proposal string
+	Alternative string
+	Comment string
+}
+
+func MakeGetQueries() GetQueries {
+  	return GetQueries {
+		Language: `SELECT l.code, l.name, lg.name AS "languageGroup" FROM snippet.language l
+					JOIN snippet."languageGroup" lg ON l."languageGroupId"=lg.id;`,
+		TaskGroup: `SELECT id, name FROM snippet."taskGroup" WHERE "isDeleted"=0::bit;`,
+		Task: `SELECT id, name, description FROM snippet."task" WHERE "taskGroupId"=?;`,
+		Snippet:   `SELECT sn1.id as "leftId", sn1.content as "leftCode", t.id AS "taskId", t.name AS "taskName", 
+					sn2.id AS "rightId", sn2.content AS "rightCode"
+					FROM snippet."task" AS t
+					LEFT JOIN snippet."taskLanguage" tl1 ON tl1."taskId"=t.id AND tl1."languageId"=?
+					LEFT JOIN snippet."taskLanguage" tl2 ON tl2."taskId"=t.id AND tl2."languageId"=?
+					JOIN snippet.language l1 ON l1.id=tl1."languageId"
+					JOIN snippet.language l2 ON l2.id=tl2."languageId"
+					LEFT JOIN snippet.snippet sn1 ON sn1.id=tl1."primarySnippetId"
+					LEFT JOIN snippet.snippet sn2 ON sn2.id=tl2."primarySnippetId"
+					WHERE t."taskGroupId"=?;`,
+		Proposal: ``,
+		Alternative:    `SELECT sn2.id AS "primaryId", sn2.content AS "primaryCode",
+						sn1.id AS "alternativeId", sn1.content AS "alternativeCode", sn1.score, sn1."tsUpload"
+						FROM snippet.snippet sn1
+						JOIN snippet."taskLanguage" tl ON tl.id=sn1."taskLanguageId"
+						JOIN snippet.snippet sn2 ON sn2.id=tl."primarySnippetId"
+						WHERE sn1."taskLanguageId"=? 
+						AND sn1."isApproved"=1::bit AND sn1.id != tl."primarySnippetId";`,
+		Comment: 	`SELECT c.content, c."tsUpload", u.id AS "userId", u.name AS "userName"
+					FROM snippet.comment c
+					JOIN snippet.user u ON u.id=c."userId"
+					WHERE c."snippetId"=?;`,
+}
