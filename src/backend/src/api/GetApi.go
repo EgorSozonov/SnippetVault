@@ -8,7 +8,7 @@ import (
 	"os"
 	"strconv"
 
-	c "sozonov.tech/sv/src/context"
+	c "sozonov.tech/sv/src/Context"
 
 	_ "github.com/lib/pq"
 

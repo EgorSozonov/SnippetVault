@@ -7,18 +7,19 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
+	c "sozonov.tech/sv/src/Context"
 	dbaccess "sozonov.tech/sv/src/DBAccess"
 	"sozonov.tech/sv/src/api"
 
 	"github.com/gorilla/mux"
 )
 
-func makeContext() (*Context, string) {
+func makeContext() (*c.Context, string) {
 	connPool, err := sql.Open("postgres", dbaccess.CONN_STRING)
 	//connPool.Exec(`set search_path='mySchema'`)
 	//defer conn.Close()
 
-	result := Context{
+	result := c.Context{
 		GET_QUERIES:  dbaccess.MakeGetQueries(),
 		POST_QUERIES: dbaccess.MakePostQueries(),
 		CONN:         connPool,
@@ -29,12 +30,12 @@ func makeContext() (*Context, string) {
 	return &result, err.Error()
 }
 
-func makeRouter(ctx *Context) *mux.Router {
+func makeRouter(ctx *c.Context) *mux.Router {
 	router := mux.NewRouter()
 
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
-	subrouter.HandleFunc("/hw/{id:[0-9]+}", contextualizeHandler(api.HwHandlerParam, ctx)).Methods("GET")
+	subrouter.HandleFunc("/hw/{id:[0-9]+}", c.ContextualizeHandler(api.HwHandlerParam, ctx)).Methods("GET")
 
 	spa := api.SpaHandler{StaticPath: "build", IndexPath: "index.html"}
 	router.PathPrefix("/").Handler(spa).Methods("GET")
