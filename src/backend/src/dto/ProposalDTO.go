@@ -1,15 +1,13 @@
 package dto
 
 import (
-	"database/sql"
 	"time"
 )
 
 type ProposalDTO struct {
-	leftCode     sql.NullString
-	taskId       int
-	taskName     string
-	proposalCode string
-	langId       int
-	date         time.Time
+	ProposalId   string
+	ProposalCode string
+	TaskName     string
+	LangageName  string
+	TSUpload     time.Time
 }

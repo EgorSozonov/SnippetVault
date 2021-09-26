@@ -13,7 +13,7 @@ type Context struct {
 	CONN         *sql.DB
 }
 
-func ContextualizeHandler(f func(c *Context, w http.ResponseWriter, req *http.Request), c *Context) func(w http.ResponseWriter, req *http.Request) {
+func Contextualize(f func(c *Context, w http.ResponseWriter, req *http.Request), c *Context) func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		f(c, w, req)
 	}

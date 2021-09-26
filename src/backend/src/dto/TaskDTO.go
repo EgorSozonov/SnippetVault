@@ -1,7 +1,7 @@
 package dto
 
 type TaskDTO struct {
-	id          int
-	name        string
-	description string
+	Id          int
+	Name        string
+	Description string
 }

@@ -1,6 +1,6 @@
 package dto
 
 type TaskGroupDTO struct {
-	id   int
-	name string
+	Id   int
+	Name string
 }

@@ -34,8 +34,13 @@ func makeRouter(ctx *c.Context) *mux.Router {
 	router := mux.NewRouter()
 
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
-
-	subrouter.HandleFunc("/hw/{id:[0-9]+}", c.ContextualizeHandler(api.HwHandlerParam, ctx)).Methods("GET")
+	subrouter.HandleFunc("/snippet/get/{langId1:[0-9]+}/{langId2:[0-9]+}/{taskId:[0-9]+}", c.Contextualize(api.GetSnippets, ctx)).Methods("GET")
+	subrouter.HandleFunc("/language/get", c.Contextualize(api.GetLanguages, ctx)).Methods("GET")
+	subrouter.HandleFunc("/taskGroup/get", c.Contextualize(api.GetTaskGroups, ctx)).Methods("GET")
+	subrouter.HandleFunc("/task/get/{taskGroupId:[0-9]+}", c.Contextualize(api.GetTasks, ctx)).Methods("GET")
+	subrouter.HandleFunc("/snippet/alternative/get/{taskLanguageId:[0-9]+}", c.Contextualize(api.GetAlternatives, ctx)).Methods("GET")
+	subrouter.HandleFunc("/snippet/proposal/get", c.Contextualize(api.GetProposals, ctx)).Methods("GET")
+	subrouter.HandleFunc("/comment/get/{snippetId:[0-9]+}", c.Contextualize(api.GetComments, ctx)).Methods("GET")
 
 	spa := api.SpaHandler{StaticPath: "build", IndexPath: "index.html"}
 	router.PathPrefix("/").Handler(spa).Methods("GET")

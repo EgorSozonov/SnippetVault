@@ -5,8 +5,8 @@ import (
 )
 
 type CommentDTO struct {
-	id      int
-	author  string
-	tStamp  time.Time
-	content string
+	Id      int
+	Author  string
+	TStamp  time.Time
+	Content string
 }
