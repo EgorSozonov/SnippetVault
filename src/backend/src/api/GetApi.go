@@ -20,6 +20,7 @@ func GetSnippets(ctx *c.Context, w http.ResponseWriter, req *http.Request) {
 	langId1, err1 := strconv.Atoi(pathVars["langId1"])
 	langId2, err2 := strconv.Atoi(pathVars["langId2"])
 	taskId, err3 := strconv.Atoi(pathVars["taskGroupId"])
+
 	if err1 != nil || err2 != nil || err3 != nil {
 		return
 	}
@@ -109,7 +110,8 @@ func GetAlternatives(ctx *c.Context, w http.ResponseWriter, req *http.Request) {
 	if err1 != nil {
 		return
 	}
-	rows, err := ctx.CONN.Query(ctx.GET_QUERIES.Task, taskLanguageId)
+	fmt.Println(taskLanguageId)
+	rows, err := ctx.CONN.Query(ctx.GET_QUERIES.Alternative, taskLanguageId)
 	if err != nil {
 		fmt.Fprintf(os.Stdout, err.Error())
 		return
@@ -119,7 +121,7 @@ func GetAlternatives(ctx *c.Context, w http.ResponseWriter, req *http.Request) {
 	var results []dto.AlternativeDTO
 	for rows.Next() {
 		var rw dto.AlternativeDTO
-		if err := rows.Scan(&rw.PrimaryId, &rw.PrimaryScore, &rw.PrimaryScore, &rw.AlternativeId,
+		if err := rows.Scan(&rw.PrimaryId, &rw.PrimaryCode, &rw.PrimaryScore, &rw.AlternativeId,
 			&rw.AlternativeCode, &rw.AlternativeScore, &rw.TSUpload); err != nil {
 			return
 		}

@@ -34,7 +34,7 @@ func makeRouter(ctx *c.Context) *mux.Router {
 	router := mux.NewRouter()
 
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
-	subrouter.HandleFunc("/snippet/get/{langId1:[0-9]+}/{langId2:[0-9]+}/{taskId:[0-9]+}", c.Contextualize(api.GetSnippets, ctx)).Methods("GET")
+	subrouter.HandleFunc("/snippet/get/{langId1:[0-9]+}/{langId2:[0-9]+}/{taskGroupId:[0-9]+}", c.Contextualize(api.GetSnippets, ctx)).Methods("GET")
 	subrouter.HandleFunc("/language/get", c.Contextualize(api.GetLanguages, ctx)).Methods("GET")
 	subrouter.HandleFunc("/taskGroup/get", c.Contextualize(api.GetTaskGroups, ctx)).Methods("GET")
 	subrouter.HandleFunc("/task/get/{taskGroupId:[0-9]+}", c.Contextualize(api.GetTasks, ctx)).Methods("GET")
