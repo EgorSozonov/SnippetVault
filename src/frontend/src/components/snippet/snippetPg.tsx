@@ -9,14 +9,18 @@ import TextInput from "./textInput"
 import './snippet.css'
 import SnippetCode from './snippetCode';
 import ENDPOINTS from '../../url';
+import createClient from '../../client';
+import { AxiosInstance } from 'axios';
+
 
 function SnippetPg() {
     const lang1 = useSelector((state: SVState) => state.language1)
     const lang2 = useSelector((state: SVState) => state.language2)
     const taskGroup = useSelector((state: SVState) => state.taskGroup)
     const [snippets, setSnippets] = useState<Snippet[]>([])
+    const client: AxiosInstance = createClient()
     useEffect(() => {
-        axios.get(`{ENDPOINTS.get.snippet}${lang1}/${lang2}/${taskGroup}`)
+        client.get(`{ENDPOINTS.get.snippet}${lang1}/${lang2}/${taskGroup}`)
         .then((r: any) => {
             console.log("Response")
             console.dir(r)

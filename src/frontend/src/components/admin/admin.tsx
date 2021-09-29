@@ -9,15 +9,15 @@ import NewProposal from './newProposal';
 
 
 const groups: TaskGroup[] = [
-    {id: 1, code: "string", name: "String manipulation"},
-    {id: 2, code: "fs", name: "File system tasks"},
-    {id: 3, code: "commTypes", name: "Common types & operations on them"},
+    {id: 1, name: "String manipulation"},
+    {id: 2, name: "File system tasks"},
+    {id: 3, name: "Common types & operations on them"},
 ]
 
 const langs: Language[] = [
-    {id: 1, code: "Cs", name: "C#"},
-    {id: 2, code: "Cpp", name: "C++"},
-    {id: 3, code: "Typescript", name: "Typescript"},
+    {id: 1, name: "C#", languageGroup: "Universal", },
+    {id: 2, name: "C++", languageGroup: "Universal", },
+    {id: 3, name: "Typescript", languageGroup: "Universal", },
 ]
 
 function Admin() {
