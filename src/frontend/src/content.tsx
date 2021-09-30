@@ -7,6 +7,7 @@ import Group from "./components/group/group"
 
 
 const Content: React.FunctionComponent = () => {
+    console.log("Content render")
     return (
     <BrowserRouter>
         <div style={{backgroundColor: "#303030", scrollbarWidth: "thin"}}>

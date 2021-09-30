@@ -43,7 +43,7 @@ func makeRouter(ctx *c.Context) *mux.Router {
 	subrouter.HandleFunc("/comment/get/{snippetId:[0-9]+}", c.Contextualize(api.GetComments, ctx)).Methods("GET")
 
 	spa := api.SpaHandler{StaticPath: "build", IndexPath: "index.html"}
-	router.PathPrefix("/").Handler(spa).Methods("GET")
+	router.PathPrefix("/sv").Handler(spa).Methods("GET")
 	return router
 }
 
