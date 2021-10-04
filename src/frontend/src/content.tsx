@@ -9,7 +9,7 @@ import Group from "./components/group/group"
 const Content: React.FunctionComponent = () => {
     console.log("Content render")
     return (
-    <BrowserRouter>
+    <BrowserRouter basename="/sv">
         <div style={{backgroundColor: "#303030", scrollbarWidth: "thin"}}>
             <Switch>
                 <Route exact={true} path={PATHS["snippet"].url}>

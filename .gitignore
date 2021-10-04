@@ -18,3 +18,5 @@ src/backend/src/DBAccess/Creds.go
 include/*
 config/creds*
 src/.DS_Store
+.DS_Store
+Src/.DS_Store?

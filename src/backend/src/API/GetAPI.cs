@@ -1,8 +1,9 @@
-using System.Web.Http;
 namespace SnippetVault {
+using System.Web.Http;
 
 
-public class GetAPI : ApiController {
+public partial class GetAPI : ApiController {
 
 }
+
 }
