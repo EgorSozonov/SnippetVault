@@ -4,28 +4,10 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
     <PropertyGroup>
-        <OutputPath>../../target</OutputPath>
+        <OutputPath>bin</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     </ItemGroup>
 </Project>
-
-
-    "editor.tokenColorCustomizations": {"textMateRules": 
-        [
-            {
-                "scope": "keyword.control.ref.latex",
-                "settings": {
-                    "foreground": "#FF0000"
-                }
-            },
-            {
-                "scope": "storage.modifier.cs",
-                "settings": {
-                    "foreground": "#FFFF00"
-                }
-            }
-        ]
-    }
