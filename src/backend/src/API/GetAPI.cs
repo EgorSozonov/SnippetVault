@@ -1,14 +1,24 @@
 namespace SnippetVault {
-using System.Web.Http;
 
-[Route("api/v1/[controller]")]
-public partial class GetController : ApiController {
+using Microsoft.AspNetCore.Mvc;
+
+
+    //[RoutePrefix("sv/api/v1/Gett")]
+    [Controller]
+public partial class GetController {
     [HttpGet]
+    [Route("sv/api/v1/Get/Foo")]
     public string Foo() {
         return "Foo";
     }
 
-    [HttpGet]
+    [Route("/")]
+    public string Default() {
+        return "Default";
+    }
+
+    [HttpGet] 
+    [Route("sv/api/v1/Get/Bar/{id:int}")]
     public string Bar(int id) {
         return "Ba " + id;
     }

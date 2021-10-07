@@ -15,8 +15,11 @@ public class Launcher {
     }
 
     public void ConfigureServices(IServiceCollection services) {
-        Console.WriteLine("ConfigureServices");
+        // services.AddMvc( options =>   {
+        //     options.Conventions.Add(new APIExplorer());
+        // });
         services.AddRouting();
+        services.AddControllers();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env){
@@ -34,10 +37,18 @@ public class Launcher {
         app.UseRouting();
         
         app.UseEndpoints(endpoints => {
-            endpoints.MapGet("/", async context => {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            // endpoints.MapGet("/", async context => {
+            //     await context.Response.WriteAsync("Hello World!");
+            // });
+            // endpoints.MapControllerRoute(
+            //     name: "default",
+            //     pattern: "sv/api/v1/{controller=Home}/{action=Index}");
+            // endpoints.MapControllerRoute(
+            //     name: "default2",
+            //     pattern: "sv/api/v1/{controller=Home}/{action=Index}/{id}");
+            endpoints.MapControllers();
         });
+
         //app.AddRouting();
     }
 }   

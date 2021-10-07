@@ -2,7 +2,7 @@ namespace SnippetVault {
 using System.Web.Http;
 
 
-public partial class GetAPI : ApiController {
+public partial class GetController  {
     public record GetQueries {
         public string snippet {get; init;}
         public string language {get; init;}
