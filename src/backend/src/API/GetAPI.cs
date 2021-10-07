@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 
     //[RoutePrefix("sv/api/v1/Gett")]
-    [Controller]
-public partial class GetController {
+[Controller]
+[Route("sv/api/v1/Get")]
+public class GetController {    
     [HttpGet]
-    [Route("sv/api/v1/Get/Foo")]
+    [Route("Foo")]
     public string Foo() {
         return "Foo";
     }
@@ -18,7 +19,7 @@ public partial class GetController {
     }
 
     [HttpGet] 
-    [Route("sv/api/v1/Get/Bar/{id:int}")]
+    [Route("Bar/{id:int}")]
     public string Bar(int id) {
         return "Ba " + id;
     }
