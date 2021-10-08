@@ -14,7 +14,7 @@ Src/backend/bin
 src/backend/build
 src/backend/obj
 src/backend/target
-src/backend/src/DBAccess/Creds.go
+src/backend/src/DBAccess/creds.json
 include/*
 config/creds*
 src/.DS_Store

@@ -9,15 +9,14 @@ using System;
 
 
 public class Launcher {
-    public IConfiguration Configuration { get; }
-    public Launcher(IConfiguration configuration)    {
-        Configuration = configuration;
+    public IConfiguration configuration { get; }
+    public Launcher(IConfiguration _configuration)    {
+        configuration = _configuration;
     }
 
     public void ConfigureServices(IServiceCollection services) {
-        // services.AddMvc( options =>   {
-        //     options.Conventions.Add(new APIExplorer());
-        // });
+        services.AddSingleton<IDBContext, DBContext>();
+        services.Configure<WebConfig>(configuration);
         services.AddRouting();
         services.AddControllers();
     }

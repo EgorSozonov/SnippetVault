@@ -7,10 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 [Controller]
 [Route("sv/api/v1/Get")]
 public class GetController {    
+    private readonly IDBContext dbContext;
+
+    public GetController(IDBContext _dbContext) {
+        dbContext = _dbContext;
+    }
+
     [HttpGet]
     [Route("Foo")]
     public string Foo() {
-        return "Foo";
+        return this.dbContext.getQueries.snippet;
     }
 
     [Route("/")]

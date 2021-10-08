@@ -1,17 +1,18 @@
 namespace SnippetVault {
-
+    
+public record GetQueries {
+    public string snippet {get; init;}
+    public string language {get; init;}
+    public string task {get; init;}
+    public string taskGroup {get; init;}
+    public string taskGroupsForLanguages {get; init;}
+    public string proposal {get; init;}
+    public string alternative {get; init;}
+    public string comment {get; init;}
+}
 
 public class GetPGQueries  {
-    public record GetQueries {
-        public string snippet {get; init;}
-        public string language {get; init;}
-        public string task {get; init;}
-        public string taskGroup {get; init;}
-        public string taskGroupsForLanguages {get; init;}
-        public string proposal {get; init;}
-        public string alternative {get; init;}
-        public string comment {get; init;}
-    }
+
 
     public static GetQueries mkGetQueries() {
         return new GetQueries() {
