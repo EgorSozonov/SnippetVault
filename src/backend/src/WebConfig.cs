@@ -2,7 +2,7 @@ namespace SnippetVault {
 
     
 public class WebConfig {
-    public string ConnectionString { get; set; }
+    public string DBConnectionString { get; set; }
 }
 
 }

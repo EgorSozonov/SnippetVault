@@ -1,9 +1,11 @@
 namespace SnippetVault {
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Npgsql;
+using System;
 
 
-    //[RoutePrefix("sv/api/v1/Gett")]
+
 [Controller]
 [Route("sv/api/v1/Get")]
 public class GetController {    
@@ -15,7 +17,17 @@ public class GetController {
 
     [HttpGet]
     [Route("Foo")]
-    public string Foo() {
+    async public Task<string> foo() {
+        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.language, dbContext.conn))
+        await using (var reader = await cmd.ExecuteReaderAsync()) {
+            try {
+                while (await reader.ReadAsync()) {
+                    Console.WriteLine(reader.GetString(1));
+                }
+            } catch (Exception e) {
+                Console.WriteLine(e.Message);
+            }
+        }
         return this.dbContext.getQueries.snippet;
     }
 

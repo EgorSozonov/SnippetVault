@@ -15,8 +15,9 @@ public class Launcher {
     }
 
     public void ConfigureServices(IServiceCollection services) {
-        services.AddSingleton<IDBContext, DBContext>();
         services.Configure<WebConfig>(configuration);
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddSingleton<IDBContext, DBContext>();        
         services.AddRouting();
         services.AddControllers();
     }
