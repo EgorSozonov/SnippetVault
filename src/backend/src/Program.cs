@@ -12,6 +12,7 @@ class Program {
     public static IWebHostBuilder CreateWebHostBuilder(string[] args) {
         Console.WriteLine("WebHostBuilder");
         return new WebHostBuilder()
+            .UseEnvironment(Microsoft.Extensions.Hosting.Environments.Development)
             .ConfigureAppConfiguration((hostingContext, config) => {
                 config.AddJsonFile("creds.json",
                     optional: false,

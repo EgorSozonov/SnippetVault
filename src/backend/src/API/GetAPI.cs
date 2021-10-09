@@ -7,17 +7,19 @@ using System;
 
 
 [Controller]
-[Route("sv/api/v1/Get")]
+[Route("sv/api/v1/get")]
 public class GetController {    
     private readonly IDBContext dbContext;
+
 
     public GetController(IDBContext _dbContext) {
         dbContext = _dbContext;
     }
 
+
     [HttpGet]
-    [Route("Foo")]
-    async public Task<string> foo() {
+    [Route("snippet")]
+    async public Task<string> snippet() {
         await using (var cmd = new NpgsqlCommand(dbContext.getQueries.language, dbContext.conn))
         await using (var reader = await cmd.ExecuteReaderAsync()) {
             try {
@@ -31,10 +33,12 @@ public class GetController {
         return this.dbContext.getQueries.snippet;
     }
 
+
     [Route("/")]
     public string Default() {
         return "Default";
     }
+
 
     [HttpGet] 
     [Route("Bar/{id:int}")]
@@ -42,5 +46,6 @@ public class GetController {
         return "Ba " + id;
     }
 }
-
+        //   NpgsqlCommand command = new NpgsqlCommand("SELECT COUNT(*) FROM cities", conn);
+        //   Int64 count = (Int64)command.ExecuteScalar();
 }
