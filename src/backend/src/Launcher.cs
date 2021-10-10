@@ -23,7 +23,6 @@ public class Launcher {
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env){
-        Console.WriteLine("Configure");
         if (env.IsDevelopment()) {
             app.UseDeveloperExceptionPage();
         } else {

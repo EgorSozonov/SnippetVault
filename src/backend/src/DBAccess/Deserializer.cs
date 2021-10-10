@@ -1,4 +1,5 @@
 namespace SnippetVault {
+using System;    
 
 public class EventInfo {
     [MySqlColName("ID")]

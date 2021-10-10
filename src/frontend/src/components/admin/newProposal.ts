@@ -6,10 +6,11 @@ import Toggler from '../../commonComponents/toggler/toggler';
 import Proposal from '../../types/proposal';
 import "../snippet/snippet.css"
 import "./admin.css"
+import { html } from 'htm/react'
+
 
 const mockProposals: Proposal[] = [
 ]
-
 
 function NewProposal() {
     return (

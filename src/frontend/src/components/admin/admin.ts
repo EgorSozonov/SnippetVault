@@ -6,6 +6,7 @@ import Language from '../../types/language';
 import TaskGroup from '../../types/taskGroup';
 import Alternative from './alternative';
 import NewProposal from './newProposal';
+import { html } from 'htm/react'
 
 
 const groups: TaskGroup[] = [

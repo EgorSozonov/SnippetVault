@@ -2,6 +2,7 @@ import Toggler from '../../commonComponents/toggler/toggler';
 import HeaderRightButton from '../../commonComponents/headerRightButton/headerRightButton';
 import Snippet from '../../types/snippet';
 import "../snippet/snippet.css"
+import { html } from 'htm/react'
 
 
 const mockAlternatives: Snippet[] = [

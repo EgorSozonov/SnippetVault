@@ -22,8 +22,14 @@ public class GetController {
     async public Task<string> snippet() {
         await using (var cmd = new NpgsqlCommand(dbContext.getQueries.language, dbContext.conn))
         await using (var reader = await cmd.ExecuteReaderAsync()) {
+            cmd.Prepare();
             try {
+                string[] columnNames = new string[reader.FieldCount];
+                for (int i = 0; i < reader.FieldCount; ++i) {
+                    columnNames[i] = reader.GetName(i);
+                }
                 while (await reader.ReadAsync()) {
+                    
                     Console.WriteLine(reader.GetString(1));
                 }
             } catch (Exception e) {

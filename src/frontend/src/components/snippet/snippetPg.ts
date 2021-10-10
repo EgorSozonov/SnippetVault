@@ -11,6 +11,7 @@ import SnippetCode from './snippetCode';
 import ENDPOINTS from '../../url';
 import createClient from '../../client';
 import { AxiosInstance } from 'axios';
+import { html } from 'htm/react'
 
 
 function SnippetPg() {
@@ -35,26 +36,26 @@ function SnippetPg() {
 
 
 
-    return (<div className="snippetsBody">
+    return html`<div class="snippetsBody">
         <Header></Header>
-        <main className="snippetsContainer">
-            <div className="snippetsHeader">
-                <div className="snippetLeftHeader">{lang1}</div>
-                    <div className="taskForHeader">{taskGroup}</div>
-                    <div className="snippetRightHeader">{lang2}</div>
+        <main class="snippetsContainer">
+            <div class="snippetsHeader">
+                <div class="snippetLeftHeader">{lang1}</div>
+                    <div class="taskForHeader">{taskGroup}</div>
+                    <div class="snippetRightHeader">{lang2}</div>
             </div>
             {snippets && snippets.map((snippet: Snippet, idx: number ) => {
                 const evenClass = (idx%2 === 0 ? " evenRow" : "")
-                return (<div className="snippetRow" key={idx}>
-                    <div className={"snippetContent leftSide" + evenClass}>
+                return (<div class="snippetRow" key={idx}>
+                    <div class={"snippetContent leftSide" + evenClass}>
                         {snippet.leftCode.length > 0 
                             ? <SnippetCode content={snippet.leftCode} isRight={false}></SnippetCode>
                             : <TextInput numberProposals={4}></TextInput>}
                     </div>
-                    <div className={"taskContainer" + evenClass}>
+                    <div class={"taskContainer" + evenClass}>
                         {snippet.taskName}
                     </div>
-                    <div className={"snippetContent rightSide" + evenClass}>
+                    <div class={"snippetContent rightSide" + evenClass}>
                         {snippet.rightCode.length > 0 
                             ? <SnippetCode content={snippet.rightCode} isRight={true}></SnippetCode>
                             : <TextInput numberProposals={4}></TextInput>}
@@ -63,7 +64,8 @@ function SnippetPg() {
             })}
             <div style={{marginBottom: "20px;", backgroundColor: "#303030",  }}>&nbsp;</div>
         </main>
-    </div>)
+    </div>
+    `
 }
 
 export default SnippetPg
