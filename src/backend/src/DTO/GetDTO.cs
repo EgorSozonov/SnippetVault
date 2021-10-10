@@ -34,12 +34,12 @@ public class ProposalDTO {
 }
 
 public class SnippetDTO {
-    public int leftId;
-    public string leftCode;
-    public int taskId;
-    public string taskName;
-    public int rightId;
-    public string rightCode;
+    public int leftId {get; set;}
+    public string leftCode {get; set;}
+    public int taskId {get; set;}
+    public string taskName {get; set;} 
+    public int rightId {get; set;}
+    public string rightCode {get; set;}
 }
 
 public class TaskDTO {

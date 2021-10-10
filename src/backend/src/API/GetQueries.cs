@@ -17,7 +17,7 @@ public class GetPGQueries  {
     public static GetQueries mkGetQueries() {
         return new GetQueries() {
             snippet=@"
-                SELECT sn1.id as ""leftId"", sn1.content as ""leftCode"", t.id AS """"taskId"", t.name AS ""taskName"", 
+                SELECT sn1.id as ""leftId"", sn1.content as ""leftCode"", t.id AS ""taskId"", t.name AS ""taskName"", 
 				       sn2.id AS ""rightId"", sn2.content AS ""rightCode""
 				FROM snippet.""task"" AS t
 				LEFT JOIN snippet.""taskLanguage"" tl1 ON tl1.""taskId""=t.id AND tl1.""languageId""=@l1
