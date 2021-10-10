@@ -18,7 +18,6 @@ const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const paths = require('./paths');
 const modules = require('./modules');
 const getClientEnvironment = require('./env');
@@ -46,7 +45,7 @@ const reactRefreshOverlayEntry = require.resolve(
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
 const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === 'true';
-const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true';
+const disableESLintPlugin = true;
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
@@ -65,16 +64,7 @@ const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 const hasJsxRuntime = (() => {
-  if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
-    return false;
-  }
-
-  try {
-    require.resolve('react/jsx-runtime');
-    return true;
-  } catch (e) {
-    return false;
-  }
+  return false;
 })();
 
 // This is the production and development configuration.
@@ -390,39 +380,31 @@ module.exports = function (webpackEnv) {
               },
             },
             // Process application JS with Babel.
-            // The preset includes JSX, Flow, TypeScript, and some ESnext features.
+            // The preset includes Flow, TypeScript, and some ESnext features.
             {
-              test: /\.(js|mjs|jsx|ts|tsx)$/,
+              test: /\.(js|mjs|ts)$/,
               include: paths.appSrc,
               loader: require.resolve('babel-loader'),
               options: {
-                customize: require.resolve(
-                  'babel-preset-react-app/webpack-overrides'
-                ),
-                presets: [
-                  [
-                    require.resolve('babel-preset-react-app'),
-                    {
-                      runtime: hasJsxRuntime ? 'automatic' : 'classic',
-                    },
+                  customize: require.resolve(
+                    'babel-preset-react-app/webpack-overrides'
+                  ),
+                  presets: [
+
                   ],
-                ],
                 
-                plugins: [
-                  [
-                    require.resolve('babel-plugin-named-asset-import'),
-                    {
-                      loaderMap: {
-                        svg: {
-                          ReactComponent:
-                            '@svgr/webpack?-svgo,+titleProp,+ref![path]',
-                        },
-                      },
-                    },
-                  ],
-                  isEnvDevelopment &&
-                    shouldUseReactRefresh &&
-                    require.resolve('react-refresh/babel'),
+                  plugins: [
+                      [
+                            require.resolve('babel-plugin-named-asset-import'),
+                            {
+                                loaderMap: {
+                                    svg: {
+                                        ReactComponent:    '@svgr/webpack?-svgo,+titleProp,+ref![path]',
+                                    },
+                                },
+                            },
+                      ],
+                  isEnvDevelopment && shouldUseReactRefresh && require.resolve('react-refresh/babel'),
                 ].filter(Boolean),
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -545,7 +527,7 @@ module.exports = function (webpackEnv) {
               // its runtime that would otherwise be processed through "file" loader.
               // Also exclude `html` and `json` extensions so they get processed
               // by webpacks internal loaders.
-              exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+              exclude: [/\.(js|mjs|ts)$/, /\.html$/, /\.json$/],
               options: {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
@@ -699,10 +681,9 @@ module.exports = function (webpackEnv) {
           reportFiles: [
             // This one is specifically to match during CI tests,
             // as micromatch doesn't match
-            // '../cra-template-typescript/template/src/App.tsx'
             // otherwise.
-            '../**/src/**/*.{ts,tsx}',
-            '**/src/**/*.{ts,tsx}',
+            '../**/src/**/*.{ts}',
+            '**/src/**/*.{ts}',
             '!**/src/**/__tests__/**',
             '!**/src/**/?(*.)(spec|test).*',
             '!**/src/setupProxy.*',
@@ -712,31 +693,7 @@ module.exports = function (webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
-      !disableESLintPlugin &&
-        new ESLintPlugin({
-          // Plugin options
-          extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
-          formatter: require.resolve('react-dev-utils/eslintFormatter'),
-          eslintPath: require.resolve('eslint'),
-          failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
-          context: paths.appSrc,
-          cache: true,
-          cacheLocation: path.resolve(
-            paths.appNodeModules,
-            '.cache/.eslintcache'
-          ),
-          // ESLint class options
-          cwd: paths.appPath,
-          resolvePluginsRelativeTo: __dirname,
-          baseConfig: {
-            extends: [require.resolve('eslint-config-react-app/base')],
-            rules: {
-              ...(!hasJsxRuntime && {
-                'react/react-in-jsx-scope': 'error',
-              }),
-            },
-          },
-        }),
+      
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.

@@ -20,26 +20,30 @@ const langs: Language[] = [
     {id: 2, name: "C++", languageGroup: "Universal", },
     {id: 3, name: "Typescript", languageGroup: "Universal", },
 ]
+const ListTaskGroups = (props: any) => EditableList<TaskGroup>(props)
+const ListLanguages = (props: any) => EditableList<Language>(props)
 
 function Admin() {
-    return (
-        <div style={{overflow: "scroll", backgroundColor: "#303030"}}>
+    return html`
+        <div style="overflow: scroll; background-color: #303030;">
             <p>
-                <NavLink to={PATHS["snippet"].url}><div className="adminHeader">Back to snippets</div></NavLink>
+                <${NavLink} to=${PATHS["snippet"].url}>
+                    <div class="adminHeader">Back to snippets</div>
+                <//>
             </p>
-            <EditableList<TaskGroup> values={groups} title="Task groups"></EditableList>
-            <EditableList<Language> values={langs} title="Languages"></EditableList>
+            <${ListTaskGroups} values=${groups} title="Task groups"></EditableList>
+            <${ListLanguages} values=${langs} title="Languages"></EditableList>
             <div>
-                <Alternative />
+                <${Alternative} />
             </div>
             <div>
-                <NewProposal />
+                <${NewProposal} />
             </div>
             
             
 
         </div>
-      );
+    `
 }
 
 export default Admin

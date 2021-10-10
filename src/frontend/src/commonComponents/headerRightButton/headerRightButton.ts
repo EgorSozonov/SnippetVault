@@ -1,4 +1,5 @@
 import "./headerRightButton.css"
+import { html } from 'htm/react'
 
 
 type Props = {
@@ -7,15 +8,12 @@ type Props = {
 }
 
 const HeaderRightButton: React.FunctionComponent<Props> = ({title, button, }: Props) => {
-
-
-    return (
-        <div className="headerRightButton">
-            <div><h3>{title}</h3></div>
-            <div className="headerRightButtonRight">{button}</div>
+    return html`
+        <div class="headerRightButton">
+            <div><h3>${title}</h3></div>
+            <div class="headerRightButtonRight">${button}</div>
         </div>
-    )
+    `
 }
-
 
 export default HeaderRightButton

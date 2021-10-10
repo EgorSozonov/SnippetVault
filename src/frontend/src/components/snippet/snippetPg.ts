@@ -15,6 +15,7 @@ import { html } from 'htm/react'
 
 
 function SnippetPg() {
+    console.log("SnippetPg")
     const lang1 = useSelector((state: SVState) => state.language1)
     const lang2 = useSelector((state: SVState) => state.language2)
     const taskGroup = useSelector((state: SVState) => state.taskGroup)
@@ -37,32 +38,33 @@ function SnippetPg() {
 
 
     return html`<div class="snippetsBody">
-        <Header></Header>
+        <${Header} />
         <main class="snippetsContainer">
             <div class="snippetsHeader">
-                <div class="snippetLeftHeader">{lang1}</div>
-                    <div class="taskForHeader">{taskGroup}</div>
-                    <div class="snippetRightHeader">{lang2}</div>
+                <div class="snippetLeftHeader">${lang1}</div>
+                <div class="taskForHeader">${taskGroup}</div>
+                <div class="snippetRightHeader">${lang2}</div>
             </div>
-            {snippets && snippets.map((snippet: Snippet, idx: number ) => {
+            ${snippets && snippets.map((snippet: Snippet, idx: number ) => {
                 const evenClass = (idx%2 === 0 ? " evenRow" : "")
-                return (<div class="snippetRow" key={idx}>
-                    <div class={"snippetContent leftSide" + evenClass}>
-                        {snippet.leftCode.length > 0 
-                            ? <SnippetCode content={snippet.leftCode} isRight={false}></SnippetCode>
-                            : <TextInput numberProposals={4}></TextInput>}
-                    </div>
-                    <div class={"taskContainer" + evenClass}>
-                        {snippet.taskName}
-                    </div>
-                    <div class={"snippetContent rightSide" + evenClass}>
-                        {snippet.rightCode.length > 0 
-                            ? <SnippetCode content={snippet.rightCode} isRight={true}></SnippetCode>
-                            : <TextInput numberProposals={4}></TextInput>}
-                    </div>
-                </div>)
+                return html`
+                    <div class="snippetRow" key=${idx}>
+                        <div class=${"snippetContent leftSide" + evenClass}>
+                            ${snippet.leftCode.length > 0 
+                                ? html`<${SnippetCode} content=${snippet.leftCode} isRight="false"><//>`
+                                : html`<${TextInput} numberProposals="4"><//>`}
+                        </div>
+                        <div class=${"taskContainer" + evenClass}>
+                            ${snippet.taskName}
+                        </div>
+                        <div class=${"snippetContent rightSide" + evenClass}>
+                            ${snippet.rightCode.length > 0 
+                                ? html`<${SnippetCode} content=${snippet.rightCode} isRight={true}><//>`
+                                : html`<${TextInput} numberProposals="4"><//>`}
+                        </div>
+                    </div>`
             })}
-            <div style={{marginBottom: "20px;", backgroundColor: "#303030",  }}>&nbsp;</div>
+            <div style="margin-bottom: 20px; background-color: #303030'">&nbsp;</div>
         </main>
     </div>
     `

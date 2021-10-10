@@ -8,9 +8,11 @@ type Props = {
 }
 
 function SnippetCode({content, isRight, } : Props) {
-    const snippetContent = html`<pre class="snippetCode">
+    const snippetContent = html`
+        <pre class="snippetCode">
             {content}
-        </pre>`
+        </pre>
+        `
     return html`
         ${isRight 
             ? html`<div class="snippetContentContainer">

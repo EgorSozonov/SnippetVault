@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { SVState } from "../../redux/state"
 import "./hoverSelect.css"
+import { html } from 'htm/react'
 
 
 type Props = {
@@ -29,20 +30,20 @@ const HoverSelect: React.FunctionComponent<Props> = ({choices, uniqueName, selec
             dispatch({type: "changeSelect", payload: {selectName: uniqueName, }})
         }
     }
-    return (
-        <div className="hoverSelect" onMouseEnter={() => dispatch({type: "changeSelect", payload: {selectName: uniqueName, }})}
-                onMouseLeave={() => dispatch({type: "changeSelect", payload: {selectName: "", }})}>            
-            <span className="search" onClick={onClickHeader}>
-                <span className={"leftButton" + (isOpen ? " hoverSelectActive" : " hoverSelectInactive")}>(-)</span>
-                <span className={"rightLabel"}>{currValue}</span>
+    return html`
+        <div class="hoverSelect" onMouseEnter=${() => dispatch({type: "changeSelect", payload: {selectName: uniqueName, }})}
+                onMouseLeave=${() => dispatch({type: "changeSelect", payload: {selectName: "", }})}>            
+            <span class="search" onClick=${onClickHeader}>
+                <span class=${"leftButton" + (isOpen ? " hoverSelectActive" : " hoverSelectInactive")}>(-)</span>
+                <span class="rightLabel">${currValue}</span>
             </span>
             {isOpen && 
-                <div className="menu">
-                    <ul className="list">
+                <div class="menu">
+                    <ul class="list">
                         <li>
-                            <ul className="optgroup">
-                                {choices.map((c: string, idx: number) => {
-                                    return (<li key={idx} onClick={() => onSelect(c)}>{c}</li>)
+                            <ul class="optgroup">
+                                ${choices.map((c: string, idx: number) => {
+                                    return html`<li key=${idx} onClick=${() => onSelect(c)}>{c}</li>`
                                 })}
                             </ul>
                         </li>
@@ -50,7 +51,7 @@ const HoverSelect: React.FunctionComponent<Props> = ({choices, uniqueName, selec
                 </div>
             }
         </div>
-    )
+    `
 }
 
 

@@ -102,40 +102,42 @@ const mockAlternatives: Snippet[] = [
 ]
 
 function Alternative() {
-    return (
-        <div className="adminAlternative">
+    return html`
+        <div class="adminAlternative">
             
-            <div className="snippetsContainer">
-                <div className="snippetsHeader">
-                    <div className="snippetLeftHeader">
+            <div class="snippetsContainer">
+                <div class="snippetsHeader">
+                    <div class="snippetLeftHeader">
                         Alternatives
                     </div>
-                    <div className="taskForHeader"><Toggler leftChoice="Old->new" rightChoice="Highest votes first" initChosen={false}>
+                    <div class="taskForHeader"><Toggler leftChoice="Old->new" rightChoice="Highest votes first" initChosen={false}>
                                 </Toggler></div>
-                    <div className="snippetRightHeader">
+                    <div class="snippetRightHeader">
                         &nbsp;
                     </div>
                 </div>
-                {mockAlternatives.map((snippet: Snippet, idx: number ) => {
+                ${mockAlternatives.map((snippet: Snippet, idx: number ) => {
                     const evenClass = (idx%2 === 0 ? " evenRow" : "")
-                    return (<div className="snippetContainer" key={idx}>
-                        <div className={"snippet leftSide" + evenClass} >{snippet.leftCode}</div>
-                        <div className={"taskContainer" + evenClass}>
-                            <div className="taskLeft">
+                    return html`
+                        <div class="snippetContainer" key={idx}>
+                            <div class=${"snippet leftSide" + evenClass}>${snippet.leftCode}</div>
+                            <div class=${"taskContainer" + evenClass}>
+                                <div class="taskLeft">
+                                </div>
+                                <div class="task">${snippet.taskName}</div>
+                                <div class="taskRight commentButton" title="Promote to main version">
+                                    P
+                                </div>
                             </div>
-                            <div className="task">{snippet.taskName}</div>
-                            <div className="taskRight commentButton" title="Promote to main version">
-                                P
-                            </div>
+                            <div class=${"snippet rightSide" + evenClass}>${snippet.rightCode}</div>
                         </div>
-                        <div className={"snippet rightSide" + evenClass}>{snippet.rightCode}</div>
-                    </div>)
+                        `
                 })}
                 
             </div>
 
         </div>
-      );
+    `
 }
 
 export default Alternative

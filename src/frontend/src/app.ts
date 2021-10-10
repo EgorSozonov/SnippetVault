@@ -5,20 +5,21 @@ import ReactDOM from 'react-dom'
 import Content from './content'
 import { Provider } from 'react-redux'
 import globalState from './redux/state'
+import { html } from 'htm/react'
 
 
 const App: React.FunctionComponent = () => {
-    return (<Provider store={globalState}>
-        <Content />
-        </Provider>
-    );
+    console.log("App")
+    return html`
+        <${Provider} store=${globalState}>
+            <${Content} />
+        <//>
+    `
 }
 
-
-
 ReactDOM.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
+    html`<${React.StrictMode}>
+      <${App} />
+    <//>`,
     document.getElementById("snippetRoot")
-  );
+)
