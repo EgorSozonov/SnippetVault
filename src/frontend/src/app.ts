@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import logo from './logo.svg'
 import './app.css'
 import ReactDOM from 'react-dom'
@@ -9,7 +9,6 @@ import { html } from 'htm/react'
 
 
 const App: React.FunctionComponent = () => {
-    console.log("App")
     return html`
         <${Provider} store=${globalState}>
             <${Content} />
@@ -17,9 +16,10 @@ const App: React.FunctionComponent = () => {
     `
 }
 
+
 ReactDOM.render(
     html`<${React.StrictMode}>
       <${App} />
-    <//>`,
+    <//>`,    
     document.getElementById("snippetRoot")
 )

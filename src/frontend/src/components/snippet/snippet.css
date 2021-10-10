@@ -108,6 +108,12 @@
     font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
 }
 
+.headerDropdownLabel {
+    height: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
 /* Snippets body */
 
 .snippetsBody {
@@ -185,6 +191,11 @@
     background-color: black;
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+.snippetFooter { 
+    margin-bottom: 20px;
+    background-color: #303030;
 }
 
 

@@ -34,22 +34,23 @@ const HoverSelect: React.FunctionComponent<Props> = ({choices, uniqueName, selec
         <div class="hoverSelect" onMouseEnter=${() => dispatch({type: "changeSelect", payload: {selectName: uniqueName, }})}
                 onMouseLeave=${() => dispatch({type: "changeSelect", payload: {selectName: "", }})}>            
             <span class="search" onClick=${onClickHeader}>
-                <span class=${"leftButton" + (isOpen ? " hoverSelectActive" : " hoverSelectInactive")}>(-)</span>
+                <span class="leftButton"></span>
                 <span class="rightLabel">${currValue}</span>
             </span>
-            {isOpen && 
-                <div class="menu">
-                    <ul class="list">
-                        <li>
-                            <ul class="optgroup">
-                                ${choices.map((c: string, idx: number) => {
-                                    return html`<li key=${idx} onClick=${() => onSelect(c)}>{c}</li>`
-                                })}
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            }
+            
+            <div class=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
+                <ul class="list">
+                    <li>
+                        <ul class="optgroup">
+                            ${choices.map((c: string, idx: number) => {
+                                return html`<li key=${idx} onClick=${() => onSelect(c)}>${c}</li>`
+                            })}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+                
+            
         </div>
     `
 }

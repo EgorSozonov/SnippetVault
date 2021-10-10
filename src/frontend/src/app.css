@@ -52,4 +52,9 @@ body {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
       monospace;
   }
+
+.browserRouter {
+    background-color: #303030; 
+    scrollbar-width: thin;
+}
   

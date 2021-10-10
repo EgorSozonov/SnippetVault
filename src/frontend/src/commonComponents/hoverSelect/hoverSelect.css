@@ -8,42 +8,23 @@
 }
 
 .hoverSelect .leftButton {
-    border-top-left-radius: 1rem;
+    border-top-left-radius: 0.5rem;
+    background-color: white;
     padding-left: 8px;
     padding-right: 8px;
     font-size: 1rem;
     height: 2rem;
-    /* border-left-color: black;
-    border-left-width: 3px;
-    border-left-style: solid;
-    border-top-color: black;
-    border-top-width: 3px;
-    border-top-style: solid; */
 }
 
 .hoverSelect .rightLabel {
-    border-top-right-radius: 1rem;
-    background-color: #E0E0E0;
+    border-top-right-radius: 0.5rem;
+    background-color: hsl(0, 0%, 87%);
     padding-left: 8px;
     padding-right: 8px;
     font-size: 1rem;
     height: 2rem;
     flex: 10;
     display: flex;
-    /* border-right-color: black;
-    border-right-width: 3px;
-    border-right-style: solid;
-    border-top-color: black;
-    border-top-width: 3px;
-    border-top-style: solid; */
-}
-
-.hoverSelectInactive {
-    background-color: white;
-}
-
-.hoverSelectActive {
-    background-color: #60FFFF;
 }
 
 .hoverSelect .search {
@@ -55,20 +36,33 @@
     height: 2rem;
     outline: none;
     box-sizing: border-box;
-    /* transform-style: preserve-3d;
-    transform-origin: 50% 0%;
-    transition: transform 0.3s; */
     z-index: 99;
 }
 
-.hoverSelect .menu {
-    overflow: auto;
-    overflow-y: auto;
+.hoverSelectMenu {
     position: absolute;
+
+
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    
+    
+}
+
+.hoverSelectMenuActive {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+
+    transition: transform 300ms ease-in-out, opacity 300ms ease-in-out;
+
+    overflow: auto;
+    overflow-y: auto;    
     width: 100%;
-    top: 2.5rem + 3px;
-    height: 13rem;
-    transition: all 0.3s ease;
+    top: calc(100% + 0.25rem);
+    /* box-shadow: 0 2px 5px 0 hsla(0, 100, 100, 0.8); */
+    max-height: 13rem;    
     margin: 0px;
     border-top: none;
 }
@@ -91,9 +85,9 @@
 .hoverSelect ul.list > li span.header {
     display: block;
     padding: 6px;
-    background-color: #34495e;
+    background-color: hsl(150, 28%, 56%);
     font-weight: 200;
-    color: #fff;
+    color: white;
 }
 
 .hoverSelect ul.optgroup {

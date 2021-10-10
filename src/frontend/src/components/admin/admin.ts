@@ -25,7 +25,7 @@ const ListLanguages = (props: any) => EditableList<Language>(props)
 
 function Admin() {
     return html`
-        <div style="overflow: scroll; background-color: #303030;">
+        <div class="adminContainer">
             <p>
                 <${NavLink} to=${PATHS["snippet"].url}>
                     <div class="adminHeader">Back to snippets</div>

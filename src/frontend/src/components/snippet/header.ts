@@ -23,17 +23,17 @@ const Header: React.FunctionComponent = () => {
         <nav>
             <div class="headerContainer">
                 <div class="choiceInput headerLeftmost">
-                    <div style="height: 2rem; margin: 0; padding: 0;"><label >Task group:</label></div>
+                    <div class="headerDropdownLabel"><label >Task group:</label></div>
                     <${HoverSelect} choices=${["strings", "file system", "spreadsheets"]} uniqueName="TaskGroupChoice"
                         selectCallback=${callbackTaskGroup}><//>
                 </div>
                 <div class="choiceInput">
-                    <div style="height: 2rem; margin: 0; padding: 0;"><label >Language 1:</label></div>
+                    <div class="headerDropdownLabel"><label >Language 1:</label></div>
                     <${HoverSelect} choices=${["C#", "Swift", "Typescript"]} uniqueName="Lang1"
                         selectCallback=${callback1}><//>
                 </div>
                 <div class="choiceInput">
-                    <div style="height: 2rem; margin: 0; padding: 0;"><label >Language 2:</label></div>
+                    <div class="headerDropdownLabel"><label >Language 2:</label></div>
                     <${HoverSelect} choices=${["C#", "Typescript"]} uniqueName="Lang2" 
                         selectCallback=${callback2}><//>
                     

@@ -3,7 +3,6 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-        "@babel/core": "7.12.3",
         "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
         "@svgr/webpack": "5.5.0",
         "@types/node": "^12.20.19",
@@ -11,9 +10,7 @@
         "@types/react-dom": "^17.0.9",
         "@types/react-router-dom": "^5.1.8",
         "axios": "^0.21.1",
-        "babel-loader": "8.1.0",
-        "babel-plugin-named-asset-import": "^0.3.7",
-        "babel-preset-react-app": "^10.0.0",
+
         "bfj": "^7.0.2",
         "camelcase": "^6.1.0",
         "case-sensitive-paths-webpack-plugin": "2.3.0",
@@ -55,6 +52,10 @@
         "workbox-webpack-plugin": "5.1.4"
     },
     "devDependencies": {
+        "@babel/core": "7.12.3",
+        "babel-loader": "8.1.0",
+        "babel-plugin-named-asset-import": "^0.3.7",
+        "babel-preset-react-app": "^10.0.0",
         "webpack": "4.44.2",
         "webpack-dev-server": "3.11.1",
         "webpack-manifest-plugin": "2.2.0"
@@ -79,7 +80,7 @@
     
     "babel": {
         "presets": [
-            "react-app"
+            "@babel/preset-typescript"
         ]
     }
 }

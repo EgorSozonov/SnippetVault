@@ -5,13 +5,14 @@ import SnippetPg from "./components/snippet/snippetPg"
 import Admin from "./components/admin/admin"
 import Group from "./components/group/group"
 import { html } from 'htm/react'
+import "./app.css"
 
 
 const Content: React.FunctionComponent = () => {
     console.log("Content render")
     return html`
     <${BrowserRouter}>
-        <div style="background-color: #303030; scrollbar-width: thin;">
+        <div class="browserRouter">
             <${Switch}>
                 <${Route} exact=${true} path=${PATHS["snippet"].url}>
                     <${SnippetPg} />

@@ -64,7 +64,7 @@ function SnippetPg() {
                         </div>
                     </div>`
             })}
-            <div style="margin-bottom: 20px; background-color: #303030'">&nbsp;</div>
+            <div class="snippetFooter"> </div>
         </main>
     </div>
     `
