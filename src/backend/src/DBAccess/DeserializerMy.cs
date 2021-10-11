@@ -89,7 +89,6 @@ public class DBDeserializer<T> where T : class, new() {
                 errMsg = $"Unsupported column type ${tp.snd}; only Int, Double, Decimal and String columns are supported!";
                 return;
             }
-            ++i;
         }
        errMsg = "";
     }
@@ -104,11 +103,11 @@ public class DBDeserializer<T> where T : class, new() {
                 if (tgt.propType == ValueType.doubl) {                    
                     settersDouble[tgt.indexSetter](newVal, reader.GetDouble(j)); 
                 } else if (tgt.propType == ValueType.deciml) {
-                    settersDecimal[tgt.indexSetter](newVal, reader.GetDecimal(j));                        
+                    settersDecimal[tgt.indexSetter](newVal, reader.GetDecimal(j));       
                 } else if (tgt.propType == ValueType.integr) {                    
-                    settersInt[tgt.indexSetter](newVal, reader.GetInt32(j));                        
+                    settersInt[tgt.indexSetter](newVal, reader.IsDBNull(j) ? 0 : reader.GetInt32(j));                        
                 } else if (tgt.propType == ValueType.strin) {
-                    settersString[tgt.indexSetter](newVal, reader.GetString(j));
+                    settersString[tgt.indexSetter](newVal, reader.IsDBNull(j) ? "" : reader.GetString(j));
                 }
             }
             result.Add(newVal);
@@ -130,7 +129,7 @@ public class DBDeserializer<T> where T : class, new() {
     }
 
 
-    private enum ValueType {
+    public enum ValueType {
         integr,
         doubl,
         deciml,
