@@ -1,28 +1,29 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
-import HoverSelect from '../../commonComponents/hoverSelect/hoverSelect';
-import Toggler from '../../commonComponents/toggler/toggler';
-import { SVState } from '../../redux/state';
-import Snippet from '../../types/snippet';
-import Header from './header'
+import React, { useContext, useEffect, useState } from "react"
+import Snippet from "../../types/snippet"
+import Header from "./header"
 import TextInput from "./textInput"
-import './snippet.css'
-import SnippetCode from './snippetCode';
-import ENDPOINTS from '../../url';
-import createClient from '../../client';
-import { AxiosInstance } from 'axios';
-import { html } from 'htm/react'
+import "./snippet.css"
+import SnippetCode from "./snippetCode"
+import createClient from "../../client"
+import { AxiosInstance } from "axios"
+import { html } from "htm/react"
+import { observer } from "mobx-react-lite"
+import AppState from "../../MobX/AppState"
+import { StoreContext } from "../../app"
 
 
-function SnippetPg() {
+
+function SnippetPg0() {
     console.log("SnippetPg")
-    const lang1 = useSelector((state: SVState) => state.language1)
-    const lang2 = useSelector((state: SVState) => state.language2)
-    const taskGroup = useSelector((state: SVState) => state.taskGroup)
+    const appState = useContext(StoreContext)
     const [snippets, setSnippets] = useState<Snippet[]>([])
     const client: AxiosInstance = createClient()
+    const lang1 = appState.app.language1
+    const lang2 = appState.app.language2
+    const tg = appState.app.taskGroup
+
     useEffect(() => {
-        client.get(`{ENDPOINTS.get.snippet}${lang1}/${lang2}/${taskGroup}`)
+        client.get(`{ENDPOINTS.get.snippet}${appState.app.language1}/${appState.app.language2}/${appState.app.taskGroup}`)
         .then((r: any) => {
             console.log("Response")
             console.dir(r)
@@ -33,7 +34,7 @@ function SnippetPg() {
             console.log("Error")
             console.dir(e)
         })
-    }, [lang1, lang2, taskGroup])
+    }, [lang1, lang2, tg])
 
 
 
@@ -42,7 +43,7 @@ function SnippetPg() {
         <main class="snippetsContainer">
             <div class="snippetsHeader">
                 <div class="snippetLeftHeader">${lang1}</div>
-                <div class="taskForHeader">${taskGroup}</div>
+                <div class="taskForHeader">${tg}</div>
                 <div class="snippetRightHeader">${lang2}</div>
             </div>
             ${snippets && snippets.map((snippet: Snippet, idx: number ) => {
@@ -70,4 +71,5 @@ function SnippetPg() {
     `
 }
 
+const SnippetPg = observer(SnippetPg0)
 export default SnippetPg
