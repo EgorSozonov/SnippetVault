@@ -1,10 +1,11 @@
-const webpack = require('webpack');
-const path = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
+const webpack = require("webpack");
+const path = require("path");
+const TerserPlugin = require("terser-webpack-plugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin")
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const WebpackBundleAnalyzer = require("webpack-bundle-analyzer")
 
 
 module.exports = (env, args) => {
@@ -117,6 +118,7 @@ module.exports = (env, args) => {
                 title: "Snippet Vault",
                 template: "./public/template.html"
             }),
+            new WebpackBundleAnalyzer.BundleAnalyzerPlugin(),
 		],
 	};
 

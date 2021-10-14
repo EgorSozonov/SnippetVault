@@ -49,6 +49,7 @@
         "url-loader": "4.1.1",
         "web-vitals": "^1.1.2",
         "webpack": "^5.26.1",
+        "webpack-bundle-analyzer": "^4.5.0",
         "webpack-cli": "^4.5.0",
         "webpack-dev-server": "^3.11.2",
         "webpack-manifest-plugin": "^4.0.2"
