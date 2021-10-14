@@ -1,67 +1,59 @@
 const webpack = require('webpack');
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin")
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 
 
 module.exports = (env, args) => {
-	const isProduction = args && args['mode'] === 'production';
+	const isProduction = args && args["mode"] === "production";
 	console.log('');
-	console.log(isProduction ? 'PRODUCTION BUILD' : 'DEVELOPMENT BUILD');
+	console.log(isProduction ? "PRODUCTION BUILD" : "DEVELOPMENT BUILD");
 	console.log('');
 
 	const config = {
 		entry: {
-			'scripts/main': path.resolve('./src/app.ts'),
+			"snippetVault": path.resolve("./src/app.ts"),
 		},
 		output: {
-			path: path.resolve('./target'),
+			path: path.resolve("./target")
 		},
-		target: 'web',
-		devtool: isProduction ? false : 'source-map',
+		target: "web",
+		devtool: isProduction ? false : "source-map",
 		optimization: {
 			splitChunks: {
 				// always create vendor.js
 				cacheGroups: {
 					vendor: {
 						test: /[\\/]node_modules[\\/]/,
-						name: 'scripts/vendor',
-						chunks: 'initial',
+						name: "vendor",
+						chunks: "initial",
 						enforce: true,
 					},
 				},
 			},
 		},
 		resolve: {
-			extensions: ['.ts', '.html', '.json'],
+			extensions: [".ts", ".js", ".html", ".json"],
 		},
 		module: {
 			rules: [
 				{
-					test: /\.(ts)$/,
-					// eslint
-					enforce: 'pre',
-					use: [
-						{
-							options: {
-								eslintPath: require.resolve('eslint'),
-							},
-							loader: require.resolve('eslint-loader'),
-						},
-					],
-					exclude: /node_modules/,
-				},
-				{
 					test: /\.ts?$/,
 					exclude: /node_modules/,
 					use: [{
-						loader: 'ts-loader',
+						loader: "ts-loader",
 						options: {
 							transpileOnly: true,
 						},
 					}],
 				},
+                {
+                    test: /\.css$/i,
+                    use: ["style-loader", "css-loader"],
+                },
 				// app main .less file
 				{
 					test: /app\.less$/i,
@@ -91,10 +83,10 @@ module.exports = (env, args) => {
 			headers: {
 				'Access-Control-Allow-Origin': '*'
 			},
-			contentBase: './dist',
+			contentBase: './target',
 			publicPath: '/',
 			compress: false,
-			port: 3030,
+			port: 47001,
 			historyApiFallback: true,
 			hot: true,
 			inline: true,
@@ -104,20 +96,27 @@ module.exports = (env, args) => {
 
 		plugins: [
 			new webpack.EnvironmentPlugin({
-				NODE_ENV: isProduction ? 'production' : 'development',
+				NODE_ENV: isProduction ? "production" : "development",
 				DEBUG: !isProduction
 			}),
-
+            new WebpackManifestPlugin({
+                fileName: "manifest.json",
+            }),
 			new CopyWebpackPlugin({
 				patterns: [
 					// static files to the site root folder (index and robots)
 					{
-						from: '**/*',
-						to: path.resolve('./target/'),
-						context: './src/static/'
+						from: "**/*",
+						to: path.resolve("./target/"),
+						context: "./src/static/",
+                        noErrorOnMissing: true
 					},
 				]
 			}),
+            new HtmlWebpackPlugin({
+                title: "Snippet Vault",
+                template: "./public/template.html"
+            }),
 		],
 	};
 
@@ -125,7 +124,7 @@ module.exports = (env, args) => {
 		config.optimization.minimize = true;
 		config.optimization.minimizer = [
 			new TerserPlugin({extractComments: false}),
-			new OptimizeCSSAssetsPlugin({}),
+			new CssMinimizerWebpackPlugin({}),
 		]
 	}
 

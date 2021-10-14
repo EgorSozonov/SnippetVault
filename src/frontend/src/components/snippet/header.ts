@@ -2,21 +2,13 @@
 import HoverSelect from '../../commonComponents/hoverSelect/hoverSelect'
 import './snippet.css'
 import { html } from 'htm/react'
+import { useContext } from 'react'
+import MainState from '../../MobX/MainState'
+import { StoreContext } from '../../app'
 
 
 const Header: React.FunctionComponent = () => {
-    const dispatch = useDispatch()
-    const callback1 = (c: string) => {
-        dispatch({type: "setLanguage1", payload: {newValue: c}})
-    }
-
-    const callback2 = (c: string) => {
-        dispatch({type: "setLanguage2", payload: {newValue: c}})
-    }
-
-    const callbackTaskGroup = (c: string) => {
-        dispatch({type: "setTaskGroup", payload: {newValue: c}})
-    }
+    const state = useContext<MainState>(StoreContext)
 
     return (html `
         <nav>
@@ -24,17 +16,17 @@ const Header: React.FunctionComponent = () => {
                 <div class="choiceInput headerLeftmost">
                     <div class="headerDropdownLabel"><label >Task group:</label></div>
                     <${HoverSelect} choices=${["strings", "file system", "spreadsheets"]} uniqueName="TaskGroupChoice"
-                        selectCallback=${callbackTaskGroup}><//>
+                        selectCallback=${state.app.setTaskGroup}><//>
                 </div>
                 <div class="choiceInput">
                     <div class="headerDropdownLabel"><label >Language 1:</label></div>
                     <${HoverSelect} choices=${["C#", "Swift", "Typescript"]} uniqueName="Lang1"
-                        selectCallback=${callback1}><//>
+                        selectCallback=${state.app.setLanguage1}><//>
                 </div>
                 <div class="choiceInput">
                     <div class="headerDropdownLabel"><label >Language 2:</label></div>
                     <${HoverSelect} choices=${["C#", "Typescript"]} uniqueName="Lang2" 
-                        selectCallback=${callback2}><//>
+                        selectCallback=${state.app.setLanguage2}><//>
                     
                 </div>
                 <div class="choiceInputButton">

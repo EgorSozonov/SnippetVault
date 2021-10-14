@@ -2,13 +2,14 @@ import './app.css'
 import Content from './content'
 import { html } from 'htm/react'
 import MainState from './MobX/MainState'
-import {createContext, h, render, FunctionComponent, ComponentChildren} from "preact"
+import {createContext, FunctionComponent,} from "react"
+import { render } from "react-dom"
 
 
 export const StoreContext = createContext<MainState>(new MainState())
 
-export const StoreProvider: FunctionComponent<{children: ComponentChildren}> = ({ children, }) => {
-    return (html`${StoreContext.Provider} value=${new MainState()}>{children}<//>`)
+export const StoreProvider: FunctionComponent<{children: any}> = ({ children, }) => {
+    return (html`<${StoreContext.Provider} value=${new MainState()}>{children}<//>`)
 }
 
 const App: FunctionComponent = () => {

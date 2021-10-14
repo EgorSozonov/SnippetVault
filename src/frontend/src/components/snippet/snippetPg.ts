@@ -6,23 +6,23 @@ import SnippetCode from "./snippetCode"
 import createClient from "../../client"
 import { AxiosInstance } from "axios"
 import { html } from "htm/react"
-import { useContext, useState, useEffect, } from "preact/hooks"
-import { observer } from "mobx-preact"
 import { StoreContext } from "../../app"
-import { FunctionalComponent, VNode } from "preact"
+import { FunctionComponent, useContext, useEffect, useState} from "react"
+import AppState from "../../MobX/AppState"
+import MainState from "../../MobX/MainState"
 
 
-const SnippetPg0: FunctionalComponent = () => {
+const SnippetPg: FunctionComponent = ({}: any) => {
     console.log("SnippetPg")
-    const appState = useContext(StoreContext)
+    const state = useContext<MainState>(StoreContext)
     const [snippets, setSnippets] = useState<Snippet[]>([])
     const client: AxiosInstance = createClient()
-    const lang1 = appState.app.language1
-    const lang2 = appState.app.language2
-    const tg = appState.app.taskGroup
+    const lang1 = state.app.language1
+    const lang2 = state.app.language2
+    const tg = state.app.taskGroup
 
     useEffect(() => {
-        client.get(`{ENDPOINTS.get.snippet}${appState.app.language1}/${appState.app.language2}/${appState.app.taskGroup}`)
+        client.get(`{ENDPOINTS.get.snippet}${state.app.language1}/${state.app.language2}/${state.app.taskGroup}`)
         .then((r: any) => {
             console.log("Response")
             console.dir(r)
@@ -70,5 +70,5 @@ const SnippetPg0: FunctionalComponent = () => {
     `
 }
 
-const SnippetPg = observer(SnippetPg0)
+//const SnippetPg = observer(SnippetPg0)
 export default SnippetPg

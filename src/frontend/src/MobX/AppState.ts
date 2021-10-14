@@ -12,7 +12,19 @@ export default class AppState {
         makeAutoObservable(this)
     }
 
-    getName = action((name: string): void => {
-
+    setLanguage1 = action((newValue: string): void => {
+        this.language1 = newValue
     })
+
+    setLanguage2 = action((newValue: string): void => {
+        this.language2 = newValue
+    })
+
+    setTaskGroup = action((newValue: string): void => {
+        this.taskGroup = newValue
+    })    
+
+    setOpenSelect = action((newValue: string): void => {
+        this.openSelect = newValue
+    })   
 }
