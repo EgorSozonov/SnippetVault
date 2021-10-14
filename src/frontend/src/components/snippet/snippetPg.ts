@@ -1,4 +1,3 @@
-import React, { useContext, useEffect, useState } from "react"
 import Snippet from "../../types/snippet"
 import Header from "./header"
 import TextInput from "./textInput"
@@ -7,13 +6,13 @@ import SnippetCode from "./snippetCode"
 import createClient from "../../client"
 import { AxiosInstance } from "axios"
 import { html } from "htm/react"
-import { observer } from "mobx-react-lite"
-import AppState from "../../MobX/AppState"
+import { useContext, useState, useEffect, } from "preact/hooks"
+import { observer } from "mobx-preact"
 import { StoreContext } from "../../app"
+import { FunctionalComponent, VNode } from "preact"
 
 
-
-function SnippetPg0() {
+const SnippetPg0: FunctionalComponent = () => {
     console.log("SnippetPg")
     const appState = useContext(StoreContext)
     const [snippets, setSnippets] = useState<Snippet[]>([])

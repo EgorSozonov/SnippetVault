@@ -7,7 +7,7 @@ export default class MainState {
     user: UserState
 
     constructor() {
-        this.app = new AppState(this)
-        this.user = new UserState(this)
+        this.app = new AppState()
+        this.user = new UserState()
     }
 }

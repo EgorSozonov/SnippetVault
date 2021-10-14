@@ -1,31 +1,30 @@
-import React, { createContext, FC, ReactNode, ReactElement, } from 'react'
-import logo from './logo.svg'
 import './app.css'
-import ReactDOM from 'react-dom'
 import Content from './content'
 import { html } from 'htm/react'
 import MainState from './MobX/MainState'
+import {createContext, h, render, FunctionComponent, ComponentChildren} from "preact"
 
 
 export const StoreContext = createContext<MainState>(new MainState())
 
-export const StoreProvider: FC<{children: ReactNode}> = ({ children, }): ReactElement => {
+export const StoreProvider: FunctionComponent<{children: ComponentChildren}> = ({ children, }) => {
     return (html`${StoreContext.Provider} value=${new MainState()}>{children}<//>`)
 }
 
-const App: React.FunctionComponent = () => {
-    return html`
-        <${StoreProvider}>
+const App: FunctionComponent = () => {
+    return html`       
             <${Content} />
-        <//>
     `
 }
 
-ReactDOM.render(
-    html`
-        <${React.StrictMode}>
-          <${App} />
-        <//>
-    `,    
-    document.getElementById("snippetRoot")
-)
+const root = document.getElementById("snippetRoot")
+if (root) {
+    render(
+        html`
+            <${StoreProvider}>
+              <${Content} />
+            <//>
+        `,    
+        root
+    )
+}

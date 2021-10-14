@@ -1,4 +1,3 @@
-import React from 'react'
 import "./snippet.css"
 import { html } from 'htm/react'
 
@@ -6,6 +5,7 @@ import { html } from 'htm/react'
 type Props = {
     numberProposals: number,
 }
+
 function TextInput({numberProposals, } : Props) {
     return html`
         <div>

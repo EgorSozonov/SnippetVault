@@ -8,7 +8,7 @@ export default class AppState {
     public language2 = ""
     public taskGroup = ""
 
-    constructor(rootStore: MainState) {
+    constructor() {
         makeAutoObservable(this)
     }
 
