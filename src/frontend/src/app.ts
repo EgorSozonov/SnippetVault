@@ -9,7 +9,7 @@ import { render } from "react-dom"
 export const StoreContext = createContext<MainState>(new MainState())
 
 export const StoreProvider: FunctionComponent<{children: any}> = ({ children, }) => {
-    return (html`<${StoreContext.Provider} value=${new MainState()}>{children}<//>`)
+    return (html`<${StoreContext.Provider} value=${new MainState()}>${children}<//>`)
 }
 
 const App: FunctionComponent = () => {

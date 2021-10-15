@@ -17,14 +17,17 @@ export default class AppState {
     })
 
     setLanguage2 = action((newValue: string): void => {
+        console.log("SetLang2")
         this.language2 = newValue
     })
 
     setTaskGroup = action((newValue: string): void => {
+        console.log("SetTG")
         this.taskGroup = newValue
     })    
 
     setOpenSelect = action((newValue: string): void => {
+        console.log("SetOpenSelect")
         this.openSelect = newValue
     })   
 }

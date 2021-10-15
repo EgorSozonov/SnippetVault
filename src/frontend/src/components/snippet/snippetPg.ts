@@ -10,9 +10,10 @@ import { StoreContext } from "../../app"
 import { FunctionComponent, useContext, useEffect, useState} from "react"
 import AppState from "../../MobX/AppState"
 import MainState from "../../MobX/MainState"
+import { observer } from "mobx-react-lite"
 
 
-const SnippetPg: FunctionComponent = ({}: any) => {
+const SnippetPg: FunctionComponent = observer(({}: any) => {
     console.log("SnippetPg")
     const state = useContext<MainState>(StoreContext)
     const [snippets, setSnippets] = useState<Snippet[]>([])
@@ -68,7 +69,7 @@ const SnippetPg: FunctionComponent = ({}: any) => {
         </main>
     </div>
     `
-}
+})
 
 //const SnippetPg = observer(SnippetPg0)
 export default SnippetPg

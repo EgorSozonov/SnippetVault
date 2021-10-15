@@ -5,9 +5,10 @@ import { html } from 'htm/react'
 import { useContext } from 'react'
 import MainState from '../../MobX/MainState'
 import { StoreContext } from '../../app'
+import { observer } from 'mobx-react-lite'
 
 
-const Header: React.FunctionComponent = () => {
+const Header: React.FunctionComponent = observer(() => {
     const state = useContext<MainState>(StoreContext)
 
     return (html `
@@ -39,6 +40,6 @@ const Header: React.FunctionComponent = () => {
         </nav>
         `
       );
-}
+})
 
 export default Header

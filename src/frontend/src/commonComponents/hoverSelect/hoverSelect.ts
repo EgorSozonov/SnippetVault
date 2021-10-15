@@ -3,6 +3,7 @@ import "./hoverSelect.css"
 import { html } from 'htm/react'
 import MainState from "../../MobX/MainState"
 import { StoreContext } from "../../app"
+import {observer} from 'mobx-react-lite'
 
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
     selectCallback: (c: string) => void,
 }
 
-const HoverSelect: React.FunctionComponent<Props> = ({choices, uniqueName, selectCallback, }) => {
+const HoverSelect: React.FunctionComponent<Props> = observer(({choices, uniqueName, selectCallback, }) => {
     const [currValue, setCurrValue] = useState(" ")
     const mainState = useContext<MainState>(StoreContext)
     const currentlyOpen = mainState.app.openSelect
@@ -50,11 +51,9 @@ const HoverSelect: React.FunctionComponent<Props> = ({choices, uniqueName, selec
                     </li>
                 </ul>
             </div>
-                
-            
         </div>
     `
-}
+})
 
 
 export default HoverSelect
