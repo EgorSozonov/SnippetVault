@@ -102,6 +102,49 @@ public class GetController {
         }
     }
 
+    [HttpGet]
+    [Route("taskGroupsForLanguages/{lang1}")]
+    async public Task<List<TaskGroupDTO>> taskGroupsForLanguage(int lang1) { 
+        return await taskGroupsForArrayLanguages(new int[] {lang1});
+    }
+
+    [HttpGet]
+    [Route("taskGroupsForLanguages/{lang1}/{lang2}")]
+    async public Task<List<TaskGroupDTO>> taskGroupsForLanguages(int lang1, int lang2) {  
+        return await taskGroupsForArrayLanguages(new int[] {lang1, lang2});
+
+    }
+
+
+
+
+    async private Task<List<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        
+        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.taskGroupsForLanguages, dbContext.conn)) { 
+            cmd.Parameters.AddWithValue("ls", NpgsqlTypes.NpgsqlDbType.Array|NpgsqlTypes.NpgsqlDbType.Integer, langs);
+            cmd.Prepare();
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                try {
+                    string[] columnNames = new string[reader.FieldCount];
+                    for (int i = 0; i < reader.FieldCount; ++i) {
+                        columnNames[i] = reader.GetName(i);
+                    }
+                    var readerSnippet = new DBDeserializer<TaskGroupDTO>(columnNames);
+                    if (!readerSnippet.isOK) return null;
+
+                    var results = readerSnippet.readResults(reader, out string errMsg);
+                    if (errMsg != "") {
+                        Console.WriteLine(errMsg);
+                        return null;
+                    }
+                    return results;
+                } catch (Exception e) {
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
+            }
+        }
+    }
+
 
     [Route("/")]
     public string Default() {

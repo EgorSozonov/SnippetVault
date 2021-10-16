@@ -30,9 +30,13 @@ public class GetPGQueries  {
             language=@"
                 SELECT l.id, l.name, lg.name AS ""languageGroup"" FROM snippet.language l
 				JOIN snippet.""languageGroup"" lg ON l.""languageGroupId""=lg.id;", 
-            task=@"SELECT id, name, description FROM snippet.""task"" WHERE ""taskGroupId""=$1;",
+            task=@"SELECT id, name, description FROM snippet.""task"" WHERE ""taskGroupId""=@1;",
             taskGroup= @"SELECT id, name FROM snippet.""taskGroup"" WHERE ""isDeleted""=0::bit;",
-            taskGroupsForLanguages= @"",
+            taskGroupsForLanguages= @"
+                SELECT DISTINCT tg.id, tg.name FROM snippet.task t
+                JOIN snippet.""taskLanguage"" tl ON tl.""taskId""=t.id
+                JOIN snippet.""taskGroup"" tg ON tg.id=t.""taskGroupId""
+                WHERE tl.""languageId"" IN (@ls);",
             proposal = @"
                 SELECT lang.name AS ""language"", task.name AS ""task"", 
 					   sn1.id AS ""proposalId"", sn1.content AS ""proposalCode"", sn1.""tsUpload""
