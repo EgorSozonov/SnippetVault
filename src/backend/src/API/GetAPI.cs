@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 using System;
+    using System.Collections.Generic;
 
-
-
-[Controller]
+    [Controller]
 [Route("sv/api/v1/get")]
 public class GetController {    
     private readonly IDBContext dbContext;
@@ -18,13 +17,12 @@ public class GetController {
 
 
     [HttpGet]
-    [Route("snippet")]
-    async public Task<string> snippet() {
-        
+    [Route("snippet/{lang1}/{lang2}/{taskGroup}")]
+    async public Task<List<SnippetDTO>> snippet(int lang1, int lang2, int taskGroup) {        
         await using (var cmd = new NpgsqlCommand(dbContext.getQueries.snippet, dbContext.conn)) { 
-            cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, 0);
-            cmd.Parameters.AddWithValue("l2", NpgsqlTypes.NpgsqlDbType.Integer, 11);
-            cmd.Parameters.AddWithValue("tg", NpgsqlTypes.NpgsqlDbType.Integer, 3);
+            cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
+            cmd.Parameters.AddWithValue("l2", NpgsqlTypes.NpgsqlDbType.Integer, lang2);
+            cmd.Parameters.AddWithValue("tg", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
             cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 //cmd.Prepare();
@@ -34,14 +32,71 @@ public class GetController {
                         columnNames[i] = reader.GetName(i);
                     }
                     var readerSnippet = new DBDeserializer<SnippetDTO>(columnNames);
-                    if (!readerSnippet.isOK) return "Reader error";
+                    if (!readerSnippet.isOK) return null;
 
                     var results = readerSnippet.readResults(reader, out string errMsg);
-                    if (errMsg != "") return errMsg;
-                    return results.ToString();
+                    if (errMsg != "") {
+                        Console.WriteLine(errMsg);
+                        return null;
+                    }
+                    return results;
                 } catch (Exception e) {
                     Console.WriteLine(e.Message);
-                    return e.Message;
+                    return null;
+                }
+            }
+        }
+    }
+
+    [HttpGet]
+    [Route("language")]
+    async public Task<List<LanguageDTO>> language() {        
+        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.language, dbContext.conn)) { 
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                try {
+                    string[] columnNames = new string[reader.FieldCount];
+                    for (int i = 0; i < reader.FieldCount; ++i) {
+                        columnNames[i] = reader.GetName(i);
+                    }
+                    var readerSnippet = new DBDeserializer<LanguageDTO>(columnNames);
+                    if (!readerSnippet.isOK) return null;
+
+                    var results = readerSnippet.readResults(reader, out string errMsg);
+                    if (errMsg != "") {
+                        Console.WriteLine(errMsg);
+                        return null;
+                    }
+                    return results;
+                } catch (Exception e) {
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
+            }
+        }
+    }
+
+    [HttpGet]
+    [Route("taskGroup")]
+    async public Task<List<TaskGroupDTO>> taskGroup() {        
+        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.taskGroup, dbContext.conn)) { 
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                try {
+                    string[] columnNames = new string[reader.FieldCount];
+                    for (int i = 0; i < reader.FieldCount; ++i) {
+                        columnNames[i] = reader.GetName(i);
+                    }
+                    var readerSnippet = new DBDeserializer<TaskGroupDTO>(columnNames);
+                    if (!readerSnippet.isOK) return null;
+
+                    var results = readerSnippet.readResults(reader, out string errMsg);
+                    if (errMsg != "") {
+                        Console.WriteLine(errMsg);
+                        return null;
+                    }
+                    return results;
+                } catch (Exception e) {
+                    Console.WriteLine(e.Message);
+                    return null;
                 }
             }
         }

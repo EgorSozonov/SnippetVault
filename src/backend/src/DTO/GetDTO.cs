@@ -20,9 +20,9 @@ public class CommentDTO {
 }
 
 public class LanguageDTO {
-    public int id;
-    public string name;
-    public string languageGroup;
+    public int id{get; set;}
+    public string name{get; set;}
+    public string languageGroup{get; set;}
 }
 
 public class ProposalDTO {
@@ -43,14 +43,14 @@ public class SnippetDTO {
 }
 
 public class TaskDTO {
-    public int id;
-    public string name;
-    public string description;
+    public int id{get; set;}
+    public string name{get; set;}
+    public string description{get; set;}
 }
 
 public class TaskGroupDTO {
-    public int id;
-    public string name;
+    public int id{get; set;}
+    public string name{get; set;}
 }
 
 }
