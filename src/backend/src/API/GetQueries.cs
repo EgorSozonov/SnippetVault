@@ -30,13 +30,13 @@ public class GetPGQueries  {
             language=@"
                 SELECT l.id, l.name, lg.name AS ""languageGroup"" FROM snippet.language l
 				JOIN snippet.""languageGroup"" lg ON l.""languageGroupId""=lg.id;", 
-            task=@"SELECT id, name, description FROM snippet.""task"" WHERE ""taskGroupId""=@1;",
+            task=@"SELECT id, name, description FROM snippet.""task"" WHERE ""taskGroupId""=@tg;",
             taskGroup= @"SELECT id, name FROM snippet.""taskGroup"" WHERE ""isDeleted""=0::bit;",
             taskGroupsForLanguages= @"
                 SELECT DISTINCT tg.id, tg.name FROM snippet.task t
                 JOIN snippet.""taskLanguage"" tl ON tl.""taskId""=t.id
                 JOIN snippet.""taskGroup"" tg ON tg.id=t.""taskGroupId""
-                WHERE tl.""languageId"" IN (@ls);",
+                WHERE tl.""languageId"" = ANY(@ls);",
             proposal = @"
                 SELECT lang.name AS ""language"", task.name AS ""task"", 
 					   sn1.id AS ""proposalId"", sn1.content AS ""proposalCode"", sn1.""tsUpload""
@@ -51,13 +51,13 @@ public class GetPGQueries  {
 				FROM snippet.snippet sn1
 				JOIN snippet.""taskLanguage"" tl ON tl.id=sn1.""taskLanguageId""
 				JOIN snippet.snippet sn2 ON sn2.id=tl.""primarySnippetId""
-				WHERE sn1.""taskLanguageId""=$1 
+				WHERE sn1.""taskLanguageId""=@tl 
 				AND sn1.""isApproved""=1::bit AND sn1.id != tl.""primarySnippetId"";",
             comment = @"
                 SELECT c.content, c.""tsUpload"", u.id AS ""userId"", u.name AS ""userName""
 				FROM snippet.comment c
 				JOIN snippet.user u ON u.id=c.""userId""
-				WHERE c.""snippetId""=$1;",
+				WHERE c.""snippetId""=@sn;",
             };
     }
 }

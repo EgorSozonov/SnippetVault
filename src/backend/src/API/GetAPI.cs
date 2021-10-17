@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 using System;
-    using System.Collections.Generic;
+using System.Collections.Generic;
 
-    [Controller]
+
+[Controller]
 [Route("sv/api/v1/get")]
 public class GetController {    
     private readonly IDBContext dbContext;
@@ -76,6 +77,34 @@ public class GetController {
     }
 
     [HttpGet]
+    [Route("task")]
+    async public Task<List<TaskDTO>> task(int taskGroupId) {        
+        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.task, dbContext.conn)) { 
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                cmd.Parameters.AddWithValue("tg", NpgsqlTypes.NpgsqlDbType.Integer, taskGroupId);
+                try {
+                    string[] columnNames = new string[reader.FieldCount];
+                    for (int i = 0; i < reader.FieldCount; ++i) {
+                        columnNames[i] = reader.GetName(i);
+                    }
+                    var readerSnippet = new DBDeserializer<TaskDTO>(columnNames);
+                    if (!readerSnippet.isOK) return null;
+
+                    var results = readerSnippet.readResults(reader, out string errMsg);
+                    if (errMsg != "") {
+                        Console.WriteLine(errMsg);
+                        return null;
+                    }
+                    return results;
+                } catch (Exception e) {
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
+            }
+        }
+    }
+
+    [HttpGet]
     [Route("taskGroup")]
     async public Task<List<TaskGroupDTO>> taskGroup() {        
         await using (var cmd = new NpgsqlCommand(dbContext.getQueries.taskGroup, dbContext.conn)) { 
@@ -115,9 +144,6 @@ public class GetController {
 
     }
 
-
-
-
     async private Task<List<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        
         await using (var cmd = new NpgsqlCommand(dbContext.getQueries.taskGroupsForLanguages, dbContext.conn)) { 
             cmd.Parameters.AddWithValue("ls", NpgsqlTypes.NpgsqlDbType.Array|NpgsqlTypes.NpgsqlDbType.Integer, langs);
@@ -129,6 +155,93 @@ public class GetController {
                         columnNames[i] = reader.GetName(i);
                     }
                     var readerSnippet = new DBDeserializer<TaskGroupDTO>(columnNames);
+                    if (!readerSnippet.isOK) return null;
+
+                    var results = readerSnippet.readResults(reader, out string errMsg);
+                    if (errMsg != "") {
+                        Console.WriteLine(errMsg);
+                        return null;
+                    }
+                    return results;
+                } catch (Exception e) {
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
+            }
+        }
+    }
+
+    [HttpGet]
+    [Route("proposal")]
+    async public Task<List<ProposalDTO>> proposal() {        
+        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.proposal, dbContext.conn)) {             
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                try {
+                    string[] columnNames = new string[reader.FieldCount];
+                    for (int i = 0; i < reader.FieldCount; ++i) {
+                        columnNames[i] = reader.GetName(i);
+                    }
+                    var readerSnippet = new DBDeserializer<ProposalDTO>(columnNames);
+                    if (!readerSnippet.isOK) return null;
+
+                    var results = readerSnippet.readResults(reader, out string errMsg);
+                    if (errMsg != "") {
+                        Console.WriteLine(errMsg);
+                        return null;
+                    }
+                    return results;
+                } catch (Exception e) {
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
+            }
+        }
+    }
+
+
+    [HttpGet]
+    [Route("alternative/{taskLanguageId}")]
+    async public Task<List<AlternativeDTO>> alternative(int taskLanguageId) {        
+        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.alternative, dbContext.conn)) { 
+            cmd.Parameters.AddWithValue("tl", NpgsqlTypes.NpgsqlDbType.Integer, taskLanguageId);
+            cmd.Prepare();
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                try {
+                    string[] columnNames = new string[reader.FieldCount];
+                    for (int i = 0; i < reader.FieldCount; ++i) {
+                        columnNames[i] = reader.GetName(i);
+                    }
+                    var readerSnippet = new DBDeserializer<AlternativeDTO>(columnNames);
+                    if (!readerSnippet.isOK) return null;
+
+                    var results = readerSnippet.readResults(reader, out string errMsg);
+                    if (errMsg != "") {
+                        Console.WriteLine(errMsg);
+                        return null;
+                    }
+                    return results;
+                } catch (Exception e) {
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
+            }
+        }
+    }
+
+
+    [HttpGet]
+    [Route("comment/{snippetId}")]
+    async public Task<List<CommentDTO>> comment(int snippetId) {        
+        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.taskGroup, dbContext.conn)) { 
+            cmd.Parameters.AddWithValue("sn", NpgsqlTypes.NpgsqlDbType.Integer, snippetId);
+            cmd.Prepare();
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                try {
+                    string[] columnNames = new string[reader.FieldCount];
+                    for (int i = 0; i < reader.FieldCount; ++i) {
+                        columnNames[i] = reader.GetName(i);
+                    }
+                    var readerSnippet = new DBDeserializer<CommentDTO>(columnNames);
                     if (!readerSnippet.isOK) return null;
 
                     var results = readerSnippet.readResults(reader, out string errMsg);
