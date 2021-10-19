@@ -10,11 +10,15 @@ src/frontend/dist/*
 src/frontend/target/*
 src/frontend/include/*
 src/backend/lib/*
+src/**/.bloop/*
+src/backend.old
+src/backend/.bsp/*
+src/backend/.metals/*
 Src/backend/bin
 src/backend/build
 src/backend/obj
 src/backend/target
-src/backend/src/DBAccess/creds.json
+src/backend/src/tech/sozonov/sv/DBAccess/creds.json
 include/*
 config/creds*
 src/.DS_Store
