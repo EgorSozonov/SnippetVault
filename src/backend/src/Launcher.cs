@@ -1,8 +1,8 @@
 namespace SnippetVault{
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
@@ -11,16 +11,20 @@ using System.IO;
 
 public class Launcher {
     public IConfiguration configuration { get; }
-    public Launcher(IConfiguration _configuration)    {
+    public IDBContext dbContext { get; }
+
+
+    public Launcher(IConfiguration _configuration, IDBContext _db)    {
         configuration = _configuration;
+        dbContext = _db;
     }
 
     public void ConfigureServices(IServiceCollection services) {
-        services.Configure<WebConfig>(configuration);
-        services.AddSingleton<IConfiguration>(configuration);
-        services.AddSingleton<IDBContext, DBContext>();        
+        services.Configure<WebConfig>(this.configuration);
+        services.AddSingleton<IConfiguration>(this.configuration);
+        
         services.AddRouting();
-        services.AddControllers();
+        //services.AddControllers();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env){
@@ -29,7 +33,7 @@ public class Launcher {
         } else {
             app.UseExceptionHandler("/Error");
             app.UseHsts();
-        }
+        }        
 
         //app.UseHttpsRedirection();
         DefaultFilesOptions options = new DefaultFilesOptions();
@@ -41,9 +45,8 @@ public class Launcher {
                 Path.Combine(env.ContentRootPath, "StaticFiles"))
         });
 
-        app.UseRouting();
-        
-        app.UseEndpoints(API.configure
+
+        app.UseEndpoints(x => API.configure(x, dbContext));
         //    endpoints => {
         //     endpoints.MapGet("/", async context => {
         //         await context.Response.WriteAsync("Hello World!");
@@ -51,15 +54,15 @@ public class Launcher {
         //     endpoints.MapGet("/api/v1/get/snippet", async context => {
                 
         //     });
-        //     // endpoints.MapControllerRoute(
-        //     //     name: "default",
-        //     //     pattern: "sv/api/v1/{controller=Home}/{action=Index}");
-        //     // endpoints.MapControllerRoute(
-        //     //     name: "default2",
-        //     //     pattern: "sv/api/v1/{controller=Home}/{action=Index}/{id}");
+            // endpoints.MapControllerRoute(
+            //     name: "default",
+            //     pattern: "sv/api/v1/{controller=Home}/{action=Index}");
+            // endpoints.MapControllerRoute(
+            //     name: "default2",
+            //     pattern: "sv/api/v1/{controller=Home}/{action=Index}/{id}");
         //     endpoints.MapControllers();
         // }
-        );
+        // );
 
         //app.AddRouting();
     }

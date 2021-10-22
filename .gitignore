@@ -21,6 +21,7 @@ src/backend/target
 src/backend/src/tech/sozonov/sv/DBAccess/creds.json
 include/*
 config/creds*
+src/**/creds.json
 src/.DS_Store
 .DS_Store
 Src/.DS_Store?
