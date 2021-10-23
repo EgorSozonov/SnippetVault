@@ -380,3 +380,266 @@ ALTER TABLE sv."user" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     CACHE 1
 );
 
+
+
+
+
+--
+-- TOC entry 2770 (class 2606 OID 16416)
+-- Name: Comment Comment_pkey; Type: CONSTRAINT; Schema: blog; Owner: zrx
+--
+
+ALTER TABLE ONLY blog."Comment"
+    ADD CONSTRAINT "Comment_pkey" PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 2775 (class 2606 OID 16440)
+-- Name: Log Log_pkey; Type: CONSTRAINT; Schema: blog; Owner: zrx
+--
+
+ALTER TABLE ONLY blog."Log"
+    ADD CONSTRAINT "Log_pkey" PRIMARY KEY ("LogId");
+
+
+--
+-- TOC entry 2773 (class 2606 OID 16424)
+-- Name: Page Page_pkey; Type: CONSTRAINT; Schema: blog; Owner: zrx
+--
+
+ALTER TABLE ONLY blog."Page"
+    ADD CONSTRAINT "Page_pkey" PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 2768 (class 2606 OID 16426)
+-- Name: User User_pkey; Type: CONSTRAINT; Schema: blog; Owner: zrx
+--
+
+ALTER TABLE ONLY blog."User"
+    ADD CONSTRAINT "User_pkey" PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 2797 (class 2606 OID 16578)
+-- Name: comment comment_pkey; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv.comment
+    ADD CONSTRAINT comment_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2791 (class 2606 OID 16553)
+-- Name: languageGroup languageGroup_pkey; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."languageGroup"
+    ADD CONSTRAINT "languageGroup_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2777 (class 2606 OID 16455)
+-- Name: language language_code_key; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv.language
+    ADD CONSTRAINT language_code_key UNIQUE (code);
+
+
+--
+-- TOC entry 2779 (class 2606 OID 16453)
+-- Name: language language_pkey; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv.language
+    ADD CONSTRAINT language_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2785 (class 2606 OID 16495)
+-- Name: snippet snippet_pkey; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv.snippet
+    ADD CONSTRAINT snippet_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2783 (class 2606 OID 16469)
+-- Name: taskGroup taskGroup_pkey; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."taskGroup"
+    ADD CONSTRAINT "taskGroup_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2787 (class 2606 OID 16595)
+-- Name: taskLanguage taskLanguage_pkey; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."taskLanguage"
+    ADD CONSTRAINT "taskLanguage_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2789 (class 2606 OID 16597)
+-- Name: taskLanguage taskLanguage_task_language_UNIQ; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."taskLanguage"
+    ADD CONSTRAINT "taskLanguage_task_language_UNIQ" UNIQUE ("taskId", "languageId");
+
+
+--
+-- TOC entry 2781 (class 2606 OID 16462)
+-- Name: task task_pkey; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv.task
+    ADD CONSTRAINT task_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2799 (class 2606 OID 16583)
+-- Name: userVote userVote_PK; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."userVote"
+    ADD CONSTRAINT "userVote_PK" PRIMARY KEY ("userId", "taskLanguageId");
+
+
+--
+-- TOC entry 2793 (class 2606 OID 16621)
+-- Name: user user_name_UNIQ; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."user"
+    ADD CONSTRAINT "user_name_UNIQ" UNIQUE (name);
+
+
+--
+-- TOC entry 2795 (class 2606 OID 16570)
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2771 (class 1259 OID 16432)
+-- Name: fki_Comment_UserId_FK; Type: INDEX; Schema: blog; Owner: zrx
+--
+
+CREATE INDEX "fki_Comment_UserId_FK" ON blog."Comment" USING btree ("UserId");
+
+
+--
+-- TOC entry 2800 (class 2606 OID 16427)
+-- Name: Comment Comment_UserId_FK; Type: FK CONSTRAINT; Schema: blog; Owner: zrx
+--
+
+ALTER TABLE ONLY blog."Comment"
+    ADD CONSTRAINT "Comment_UserId_FK" FOREIGN KEY ("UserId") REFERENCES blog."User"("Id");
+
+
+--
+-- TOC entry 2801 (class 2606 OID 16555)
+-- Name: language Language_LanguageGroup_FK; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv.language
+    ADD CONSTRAINT "Language_LanguageGroup_FK" FOREIGN KEY ("languageGroupId") REFERENCES sv."languageGroup"(id);
+
+
+--
+-- TOC entry 2808 (class 2606 OID 16589)
+-- Name: comment comment_snippet_FK; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv.comment
+    ADD CONSTRAINT "comment_snippet_FK" FOREIGN KEY ("snippetId") REFERENCES sv.snippet(id);
+
+
+--
+-- TOC entry 2807 (class 2606 OID 16584)
+-- Name: comment comment_user_FK; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv.comment
+    ADD CONSTRAINT "comment_user_FK" FOREIGN KEY ("userId") REFERENCES sv."user"(id);
+
+
+--
+-- TOC entry 2803 (class 2606 OID 16598)
+-- Name: snippet snippet_taskLanguage_FK; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv.snippet
+    ADD CONSTRAINT "snippet_taskLanguage_FK" FOREIGN KEY ("taskLanguageId") REFERENCES sv."taskLanguage"(id);
+
+
+--
+-- TOC entry 2805 (class 2606 OID 16610)
+-- Name: taskLanguage taskLanguage_language_FK; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."taskLanguage"
+    ADD CONSTRAINT "taskLanguage_language_FK" FOREIGN KEY ("languageId") REFERENCES sv.language(id);
+
+
+--
+-- TOC entry 2806 (class 2606 OID 16615)
+-- Name: taskLanguage taskLanguage_snippet_FK; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."taskLanguage"
+    ADD CONSTRAINT "taskLanguage_snippet_FK" FOREIGN KEY ("primarySnippetId") REFERENCES sv.snippet(id);
+
+
+--
+-- TOC entry 2804 (class 2606 OID 16605)
+-- Name: taskLanguage taskLanguage_task_FK; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."taskLanguage"
+    ADD CONSTRAINT "taskLanguage_task_FK" FOREIGN KEY ("taskId") REFERENCES sv.task(id);
+
+
+--
+-- TOC entry 2802 (class 2606 OID 16470)
+-- Name: task task_taskGroupId_fkey; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv.task
+    ADD CONSTRAINT "task_taskGroupId_fkey" FOREIGN KEY ("taskGroupId") REFERENCES sv."taskGroup"(id);
+
+
+--
+-- TOC entry 2811 (class 2606 OID 16632)
+-- Name: userVote userVote_snippet_FK; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."userVote"
+    ADD CONSTRAINT "userVote_snippet_FK" FOREIGN KEY ("snippetId") REFERENCES sv.snippet(id);
+
+
+--
+-- TOC entry 2810 (class 2606 OID 16627)
+-- Name: userVote userVote_taskLanguage_FK; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."userVote"
+    ADD CONSTRAINT "userVote_taskLanguage_FK" FOREIGN KEY ("taskLanguageId") REFERENCES sv."taskLanguage"(id);
+
+
+--
+-- TOC entry 2809 (class 2606 OID 16622)
+-- Name: userVote userVote_user_FK; Type: FK CONSTRAINT; Schema: snippet; Owner: postgres
+--
+
+ALTER TABLE ONLY sv."userVote"
+    ADD CONSTRAINT "userVote_user_FK" FOREIGN KEY ("userId") REFERENCES sv."user"(id);
+
