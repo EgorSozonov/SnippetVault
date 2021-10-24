@@ -140,8 +140,8 @@ public static class API {
 
     private static void makeDelegates(IDBContext dbContext, out Tuple<RequestDelegate, string>[] delegatesForGetting, out RequestDelegate homePage) {
         delegatesForGetting = new Tuple<RequestDelegate, string>[] {
-            new Tuple<RequestDelegate, string>(addDBContext(snippet, dbContext), nameof(snippet)),
-            new Tuple<RequestDelegate, string>(addDBContext(language, dbContext), nameof(language)),
+            new Tuple<RequestDelegate, string>(addDBContext(snippet, dbContext), "snippet"),
+            new Tuple<RequestDelegate, string>(addDBContext(language, dbContext), "language"),
             new Tuple<RequestDelegate, string>(addDBContext(taskGroup, dbContext), nameof(taskGroup)),
         };
         homePage = context => {

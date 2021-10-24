@@ -44,7 +44,7 @@ public class Launcher {
             FileProvider = new PhysicalFileProvider(
                 Path.Combine(env.ContentRootPath, "StaticFiles"))
         });
-
+        app.UseRouting();
 
         app.UseEndpoints(x => API.configure(x, dbContext));
         //    endpoints => {

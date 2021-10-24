@@ -259,7 +259,7 @@ CREATE TABLE sv.task (
 );
 
 
-ALTER TABLE sv.task OWNER TO postgres;
+ALTER TABLE sv.task OWNER TO sv_user;
 
 --
 -- TOC entry 210 (class 1259 OID 16465)
