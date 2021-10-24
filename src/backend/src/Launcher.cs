@@ -24,7 +24,6 @@ public class Launcher {
         services.AddSingleton<IConfiguration>(this.configuration);
         
         services.AddRouting();
-        //services.AddControllers();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env){

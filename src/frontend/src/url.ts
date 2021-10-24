@@ -1,8 +1,10 @@
 const ENDPOINTS = {
     get: {
-        snippet: "snippet/get/"
+        snippet: "snippet",
+        language: "language",
+        taskGroup: "taskGroup",
     }
 }
 
-const API_PREFIX = "/api/v1/"
+export const API_PREFIX = "/api/v1/"
 export default ENDPOINTS

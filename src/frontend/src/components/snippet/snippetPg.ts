@@ -11,6 +11,7 @@ import { FunctionComponent, useContext, useEffect, useState} from "react"
 import AppState from "../../MobX/AppState"
 import MainState from "../../MobX/MainState"
 import { observer } from "mobx-react-lite"
+import ENDPOINTS, { API_PREFIX } from "../../url"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -23,9 +24,24 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const tg = state.app.taskGroup
 
     useEffect(() => {
-        client.get(`{ENDPOINTS.get.snippet}${state.app.language1}/${state.app.language2}/${state.app.taskGroup}`)
+        client.get(`${API_PREFIX}get/${ENDPOINTS.get.language}`)
         .then((r: any) => {
-            console.log("Response")
+            console.log("Languages")
+            console.dir(r)
+            if (r.data) {
+                state.app.setLanguages(r.data)
+            }
+        }).catch((e: any) => {
+            console.log("Error")
+            console.dir(e)
+        })
+    })
+    useEffect(() => {
+        
+
+        client.get(`${API_PREFIX}get/${ENDPOINTS.get.snippet}${state.app.language1}/${state.app.language2}/${state.app.taskGroup}`)
+        .then((r: any) => {
+            console.log("Snippets")
             console.dir(r)
             if (r.data) {
                 setSnippets(r.data)

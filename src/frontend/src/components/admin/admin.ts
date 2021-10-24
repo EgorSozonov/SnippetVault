@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom';
 import EditableList from '../../commonComponents/editableList/editableList';
 import PATHS from '../../path';
-import Language from '../../types/language';
+import LanguageDTO from '../../types/LanguageDTO';
 import TaskGroup from '../../types/taskGroup';
 import Alternative from './alternative';
 import NewProposal from './newProposal';
@@ -15,13 +15,13 @@ const groups: TaskGroup[] = [
     {id: 3, name: "Common types & operations on them"},
 ]
 
-const langs: Language[] = [
+const langs: LanguageDTO[] = [
     {id: 1, name: "C#", languageGroup: "Universal", },
     {id: 2, name: "C++", languageGroup: "Universal", },
     {id: 3, name: "Typescript", languageGroup: "Universal", },
 ]
 const ListTaskGroups = (props: any) => EditableList<TaskGroup>(props)
-const ListLanguages = (props: any) => EditableList<Language>(props)
+const ListLanguages = (props: any) => EditableList<LanguageDTO>(props)
 
 function Admin() {
     return html`

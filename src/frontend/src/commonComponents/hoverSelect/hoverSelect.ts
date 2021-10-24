@@ -4,21 +4,22 @@ import { html } from 'htm/react'
 import MainState from "../../MobX/MainState"
 import { StoreContext } from "../../app"
 import {observer} from 'mobx-react-lite'
+import SelectChoice from "../../types/SelectChoice"
 
 
 type Props = {
-    choices: string[],
+    choices: SelectChoice[],
     uniqueName: string,
-    selectCallback: (c: string) => void,
+    selectCallback: (c: SelectChoice) => void,
 }
 
 const HoverSelect: React.FunctionComponent<Props> = observer(({choices, uniqueName, selectCallback, }) => {
-    const [currValue, setCurrValue] = useState(" ")
+    const [currValue, setCurrValue] = useState({id: 0, name: ""})
     const mainState = useContext<MainState>(StoreContext)
     const currentlyOpen = mainState.app.openSelect
     const isOpen = currentlyOpen === uniqueName
 
-    const onSelect = (c: string) => {
+    const onSelect = (c: SelectChoice) => {
         setCurrValue(c)
         selectCallback(c)
         mainState.app.setOpenSelect("")
@@ -44,7 +45,7 @@ const HoverSelect: React.FunctionComponent<Props> = observer(({choices, uniqueNa
                 <ul class="list">
                     <li>
                         <ul class="optgroup">
-                            ${choices.map((c: string, idx: number) => {
+                            ${choices.map((c: SelectChoice, idx: number) => {
                                 return html`<li key=${idx} onClick=${() => onSelect(c)}>${c}</li>`
                             })}
                         </ul>

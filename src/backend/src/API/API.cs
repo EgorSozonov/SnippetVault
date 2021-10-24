@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Npgsql;
 using System;
+using System.Web;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+    using System.IO;
 
-
-public static class API {
+    public static class API {
     private static async Task snippet(HttpContext context, IDBContext dbContext) {
         string lang1Str = context.Request.RouteValues["lang1"] as string;
         string lang2Str = context.Request.RouteValues["lang2"] as string;
@@ -160,9 +161,11 @@ public static class API {
             new Tuple<RequestDelegate, string>(addDBContext(alternative, dbContext), "alternative/{taskLanguageId}"),
             new Tuple<RequestDelegate, string>(addDBContext(proposal, dbContext), "proposal"),
         };
+
         homePage = context => {
             //IFileInfo file = null;
-            return context.Response.WriteAsync("Index.html");
+            var indexHtml = File.ReadAllText("bin/StaticFiles/index.html");
+            return context.Response.WriteAsync(indexHtml);            
         };
     }
 
