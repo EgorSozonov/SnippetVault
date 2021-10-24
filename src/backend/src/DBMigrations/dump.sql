@@ -150,7 +150,7 @@ CREATE TABLE sv.comment (
     "userId" integer NOT NULL,
     "snippetId" integer NOT NULL,
     content text NOT NULL,
-    "dateComment" timestamp with time zone NOT NULL
+    "tsUpload" timestamp with time zone NOT NULL
 );
 
 
@@ -226,7 +226,8 @@ CREATE TABLE sv.snippet (
     "taskLanguageId" integer NOT NULL,
     content text NOT NULL,
     "isApproved" bit(1) DEFAULT (0)::bit(1) NOT NULL,
-    score integer DEFAULT 0 NOT NULL
+    score integer DEFAULT 0 NOT NULL,
+    "tsUpload" timestamp with time zone NOT NULL DEFAULT '2021-09-01 00:00:00+03'::timestamp with time zone
 );
 
 
@@ -255,7 +256,8 @@ ALTER TABLE sv.snippet ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 CREATE TABLE sv.task (
     id integer NOT NULL,
     name character varying(128) NOT NULL,
-    "taskGroupId" integer NOT NULL
+    "taskGroupId" integer NOT NULL,
+    description character varying(256) COLLATE pg_catalog."default" NOT NULL DEFAULT ''::character varying
 );
 
 
