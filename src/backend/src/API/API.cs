@@ -54,30 +54,8 @@ public static class API {
     private static async Task language(HttpContext context, IDBContext dbContext) {
         await using (var cmd = new NpgsqlCommand(dbContext.getQueries.language, dbContext.conn)) { 
             cmd.Prepare();
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                try {                    
-                    string[] columnNames = new string[reader.FieldCount];
-                    for (int i = 0; i < reader.FieldCount; ++i) {
-                        columnNames[i] = reader.GetName(i);
-                    }
-                    var readerSnippet = new DBDeserializer<LanguageDTO>(columnNames);
-                    if (!readerSnippet.isOK)  {
-                        await context.Response.WriteAsync("Error");
-                        return;
-                    }
-
-                    var results = readerSnippet.readResults(reader, out string errMsg);
-                    if (errMsg != "") {
-                        await context.Response.WriteAsync(errMsg);
-                        return;
-                    }
-                    await context.Response.WriteAsJsonAsync<List<LanguageDTO>>(results);
-                    return;
-                } catch (Exception e) {
-                    Console.WriteLine(e.Message);
-                    await context.Response.WriteAsync("Exception");
-                    return;
-                }                
+            await using (var reader = await cmd.ExecuteReaderAsync()) {                 
+                await readResultSet<LanguageDTO>(reader, context.Response);             
             }
         }
     }
@@ -85,49 +63,44 @@ public static class API {
     private static async Task taskGroup(HttpContext context, IDBContext dbContext) {
         await using (var cmd = new NpgsqlCommand(dbContext.getQueries.taskGroup, dbContext.conn)) { 
             cmd.Prepare();
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                try {                    
-                    await readResultSet<TaskGroupDTO>(reader, context.Response);
-                } catch (Exception e) {
-                    Console.WriteLine(e.Message);
-                    await context.Response.WriteAsync("Exception");
-                    return;
-                }                
+            await using (var reader = await cmd.ExecuteReaderAsync()) {                                   
+                await readResultSet<TaskGroupDTO>(reader, context.Response);                               
             }
         }
     }
 
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {
-        string[] columnNames = new string[reader.FieldCount];
-        for (int i = 0; i < reader.FieldCount; ++i) {
-            columnNames[i] = reader.GetName(i);
-        }
-        var readerSnippet = new DBDeserializer<T>(columnNames);
-        if (!readerSnippet.isOK)  {
-            await response.WriteAsync("Error");
-            return;
-        }
+        try {                    
+            string[] columnNames = new string[reader.FieldCount];
+            for (int i = 0; i < reader.FieldCount; ++i) {
+                columnNames[i] = reader.GetName(i);
+            }
+            var readerSnippet = new DBDeserializer<T>(columnNames);
+            if (!readerSnippet.isOK)  {
+                await response.WriteAsync("Error");
+                return;
+            }
 
-        var results = readerSnippet.readResults(reader, out string errMsg);
-        if (errMsg != "") {
-            await response.WriteAsync(errMsg);
+            var results = readerSnippet.readResults(reader, out string errMsg);
+            if (errMsg != "") {
+                await response.WriteAsync(errMsg);
+                return;
+            }
+            await response.WriteAsJsonAsync<List<T>>(results);
             return;
-        }
-        await response.WriteAsJsonAsync<List<T>>(results);
-        return;
+        } catch (Exception e) {
+            Console.WriteLine(e.Message);
+            await response.WriteAsync("Exception");
+            return;
+        }  
     }
+
 
     private static async Task proposal(HttpContext context, IDBContext dbContext) {
         await using (var cmd = new NpgsqlCommand(dbContext.getQueries.proposal, dbContext.conn)) { 
             cmd.Prepare();
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                try {                    
-                    await readResultSet<ProposalDTO>(reader, context.Response);
-                } catch (Exception e) {
-                    Console.WriteLine(e.Message);
-                    await context.Response.WriteAsync("Exception");
-                    return;
-                }                
+            await using (var reader = await cmd.ExecuteReaderAsync()) {                                   
+                await readResultSet<ProposalDTO>(reader, context.Response);                            
             }
         }
     }
