@@ -31,7 +31,7 @@ using Microsoft.AspNetCore.Routing;
 
     private static async Task language(HttpContext context, IDBContext dbContext) {
         await using (var cmd = new NpgsqlCommand(dbContext.getQueries.language, dbContext.conn)) { 
-            cmd.Prepare();
+            //cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {                 
                 await readResultSet<LanguageDTO>(reader, context.Response);             
             }
@@ -40,7 +40,7 @@ using Microsoft.AspNetCore.Routing;
 
     private static async Task taskGroup(HttpContext context, IDBContext dbContext) {
         await using (var cmd = new NpgsqlCommand(dbContext.getQueries.taskGroup, dbContext.conn)) { 
-            cmd.Prepare();
+            //cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {                                   
                 await readResultSet<TaskGroupDTO>(reader, context.Response);                               
             }

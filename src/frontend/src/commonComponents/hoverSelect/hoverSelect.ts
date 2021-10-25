@@ -14,6 +14,7 @@ type Props = {
 }
 
 const HoverSelect: React.FunctionComponent<Props> = observer(({choices, uniqueName, selectCallback, }) => {
+    console.log("Hover select")
     const [currValue, setCurrValue] = useState({id: 0, name: ""})
     const mainState = useContext<MainState>(StoreContext)
     const currentlyOpen = mainState.app.openSelect
@@ -27,8 +28,7 @@ const HoverSelect: React.FunctionComponent<Props> = observer(({choices, uniqueNa
 
     const onClickHeader = () => {
         if (isOpen) {
-            mainState.app.setOpenSelect("")
-            
+            mainState.app.setOpenSelect("")            
         } else {
             mainState.app.setOpenSelect(uniqueName)
         }
@@ -38,7 +38,7 @@ const HoverSelect: React.FunctionComponent<Props> = observer(({choices, uniqueNa
                 onMouseLeave=${() => mainState.app.setOpenSelect("")}>            
             <span class="search" onClick=${onClickHeader}>
                 <span class="leftButton"></span>
-                <span class="rightLabel">${currValue}</span>
+                <span class="rightLabel">${currValue.name}</span>
             </span>
             
             <div class=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
@@ -46,7 +46,7 @@ const HoverSelect: React.FunctionComponent<Props> = observer(({choices, uniqueNa
                     <li>
                         <ul class="optgroup">
                             ${choices.map((c: SelectChoice, idx: number) => {
-                                return html`<li key=${idx} onClick=${() => onSelect(c)}>${c}</li>`
+                                return html`<li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
                             })}
                         </ul>
                     </li>

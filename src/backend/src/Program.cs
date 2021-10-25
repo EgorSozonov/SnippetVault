@@ -23,7 +23,7 @@ class Program {
                     reloadOnChange: false);
             })
             .ConfigureServices(serviceCollection =>
-                serviceCollection.AddSingleton<IDBContext, DBContext>())
+                serviceCollection.AddScoped<IDBContext, DBContext>())
             .UseStartup<Launcher>();
     }
 }
