@@ -6,9 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 class Program {
     static void Main(string[] args) {
-        CreateWebHostBuilder(args).UseUrls("http://localhost:47000/")
-
-            .UseKestrel().Build().Run();
+        CreateWebHostBuilder(args)
+            .UseUrls("http://localhost:47000/")
+            .UseKestrel()
+            .Build()
+            .Run();
     }
 
 

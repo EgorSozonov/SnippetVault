@@ -20,17 +20,13 @@ public class DBDeserializer<T> where T : class, new() {
 
     public DBDeserializer(string[] queryColumns){
         this.isOK = true;
-        determineTypeProperties(queryColumns, out columnTargets,
-           out settersInt,
-           out settersDouble,
-           out settersDecimal,
-           out settersString,
-           out string errMsg);
-        if (errMsg != "") {
-            isOK = false;
-            return;
-        }
-
+        determineTypeProperties(queryColumns, 
+                                out columnTargets,
+                                out settersInt,
+                                out settersDouble,
+                                out settersDecimal,
+                                out settersString,
+                                out string errMsg);
         if (errMsg != "") {
             isOK = false;
             return;
@@ -48,8 +44,7 @@ public class DBDeserializer<T> where T : class, new() {
         var properties = typeof(T).GetProperties();
         propTargets = new PropTarget[numProps];
        
-        settersInt = new List<Action<T, int>>(numProps);
-        
+        settersInt = new List<Action<T, int>>(numProps);        
         settersString = new List<Action<T, string>>(numProps);
         settersDouble = new List<Action<T, double>>(numProps);
         settersDecimal = new List<Action<T, decimal>>(numProps);
@@ -105,7 +100,7 @@ public class DBDeserializer<T> where T : class, new() {
                 } else if (tgt.propType == ValueType.deciml) {
                     settersDecimal[tgt.indexSetter](newVal, reader.GetDecimal(j));       
                 } else if (tgt.propType == ValueType.integr) {                    
-                    settersInt[tgt.indexSetter](newVal, reader.IsDBNull(j) ? 0 : reader.GetInt32(j));                        
+                    settersInt[tgt.indexSetter](newVal, reader.IsDBNull(j) ? 0 : reader.GetInt32(j));                      
                 } else if (tgt.propType == ValueType.strin) {
                     settersString[tgt.indexSetter](newVal, reader.IsDBNull(j) ? "" : reader.GetString(j));
                 }
@@ -116,19 +111,6 @@ public class DBDeserializer<T> where T : class, new() {
         return result;
     }
 
-      
-    private class Pair<T, U> {
-        public T fst { get; set; }
-        public U snd { get; set; }
-
-
-        public Pair(T _fst, U _snd){
-            fst = _fst;
-            snd = _snd;
-        }
-    }
-
-
     public enum ValueType {
         integr,
         doubl,
@@ -137,9 +119,5 @@ public class DBDeserializer<T> where T : class, new() {
         // TODO add dates, datetimes and booleans
     }
 }
-
-
-
-
 
 }
