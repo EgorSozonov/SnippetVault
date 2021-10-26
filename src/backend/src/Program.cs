@@ -24,7 +24,7 @@ class Program {
             })
             .ConfigureServices(serviceCollection =>
                 serviceCollection.AddScoped<IDBContext, DBContext>())
-            .UseStartup<Launcher>();
+            .UseStartup<WebApp>();
     }
 }
 

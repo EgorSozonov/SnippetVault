@@ -9,12 +9,12 @@ using Microsoft.Extensions.Hosting;
 using System.IO;
 
 
-public class Launcher {
+public class WebApp {
     public IConfiguration configuration { get; }
     public IDBContext dbContext { get; }
 
 
-    public Launcher(IConfiguration _configuration, IDBContext _db)    {
+    public WebApp(IConfiguration _configuration, IDBContext _db)    {
         configuration = _configuration;
         dbContext = _db;
     }
@@ -22,7 +22,7 @@ public class Launcher {
     public void ConfigureServices(IServiceCollection services) {
         services.Configure<WebConfig>(this.configuration);
         services.AddSingleton<IConfiguration>(this.configuration);
-        
+        services.AddControllers();
         services.AddRouting();
     }
 
@@ -45,7 +45,11 @@ public class Launcher {
         });
         app.UseRouting();
 
-        app.UseEndpoints(x => API.configure(x, dbContext));
+        app.UseEndpoints(x => {
+            x.MapControllers();
+            x.MapGet("/", API.homePage);
+        });
+
         //    endpoints => {
         //     endpoints.MapGet("/", async context => {
         //         await context.Response.WriteAsync("Hello World!");

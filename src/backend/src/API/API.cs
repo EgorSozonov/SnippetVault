@@ -7,112 +7,138 @@ using System.Web;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-    using System.IO;
+using System.IO;
+using Microsoft.AspNetCore.Mvc;
 
-    public static class API {
-    private static async Task snippet(HttpContext context, IDBContext dbContext) {
-        string lang1Str = context.Request.RouteValues["lang1"] as string;
-        string lang2Str = context.Request.RouteValues["lang2"] as string;
-        string tgStr = context.Request.RouteValues["taskGroup"] as string;
+[Controller]
+[Route("/api/v1/get")]
+public class API : Controller {
+    private readonly IDBContext db;
+    public API(IDBContext _db) {
+        this.db = _db;
+    }
+
+    [HttpGet]
+    [Route("snippet/{lang1}/{lang2}/{taskGroup}")]
+    public async Task snippet() {
+        string lang1Str = HttpContext.Request.RouteValues["lang1"] as string;
+        string lang2Str = HttpContext.Request.RouteValues["lang2"] as string;
+        string tgStr = HttpContext.Request.RouteValues["taskGroup"] as string;
         if (!int.TryParse(lang1Str, out int lang1)) return;
         if (!int.TryParse(lang2Str, out int lang2)) return;
         if (!int.TryParse(tgStr, out int taskGroup)) return;
 
-        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.snippet, dbContext.conn)) { 
+        await using (var cmd = new NpgsqlCommand(db.getQueries.snippet, db.conn)) { 
             cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
             cmd.Parameters.AddWithValue("l2", NpgsqlTypes.NpgsqlDbType.Integer, lang2);
             cmd.Parameters.AddWithValue("tg", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
             cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {
-                await readResultSet<SnippetDTO>(reader, context.Response);
+                await readResultSet<SnippetDTO>(reader, HttpContext.Response);
             }
         }
     }
 
-    private static async Task language(HttpContext context, IDBContext dbContext) {
-        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.language, dbContext.conn)) { 
+    [HttpGet]
+    [Route("language")]
+    public async Task language() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.language, db.conn)) { 
             //cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {                 
-                await readResultSet<LanguageDTO>(reader, context.Response);             
+                await readResultSet<LanguageDTO>(reader, HttpContext.Response);             
             }
         }
     }
 
-    private static async Task taskGroup(HttpContext context, IDBContext dbContext) {
-        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.taskGroup, dbContext.conn)) { 
+    [HttpGet]
+    [Route("taskGroup")]
+    public async Task taskGroup() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroup, db.conn)) { 
             //cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {                                   
-                await readResultSet<TaskGroupDTO>(reader, context.Response);                               
+                await readResultSet<TaskGroupDTO>(reader, HttpContext.Response);                               
             }
         }
     }    
 
-    private static async Task proposal(HttpContext context, IDBContext dbContext) {
-        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.proposal, dbContext.conn)) { 
+    [HttpGet]
+    [Route("proposal")]
+    public async Task proposal() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.proposal, db.conn)) { 
             cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {                                   
-                await readResultSet<ProposalDTO>(reader, context.Response);                            
+                await readResultSet<ProposalDTO>(reader, HttpContext.Response);                            
             }
         }
     }
 
-    private static async Task task(HttpContext context, IDBContext dbContext) {
-        string tgIdStr = context.Request.RouteValues["taskGroupId"] as string;
+    [HttpGet]
+    [Route("task/{taskGroupId}")]
+    public async Task task() {
+        string tgIdStr = HttpContext.Request.RouteValues["taskGroupId"] as string;
         if (!int.TryParse(tgIdStr, out int tgId)) return;
-        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.task, dbContext.conn)) { 
+        await using (var cmd = new NpgsqlCommand(db.getQueries.task, db.conn)) { 
             cmd.Parameters.AddWithValue("tg", NpgsqlTypes.NpgsqlDbType.Integer, tgId);
             cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {                                   
-                await readResultSet<TaskDTO>(reader, context.Response);                            
+                await readResultSet<TaskDTO>(reader, HttpContext.Response);                            
             }
         }
     }
 
-    private static async Task taskGroupsForLanguage(HttpContext context, IDBContext dbContext) {
-        string paramStr = context.Request.RouteValues["langId"] as string;
+    [HttpGet]
+    [Route("taskGroupsForLanguage/{langId1}")]
+    public async Task taskGroupsForLanguage() {
+        string paramStr = HttpContext.Request.RouteValues["langId"] as string;
         if (!int.TryParse(paramStr, out int langId)) return;
-        await taskGroupsForArrayLanguages(new int[] {langId}, context, dbContext);
+        await taskGroupsForArrayLanguages(new int[] {langId}, HttpContext);
     }
 
-    private static async Task taskGroupsForLanguages(HttpContext context, IDBContext dbContext) {
-        string paramStr1 = context.Request.RouteValues["langId1"] as string;
-        string paramStr2 = context.Request.RouteValues["langId2"] as string;
+    [HttpGet]
+    [Route("taskGroupsForLanguages/{langId1}/{langId2}")]
+    public async Task taskGroupsForLanguages() {
+        string paramStr1 = HttpContext.Request.RouteValues["langId1"] as string;
+        string paramStr2 = HttpContext.Request.RouteValues["langId2"] as string;
         if (!int.TryParse(paramStr1, out int langId1)) return;
         if (!int.TryParse(paramStr2, out int langId2)) return;
-        await taskGroupsForArrayLanguages(new int[] {langId1, langId2}, context, dbContext);
+        await taskGroupsForArrayLanguages(new int[] {langId1, langId2}, HttpContext);
     }
 
 
-    private static async Task taskGroupsForArrayLanguages(int[] langs, HttpContext context, IDBContext dbContext) {        
-        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.taskGroupsForLanguages, dbContext.conn)) { 
+    private async Task taskGroupsForArrayLanguages(int[] langs, HttpContext context) {        
+        await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroupsForLanguages, db.conn)) { 
             cmd.Parameters.AddWithValue("ls", NpgsqlTypes.NpgsqlDbType.Array|NpgsqlTypes.NpgsqlDbType.Integer, langs);
             cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {
-                await readResultSet<TaskGroupDTO>(reader, context.Response);
+                await readResultSet<TaskGroupDTO>(reader, HttpContext.Response);
             }
         }
     }
 
-    private static async Task alternative(HttpContext context, IDBContext dbContext) {
-        string paramStr = context.Request.RouteValues["taskLanguageId"] as string;
+    [HttpGet]
+    [Route("alternative/{taskLanguageId}")]
+    public async Task alternative() {
+        string paramStr = HttpContext.Request.RouteValues["taskLanguageId"] as string;
         if (!int.TryParse(paramStr, out int taskLanguageId)) return;
-        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.task, dbContext.conn)) { 
+        await using (var cmd = new NpgsqlCommand(db.getQueries.task, db.conn)) { 
             cmd.Parameters.AddWithValue("tl", NpgsqlTypes.NpgsqlDbType.Integer, taskLanguageId);
             cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {                                   
-                await readResultSet<AlternativeDTO>(reader, context.Response);                            
+                await readResultSet<AlternativeDTO>(reader, HttpContext.Response);                            
             }
         }
     }
 
-    private static async Task comment(HttpContext context, IDBContext dbContext) {
-        string paramStr = context.Request.RouteValues["snippetId"] as string;
+    [HttpGet]
+    [Route("comment/{snippetId}")]
+    public async Task comment() {
+        string paramStr = HttpContext.Request.RouteValues["snippetId"] as string;
         if (!int.TryParse(paramStr, out int snippetId)) return;
-        await using (var cmd = new NpgsqlCommand(dbContext.getQueries.task, dbContext.conn)) { 
+        await using (var cmd = new NpgsqlCommand(db.getQueries.task, db.conn)) { 
             cmd.Parameters.AddWithValue("sn", NpgsqlTypes.NpgsqlDbType.Integer, snippetId);
             cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {                                   
-                await readResultSet<CommentDTO>(reader, context.Response);                            
+                await readResultSet<CommentDTO>(reader, HttpContext.Response);                            
             }
         }
     }
@@ -142,40 +168,10 @@ using Microsoft.AspNetCore.Routing;
             return;
         }  
     }
-
-
-    private static RequestDelegate addDBContext(Func<HttpContext, IDBContext, Task> f, IDBContext dBContext) {
-        return x => f(x, dBContext);
-    }
-
-
-    private static void makeDelegates(IDBContext dbContext, out Tuple<RequestDelegate, string>[] delegatesForGetting, out RequestDelegate homePage) {
-        delegatesForGetting = new Tuple<RequestDelegate, string>[] {
-            new Tuple<RequestDelegate, string>(addDBContext(snippet, dbContext), "snippet/{lang1}/{lang2}/{taskGroup}"),
-            new Tuple<RequestDelegate, string>(addDBContext(language, dbContext), "language"),
-            new Tuple<RequestDelegate, string>(addDBContext(task, dbContext), "task/{taskGroupId}"),
-            new Tuple<RequestDelegate, string>(addDBContext(taskGroupsForLanguage, dbContext), "taskGroupsForLanguage/{langId}"),
-            new Tuple<RequestDelegate, string>(addDBContext(taskGroupsForLanguages, dbContext), "taskGroupsForLanguages/{langId1}/{langId2}"),
-            new Tuple<RequestDelegate, string>(addDBContext(taskGroup, dbContext), "taskGroup"),
-            new Tuple<RequestDelegate, string>(addDBContext(comment, dbContext), "comment/{snippetId}"),
-            new Tuple<RequestDelegate, string>(addDBContext(alternative, dbContext), "alternative/{taskLanguageId}"),
-            new Tuple<RequestDelegate, string>(addDBContext(proposal, dbContext), "proposal"),
-        };
-
-        homePage = context => {
-            //IFileInfo file = null;
-            var indexHtml = File.ReadAllText("bin/StaticFiles/index.html");
-            return context.Response.WriteAsync(indexHtml);            
-        };
-    }
-
-
-    public static void configure(IEndpointRouteBuilder builder, IDBContext dbContext) {
-        makeDelegates(dbContext, out var delsForGetting, out var homePage);
-        foreach (var del in delsForGetting) {
-            builder.MapGet("/api/v1/get/" + del.Item2, del.Item1);
-        }
-        builder.MapGet("/", homePage);
+    
+    public static async Task homePage(HttpContext context) {
+        var indexHtml = System.IO.File.ReadAllText("bin/StaticFiles/index.html");
+        await context.Response.WriteAsync(indexHtml);
     }
 }
 

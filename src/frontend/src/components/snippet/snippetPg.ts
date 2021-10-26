@@ -13,7 +13,17 @@ import MainState from "../../MobX/MainState"
 import { observer } from "mobx-react-lite"
 import ENDPOINTS, { API_PREFIX } from "../../url"
 
+function nullify(x: Foo) {
+    x.fld = null
+}
 
+type SubFoo = {
+    subfld: string
+}
+
+type Foo = {
+    fld: SubFoo | null
+}
 const SnippetPg: FunctionComponent = observer(({}: any) => {
     console.log("SnippetPg!!")
     const state = useContext<MainState>(StoreContext)
@@ -22,6 +32,13 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const lang1 = state.app.language1
     const lang2 = state.app.language2
     const tg = state.app.taskGroup
+
+    const x = {fld: {subfld: "asf"}}
+    
+    if (x.fld !== null) {
+        nullify(x)
+        console.log(x.fld.subfld)
+    }
 
     useEffect(() => {
         console.log(`get/${ENDPOINTS.get.language}`)
