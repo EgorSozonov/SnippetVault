@@ -7,7 +7,6 @@ const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const WebpackBundleAnalyzer = require("webpack-bundle-analyzer")
 
-
 module.exports = (env, args) => {
 	const isProduction = args && args["mode"] === "production";
 	console.log('');
@@ -118,7 +117,15 @@ module.exports = (env, args) => {
                 title: "Snippet Vault",
                 template: "./public/template.html"
             }),
-            new WebpackBundleAnalyzer.BundleAnalyzerPlugin(),
+            new CopyWebpackPlugin({
+                patterns: [
+                    {
+                        from: path.resolve("./target/"),
+                        to: path.resolve("../backend/bin/StaticFiles/")
+                    }
+                ]
+            })
+            //new WebpackBundleAnalyzer.BundleAnalyzerPlugin(),
 		],
 	};
 

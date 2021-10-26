@@ -9,11 +9,9 @@ import "./app.css"
 
 
 const Content: React.FunctionComponent = () => {
-    console.log("Content render")
     return html`
     <${BrowserRouter}>
-        <div class="browserRouter">
-            a
+        <div class="browserRouter">            
             <${Switch}>
                 <${Route} exact=${true} path=${PATHS["snippet"].url}>
                     b
