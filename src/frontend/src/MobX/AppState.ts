@@ -38,6 +38,6 @@ export default class AppState {
     }) 
 
     setTaskGroups = action((newValue: TaskGroupDTO[]): void => {
-        this.languages = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name}}))
+        this.taskGroups = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name}}))
     })  
 }

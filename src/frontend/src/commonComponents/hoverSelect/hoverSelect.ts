@@ -14,7 +14,6 @@ type Props = {
 }
 
 const HoverSelect: React.FunctionComponent<Props> = observer(({choices, uniqueName, selectCallback, }) => {
-    console.log("Hover select")
     const [currValue, setCurrValue] = useState({id: 0, name: ""})
     const mainState = useContext<MainState>(StoreContext)
     const currentlyOpen = mainState.app.openSelect

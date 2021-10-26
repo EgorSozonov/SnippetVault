@@ -24,6 +24,11 @@ public class WebApp {
         services.AddSingleton<IConfiguration>(this.configuration);
         services.AddControllers();
         services.AddRouting();
+        services.AddCors(o => o.AddPolicy("SVCorsPolicy", builder => {
+            builder.WithOrigins("http://localhost:47001")
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        }));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env){
@@ -33,6 +38,8 @@ public class WebApp {
             app.UseExceptionHandler("/Error");
             app.UseHsts();
         }        
+
+        app.UseCors("SVCorsPolicy");
 
         //app.UseHttpsRedirection();
         DefaultFilesOptions options = new DefaultFilesOptions();

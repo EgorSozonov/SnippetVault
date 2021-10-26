@@ -76,15 +76,15 @@ public class DBDeserializer<T> where T : class, new() {
             } else if (tp.snd == typeof(double)) {
                 settersDouble.Add((Action<T, double>) Delegate.CreateDelegate(typeof(Action<T, double>), null,
                        typeof(T).GetProperty(tp.fst).GetSetMethod()));
-                propTargets[i] = new PropTarget() { indexSetter = settersInt.Count - 1, propType = ValueType.doubl};    
+                propTargets[i] = new PropTarget() { indexSetter = settersDouble.Count - 1, propType = ValueType.doubl};    
             } else if (tp.snd == typeof(decimal)) {                
                 settersDecimal.Add((Action<T, decimal>) Delegate.CreateDelegate(typeof(Action<T, decimal>), null,
                        typeof(T).GetProperty(tp.fst).GetSetMethod()));
-                propTargets[i] = new PropTarget() { indexSetter = settersInt.Count - 1, propType = ValueType.deciml};
+                propTargets[i] = new PropTarget() { indexSetter = settersDecimal.Count - 1, propType = ValueType.deciml};
             } else if (tp.snd == typeof(string)) {
                 settersString.Add((Action<T, string>) Delegate.CreateDelegate(typeof(Action<T, string>), null,
                                   typeof(T).GetProperty(tp.fst).GetSetMethod()));
-                propTargets[i] = new PropTarget() { indexSetter = settersInt.Count - 1, propType = ValueType.strin};
+                propTargets[i] = new PropTarget() { indexSetter = settersString.Count - 1, propType = ValueType.strin};
             } else {
                 errMsg = $"Unsupported column type ${tp.snd}; only Int, Double, Decimal and String columns are supported!";
                 return;

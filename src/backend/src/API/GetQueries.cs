@@ -28,7 +28,7 @@ public class GetPGQueries  {
 				LEFT JOIN sv.snippet sn2 ON sn2.id=tl2.""primarySnippetId""
 				WHERE t.""taskGroupId""=@tg;", 
             language=@"
-                SELECT l.id, l.name, lg.name AS ""languageGroup"" FROM sv.language l
+                SELECT l.id, l.name AS name, lg.name AS ""languageGroup"" FROM sv.language l
 				JOIN sv.""languageGroup"" lg ON l.""languageGroupId""=lg.id;", 
             task=@"SELECT id, name, description FROM sv.""task"" WHERE ""taskGroupId""=@tg;",
             taskGroup= @"SELECT id, name FROM sv.""taskGroup"" WHERE ""isDeleted""=0::bit;",

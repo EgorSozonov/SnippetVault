@@ -10,7 +10,7 @@ type Props = {
 function SnippetCode({content, isRight, } : Props) {
     const snippetContent = html`
         <pre class="snippetCode">
-            {content}
+            ${content}
         </pre>
         `
     return html`
