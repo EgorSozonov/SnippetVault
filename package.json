@@ -17,6 +17,7 @@
         "@svgr/webpack": "5.5.0",
         "@types/node": "^12.20.19",
         "@types/react-dom": "^17.0.9",
+        "@types/webpack": "^5.28.0",
         "bfj": "^7.0.2",
         "camelcase": "^6.1.0",
         "case-sensitive-paths-webpack-plugin": "2.3.0",
@@ -44,6 +45,7 @@
         "style-loader": "1.3.0",
         "terser-webpack-plugin": "4.2.3",
         "ts-loader": "^9.2.6",
+        "ts-node": "^10.4.0",
         "ts-pnp": "1.2.0",
         "typescript": "^4.3.5",
         "url-loader": "4.1.1",
@@ -55,9 +57,21 @@
         "webpack-manifest-plugin": "^4.0.2"
     },
     "scripts": {
-        "start": "webpack serve --config ./webpack.config.js --mode development --host 0.0.0.0",
         "build": "yarn autoclean && webpack --config ./webpack.config.js --mode production --progress",
-        "test": "node scripts/test.js"
+        "test": "node scripts/test.js",
+        "clean:build": "rm -rf target/*",
+        "clean:build:win": "rimraf \"public\\build\\*",
+        "build:client:dev": "webpack --config ./src/frontend/config/webpack.frontend.dev.ts --watch",
+        "build:server:dev": "webpack --config ./src/backend/config/webpack.backend.dev.ts --watch",
+        "build:client:prod": "webpack --config ./src/frontend/config/webpack.frontend.prod.ts --mode production",
+        "build:server:prod": "webpack --config ./src/backend/config/webpack.backend.prod.ts --mode production",
+        "start:server:prod": "export NODE_ENV=production && node ./dist/server.*.js",
+        "start:iso:dev": "export NODE_ENV=development && yarn run clean:build && yarn run build:client:dev & wait-on public/build/index-dev.html && yarn run build:server:dev --inspect",
+        "start:iso:dev:win": "yarn run clean:build:win && set NODE_ENV=development&& concurrently \"yarn run build:client:dev\" \"wait-on public\\build\\index-dev.html && yarn run build:server:dev\"",
+        "start:iso:prod": "yarn run build:client:prod && yarn run build:server:prod && yarn run start:server:prod",
+        "heroku-prebuild": "yarn i --unsafe-perm --dev node-sass && yarn install --dev",
+        "heroku-postbuild": "yarn install --dev webpack",
+        "start": "yarn run start:iso:prod"
     },
     "browserslist": {
         "production": [
@@ -71,9 +85,5 @@
             "last 1 safari version"
         ]
     },
-    "babel": {
-        "presets": [
-            "@babel/preset-react"
-        ]
-    }
+    "author": "Egor Sozonov"
 }
