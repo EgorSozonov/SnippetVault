@@ -4,6 +4,7 @@ target/*
 build/*
 bin/*
 src/frontend/node_modules/*
+node_modules/*
 **/.vscode/*
 src/**/.DS_Store
 src/frontend/dist/*
