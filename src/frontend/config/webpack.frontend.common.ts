@@ -1,19 +1,13 @@
-const webpack = require("webpack");
-const path = require("path");
-const TerserPlugin = require("terser-webpack-plugin");
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CssMinimizerWebpackPlugin = require("css-minimizer-webpack-plugin")
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
-const HtmlWebpackPlugin = require("html-webpack-plugin")
-const WebpackBundleAnalyzer = require("webpack-bundle-analyzer")
+import webpack from "webpack";
+import path from "path";
+import CopyWebpackPlugin from "copy-webpack-plugin";
+import CssMinimizerWebpackPlugin from "css-minimizer-webpack-plugin";
+import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
+import HtmlWebpackPlugin from "html-webpack-plugin";
 
-module.exports = (args: any) => {
-	const isProduction = args && args["mode"] === "production";
-	console.log('');
-	console.log(isProduction ? "PRODUCTION BUILD" : "DEVELOPMENT BUILD");
-	console.log('');
 
-	const config = {
+const common = {
+
 		entry: {
 			"snippetVault": path.resolve("./src/frontend/app.ts"),
 		},
@@ -21,7 +15,6 @@ module.exports = (args: any) => {
 			path: path.resolve("./target")
 		},
 		target: "web",
-		devtool: isProduction ? false : "source-map",
 		optimization: {
 			splitChunks: {
 				// always create vendor.js
@@ -116,26 +109,17 @@ module.exports = (args: any) => {
             new HtmlWebpackPlugin({
                 title: "Snippet Vault",
                 template: "./public/template.html"
-            }),
-            // new CopyWebpackPlugin({
-            //     patterns: [
-            //         {
-            //             from: path.resolve("./target/"),
-            //             to: path.resolve("../backend/bin/StaticFiles/")
-            //         }
-            //     ]
-            // })
-            //new WebpackBundleAnalyzer.BundleAnalyzerPlugin(),
-		],
-	};
+        }),
+        // new CopyWebpackPlugin({
+        //     patterns: [
+        //         {
+        //             from: path.resolve("./target/"),
+        //             to: path.resolve("../backend/bin/StaticFiles/")
+        //         }
+        //     ]
+        // })
+        //new WebpackBundleAnalyzer.BundleAnalyzerPlugin(),
+	],
+}
 
-	if (isProduction) {
-		config.optimization.minimize = true;
-		config.optimization.minimizer = [
-			new TerserPlugin({extractComments: false}),
-			new CssMinimizerWebpackPlugin({}),
-		]
-	}
-
-	return config;
-};
+export default common

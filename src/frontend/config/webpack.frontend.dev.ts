@@ -1,33 +1,26 @@
 
-const path = require("path");
-const nodeExternals = require("webpack-node-externals");
-const merge = require("webpack-merge");
-const common = require("./webpack.backend.common.ts");
-const webpack = require("webpack");
-const StartServerPlugin = require("start-server-webpack-plugin");
-
+import path from "path";
+import merge from "webpack-merge";
+import common from "./webpack.frontend.common";
+import webpack from "webpack";
+import StartServerPlugin from "start-server-webpack-plugin";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
 module.exports = merge(common, {
-    mode: "development",
-    externals: nodeExternals({
-        whitelist: ["webpack/hot/poll?1000"]
-    }),
-    entry: [ "webpack/hot/poll?1000", "./src/server/index" ],
+    mode: 'development',
     output: {
-        filename: "server.js",
-        publicPath: "/assets/"
+        filename: 'bundle.js'
     },
+    devtool: false,
     plugins: [
-        new StartServerPlugin({
-            "name": "server.js", nodeArgs: ["--inspect"]
-        }),
-        new webpack.NamedModulesPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.DefinePlugin({
-            "process.env": {
-                "BUILD_TARGET": JSON.stringify("server")
-            }
-        })
+    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({
+      filename: 'index-dev.html',
+      template: './src/common/html/index-dev.html'
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'style-dev.css',
+    })
     ]
 });
