@@ -18,7 +18,7 @@ const webpackFrontend = (args: any): Configuration => {
 			"snippetVault": path.resolve("./src/frontend/App.ts"),
 		},
 		output: {
-			path: path.resolve("./target")
+			path: path.resolve("./target/frontend")
 		},
 		target: "web",
 		devtool: isProduction ? false : "source-map",
@@ -89,7 +89,6 @@ const webpackFrontend = (args: any): Configuration => {
 			headers: {
 				'Access-Control-Allow-Origin': '*'
 			},
-			static: {directory: "./target", publicPath: "/", },
 			compress: false,
 			port: 47001,
 			historyApiFallback: true,

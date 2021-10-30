@@ -9,29 +9,26 @@ const webpackBackend = (args: any): Configuration => {
 	console.log('');
 	console.log(isProduction ? "PRODUCTION BUILD" : "DEVELOPMENT BUILD");
 	console.log('');
+    if (isProduction === true) {
+        require('dotenv').config({ path: `.env.production` })
+    }
+    
 
 	const config: Configuration = {
 		entry: {
-			"snippetVault": path.resolve("./src/backend/App.ts"),
+			"snippetVaultBackend": path.resolve("./src/backend/Server.ts"),
 		},
 		output: {
-			path: path.resolve("./target")
+			path: path.resolve("./target/backend")
 		},
-		target: "web",
+		target: "node",
+        node: {
+            __dirname: false,
+            __filename: false,
+        },
 		devtool: isProduction ? false : "source-map",
 		optimization: {
-            minimize: isProduction,
-			splitChunks: {
-				// always create vendor.js
-				cacheGroups: {
-					vendor: {
-						test: /[\\/]node_modules[\\/]/,
-						name: "vendor",
-						chunks: "initial",
-						enforce: true,
-					},
-				},
-			},
+            minimize: isProduction,			
 		},
 		resolve: {
 			extensions: [".ts", ".js", ".json"],
@@ -53,10 +50,6 @@ const webpackBackend = (args: any): Configuration => {
                     test: /\.css$/i,
                     use: ["style-loader", "css-loader"],
                 },
-                {
-                    test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
-                    type: 'asset/inline',
-                },
 				// app main .less file
 				{
 					test: /app\.less$/i,
@@ -66,7 +59,6 @@ const webpackBackend = (args: any): Configuration => {
 							options: {
 								name: 'styles/[name].css',
 							}
-
 						},
 						{
 							loader: 'less-loader',
@@ -86,9 +78,9 @@ const webpackBackend = (args: any): Configuration => {
 			headers: {
 				'Access-Control-Allow-Origin': '*'
 			},
-			static: {directory: "./target", publicPath: "/", },
+			static: {directory: "./target/staticFiles", publicPath: "/", },
 			compress: false,
-			port: 47001,
+			port: 47000,
 			historyApiFallback: true,
 			hot: true,
             magicHtml: false,
@@ -97,11 +89,8 @@ const webpackBackend = (args: any): Configuration => {
 		plugins: [
 			new webpack.EnvironmentPlugin({
 				NODE_ENV: isProduction ? "production" : "development",
-				DEBUG: !isProduction
-			}),
-            new Manifest({
-                fileName: "manifest.json",
-            }),
+				//DEBUG: ""
+			}),            
 			new Copy({
 				patterns: [
 					// static files to the site root folder (index and robots)
