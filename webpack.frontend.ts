@@ -4,10 +4,16 @@ import CopyWebpackPlugin from "copy-webpack-plugin";
 import CssMinimizerWebpackPlugin from "css-minimizer-webpack-plugin";
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import TerserPlugin from "terser-webpack-plugin";
 
 
-const common = {
+const webpackFrontend = (args: any) => {
+	const isProduction = args && args["mode"] === "production";
+	console.log('');
+	console.log(isProduction ? "PRODUCTION BUILD" : "DEVELOPMENT BUILD");
+	console.log('');
 
+	const config = {
 		entry: {
 			"snippetVault": path.resolve("./src/frontend/app.ts"),
 		},
@@ -15,7 +21,15 @@ const common = {
 			path: path.resolve("./target")
 		},
 		target: "web",
+		devtool: isProduction ? false : "source-map",
 		optimization: {
+            minimize: isProduction,
+            minimizer: isProduction 
+                ? [
+        			new TerserPlugin({extractComments: false}),
+        			new CssMinimizerWebpackPlugin({}),
+        		] 
+                : [],
 			splitChunks: {
 				// always create vendor.js
 				cacheGroups: {
@@ -31,6 +45,7 @@ const common = {
 		resolve: {
 			extensions: [".ts", ".js", ".html", ".json"],
 		},
+        
 		module: {
 			rules: [
 				{
@@ -109,17 +124,20 @@ const common = {
             new HtmlWebpackPlugin({
                 title: "Snippet Vault",
                 template: "./public/template.html"
-        }),
-        // new CopyWebpackPlugin({
-        //     patterns: [
-        //         {
-        //             from: path.resolve("./target/"),
-        //             to: path.resolve("../backend/bin/StaticFiles/")
-        //         }
-        //     ]
-        // })
-        //new WebpackBundleAnalyzer.BundleAnalyzerPlugin(),
-	],
-}
+            }),
+            // new CopyWebpackPlugin({
+            //     patterns: [
+            //         {
+            //             from: path.resolve("./target/"),
+            //             to: path.resolve("../backend/bin/StaticFiles/")
+            //         }
+            //     ]
+            // })
+            //new WebpackBundleAnalyzer.BundleAnalyzerPlugin(),
+		],
+	};
 
-export default common
+	return config;
+};
+
+export default webpackFrontend

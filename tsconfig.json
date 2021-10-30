@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "webpack.backend.common.ts", "webpack.frontend.common.ts"  ]
 }

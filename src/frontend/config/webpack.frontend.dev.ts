@@ -1,7 +1,7 @@
 
 import path from "path";
 import merge from "webpack-merge";
-import common from "./webpack.frontend.common";
+import common from "../../../webpack.frontend";
 import webpack from "webpack";
 import StartServerPlugin from "start-server-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
