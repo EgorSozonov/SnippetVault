@@ -15,7 +15,7 @@ const webpackFrontend = (args: any): Configuration => {
 
 	const config: Configuration = {
 		entry: {
-			"snippetVault": path.resolve("./src/frontend/app.ts"),
+			"snippetVault": path.resolve("./src/frontend/App.ts"),
 		},
 		output: {
 			path: path.resolve("./target")

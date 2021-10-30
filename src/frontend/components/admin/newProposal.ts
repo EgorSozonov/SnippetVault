@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import EditableList from '../../commonComponents/editableList/EditableList';
 import HeaderRightButton from '../../commonComponents/headerRightButton/HeaderRightButton';
 import Toggler from '../../commonComponents/toggler/Toggler';
-import Proposal from '../../types/proposal';
+import Proposal from '../../../common/dto/ProposalDTO';
 import "../snippet/snippet.css"
 import "./admin.css"
 import { html } from 'htm/react'

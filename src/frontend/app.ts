@@ -1,7 +1,7 @@
 import './app.css'
 import Content from './components/content/Content'
 import { html } from 'htm/react'
-import MainState from './MobX/MainState'
+import MainState from './mobX/MainState'
 import {createContext, FunctionComponent,} from "react"
 import { render } from "react-dom"
 

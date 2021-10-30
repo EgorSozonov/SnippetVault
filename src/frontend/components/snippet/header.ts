@@ -3,7 +3,7 @@ import HoverSelect from '../../commonComponents/hoverSelect/HoverSelect'
 import './snippet.css'
 import { html } from 'htm/react'
 import { useContext } from 'react'
-import MainState from '../../MobX/MainState'
+import MainState from '../../mobX/MainState'
 import { StoreContext } from '../../App'
 import { observer } from 'mobx-react-lite'
 

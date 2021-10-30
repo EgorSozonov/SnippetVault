@@ -8,10 +8,10 @@ import { AxiosInstance } from "axios"
 import { html } from "htm/react"
 import { StoreContext } from "../../App"
 import { FunctionComponent, useContext, useEffect, useState} from "react"
-import AppState from "../../MobX/AppState"
-import MainState from "../../MobX/MainState"
+import AppState from "../../mobX/AppState"
+import MainState from "../../mobX/MainState"
 import { observer } from "mobx-react-lite"
-import ENDPOINTS, { API_PREFIX } from "../../params/Url"
+import { ENDPOINTS } from "../../../common/web/Url"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {

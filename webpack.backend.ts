@@ -12,7 +12,7 @@ const webpackBackend = (args: any): Configuration => {
 
 	const config: Configuration = {
 		entry: {
-			"snippetVault": path.resolve("./src/backend/app.ts"),
+			"snippetVault": path.resolve("./src/backend/App.ts"),
 		},
 		output: {
 			path: path.resolve("./target")

@@ -1,7 +1,7 @@
 import { action, IObservableArray, makeAutoObservable, observable } from "mobx"
-import LanguageDTO from "../types/LanguageDTO"
-import SelectChoice from "../types/SelectChoice"
-import TaskGroupDTO from "../types/TaskGroupDTO"
+import LanguageDTO from "../../common/dto/LanguageDTO"
+import SelectChoice from "../../common/types/SelectChoice"
+import TaskGroupDTO from "../../common/dto/TaskGroupDTO"
 import MainState from "./MainState"
 
 

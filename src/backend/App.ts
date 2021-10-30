@@ -16,7 +16,7 @@ App.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
 })
 
 // Initial route
-App.use(async (ctx:Koa.Context) => {
+App.use(async (ctx: Koa.Context) => {
     ctx.body = "Hello world"
 })
 
