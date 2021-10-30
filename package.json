@@ -72,7 +72,7 @@
         "clean:build": "rm -rf target/*",
         "clean:build:win": "rimraf \"public\\build\\*",
         "build:frontend:dev": "webpack --config ./webpack.frontend.ts --watch",
-        "build:backend:dev": "webpack --config ./webpack.backend.ts --watch",
+        "build:backend:dev": "webpack --config ./webpack.backend.ts",
         "build:frontend:prod": "webpack --config ./webpack.frontend.ts --mode production",
         "build:backend:prod": "webpack --config ./webpack.backend.ts --mode production",
         "start:backend:prod": "export NODE_ENV=production && node ./dist/server.*.js",
