@@ -56,6 +56,10 @@ const webpackFrontend = (args: any): Configuration => {
                     test: /\.css$/i,
                     use: ["style-loader", "css-loader"],
                 },
+                {
+                    test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
+                    type: 'asset/inline',
+                },
 				// app main .less file
 				{
 					test: /app\.less$/i,
@@ -124,7 +128,7 @@ const webpackFrontend = (args: any): Configuration => {
             //         }
             //     ]
             // })
-		],
+	    ],
 	};
 
 	return config;

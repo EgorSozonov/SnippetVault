@@ -1,16 +1,16 @@
 import { useState } from "react"
-import HasName from "../../interfaces/hasName"
-import StringKeyed from "../../interfaces/stringKeyed"
+import IHasName from "../../interfaces/IHasName"
+import IStringKeyed from "../../interfaces/IStringKeyed"
 import "./editableList.css"
 import { html } from 'htm/react'
 
 
-type Props<T extends StringKeyed & HasName> = {
+type Props<T extends IStringKeyed & IHasName> = {
     values: T[],
     title: string,
 }
 
-const EditableList = <T extends StringKeyed & HasName>({values, title, }: Props<T>) => {
+const EditableList = <T extends IStringKeyed & IHasName>({values, title, }: Props<T>) => {
     const [openIdx, setOpenIdx] = useState(-1)
     const rowClickHandler = (idx: number) => {
         if (idx === openIdx) {

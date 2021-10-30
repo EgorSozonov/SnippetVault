@@ -1,5 +1,5 @@
 import './app.css'
-import Content from './content'
+import Content from './components/content/Content'
 import { html } from 'htm/react'
 import MainState from './MobX/MainState'
 import {createContext, FunctionComponent,} from "react"

@@ -1,8 +1,8 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import EditableList from '../../commonComponents/editableList/editableList';
-import HeaderRightButton from '../../commonComponents/headerRightButton/headerRightButton';
-import Toggler from '../../commonComponents/toggler/toggler';
+import EditableList from '../../commonComponents/editableList/EditableList';
+import HeaderRightButton from '../../commonComponents/headerRightButton/HeaderRightButton';
+import Toggler from '../../commonComponents/toggler/Toggler';
 import Proposal from '../../types/proposal';
 import "../snippet/snippet.css"
 import "./admin.css"

@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { API_PREFIX } from './url'
+import { API_PREFIX, BASE_URL } from './params/Url'
 
 
 const axiosConfig: AxiosRequestConfig = {
-    baseURL: "http://localhost:47000" + API_PREFIX,
+    baseURL: BASE_URL + API_PREFIX,
     timeout: 10000,
     //headers: {'X-Custom-Header': 'foobar'},
 }

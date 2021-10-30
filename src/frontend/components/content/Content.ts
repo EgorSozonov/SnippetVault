@@ -1,9 +1,9 @@
 import React from "react"
 import  { BrowserRouter, Switch, Route } from "react-router-dom"
-import PATHS from "./path"
-import SnippetPg from "./components/snippet/snippetPg"
-import Admin from "./components/admin/admin"
-import Group from "./components/group/group"
+import PATHS from "../../params/Path"
+import SnippetPg from "../snippet/SnippetPg"
+import Admin from "../admin/Admin"
+import Group from "../group/Group"
 import { html } from 'htm/react'
 import "./app.css"
 

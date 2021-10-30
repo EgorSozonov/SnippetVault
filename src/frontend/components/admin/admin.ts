@@ -1,11 +1,11 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import EditableList from '../../commonComponents/editableList/editableList';
-import PATHS from '../../path';
-import LanguageDTO from '../../types/LanguageDTO';
-import TaskGroupDTO from '../../types/TaskGroupDTO';
-import Alternative from './alternative';
-import NewProposal from './newProposal';
+import EditableList from '../../commonComponents/editableList/EditableList';
+import PATHS from '../../params/Path';
+import LanguageDTO from '../../../common/dto/LanguageDTO';
+import TaskGroupDTO from '../../../common/dto/TaskGroupDTO';
+import Alternative from './Alternative';
+import NewProposal from './NewProposal';
 import { html } from 'htm/react'
 
 

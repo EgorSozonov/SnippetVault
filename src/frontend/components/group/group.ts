@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import PATHS from '../../path'
+import PATHS from '../../params/Path'
 import { html } from 'htm/react'
 
 

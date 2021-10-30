@@ -1,23 +1,23 @@
-import Snippet from "../../types/snippet"
-import Header from "./header"
-import TextInput from "./textInput"
+import SnippetDTO from "../../../common/dto/SnippetDTO"
+import Header from "./Header"
+import TextInput from "./TextInput"
 import "./snippet.css"
-import SnippetCode from "./snippetCode"
-import createClient from "../../client"
+import SnippetCode from "./SnippetCode"
+import createClient from "../../Client"
 import { AxiosInstance } from "axios"
 import { html } from "htm/react"
-import { StoreContext } from "../../app"
+import { StoreContext } from "../../App"
 import { FunctionComponent, useContext, useEffect, useState} from "react"
 import AppState from "../../MobX/AppState"
 import MainState from "../../MobX/MainState"
 import { observer } from "mobx-react-lite"
-import ENDPOINTS, { API_PREFIX } from "../../url"
+import ENDPOINTS, { API_PREFIX } from "../../params/Url"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
     console.log("SnippetPg!!")
     const state = useContext<MainState>(StoreContext)
-    const [snippets, setSnippets] = useState<Snippet[]>([])
+    const [snippets, setSnippets] = useState<SnippetDTO[]>([])
     const client: AxiosInstance = createClient()
     const lang1 = state.app.language1
     const lang2 = state.app.language2
@@ -73,7 +73,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                 <div class="taskForHeader">${tg.name}</div>
                 <div class="snippetRightHeader">${lang2.name}</div>
             </div>
-            ${snippets && snippets.map((snippet: Snippet, idx: number ) => {
+            ${snippets && snippets.map((snippet: SnippetDTO, idx: number ) => {
                 const evenClass = (idx%2 === 0 ? " evenRow" : "")
                 return html`
                     <div class="snippetRow" key=${idx}>
