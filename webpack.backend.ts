@@ -16,7 +16,7 @@ const webpackBackend = (args: any): Configuration => {
 
 	const config: Configuration = {
 		entry: {
-			"snippetVaultBackend": path.resolve("./src/backend/Server.ts"),
+			"snippetVaultBackend": path.resolve("./src/backend/App.ts"),
 		},
 		output: {
 			path: path.resolve("./target/backend")

@@ -1,26 +1,10 @@
-import Koa from "koa";
-import HttpStatus from "http-status-codes"
+
+import { PORT } from "../common/web/Url";
+import SVServer from "./server/SVServer"
 
 
-const App: Koa = new Koa()
+// Process.env will always be comprised of strings, so we typecast the port to a number.
+//const PORT = Number(process.env.PORT) || 47000;
 
-App.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
-    try {
-        await next();
-    } catch (error: any) {
-        ctx.status = error.statusCode || error.status || HttpStatus.INTERNAL_SERVER_ERROR;
-        error.status = ctx.status;
-        ctx.body = { error };
-        ctx.app.emit("error", error, ctx)
-    }
-})
 
-// Initial route
-App.use(async (ctx: Koa.Context) => {
-    ctx.body = "Hello world"
-})
-
-// Application error logging.
-App.on("error", console.error)
-
-export default App
+SVServer.listen(PORT);
