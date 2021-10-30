@@ -8,21 +8,28 @@
             "esnext"
         ],
         "allowJs": false,
+        "declaration": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "strict": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
-        "module": "esnext",
+        "module": "es6",
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
     },
+    "ts-node": {
+        "compilerOptions": {
+            "module": "CommonJS"
+        }
+    },
     "include": [
         "src", 
         "webpack.backend.ts", 
-        "webpack.frontend.ts"  
+        "webpack.frontend.ts",
+        "webpack.d.ts"
     ]
 }

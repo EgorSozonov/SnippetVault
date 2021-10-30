@@ -1,19 +1,19 @@
-import webpack from "webpack";
+import webpack, { Configuration } from "webpack";
 import path from "path";
-import CopyWebpackPlugin from "copy-webpack-plugin";
-import CssMinimizerWebpackPlugin from "css-minimizer-webpack-plugin";
-import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
-import HtmlWebpackPlugin from "html-webpack-plugin";
-import TerserPlugin from "terser-webpack-plugin";
+import Copy from "copy-webpack-plugin";
+import CssMinimizer from "css-minimizer-webpack-plugin";
+import { WebpackManifestPlugin as Manifest } from 'webpack-manifest-plugin';
+import Html from "html-webpack-plugin";
+import Terser from "terser-webpack-plugin";
 
 
-const webpackFrontend = (args: any) => {
+const webpackFrontend = (args: any): Configuration => {
 	const isProduction = args && args["mode"] === "production";
 	console.log('');
 	console.log(isProduction ? "PRODUCTION BUILD" : "DEVELOPMENT BUILD");
 	console.log('');
 
-	const config = {
+	const config: Configuration = {
 		entry: {
 			"snippetVault": path.resolve("./src/frontend/app.ts"),
 		},
@@ -24,12 +24,6 @@ const webpackFrontend = (args: any) => {
 		devtool: isProduction ? false : "source-map",
 		optimization: {
             minimize: isProduction,
-            minimizer: isProduction 
-                ? [
-        			new TerserPlugin({extractComments: false}),
-        			new CssMinimizerWebpackPlugin({}),
-        		] 
-                : [],
 			splitChunks: {
 				// always create vendor.js
 				cacheGroups: {
@@ -91,15 +85,12 @@ const webpackFrontend = (args: any) => {
 			headers: {
 				'Access-Control-Allow-Origin': '*'
 			},
-			contentBase: './target',
-			publicPath: '/',
+			static: {directory: "./target", publicPath: "/", },
 			compress: false,
 			port: 47001,
 			historyApiFallback: true,
 			hot: true,
-			inline: true,
-			stats: 'normal',
-			clientLogLevel: 'error'
+            magicHtml: false,
 		},
 
 		plugins: [
@@ -107,10 +98,10 @@ const webpackFrontend = (args: any) => {
 				NODE_ENV: isProduction ? "production" : "development",
 				DEBUG: !isProduction
 			}),
-            new WebpackManifestPlugin({
+            new Manifest({
                 fileName: "manifest.json",
             }),
-			new CopyWebpackPlugin({
+			new Copy({
 				patterns: [
 					// static files to the site root folder (index and robots)
 					{
@@ -121,7 +112,7 @@ const webpackFrontend = (args: any) => {
 					},
 				]
 			}),
-            new HtmlWebpackPlugin({
+            new Html({
                 title: "Snippet Vault",
                 template: "./public/template.html"
             }),
@@ -133,7 +124,6 @@ const webpackFrontend = (args: any) => {
             //         }
             //     ]
             // })
-            //new WebpackBundleAnalyzer.BundleAnalyzerPlugin(),
 		],
 	};
 
