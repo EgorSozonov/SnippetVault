@@ -4,3 +4,5 @@ type LanguageGroup = {
     name: string,
     languages: LanguageDTO[],
 }
+
+export default LanguageGroup

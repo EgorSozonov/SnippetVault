@@ -1,9 +1,12 @@
 import Koa from "koa";
 import Router from "koa-router";
+import { API_PREFIX1 } from "../../common/web/Url";
 
+
+const API_PREFIX = API_PREFIX1
 
 const routerOpts: Router.IRouterOptions = {
-    prefix: "/api/v1",
+    prefix: API_PREFIX,
 };
 
 const router: Router = new Router(routerOpts);

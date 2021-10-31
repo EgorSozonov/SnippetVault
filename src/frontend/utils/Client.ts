@@ -16,14 +16,4 @@ export async function fetchFromClient<T>(response: Promise<EitherMsg<T>>, action
     } else {
         console.log(result.errMsg)
     }
-    // match<EitherMsg<T>, void>(result)
-    //     .with({isOK: false}, (res) => {
-    //         console.log("in Error branch of pattern match")
-    //         console.log(res.errMsg)
-            
-    //     })
-    //     .with({isOK: true}, (res) => {
-    //         console.log("In OK branch of pattern match")
-    //         actionOK(res.value)
-    //     })
 }

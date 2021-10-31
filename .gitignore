@@ -19,7 +19,7 @@ Src/backend/bin
 src/backend/build
 src/backend/obj
 src/backend/target
-src/backend/src/tech/sozonov/sv/DBAccess/creds.json
+src/backend/src/backend/db/creds.json
 include/*
 config/creds*
 src/**/creds.json

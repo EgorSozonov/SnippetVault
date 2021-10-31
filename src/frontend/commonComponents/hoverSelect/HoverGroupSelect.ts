@@ -5,19 +5,21 @@ import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import {observer} from 'mobx-react-lite'
 import SelectChoice from "../../../common/types/SelectChoice"
+import SelectGroup from "../../../common/types/SelectGroup"
 
 
 type Props = {
-    choices: SelectChoice[],
+    choiceGroups: SelectGroup[],
     uniqueName: string,
     selectCallback: (c: SelectChoice) => void,
 }
 
-const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choices, uniqueName, selectCallback, }) => {
+const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups, uniqueName, selectCallback, }) => {
     const [currValue, setCurrValue] = useState({id: 0, name: ""})
     const mainState = useContext<MainState>(StoreContext)
     const currentlyOpen = mainState.app.openSelect
     const isOpen = currentlyOpen === uniqueName
+    const [selectedGroup, setSelectedGroup] = useState<SelectGroup>(choiceGroups.length > 0 ? choiceGroups[0] : {id: -1, name: "", choices: [])
 
     const onSelect = (c: SelectChoice) => {
         setCurrValue(c)
@@ -41,10 +43,11 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choices, uni
             </span>
             
             <div class=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
+                <div>${selectedGroup.name}</div>
                 <ul class="list">
                     <li>
                         <ul class="optgroup">
-                            ${choices.map((c: SelectChoice, idx: number) => {
+                            ${selectedGroup.choices.map((c: SelectChoice, idx: number) => {
                                 return html`<li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
                             })}
                         </ul>
