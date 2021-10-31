@@ -1,9 +1,9 @@
 type Proposal = {
-    ProposalId: string,
-    ProposalCode: string,
-    TaskName: string,
-    LanguageName: string,
-    TSUpload: Date,
+    id: string,
+    code: string,
+    taskName: string,
+    languageName: string,
+    tsUpload: Date,
 }
 
 export default Proposal
