@@ -3,6 +3,8 @@ import LanguageDTO from "../../common/dto/LanguageDTO"
 import SelectChoice from "../../common/types/SelectChoice"
 import TaskGroupDTO from "../../common/dto/TaskGroupDTO"
 import MainState from "./MainState"
+import SnippetDTO from "../../common/dto/SnippetDTO"
+import Snippet from "../../common/dto/SnippetDTO"
 
 
 export default class AppState {
@@ -12,6 +14,7 @@ export default class AppState {
     public language2: SelectChoice = {id: 0, name: ""}
     public taskGroup: SelectChoice = {id: 0, name: ""}
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
+    public snippets: IObservableArray<SnippetDTO> = observable.array([])
 
     constructor() {
         makeAutoObservable(this)
@@ -34,10 +37,16 @@ export default class AppState {
     })
 
     setLanguages = action((newValue: LanguageDTO[]): void => {
+        console.log("setting languages")
+        console.log(newValue)
         this.languages = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name}}))
     }) 
 
     setTaskGroups = action((newValue: TaskGroupDTO[]): void => {
         this.taskGroups = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name}}))
+    })  
+
+    setSnippets = action((newValue: SnippetDTO[]): void => {
+        this.snippets = observable.array(newValue)
     })  
 }

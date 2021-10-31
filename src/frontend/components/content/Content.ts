@@ -12,16 +12,13 @@ const Content: React.FunctionComponent = () => {
     <${BrowserRouter}>
         <div class="browserRouter">            
             <${Switch}>
-                <${Route} exact=${true} path=${PATHS["snippet"].url}>
-                    
+                <${Route} exact=${true} path=${PATHS["snippet"].url}>                    
                     <${SnippetPg} />
                 <//>
-                <${Route} exact=${true} path=${PATHS["group"].url}>
-                    
+                <${Route} exact=${true} path=${PATHS["group"].url}>                    
                     <${Group} />
                 <//>
-                <${Route} exact=${true} path=${PATHS["admin"].url}>
-                    
+                <${Route} exact=${true} path=${PATHS["admin"].url}>                    
                     <${Admin} />
                 <//>
                 <${Route}>

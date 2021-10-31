@@ -71,7 +71,7 @@
     "scripts": {
         "test": "node scripts/test.js",
         "clean:build": "rm -rf target/*",
-        "build:frontend:dev": "webpack --config ./webpack.frontend.ts --mode development --watch",
+        "build:frontend:dev": "webpack --config ./webpack.frontend.ts --mode development",
         "build:backend:dev": "webpack --config ./webpack.backend.ts --mode development",
         "build:frontend:prod": "webpack --config ./webpack.frontend.ts --mode production",
         "build:backend:prod": "webpack --config ./webpack.backend.ts --mode production",
