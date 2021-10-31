@@ -3,19 +3,13 @@ import Header from "./Header"
 import TextInput from "./TextInput"
 import "./snippet.css"
 import SnippetCode from "./SnippetCode"
-import createClient from "../../Client"
-import { AxiosInstance } from "axios"
 import { html } from "htm/react"
 import { StoreContext } from "../../App"
-import { FunctionComponent, useContext, useEffect, useState} from "react"
-import AppState from "../../mobX/AppState"
+import { FunctionComponent, useContext, useEffect} from "react"
 import MainState from "../../mobX/MainState"
 import { observer } from "mobx-react-lite"
-import { ENDPOINTS } from "../../../common/web/Url"
 import { fetchFromClient } from "../../utils/Client"
 import IClient from "../../interfaces/IClient"
-import HttpClient from "../../http/HttpClient"
-import MockClient from "../../mock/MockClient"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -25,9 +19,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const lang1 = state.app.language1
     const lang2 = state.app.language2
     const tg = state.app.taskGroup
-    const client0 = createClient()
-    //const client: IClient = new HttpClient(client0)
-    const client: IClient = new MockClient()
+    const client: IClient = state.app.client
 
     useEffect(() => {
         fetchFromClient(client.getLanguages(), state.app.setLanguages)
@@ -71,5 +63,5 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     `
 })
 
-//const SnippetPg = observer(SnippetPg0)
+
 export default SnippetPg

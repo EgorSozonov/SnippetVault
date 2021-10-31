@@ -2,9 +2,11 @@ import { action, IObservableArray, makeAutoObservable, observable } from "mobx"
 import LanguageDTO from "../../common/dto/LanguageDTO"
 import SelectChoice from "../../common/types/SelectChoice"
 import TaskGroupDTO from "../../common/dto/TaskGroupDTO"
-import MainState from "./MainState"
 import SnippetDTO from "../../common/dto/SnippetDTO"
-import Snippet from "../../common/dto/SnippetDTO"
+import IClient from "../interfaces/IClient"
+import MockClient from "../mock/MockClient"
+import createClient from "../Client"
+import HttpClient from "../http/HttpClient"
 
 
 export default class AppState {
@@ -15,9 +17,12 @@ export default class AppState {
     public taskGroup: SelectChoice = {id: 0, name: ""}
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
     public snippets: IObservableArray<SnippetDTO> = observable.array([])
+    public client: IClient = new MockClient()
 
     constructor() {
         makeAutoObservable(this)
+        // const axios = createClient()
+        // this.client = new HttpClient(axios)
     }
 
     setLanguage1 = action((newValue: SelectChoice): void => {
@@ -37,8 +42,6 @@ export default class AppState {
     })
 
     setLanguages = action((newValue: LanguageDTO[]): void => {
-        console.log("setting languages")
-        console.log(newValue)
         this.languages = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name}}))
     }) 
 
