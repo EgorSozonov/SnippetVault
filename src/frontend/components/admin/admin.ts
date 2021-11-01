@@ -4,7 +4,7 @@ import EditableList from '../../commonComponents/editableList/EditableList';
 import PATHS from '../../params/Path';
 import LanguageDTO from '../../../common/dto/LanguageDTO';
 import TaskGroupDTO from '../../../common/dto/TaskGroupDTO';
-import Alternative from './Alternative';
+import Alternative from '../alternative/Alternative';
 import NewProposal from './NewProposal';
 import { html } from 'htm/react'
 

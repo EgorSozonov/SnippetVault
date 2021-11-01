@@ -20,7 +20,9 @@ const mockData = {
     languages: [
             {id: 1, name: "C#", languageGroup: "Universal", },
             {id: 2, name: "C++", languageGroup: "Universal", },
-            {id: 3, name: "Typescript", languageGroup: "Universal", },
+            {id: 3, name: "Typescript", languageGroup: "Scripting", },
+            {id: 4, name: "Python", languageGroup: "Scripting", },
+            {id: 5, name: "MySQL", languageGroup: "Data querying", },
         ],
     taskGroups: [
         {id: 1, name: "String manipulation"},

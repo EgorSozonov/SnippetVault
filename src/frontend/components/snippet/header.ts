@@ -6,6 +6,7 @@ import { useContext } from 'react'
 import MainState from '../../mobX/MainState'
 import { StoreContext } from '../../App'
 import { observer } from 'mobx-react-lite'
+import HoverGroupSelect from '../../commonComponents/hoverSelect/HoverGroupSelect'
 
 
 const Header: React.FunctionComponent = observer(() => {
@@ -21,12 +22,12 @@ const Header: React.FunctionComponent = observer(() => {
                 </div>
                 <div class="choiceInput">
                     <div class="headerDropdownLabel"><label >Language 1:</label></div>
-                    <${HoverSelect} choices=${state.app.languages} uniqueName="Lang1"
+                    <${HoverGroupSelect} choiceGroups=${state.app.languageGroups} uniqueName="Lang1"
                         selectCallback=${state.app.setLanguage1}><//>
                 </div>
                 <div class="choiceInput">
                     <div class="headerDropdownLabel"><label >Language 2:</label></div>
-                    <${HoverSelect} choices=${state.app.languages} uniqueName="Lang2" 
+                    <${HoverGroupSelect} choiceGroups=${state.app.languageGroups} uniqueName="Lang2" 
                         selectCallback=${state.app.setLanguage2}><//>                    
                 </div>
                 <div class="choiceInputButton">

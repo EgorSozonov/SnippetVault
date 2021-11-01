@@ -19,8 +19,15 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
     const mainState = useContext<MainState>(StoreContext)
     const currentlyOpen = mainState.app.openSelect
     const isOpen = currentlyOpen === uniqueName
-    const [selectedGroup, setSelectedGroup] = useState<SelectGroup>(choiceGroups.length > 0 ? choiceGroups[0] : {id: -1, name: "", choices: [])
+    const initChoiceGroup: SelectGroup = choiceGroups.length > 0 ? {id: choiceGroups[0].id, name: choiceGroups[0].name, choices: choiceGroups[0].choices} : {id: -1, name: "", choices: [], }
 
+
+    const [selectedGroup, setSelectedGroup] = useState<SelectGroup>(initChoiceGroup)
+
+    console.log(choiceGroups.length)
+    console.log(selectedGroup.name)
+
+    const [groupSelectMode, setGroupSelectMode] = useState(false)
     const onSelect = (c: SelectChoice) => {
         setCurrValue(c)
         selectCallback(c)
@@ -34,6 +41,16 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
             mainState.app.setOpenSelect(uniqueName)
         }
     }
+
+    const onClickGroup = () => {
+        setGroupSelectMode(!groupSelectMode)
+    }
+
+    const onSelectGroup = (idx: number) => {
+        setSelectedGroup(choiceGroups[idx])
+        setGroupSelectMode(false)
+    }
+
     return html`
         <div class="hoverSelect" onMouseEnter=${() => mainState.app.setOpenSelect(uniqueName)}
                 onMouseLeave=${() => mainState.app.setOpenSelect("")}>            
@@ -43,16 +60,29 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
             </span>
             
             <div class=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
-                <div>${selectedGroup.name}</div>
-                <ul class="list">
-                    <li>
-                        <ul class="optgroup">
-                            ${selectedGroup.choices.map((c: SelectChoice, idx: number) => {
-                                return html`<li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
-                            })}
-                        </ul>
-                    </li>
-                </ul>
+                <div class="groupName" onClick=${onClickGroup}>Selected group: ${selectedGroup.name}</div>
+                ${ groupSelectMode === true &&
+                    html`<ul class="list">
+                        <li>
+                            <ul class="optgroup">
+                                ${choiceGroups.map((c: SelectGroup, idx: number) => {
+                                    return html`<li key=${idx} onClick=${() => onSelectGroup(idx)}>${c.name}</li>`
+                                })}
+                            </ul>
+                        </li>
+                    </ul>`
+                }
+                ${ groupSelectMode === false &&
+                    html`<ul class="list">
+                        <li>
+                            <ul class="optgroup">
+                                ${selectedGroup.choices.map((c: SelectChoice, idx: number) => {
+                                    return html`<li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
+                                })}
+                            </ul>
+                        </li>
+                    </ul>`
+                }
             </div>
         </div>
     `

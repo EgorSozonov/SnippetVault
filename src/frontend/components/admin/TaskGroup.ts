@@ -4,7 +4,7 @@ import PATHS from '../../params/Path'
 import { html } from 'htm/react'
 
 
-function Group() {
+function TaskGroup() {
     return html`
         <div>Hello world group
             <p>
@@ -16,4 +16,4 @@ function Group() {
     `
 }
 
-export default Group
+export default TaskGroup

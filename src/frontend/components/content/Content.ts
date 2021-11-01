@@ -3,7 +3,7 @@ import  { BrowserRouter, Switch, Route } from "react-router-dom"
 import PATHS from "../../params/Path"
 import SnippetPg from "../snippet/SnippetPg"
 import Admin from "../admin/Admin"
-import Group from "../group/Group"
+import Group from "../admin/TaskGroup"
 import { html } from 'htm/react'
 
 
