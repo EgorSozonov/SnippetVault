@@ -7,6 +7,7 @@ import IClient from "../interfaces/IClient"
 import MockClient from "../mock/MockClient"
 import createClient from "../Client"
 import HttpClient from "../http/HttpClient"
+import SelectGroup from "../../common/types/SelectGroup"
 
 
 export default class AppState {
@@ -14,6 +15,7 @@ export default class AppState {
     public language1: SelectChoice = {id: 0, name: ""}
     public languages: IObservableArray<SelectChoice> = observable.array([])
     public language2: SelectChoice = {id: 0, name: ""}
+    public languageGroups: IObservableArray<SelectGroup> = observable.array([])
     public taskGroup: SelectChoice = {id: 0, name: ""}
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
     public snippets: IObservableArray<SnippetDTO> = observable.array([])
@@ -31,6 +33,10 @@ export default class AppState {
 
     setLanguage2 = action((newValue: SelectChoice): void => {
         this.language2 = newValue
+    })
+
+    setLanguageGroups = action((newValue: SelectGroup[]): void => {
+        this.languageGroups = observable.array(newValue)
     })
 
     setTaskGroup = action((newValue: SelectChoice): void => {

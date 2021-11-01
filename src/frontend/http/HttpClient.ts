@@ -27,14 +27,14 @@ class HttpClient implements IClient {
 
     private async makeGetRequest<T>(url: string): Promise<EitherMsg<T>> {
         try {
-            const r = await this.client.get<T>(url)        
+            const r = await this.client.get<T>(url)
             if (r.data) {
-                return {isOK: true, value: r.data}
+                return { isOK: true, value: r.data, }
             } else {
-                return {isOK: false, errMsg: "Error: empty result"}
+                return { isOK: false, errMsg: "Error: empty result", }
             }
         } catch(e: any) {
-            return {isOK: false, errMsg: e.toString()}
+            return { isOK: false, errMsg: e.toString() }
         }
     }
 }

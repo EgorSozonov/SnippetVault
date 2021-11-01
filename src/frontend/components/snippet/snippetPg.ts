@@ -8,8 +8,9 @@ import { StoreContext } from "../../App"
 import { FunctionComponent, useContext, useEffect} from "react"
 import MainState from "../../mobX/MainState"
 import { observer } from "mobx-react-lite"
-import { fetchFromClient } from "../../utils/Client"
+import { fetchFromClient, fetchFromClientTransform } from "../../utils/Client"
 import IClient from "../../interfaces/IClient"
+import { groupLanguages, groupLanguagesAsync, } from "../../utils/languageGroup/GroupLanguages"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -22,7 +23,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const client: IClient = state.app.client
 
     useEffect(() => {
-        fetchFromClient(client.getLanguages(), state.app.setLanguages)
+        fetchFromClientTransform(client.getLanguages(), groupLanguages, state.app.setLanguageGroups)
         fetchFromClient(client.getTaskGroups(), state.app.setTaskGroups)
     }, [])
 
