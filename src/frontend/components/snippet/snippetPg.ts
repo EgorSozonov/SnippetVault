@@ -10,7 +10,7 @@ import MainState from "../../mobX/MainState"
 import { observer } from "mobx-react-lite"
 import { fetchFromClient, fetchFromClientTransform } from "../../utils/Client"
 import IClient from "../../interfaces/IClient"
-import { groupLanguages, groupLanguagesAsync, } from "../../utils/languageGroup/GroupLanguages"
+import { groupLanguages, } from "../../utils/languageGroup/GroupLanguages"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -45,7 +45,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                     <div class="snippetRow" key=${idx}>
                         <div class=${"snippetContent leftSide" + evenClass}>
                             ${snippet.leftCode.length > 0 
-                                ? html`<${SnippetCode} content=${snippet.leftCode} isRight="false"><//>`
+                                ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false}><//>`
                                 : html`<${TextInput} numberProposals="4"><//>`}
                         </div>
                         <div class=${"taskContainer" + evenClass}>
@@ -53,7 +53,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         </div>
                         <div class=${"snippetContent rightSide" + evenClass}>
                             ${snippet.rightCode.length > 0 
-                                ? html`<${SnippetCode} content=${snippet.rightCode} isRight={true}><//>`
+                                ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true}><//>`
                                 : html`<${TextInput} numberProposals="4"><//>`}
                         </div>
                     </div>`

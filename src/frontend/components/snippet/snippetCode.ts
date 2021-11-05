@@ -13,9 +13,12 @@ function SnippetCode({content, isRight, } : Props) {
             ${content}
         </pre>
         `
+
+    console.log(isRight)
     return html`
-        ${isRight 
-            ? html`<div class="snippetContentContainer">
+        ${isRight === true
+            ? html`
+                <div class="snippetContentContainer">
                     <div class="snippetButtons">
                         <div class="commentButton" title="Alternative versions">A</div>
                         <div class="commentButton" title="Copy text">C</div>
