@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import "./hoverSelect.css"
 import { html } from 'htm/react'
 import MainState from "../../mobX/MainState"
@@ -19,13 +19,15 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
     const mainState = useContext<MainState>(StoreContext)
     const currentlyOpen = mainState.app.openSelect
     const isOpen = currentlyOpen === uniqueName
-    const initChoiceGroup: SelectGroup = choiceGroups.length > 0 ? {id: choiceGroups[0].id, name: choiceGroups[0].name, choices: choiceGroups[0].choices} : {id: -1, name: "", choices: [], }
 
+    // const [selectedGroup, setSelectedGroup] = useState<SelectGroup>(((x: SelectGroup[]) => x.length > 0 ? ({id: x[0].id, name: x[0].name, choices: x[0].choices}) : {id: -1, name: "", choices: [], })(choiceGroups))
+    const [selectedGroup, setSelectedGroup] = useState<SelectGroup>(choiceGroups.length > 0 ? choiceGroups[0] : {id: -1, name: "", choices: [], })
 
-    const [selectedGroup, setSelectedGroup] = useState<SelectGroup>(initChoiceGroup)
-
-    console.log(choiceGroups.length)
-    console.log(selectedGroup.name)
+    useEffect(() => {
+        if (choiceGroups.length > 0) {
+            setSelectedGroup(choiceGroups[0])
+        }
+    }, [choiceGroups])
 
     const [groupSelectMode, setGroupSelectMode] = useState(false)
     const onSelect = (c: SelectChoice) => {
@@ -47,6 +49,7 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
     }
 
     const onSelectGroup = (idx: number) => {
+        console.log(`onSelectGroup ${idx}`)
         setSelectedGroup(choiceGroups[idx])
         setGroupSelectMode(false)
     }

@@ -13,8 +13,6 @@ function SnippetCode({content, isRight, } : Props) {
             ${content}
         </pre>
         `
-
-    console.log(isRight)
     return html`
         ${isRight === true
             ? html`
