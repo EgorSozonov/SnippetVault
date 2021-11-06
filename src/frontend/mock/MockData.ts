@@ -18,18 +18,19 @@ const mockData = {
             },
         ],
     languages: [
-            {id: 1, name: "C#", languageGroup: "Universal", },
-            {id: 2, name: "C++", languageGroup: "Universal", },
-            {id: 3, name: "Typescript", languageGroup: "Scripting", },
-            {id: 4, name: "Python", languageGroup: "Scripting", },
-            {id: 5, name: "MySQL", languageGroup: "Data querying", },
-            {id: 6, name: "Java", languageGroup: "Universal", },
-            {id: 7, name: "Haskell", languageGroup: "Universal", },
+            {id: 1, name: "C#", languageGroup: "Universal", languageGroupOrder: 1, },
+            {id: 2, name: "C++", languageGroup: "Universal", languageGroupOrder: 1, },
+            {id: 3, name: "Typescript", languageGroup: "Scripting", languageGroupOrder: 2, },
+            {id: 4, name: "Python", languageGroup: "Scripting", languageGroupOrder: 2, },
+            {id: 5, name: "MySQL", languageGroup: "Data querying", languageGroupOrder: 3, },
+            {id: 6, name: "Java", languageGroup: "Universal", languageGroupOrder: 1, },
+            {id: 7, name: "Haskell", languageGroup: "Universal", languageGroupOrder: 1, },
+            {id: 8, name: "PostgreSQL", languageGroup: "Data querying", languageGroupOrder: 3, },
         ],
     taskGroups: [
         {id: 1, name: "String manipulation"},
         {id: 2, name: "File system tasks"},
-        {id: 3, name: "Common types & operations on them"},
+        {id: 3, name: "Primitive types"},
     ]
         
 }

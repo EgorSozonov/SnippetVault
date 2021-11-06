@@ -3,8 +3,10 @@ import  { BrowserRouter, Switch, Route } from "react-router-dom"
 import PATHS from "../../params/Path"
 import SnippetPg from "../snippet/SnippetPg"
 import Admin from "../admin/Admin"
-import Group from "../admin/TaskGroup"
 import { html } from 'htm/react'
+import TaskGroup from "../admin/TaskGroup"
+import LangGroup from "../admin/LangGroup"
+import NewProposal from "../admin/NewProposal"
 
 
 const Content: React.FunctionComponent = () => {
@@ -15,8 +17,17 @@ const Content: React.FunctionComponent = () => {
                 <${Route} exact=${true} path=${PATHS["snippet"].url}>                    
                     <${SnippetPg} />
                 <//>
-                <${Route} exact=${true} path=${PATHS["group"].url}>                    
-                    <${Group} />
+                <${Route} exact=${true} path=${PATHS["alternative"].url}>                    
+                    <${TaskGroup} />
+                <//>
+                <${Route} exact=${true} path=${PATHS["proposal"].url}>                    
+                    <${NewProposal} />
+                <//>
+                <${Route} exact=${true} path=${PATHS["taskGroup"].url}>                    
+                    <${TaskGroup} />
+                <//>
+                <${Route} exact=${true} path=${PATHS["languageGroup"].url}>                    
+                    <${LangGroup} />
                 <//>
                 <${Route} exact=${true} path=${PATHS["admin"].url}>                    
                     <${Admin} />

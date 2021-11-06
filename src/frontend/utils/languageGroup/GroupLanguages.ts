@@ -6,7 +6,7 @@ import LanguageGroup from "../../types/LanguageGroup";
 
 export function groupLanguages(langs: LanguageDTO[]): SelectGroup[] {
     if (langs.length === 0) return []
-    const sortedArr = langs.sort((x, y) => x.languageGroup === y.languageGroup ? 0 : (x.languageGroup < y.languageGroup ? -1 : 1))
+    const sortedArr = langs.sort((x, y) => x.languageGroupOrder - y.languageGroupOrder)
     const result: SelectGroup[] = sortedArr.reduce((acc: SelectGroup[], x: LanguageDTO) => {
         if (acc.length === 0 || x.languageGroup !== acc[acc.length - 1].name) {
             acc.push({id: 1, name: x.languageGroup, choices: [x]})
@@ -15,6 +15,7 @@ export function groupLanguages(langs: LanguageDTO[]): SelectGroup[] {
         }
         return acc
     }, [])
+    result.forEach(x => x.choices = x.choices.sort())
     return result
 }
 
