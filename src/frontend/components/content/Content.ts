@@ -7,6 +7,7 @@ import { html } from 'htm/react'
 import TaskGroup from "../admin/TaskGroup"
 import LangGroup from "../admin/LangGroup"
 import NewProposal from "../admin/NewProposal"
+import Alternative from "../alternative/Alternative"
 
 
 const Content: React.FunctionComponent = () => {
@@ -17,8 +18,8 @@ const Content: React.FunctionComponent = () => {
                 <${Route} exact=${true} path=${PATHS["snippet"].url}>                    
                     <${SnippetPg} />
                 <//>
-                <${Route} exact=${true} path=${PATHS["alternative"].url}>                    
-                    <${TaskGroup} />
+                <${Route} path=${PATHS["alternative"].url}>   
+                    <${Alternative} />
                 <//>
                 <${Route} exact=${true} path=${PATHS["proposal"].url}>                    
                     <${NewProposal} />

@@ -23,7 +23,7 @@ if (root) {
     render(
         html`
             <${StoreProvider}>
-              <${Content} />
+                <${Content} />
             <//>
         `,    
         root

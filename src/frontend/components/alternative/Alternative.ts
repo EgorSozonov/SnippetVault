@@ -8,9 +8,11 @@ import { StoreContext } from "../../App";
 import IClient from "../../interfaces/IClient";
 import { fetchFromClient } from "../../utils/Client";
 import AlternativeDTO from "../../../common/dto/AlternativeDTO";
+import Toggler from "../../commonComponents/toggler/Toggler";
 
 
 function Alternative() {
+    console.log("alternative!")
     const { taskId, langId } = useParams<{taskId: string, langId: string}>()
     const taskIdNum: number = parseInt(taskId) || -1
     const langIdNum: number = parseInt(langId) || -1
@@ -20,6 +22,9 @@ function Alternative() {
     useEffect(() => {        
         fetchFromClient(client.getAlternatives(langIdNum, taskIdNum), state.app.setAlternatives)
     }, [])
+
+    console.log("alternatives")
+    console.log(state.app.alternatives)
     return html`
         <div class="adminAlternative">
             
@@ -29,8 +34,8 @@ function Alternative() {
                         Alternatives
                     </div>
 
-                    <div class="taskForHeader"><Toggler leftChoice="Old->new" rightChoice="Highest votes first" initChosen={false}>
-                                </Toggler></div>
+                    <div class="taskForHeader"><${Toggler} leftChoice=${"Old->new"} rightChoice=${"Highest votes first"} initChosen=${false}>
+                                <//></div>
                     <div class="snippetRightHeader">
                         <div>
                             Task: foo
