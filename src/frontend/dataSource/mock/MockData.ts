@@ -1,3 +1,6 @@
+import AlternativeDTO from "../../../common/dto/AlternativeDTO"
+import TaskDTO from "../../../common/dto/TaskDTO"
+
 const mockData = {
     snippets: [
             {    
@@ -27,12 +30,34 @@ const mockData = {
             {id: 7, name: "Haskell", languageGroup: "Universal", languageGroupOrder: 1, },
             {id: 8, name: "PostgreSQL", languageGroup: "Data querying", languageGroupOrder: 3, },
         ],
+    languageGroups: [],
     taskGroups: [
         {id: 1, name: "String manipulation"},
         {id: 2, name: "File system"},
         {id: 3, name: "Primitive types"},
         {id: 4, name: "Math"},
-    ]
-        
+    ],
+
+    tasks: [
+        {id: 1, tgId: 1, name: "Reverse string"},
+        {id: 2, tgId: 1, name: "Find substring"},
+        {id: 3, tgId: 1, name: "Regex match"},
+        {id: 4, tgId: 2, name: "Walk a folder"},
+        {id: 5, tgId: 3, name: "String -> number"},
+        {id: 6, tgId: 3, name: "Number -> string"},
+        {id: 7, tgId: 4, name: "Sine function"},
+        {id: 8, tgId: 4, name: "Cosine function"},
+    ],
+    proposals: [],
+    alternatives: [
+        {langId: 1, taskId: 1, code: "Reverse string"},
+
+    ],
+    getTasks: (tgId: number): TaskDTO[] => {
+        return []
+    },
+    getAlternatives: (langId: number, taskId: number): AlternativeDTO[] => {
+        return []
+    }
 }
 export default mockData

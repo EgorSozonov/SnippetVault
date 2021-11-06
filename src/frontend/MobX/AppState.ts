@@ -8,17 +8,20 @@ import MockClient from "../dataSource/mock/MockClient"
 import createClient from "../Client"
 import HttpClient from "../dataSource/http/HttpClient"
 import SelectGroup from "../../common/types/SelectGroup"
+import AlternativeDTO from "../../common/dto/AlternativeDTO"
 
 
 export default class AppState {
     public openSelect = ""
+    public snippets: IObservableArray<SnippetDTO> = observable.array([])
     public language1: SelectChoice = {id: 0, name: ""}
     public languages: IObservableArray<SelectChoice> = observable.array([])
     public language2: SelectChoice = {id: 0, name: ""}
     public languageGroups: IObservableArray<SelectGroup> = observable.array([])
     public taskGroup: SelectChoice = {id: 0, name: ""}
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
-    public snippets: IObservableArray<SnippetDTO> = observable.array([])
+
+    public alternatives: IObservableArray<AlternativeDTO> = observable.array([])
     public client: IClient = new MockClient()
 
     constructor() {
@@ -26,6 +29,10 @@ export default class AppState {
         // const axios = createClient()
         // this.client = new HttpClient(axios)
     }
+
+    setSnippets = action((newValue: SnippetDTO[]): void => {
+        this.snippets = observable.array(newValue)
+    })  
 
     setLanguage1 = action((newValue: SelectChoice): void => {
         this.language1 = newValue
@@ -55,7 +62,8 @@ export default class AppState {
         this.taskGroups = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name}}))
     })  
 
-    setSnippets = action((newValue: SnippetDTO[]): void => {
-        this.snippets = observable.array(newValue)
+    setAlternatives = action((newValue: AlternativeDTO[]): void => {
+        this.alternatives = observable.array(newValue)
     })  
+
 }

@@ -1,11 +1,16 @@
-import { Axios, AxiosInstance } from "axios"
-import LanguageDTO from "../../../common/dto/LanguageDTO";
-import SnippetDTO from "../../../common/dto/SnippetDTO";
-import TaskGroupDTO from "../../../common/dto/TaskGroupDTO";
-import { ENDPOINTS } from "../../../common/web/Url";
+import { AxiosInstance } from "axios"
+import AlternativeDTO from "../../../common/dto/AlternativeDTO"
+import LanguageDTO from "../../../common/dto/LanguageDTO"
+import LanguageGroupDTO from "../../../common/dto/LanguageGroupDTO"
+import ProposalDTO from "../../../common/dto/ProposalDTO"
+import SnippetDTO from "../../../common/dto/SnippetDTO"
+import TaskDTO from "../../../common/dto/TaskDTO"
+import TaskGroupDTO from "../../../common/dto/TaskGroupDTO"
+import { ENDPOINTS } from "../../../common/web/Url"
 import createClient from "../../Client"
 import IClient from "../../interfaces/IClient"
-import EitherMsg from "../../types/EitherMsg";
+import EitherMsg from "../../types/EitherMsg"
+
 
 class HttpClient implements IClient {
     constructor(private client: AxiosInstance) {
@@ -22,6 +27,22 @@ class HttpClient implements IClient {
 
     getTaskGroups(): Promise<EitherMsg<TaskGroupDTO[]>> {
         return this.makeGetRequest<TaskGroupDTO[]>(`get/${ENDPOINTS.get.taskGroup}`)
+    }
+
+    getLanguageGroups(): Promise<EitherMsg<LanguageGroupDTO[]>> {
+        return this.makeGetRequest<LanguageGroupDTO[]>(`get/${ENDPOINTS.get.languageGroup}`)
+    }
+
+    getProposals(): Promise<EitherMsg<ProposalDTO[]>> {
+        return this.makeGetRequest<ProposalDTO[]>(`get/${ENDPOINTS.get.proposal}`)
+    }
+
+    getTasks(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
+        return this.makeGetRequest<TaskDTO[]>(`get/${ENDPOINTS.get.task}/${tgId}`)
+    }
+
+    getAlternatives(langId: number, taskId: number): Promise<EitherMsg<AlternativeDTO[]>> {
+        return this.makeGetRequest<AlternativeDTO[]>(`get/${ENDPOINTS.get.alternative}/${langId}/${taskId}`)
     }
     
 

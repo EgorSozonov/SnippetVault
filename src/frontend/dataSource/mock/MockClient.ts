@@ -1,5 +1,9 @@
+import AlternativeDTO from "../../../common/dto/AlternativeDTO"
 import LanguageDTO from "../../../common/dto/LanguageDTO"
+import LanguageGroupDTO from "../../../common/dto/LanguageGroupDTO"
+import ProposalDTO from "../../../common/dto/ProposalDTO"
 import SnippetDTO from "../../../common/dto/SnippetDTO"
+import TaskDTO from "../../../common/dto/TaskDTO"
 import TaskGroupDTO from "../../../common/dto/TaskGroupDTO"
 import IClient from "../../interfaces/IClient"
 import EitherMsg from "../../types/EitherMsg"
@@ -17,6 +21,22 @@ class MockClient implements IClient {
 
     getTaskGroups(): Promise<EitherMsg<TaskGroupDTO[]>> {
         return this.wrapOK(mockData.taskGroups)
+    }
+
+    getLanguageGroups(): Promise<EitherMsg<LanguageGroupDTO[]>> {
+        return this.wrapOK(mockData.languageGroups)
+    }
+
+    getProposals(): Promise<EitherMsg<ProposalDTO[]>> {
+        return this.wrapOK(mockData.proposals)
+    }
+
+    getTasks(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
+        return this.wrapOK(mockData.getTasks(tgId))
+    }
+
+    getAlternatives(langId: number, taskId: number): Promise<EitherMsg<AlternativeDTO[]>> {
+        return this.wrapOK(mockData.getAlternatives(langId, taskId))
     }
     
     private wrapOK<T>(val: T): Promise<EitherMsg<T>> {

@@ -3,6 +3,10 @@ export const ENDPOINTS = {
         snippet: "snippet",
         language: "language",
         taskGroup: "taskGroup",
+        languageGroup: "languageGroup",
+        proposal: "proposal",
+        task: "task",
+        alternative: "alternative",
     }
 }
 export const PORT = 47000

@@ -17,10 +17,10 @@ type Paths = {
 
 const PATHS: Paths = {
     "snippet": {description: "View snippets", url: "/sn"},
-    "alternative": {description: "Alternatives & comments", url: "/alternative"},
+    "alternative": {description: "Alternatives & comments", url: "/alternative/:langId/:taskId"},
     "proposal": {description: "New snippet proposals", url: "/proposal"},
-    "taskGroup": {description: "Edit task group", url: "/taskGroup"},
-    "languageGroup": {description: "Edit language group", url: "/languageGroup"},
+    "taskGroup": {description: "Edit task group", url: "/taskGroup/:tgId"},
+    "languageGroup": {description: "Edit language group", url: "/languageGroup/:lgId"},
     "admin": {description: "Admin page", url: "/adminning"},
 }
 
