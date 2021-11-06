@@ -9,18 +9,18 @@ import SelectChoice from "../../../common/types/SelectChoice"
 
 type Props = {
     choices: SelectChoice[],
+    currValue: SelectChoice,
     uniqueName: string,
     selectCallback: (c: SelectChoice) => void,
 }
 
-const HoverSelect: React.FunctionComponent<Props> = observer(({choices, uniqueName, selectCallback, }) => {
-    const [currValue, setCurrValue] = useState({id: 0, name: ""})
+const HoverSelect: React.FunctionComponent<Props> = observer(({choices, currValue, uniqueName, selectCallback, }) => {
+    
     const mainState = useContext<MainState>(StoreContext)
     const currentlyOpen = mainState.app.openSelect
     const isOpen = currentlyOpen === uniqueName
 
     const onSelect = (c: SelectChoice) => {
-        setCurrValue(c)
         selectCallback(c)
         mainState.app.setOpenSelect("")
     }

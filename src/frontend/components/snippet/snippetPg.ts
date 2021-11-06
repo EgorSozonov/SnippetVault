@@ -14,7 +14,6 @@ import { groupLanguages, } from "../../utils/languageGroup/GroupLanguages"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
-    console.log("SnippetPg!")
     const state = useContext<MainState>(StoreContext)
     const snippets = state.app.snippets
     const lang1 = state.app.language1

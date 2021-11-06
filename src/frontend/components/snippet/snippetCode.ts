@@ -33,7 +33,7 @@ function SnippetCode({content, isRight, langId, taskId, } : Props) {
     return html`
         ${isRight === true
             ? html`
-                <div class="snippetContentContainer">
+                <div class="snippetCodeContainer">
                     <div class="snippetButtons">                        
                         ${alternativesLink}
                         <div class="commentButton" title="Copy code to clipboard" onClick=${() => copyTextToClipboard(content)}>C</div>
@@ -41,7 +41,7 @@ function SnippetCode({content, isRight, langId, taskId, } : Props) {
                     ${snippetContent}
                 </div>
             `
-            : html`<div class="snippetContentContainer">
+            : html`<div class="snippetCodeContainer">
                     ${snippetContent}
                     <div class="snippetButtons snippetButtonsRight">
                         ${alternativesLink}

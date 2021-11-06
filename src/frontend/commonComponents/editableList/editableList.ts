@@ -10,6 +10,10 @@ type Props<T extends IStringKeyed & IHasName> = {
     title: string,
 }
 
+function inputSelectHandler(event:any) {
+    event.target.select()
+}
+
 const EditableList = <T extends IStringKeyed & IHasName>({values, title, }: Props<T>) => {
     const [openIdx, setOpenIdx] = useState(-1)
     const rowClickHandler = (idx: number) => {
@@ -36,17 +40,23 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, }: Prop
                             </div>
                             ${openIdx === idx && html`
                                 <ul>
-                                    ${Object.keys(v).map((k: string, idxKey: number) => {
+                                    ${Object.keys(v).filter(x => x !== "id").map((k: string, idxKey: number) => {
                                         return html`
                                             <li key=${idxKey} class="editableListEdit">
-                                                <span><label>${k}</label></span>
-                                                <span><input type="text" defaultValue=${v[k]} onFocus=${(event:any) => event.target.select()} />
+                                                <span class="editableListColumn">
+                                                    <label>${k}</label>
                                                 </span>
-                                                <span><button>Save</button></span>                                            
+                                                <span class="editableListColumn">
+                                                    <input type="text" defaultValue=${v[k]} onFocus=${inputSelectHandler} />
+                                                </span>
                                             </li>`
                                     })}
                                 </ul>
+                                <div>
+                                    <button>Save</button>
+                                </div>
                             `}
+
                         </li>
                     `}
                 )}

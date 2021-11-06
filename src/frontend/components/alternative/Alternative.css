@@ -1,0 +1,39 @@
+.alternativeContainer {
+    display: flex;
+    flex-direction: row;
+    align-content: stretch;
+    width: 100%;
+    min-height: 4rem;
+    background-color: hsl(0, 0%, 30%);    
+}
+
+.alternative {
+    width: 41vw;
+    display: flex;
+    flex-direction: row;
+    border-style: solid;
+    border-width: 1px;
+    border-top-width: 0;
+}
+
+.alternativeLeftSide {
+    border-color: hsl(120, 71%, 43%);
+}
+
+.alternativeRightSide {
+    border-color: hsl(46, 84%, 39%);
+}
+
+.alternativeTimestampContainer {
+    width: 16vw;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: hsl(0, 0%, 43%);
+    min-height: 4em;
+    text-align: center;
+}
+
+.alternativeTimestamp {
+    font-weight: bold;
+    color: green;
+}

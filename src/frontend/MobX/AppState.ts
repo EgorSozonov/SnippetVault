@@ -63,6 +63,8 @@ export default class AppState {
     })  
 
     setAlternatives = action((newValue: AlternativeDTO[]): void => {
+        console.log("newValue")
+        console.log(newValue)
         this.alternatives = observable.array(newValue)
     })  
 

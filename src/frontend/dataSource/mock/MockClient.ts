@@ -7,12 +7,12 @@ import TaskDTO from "../../../common/dto/TaskDTO"
 import TaskGroupDTO from "../../../common/dto/TaskGroupDTO"
 import IClient from "../../interfaces/IClient"
 import EitherMsg from "../../types/EitherMsg"
-import {mockData, getMockTasks, getMockAlternatives} from "./MockData"
+import {mockData, getMockTasks, getMockAlternatives, getMockSnippets} from "./MockData"
 
 
 class MockClient implements IClient {
     getSnippets(lang1: number, lang2: number, taskGroup: number): Promise<EitherMsg<SnippetDTO[]>> {
-        return this.wrapOK(mockData.snippets)
+        return this.wrapOK(getMockSnippets(lang1, lang2, taskGroup))
     }
 
     getLanguages(): Promise<EitherMsg<LanguageDTO[]>> {

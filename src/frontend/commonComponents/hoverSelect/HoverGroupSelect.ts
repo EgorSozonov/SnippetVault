@@ -10,17 +10,15 @@ import SelectGroup from "../../../common/types/SelectGroup"
 
 type Props = {
     choiceGroups: SelectGroup[],
+    currValue: SelectChoice,
     uniqueName: string,
     selectCallback: (c: SelectChoice) => void,
 }
 
-const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups, uniqueName, selectCallback, }) => {
-    const [currValue, setCurrValue] = useState({id: 0, name: ""})
+const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups, currValue, uniqueName, selectCallback, }) => {
     const mainState = useContext<MainState>(StoreContext)
     const currentlyOpen = mainState.app.openSelect
     const isOpen = currentlyOpen === uniqueName
-
-    // const [selectedGroup, setSelectedGroup] = useState<SelectGroup>(((x: SelectGroup[]) => x.length > 0 ? ({id: x[0].id, name: x[0].name, choices: x[0].choices}) : {id: -1, name: "", choices: [], })(choiceGroups))
     const [selectedGroup, setSelectedGroup] = useState<SelectGroup>(choiceGroups.length > 0 ? choiceGroups[0] : {id: -1, name: "", choices: [], })
 
     useEffect(() => {
@@ -31,7 +29,6 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
 
     const [groupSelectMode, setGroupSelectMode] = useState(false)
     const onSelect = (c: SelectChoice) => {
-        setCurrValue(c)
         selectCallback(c)
         mainState.app.setOpenSelect("")
     }
@@ -49,7 +46,6 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
     }
 
     const onSelectGroup = (idx: number) => {
-        console.log(`onSelectGroup ${idx}`)
         setSelectedGroup(choiceGroups[idx])
         setGroupSelectMode(false)
     }
@@ -63,8 +59,9 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
             </span>
             
             <div class=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
-                <div class="groupName" onClick=${onClickGroup}>Selected group: ${selectedGroup.name}</div>
-                ${ groupSelectMode === true &&
+                <div class=${"groupName" + (groupSelectMode === true ? " groupNameSelectMode": "")} 
+                    onClick=${onClickGroup}>Selected group: ${selectedGroup.name}</div>
+                ${groupSelectMode === true &&
                     html`<ul class="list">
                         <li>
                             <ul class="optgroup">
@@ -75,7 +72,7 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
                         </li>
                     </ul>`
                 }
-                ${ groupSelectMode === false &&
+                ${groupSelectMode === false &&
                     html`<ul class="list">
                         <li>
                             <ul class="optgroup">

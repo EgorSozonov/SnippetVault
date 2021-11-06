@@ -1,6 +1,6 @@
 .editableListContainer {
     margin: 10px;
-    background-color: #C0C0C0;
+    background-color: hsl(0, 0%, 75%);
 }
 
 .editableListContainer h5 {
@@ -28,7 +28,11 @@
 
 .editableListEdit {
     margin-left: 25px;
-    display: flex;
+}
+
+.editableListColumn {
+    width: 200px;
+    display: inline-block;
 }
 
 .editableListHeader {

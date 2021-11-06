@@ -1,24 +1,36 @@
 import AlternativeDTO from "../../../common/dto/AlternativeDTO"
+import SnippetDTO from "../../../common/dto/SnippetDTO"
 import TaskDTO from "../../../common/dto/TaskDTO"
 
 export const mockData = {
     snippets: [
             {    
-                leftCode: "code in left language();",
+                leftCode: "str.Reverse();",
                 leftId: 1,
                 taskId: 1,
-                taskName: "Task #1",
-                rightCode: "(code (in (right language)))",
-                rightId: 2,
-            },
+                taskName: "Reverse string",
+                rightCode: "str.reverse();",
+                rightId: 6,
+            },            
             {    
-                leftCode: "someOther(code in left language)[1];",
+                leftCode: "int ind = str.IndexOf(otherStr);",
                 leftId: 1,
                 taskId: 2,
-                taskName: "Task #2",
-                rightCode: "(some-other (code (in (right language))))",
-                rightId: 2,
+                taskName: "Find substring",
+                rightCode: "int ind = str.indexOf(otherStr);",
+                rightId: 6,
             },
+            {    
+                leftCode: `string[] files = Directory.GetFiles(thePath, "*", SearchOption.TopDirectoryOnly);`,
+                leftId: 1,
+                taskId: 4,
+                taskName: "Walk a folder",
+                rightCode: `File(thePath).walk().forEach {
+    println(it)
+}`,
+                rightId: 6,
+            },
+            
         ],
     languages: [
             {id: 1, name: "C#", languageGroup: "Universal", languageGroupOrder: 1, },
@@ -26,7 +38,7 @@ export const mockData = {
             {id: 3, name: "Typescript", languageGroup: "Scripting", languageGroupOrder: 2, },
             {id: 4, name: "Python", languageGroup: "Scripting", languageGroupOrder: 2, },
             {id: 5, name: "MySQL", languageGroup: "Data querying", languageGroupOrder: 3, },
-            {id: 6, name: "Java", languageGroup: "Universal", languageGroupOrder: 1, },
+            {id: 6, name: "Kotlin", languageGroup: "Universal", languageGroupOrder: 1, },
             {id: 7, name: "Haskell", languageGroup: "Universal", languageGroupOrder: 1, },
             {id: 8, name: "PostgreSQL", languageGroup: "Data querying", languageGroupOrder: 3, },
     ],
@@ -68,14 +80,14 @@ export const mockData = {
             code: "a different code();",
             taskName: "Walk a folder",
             languageName: "C#",
-            tsUpload: new Date(2021, 11, 28),
+            tsUpload: new Date(2021, 10, 25),
         },
         {
             id: 12,
             code: "public static virtual void final sin(double x) throws AComplexBusinessExceptionEveryTime()",
             taskName: "Sine function",
             languageName: "Java",
-            tsUpload: new Date(2021, 11, 28),
+            tsUpload: new Date(2021, 11, 22),
         },                
     ],
 
@@ -94,6 +106,11 @@ export const mockData = {
         },    
     ],
 
+}
+
+export function getMockSnippets(lang1: number, lang2: number, tgId: number): SnippetDTO[] {
+    const tasks = getMockTasks(tgId)
+    return mockData.snippets.filter(x => x.leftId == lang1 && tasks.some(y => y.id == x.taskId) && x.rightId == lang2)
 }
 
 export function getMockTasks(tgId: number): TaskDTO[] {

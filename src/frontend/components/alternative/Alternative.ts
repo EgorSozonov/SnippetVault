@@ -1,18 +1,18 @@
-import SnippetDTO from "../../../common/dto/SnippetDTO";
-import "../snippet/snippet.css"
+import "./alternative.css"
 import { html } from "htm/react"
 import { useParams } from "react-router";
-import { useContext, useEffect } from "react";
-import MainState from "../../mobX/MainState";
-import { StoreContext } from "../../App";
-import IClient from "../../interfaces/IClient";
-import { fetchFromClient } from "../../utils/Client";
-import AlternativeDTO from "../../../common/dto/AlternativeDTO";
-import Toggler from "../../commonComponents/toggler/Toggler";
+import { FunctionComponent, useContext, useEffect } from "react"
+import MainState from "../../mobX/MainState"
+import { StoreContext } from "../../App"
+import IClient from "../../interfaces/IClient"
+import { fetchFromClient } from "../../utils/Client"
+import AlternativeDTO from "../../../common/dto/AlternativeDTO"
+import Toggler from "../../commonComponents/toggler/Toggler"
+import { observer } from "mobx-react-lite"
+import { fmtDt } from "../../utils/DateFormat"
 
 
-function Alternative() {
-    console.log("alternative!")
+const Alternative: FunctionComponent = observer(({}: any) => {
     const { taskId, langId } = useParams<{taskId: string, langId: string}>()
     const taskIdNum: number = parseInt(taskId) || -1
     const langIdNum: number = parseInt(langId) || -1
@@ -23,8 +23,8 @@ function Alternative() {
         fetchFromClient(client.getAlternatives(langIdNum, taskIdNum), state.app.setAlternatives)
     }, [])
 
-    console.log("alternatives")
-    console.log(state.app.alternatives)
+    console.log("alternatives:")
+    console.log(state.app.alternatives.length)
     return html`
         <div class="adminAlternative">
             
@@ -33,9 +33,9 @@ function Alternative() {
                     <div class="snippetLeftHeader">
                         Alternatives
                     </div>
-
-                    <div class="taskForHeader"><${Toggler} leftChoice=${"Old->new"} rightChoice=${"Highest votes first"} initChosen=${false}>
-                                <//></div>
+                    <div class="taskForHeader"><${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false} />
+                                
+                    </div>
                     <div class="snippetRightHeader">
                         <div>
                             Task: foo
@@ -46,19 +46,21 @@ function Alternative() {
                     </div>
                 </div>
                 ${state.app.alternatives.map((alt: AlternativeDTO, idx: number ) => {
+                    console.log("inside `map`")
                     const evenClass = (idx%2 === 0 ? " evenRow" : "")
                     return html`
-                        <div class="snippetContainer" key={idx}>
-                            <div class=${"snippet leftSide" + evenClass}>${alt.primaryCode}</div>
-                            <div class=${"taskContainer" + evenClass}>
-                                <div class="taskLeft">
-                                </div>
-                                <div class="task">${alt.tsUpload}</div>
+                        <div class="alternativeContainer" key=${idx}>
+                            <div class=${"alternative alternativeLeftSide" + evenClass}>${alt.primaryCode}</div>
+                            <div class=${"alternativeTimestampContainer" + evenClass}>
+                                <div class="alternativeTimestamp">${fmtDt(alt.tsUpload)}</div>
+                                
+                            </div>
+                            <div class=${"alternative alternativeRightSide" + evenClass}>
                                 <div class="taskRight commentButton" title="Promote to main version">
                                     P
-                                </div>
+                                </div>                                
+                                ${alt.alternativeCode}
                             </div>
-                            <div class=${"snippet rightSide" + evenClass}>${alt.alternativeCode}</div>
                         </div>
                         `
                 })}
@@ -67,6 +69,6 @@ function Alternative() {
 
         </div>
     `
-}
+})
 
 export default Alternative

@@ -17,17 +17,17 @@ const Header: React.FunctionComponent = observer(() => {
             <div class="headerContainer">
                 <div class="choiceInput headerLeftmost">
                     <div class="headerDropdownLabel"><label >Task group:</label></div>
-                    <${HoverSelect} choices=${state.app.taskGroups} uniqueName="TaskGroupChoice"
+                    <${HoverSelect} currValue=${state.app.taskGroup} choices=${state.app.taskGroups} uniqueName="TaskGroupChoice"
                         selectCallback=${state.app.setTaskGroup}><//>
                 </div>
                 <div class="choiceInput">
                     <div class="headerDropdownLabel"><label >Language 1:</label></div>
-                    <${HoverGroupSelect} choiceGroups=${state.app.languageGroups} uniqueName="Lang1"
+                    <${HoverGroupSelect} currValue=${state.app.language1} choiceGroups=${state.app.languageGroups} uniqueName="Lang1"
                         selectCallback=${state.app.setLanguage1}><//>
                 </div>
                 <div class="choiceInput">
                     <div class="headerDropdownLabel"><label >Language 2:</label></div>
-                    <${HoverGroupSelect} choiceGroups=${state.app.languageGroups} uniqueName="Lang2" 
+                    <${HoverGroupSelect} currValue=${state.app.language2} choiceGroups=${state.app.languageGroups} uniqueName="Lang2" 
                         selectCallback=${state.app.setLanguage2}><//>                    
                 </div>
                 <div class="choiceInputButton">

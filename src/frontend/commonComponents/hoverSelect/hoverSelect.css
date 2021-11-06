@@ -25,6 +25,7 @@
     height: 2rem;
     flex: 10;
     display: flex;
+    align-items: center;
 }
 
 .hoverSelect .search {
@@ -131,6 +132,13 @@
 }
 
 .hoverSelect .groupName {
-    background-color: white;
+    background-color: hsl(0, 0%, 75%);
     color: black;
+    border-bottom-style: dotted;
+    border-bottom-width: 1px;
+}
+
+.hoverSelect .groupNameSelectMode {
+    border-bottom-style: double;
+    border-bottom-width: 2px;
 }
