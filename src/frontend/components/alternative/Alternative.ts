@@ -1,6 +1,7 @@
 import SnippetDTO from "../../../common/dto/SnippetDTO";
 import "../snippet/snippet.css"
 import { html } from "htm/react"
+import mockData from "../../dataSource/mock/MockData";
 
 
 function Alternative() {
@@ -18,7 +19,7 @@ function Alternative() {
                         &nbsp;
                     </div>
                 </div>
-                ${mockAlternatives.map((snippet: SnippetDTO, idx: number ) => {
+                ${mockData.alternatives.map((snippet: SnippetDTO, idx: number ) => {
                     const evenClass = (idx%2 === 0 ? " evenRow" : "")
                     return html`
                         <div class="snippetContainer" key={idx}>
