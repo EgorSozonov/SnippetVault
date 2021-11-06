@@ -7,9 +7,7 @@ import TaskGroupDTO from '../../../common/dto/TaskGroupDTO';
 import Alternative from '../alternative/Alternative';
 import NewProposal from './NewProposal';
 import { html } from 'htm/react'
-import mockData from '../../dataSource/mock/MockData';
-
-
+import { mockData } from '../../dataSource/mock/MockData';
 
 
 const ListTaskGroups = (props: any) => EditableList<TaskGroupDTO>(props)

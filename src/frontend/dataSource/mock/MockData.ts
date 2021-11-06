@@ -1,7 +1,7 @@
 import AlternativeDTO from "../../../common/dto/AlternativeDTO"
 import TaskDTO from "../../../common/dto/TaskDTO"
 
-const mockData = {
+export const mockData = {
     snippets: [
             {    
                 leftCode: "code in left language();",
@@ -29,8 +29,14 @@ const mockData = {
             {id: 6, name: "Java", languageGroup: "Universal", languageGroupOrder: 1, },
             {id: 7, name: "Haskell", languageGroup: "Universal", languageGroupOrder: 1, },
             {id: 8, name: "PostgreSQL", languageGroup: "Data querying", languageGroupOrder: 3, },
-        ],
-    languageGroups: [],
+    ],
+
+    languageGroups: [
+        {id: 1, name: "Universal", order: 1, }, 
+        {id: 2, name: "Scripting", order: 2, }, 
+        {id: 3, name: "Data querying", order: 3, }, 
+    ],
+
     taskGroups: [
         {id: 1, name: "String manipulation"},
         {id: 2, name: "File system"},
@@ -39,25 +45,61 @@ const mockData = {
     ],
 
     tasks: [
-        {id: 1, tgId: 1, name: "Reverse string"},
-        {id: 2, tgId: 1, name: "Find substring"},
-        {id: 3, tgId: 1, name: "Regex match"},
-        {id: 4, tgId: 2, name: "Walk a folder"},
-        {id: 5, tgId: 3, name: "String -> number"},
-        {id: 6, tgId: 3, name: "Number -> string"},
-        {id: 7, tgId: 4, name: "Sine function"},
-        {id: 8, tgId: 4, name: "Cosine function"},
+        {tgId: 1, value: {id: 1, name: "Reverse string"}, },
+        {tgId: 1, value: {id: 2, name: "Find substring"}, },
+        {tgId: 1, value: {id: 3, name: "Regex match"}, },
+        {tgId: 2, value: {id: 4, name: "Walk a folder"}, },
+        {tgId: 3, value: {id: 5, name: "String -> number"}, },
+        {tgId: 3, value: {id: 6, name: "Number -> string"}, },
+        {tgId: 4, value: {id: 7, name: "Sine function"}, },
+        {tgId: 4, value: {id: 8, name: "Cosine function"}, },
     ],
-    proposals: [],
-    alternatives: [
-        {langId: 1, taskId: 1, code: "Reverse string"},
 
+    proposals: [
+        {
+            id: 10,
+            code: "proposal code();",
+            taskName: "Walk a folder",
+            languageName: "C#",
+            tsUpload: new Date(2021, 11, 28),
+        },
+        {
+            id: 11,
+            code: "a different code();",
+            taskName: "Walk a folder",
+            languageName: "C#",
+            tsUpload: new Date(2021, 11, 28),
+        },
+        {
+            id: 12,
+            code: "public static virtual void final sin(double x) throws AComplexBusinessExceptionEveryTime()",
+            taskName: "Sine function",
+            languageName: "Java",
+            tsUpload: new Date(2021, 11, 28),
+        },                
     ],
-    getTasks: (tgId: number): TaskDTO[] => {
-        return []
-    },
-    getAlternatives: (langId: number, taskId: number): AlternativeDTO[] => {
-        return []
-    }
+
+    alternatives: [
+        {langId: 1, taskId: 1, value: {primaryId: 5, primaryCode: "foo(blahBlach[4]);", primaryScore: 10, 
+            alternativeId: 8, alternativeCode: "differentFoo(blahBlach[4]);", alternativeScore: 12, tsUpload: new Date(2021, 12, 2), },
+        },
+        {langId: 1, taskId: 1, value: {primaryId: 5, primaryCode: "foo(blahBlach[4]);", primaryScore: 10, 
+            alternativeId: 9, alternativeCode: "aHighScoreAlternative(blahBlach[4]);", alternativeScore: 22, tsUpload: new Date(2021, 12, 2), },
+        },
+        {langId: 1, taskId: 1, value: {primaryId: 5, primaryCode: "foo(blahBlach[4]);", primaryScore: 10, 
+            alternativeId: 11, alternativeCode: "aModerateScoreAlternative(blahBlach[4]);", alternativeScore: 15, tsUpload: new Date(2021, 12, 2), },
+        },
+        {langId: 6, taskId: 1, value: {primaryId: 5, primaryCode: "foo(blahBlach[4]);", primaryScore: 10, 
+            alternativeId: 18, alternativeCode: "javaAlternative(blahBlach[6]);", alternativeScore: 12, tsUpload: new Date(2021, 12, 2), },
+        },    
+    ],
+
 }
-export default mockData
+
+export function getMockTasks(tgId: number): TaskDTO[] {
+    return mockData.tasks.filter(x => x.tgId == tgId).map(y => y.value)
+}
+
+export function getMockAlternatives(langId: number, taskId: number): AlternativeDTO[] {
+    return mockData.alternatives.filter(x => x.langId == langId && x.taskId == taskId).map(y => y.value)
+}

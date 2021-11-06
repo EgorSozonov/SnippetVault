@@ -7,6 +7,8 @@ import PATHS from '../../params/Path';
 type Props = {
     content: string,
     isRight: boolean,
+    langId: number,
+    taskId: number
 }
 
 function copyTextToClipboard(text: string) {
@@ -15,14 +17,14 @@ function copyTextToClipboard(text: string) {
 
 
 
-function SnippetCode({content, isRight, } : Props) {
+function SnippetCode({content, isRight, langId, taskId, } : Props) {
     const snippetContent = html`
         <pre class="snippetCode">
             ${content}
         </pre>
         `
     const alternativesLink = html`
-        <${NavLink} exact to=${PATHS["alternative"].url}>
+        <${NavLink} exact to=${`${PATHS["alternative"].urlPrefix}/${langId}/${taskId}`}>
             <div title="Alternative versions" class="commentButton">
                 A
             </div>

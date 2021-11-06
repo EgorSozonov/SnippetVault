@@ -45,7 +45,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                     <div class="snippetRow" key=${idx}>
                         <div class=${"snippetContent leftSide" + evenClass}>
                             ${snippet.leftCode.length > 0 
-                                ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false}><//>`
+                                ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false} langId=${lang1.id} taskId=${snippet.taskId}><//>`
                                 : html`<${TextInput} numberProposals="4"><//>`}
                         </div>
                         <div class=${"taskContainer" + evenClass}>
@@ -53,7 +53,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         </div>
                         <div class=${"snippetContent rightSide" + evenClass}>
                             ${snippet.rightCode.length > 0 
-                                ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true}><//>`
+                                ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true} langId=${lang2.id} taskId=${snippet.taskId}><//>`
                                 : html`<${TextInput} numberProposals="4"><//>`}
                         </div>
                     </div>`

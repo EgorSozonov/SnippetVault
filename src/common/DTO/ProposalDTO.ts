@@ -1,5 +1,5 @@
 type Proposal = {
-    id: string,
+    id: number,
     code: string,
     taskName: string,
     languageName: string,

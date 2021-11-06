@@ -7,7 +7,7 @@ import TaskDTO from "../../../common/dto/TaskDTO"
 import TaskGroupDTO from "../../../common/dto/TaskGroupDTO"
 import IClient from "../../interfaces/IClient"
 import EitherMsg from "../../types/EitherMsg"
-import mockData from "./MockData"
+import {mockData, getMockTasks, getMockAlternatives} from "./MockData"
 
 
 class MockClient implements IClient {
@@ -32,11 +32,11 @@ class MockClient implements IClient {
     }
 
     getTasks(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
-        return this.wrapOK(mockData.getTasks(tgId))
+        return this.wrapOK(getMockTasks(tgId))
     }
 
     getAlternatives(langId: number, taskId: number): Promise<EitherMsg<AlternativeDTO[]>> {
-        return this.wrapOK(mockData.getAlternatives(langId, taskId))
+        return this.wrapOK(getMockAlternatives(langId, taskId))
     }
     
     private wrapOK<T>(val: T): Promise<EitherMsg<T>> {
