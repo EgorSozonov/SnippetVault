@@ -1,8 +1,8 @@
-import LanguageDTO from "../../common/dto/LanguageDTO"
-import SnippetDTO from "../../common/dto/SnippetDTO"
-import TaskGroupDTO from "../../common/dto/TaskGroupDTO"
-import IClient from "../interfaces/IClient"
-import EitherMsg from "../types/EitherMsg"
+import LanguageDTO from "../../../common/dto/LanguageDTO"
+import SnippetDTO from "../../../common/dto/SnippetDTO"
+import TaskGroupDTO from "../../../common/dto/TaskGroupDTO"
+import IClient from "../../interfaces/IClient"
+import EitherMsg from "../../types/EitherMsg"
 import mockData from "./MockData"
 
 

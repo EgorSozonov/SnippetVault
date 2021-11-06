@@ -4,9 +4,9 @@ import SelectChoice from "../../common/types/SelectChoice"
 import TaskGroupDTO from "../../common/dto/TaskGroupDTO"
 import SnippetDTO from "../../common/dto/SnippetDTO"
 import IClient from "../interfaces/IClient"
-import MockClient from "../mock/MockClient"
+import MockClient from "../dataSource/mock/MockClient"
 import createClient from "../Client"
-import HttpClient from "../http/HttpClient"
+import HttpClient from "../dataSource/http/HttpClient"
 import SelectGroup from "../../common/types/SelectGroup"
 
 

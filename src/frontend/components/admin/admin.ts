@@ -7,19 +7,11 @@ import TaskGroupDTO from '../../../common/dto/TaskGroupDTO';
 import Alternative from '../alternative/Alternative';
 import NewProposal from './NewProposal';
 import { html } from 'htm/react'
+import mockData from '../../dataSource/mock/MockData';
 
 
-const groups: TaskGroupDTO[] = [
-    {id: 1, name: "String manipulation"},
-    {id: 2, name: "File system tasks"},
-    {id: 3, name: "Common types & operations on them"},
-]
 
-const langs: LanguageDTO[] = [
-    {id: 1, name: "C#", languageGroup: "Universal", },
-    {id: 2, name: "C++", languageGroup: "Universal", },
-    {id: 3, name: "Typescript", languageGroup: "Universal", },
-]
+
 const ListTaskGroups = (props: any) => EditableList<TaskGroupDTO>(props)
 const ListLanguages = (props: any) => EditableList<LanguageDTO>(props)
 
@@ -31,17 +23,14 @@ function Admin() {
                     <div class="adminHeader">Back to snippets</div>
                 <//>
             </p>
-            <${ListTaskGroups} values=${groups} title="Task groups"></EditableList>
-            <${ListLanguages} values=${langs} title="Languages"></EditableList>
+            <${ListTaskGroups} values=${mockData.taskGroups} title="Task groups"></EditableList>
+            <${ListLanguages} values=${mockData.languages} title="Languages"></EditableList>
             <div>
                 <${Alternative} />
             </div>
             <div>
                 <${NewProposal} />
             </div>
-            
-            
-
         </div>
     `
 }

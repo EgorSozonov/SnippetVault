@@ -29,8 +29,9 @@ const mockData = {
         ],
     taskGroups: [
         {id: 1, name: "String manipulation"},
-        {id: 2, name: "File system tasks"},
+        {id: 2, name: "File system"},
         {id: 3, name: "Primitive types"},
+        {id: 4, name: "Math"},
     ]
         
 }
