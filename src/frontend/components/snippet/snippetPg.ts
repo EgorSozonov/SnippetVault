@@ -22,7 +22,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const client: IClient = state.app.client
 
     useEffect(() => {
-        fetchFromClientTransform(client.getLanguages(), groupLanguages, state.app.setLanguageGroups)
+        fetchFromClientTransform(client.getLanguages(), groupLanguages, state.app.setGroupedLanguages)
         fetchFromClient(client.getTaskGroups(), state.app.setTaskGroups)
     }, [])
 
