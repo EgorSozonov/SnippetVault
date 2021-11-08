@@ -1,3 +1,5 @@
+import CommentDTO from "./CommentDTO"
+
 type AlternativeDTO = {
     primaryId: number,
     primaryCode: string, 
@@ -5,6 +7,7 @@ type AlternativeDTO = {
     alternativeId: number,
     alternativeCode: string,
     alternativeScore: number,
+    comments: CommentDTO[],
     tsUpload: Date,
 }
 

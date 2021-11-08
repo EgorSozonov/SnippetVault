@@ -4,6 +4,8 @@ import IStringKeyed from "../../interfaces/IStringKeyed"
 import "./editableList.css"
 import { html } from 'htm/react'
 import { Editability } from "../../types/Editability"
+import HoverSelect from "../hoverSelect/HoverSelect"
+import SelectChoice from "../../../common/types/SelectChoice"
 
 
 type Props<T extends IStringKeyed & IHasName> = {
@@ -12,7 +14,7 @@ type Props<T extends IStringKeyed & IHasName> = {
     editabilities: Editability<T>[],
 }
 
-function inputSelectHandler(event:any) {
+function inputFocusHandler(event:any) {
     event.target.select()
 }
 
@@ -45,6 +47,11 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
         // TODO save newValue   
     }
 
+    const inputSelectHandler = (newValue: SelectChoice) => {
+        console.log("new value")
+        console.log(newValue)
+    }
+
     return html`
         <div class="editableListContainer">
             <div class="editableListHeader">
@@ -64,7 +71,12 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                                             <label>${x.field}</label>
                                         </span>
                                         <span class="editableListColumn">
-                                            <input type="text" name=${x.field} defaultValue=${values[0][x.field]} onFocus=${inputSelectHandler} />
+                                            ${x.fieldType === "choice" 
+                                                ? html`<${HoverSelect} choices=${x.choices} currValue=${values[0][x.field]} 
+                                                    onFocus=${inputSelectHandler} />`
+                                                : html`<input type="text" name=${x.field} defaultValue=${values[0][x.field]} 
+                                                    onFocus=${inputSelectHandler} />`
+                                            }                                            
                                         </span>
                                     </li>`
                             })}
@@ -92,7 +104,12 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                                                         <label>${x.field}</label>
                                                     </span>
                                                     <span class="editableListColumn">
-                                                        <input type="text" name=${x.field} defaultValue=${v[x.field]} onFocus=${inputSelectHandler} />
+                                                        ${x.fieldType === "choice" 
+                                                            ? html`<${HoverSelect} choices=${x.choices} currValue=${v[x.field]} 
+                                                                uniqueName=${"unique" + idx} selectCallback=${inputSelectHandler} />`
+                                                            : html`<input type="text" name=${x.field} defaultValue=${v[x.field]} 
+                                                                onFocus=${inputFocusHandler} />`
+                                                }
                                                     </span>
                                                 </li>`
                                         })}
