@@ -6,6 +6,7 @@ import { html } from 'htm/react'
 import { Editability } from "../../types/Editability"
 import HoverSelect from "../hoverSelect/HoverSelect"
 import SelectChoice from "../../../common/types/SelectChoice"
+import HoverSelectInput from "../hoverSelect/HoverSelectInput"
 
 
 type Props<T extends IStringKeyed & IHasName> = {
@@ -29,8 +30,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
         }
     }
 
-    const newSaveHandler = (e: any) => {
-        
+    const newSaveHandler = (e: any) => {        
         e.preventDefault()        
     }
 
@@ -47,9 +47,28 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
         // TODO save newValue   
     }
 
-    const inputSelectHandler = (newValue: SelectChoice) => {
-        console.log("new value")
-        console.log(newValue)
+    const inputSelectHandler = (idx: number, field: keyof T) => (newValue: SelectChoice) => {
+        const theValue = values[idx]
+    }
+    const editableInputs = (v: T, idx: number) => {
+        return html`${editabilities.filter(x => x.field in v).map((x: Editability<T>) => {
+                console.log(x.field.toString() + idx)
+                return html`
+                    <li key=${x.field.toString() + idx} class="editableListEdit">
+                        <span class="editableListColumn">
+                            <label>${x.field}</label>
+                        </span>
+                        <span class="editableListColumn">
+                            ${x.fieldType === "choice" 
+                                ? html`<${HoverSelectInput} name=${x.field} choices=${x.choices} initValue=${v[x.field].name} 
+                                    uniqueName=${"unique" + x.field + idx} />`
+                                : html`<input type="text" name=${x.field} defaultValue=${v[x.field]} 
+                                    onFocus=${inputFocusHandler} />`
+                    }
+                        </span>
+                    </li>`
+            })}
+        `
     }
 
     return html`
@@ -73,7 +92,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                                         <span class="editableListColumn">
                                             ${x.fieldType === "choice" 
                                                 ? html`<${HoverSelect} choices=${x.choices} currValue=${values[0][x.field]} 
-                                                    onFocus=${inputSelectHandler} />`
+                                                    selectCallback=${inputSelectHandler} />`
                                                 : html`<input type="text" name=${x.field} defaultValue=${values[0][x.field]} 
                                                     onFocus=${inputSelectHandler} />`
                                             }                                            
@@ -97,22 +116,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                             ${openIdx === idx && html`
                                 <form onSubmit=${editSaveHandler(idx)}>
                                     <ul>
-                                        ${editabilities.filter(x => x.field in v).map((x: Editability<T>) => {
-                                            return html`
-                                                <li key=${x.field} class="editableListEdit">
-                                                    <span class="editableListColumn">
-                                                        <label>${x.field}</label>
-                                                    </span>
-                                                    <span class="editableListColumn">
-                                                        ${x.fieldType === "choice" 
-                                                            ? html`<${HoverSelect} choices=${x.choices} currValue=${v[x.field]} 
-                                                                uniqueName=${"unique" + idx} selectCallback=${inputSelectHandler} />`
-                                                            : html`<input type="text" name=${x.field} defaultValue=${v[x.field]} 
-                                                                onFocus=${inputFocusHandler} />`
-                                                }
-                                                    </span>
-                                                </li>`
-                                        })}
+                                        ${editableInputs(v, idx)}
                                     </ul>
                                     <div>
                                         <input type="submit" value="Save" />

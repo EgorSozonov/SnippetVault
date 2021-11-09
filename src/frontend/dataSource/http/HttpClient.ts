@@ -2,6 +2,7 @@ import { AxiosInstance } from "axios"
 import AlternativeDTO from "../../../common/dto/AlternativeDTO"
 import LanguageDTO from "../../../common/dto/LanguageDTO"
 import LanguageGroupDTO from "../../../common/dto/LanguageGroupDTO"
+import LanguageReqDTO from "../../../common/dto/LanguageReqDTO"
 import ProposalDTO from "../../../common/dto/ProposalDTO"
 import SnippetDTO from "../../../common/dto/SnippetDTO"
 import TaskDTO from "../../../common/dto/TaskDTO"
@@ -23,6 +24,10 @@ class HttpClient implements IClient {
 
     getLanguages(): Promise<EitherMsg<LanguageDTO[]>> {
         return this.makeGetRequest<LanguageDTO[]>(`get/${ENDPOINTS.get.language}`)
+    }
+
+    getLanguagesReq(): Promise<EitherMsg<LanguageReqDTO[]>> {
+        return this.makeGetRequest<LanguageReqDTO[]>(`get/${ENDPOINTS.get.languageReq}`)
     }
 
     getTaskGroups(): Promise<EitherMsg<TaskGroupDTO[]>> {

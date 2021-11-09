@@ -8,13 +8,14 @@ import MockClient from "../dataSource/mock/MockClient"
 import AlternativeDTO from "../../common/dto/AlternativeDTO"
 import LanguageGroupDTO from "../../common/dto/LanguageGroupDTO"
 import SelectGroup from "../../common/types/SelectGroup"
+import LanguageReqDTO from "../../common/dto/LanguageReqDTO"
 
 
 export default class AppState {
     public openSelect = ""
     public snippets: IObservableArray<SnippetDTO> = observable.array([])
     public language1: SelectChoice = {id: 0, name: ""}
-    public languages: IObservableArray<SelectChoice> = observable.array([])
+    public languages: IObservableArray<LanguageReqDTO> = observable.array([])
     public language2: SelectChoice = {id: 0, name: ""}
     public groupedLanguages: IObservableArray<SelectGroup> = observable.array([])
     public languageGroups: IObservableArray<LanguageGroupDTO> = observable.array([])
@@ -58,8 +59,8 @@ export default class AppState {
         this.openSelect = newValue
     })
 
-    setLanguages = action((newValue: LanguageDTO[]): void => {
-        this.languages = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name}}))
+    setLanguages = action((newValue: LanguageReqDTO[]): void => {
+        this.languages = observable.array(newValue)
     }) 
 
     setTaskGroups = action((newValue: TaskGroupDTO[]): void => {

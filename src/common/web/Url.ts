@@ -2,6 +2,7 @@ export const ENDPOINTS = {
     get: {
         snippet: "snippet",
         language: "language",
+        languageReq: "languageReq",
         taskGroup: "taskGroup",
         languageGroup: "languageGroup",
         proposal: "proposal",

@@ -43,6 +43,17 @@ export const mockData = {
             {id: 8, name: "PostgreSQL", languageGroup: "Data querying", languageGroupOrder: 3, },
     ],
 
+    languagesReq: [
+            {id: 1, name: "C#", languageGroup: {id: 1, name: "Universal", }, },
+            {id: 2, name: "C++", languageGroup: {id: 1, name: "Universal", }, },
+            {id: 3, name: "Typescript", languageGroup: {id: 2, name: "Scripting", }, },
+            {id: 4, name: "Python", languageGroup: {id: 2, name: "Scripting", }, },
+            {id: 5, name: "MySQL", languageGroup: {id: 3, name: "Data querying", }, },
+            {id: 6, name: "Kotlin", languageGroup: {id: 1, name: "Universal", }, },
+            {id: 7, name: "Haskell", languageGroup: {id: 1, name: "Universal", }, },
+            {id: 8, name: "PostgreSQL", languageGroup: {id: 3, name: "Data querying", }, },
+    ],
+
     languageGroups: [
         {id: 1, name: "Universal", order: 1, }, 
         {id: 2, name: "Scripting", order: 2, }, 
