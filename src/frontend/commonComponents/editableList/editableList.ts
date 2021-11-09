@@ -50,27 +50,26 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     const inputSelectHandler = (idx: number, field: keyof T) => (newValue: SelectChoice) => {
         const theValue = values[idx]
     }
-    const editableInputs = (v: T, idx: number) => {
-        return html`${editabilities.filter(x => x.field in v).map((x: Editability<T>) => {
-                console.log(x.field.toString() + idx)
-                return html`
-                    <li key=${x.field.toString() + idx} class="editableListEdit">
-                        <span class="editableListColumn">
-                            <label>${x.field}</label>
-                        </span>
-                        <span class="editableListColumn">
-                            ${x.fieldType === "choice" 
-                                ? html`<${HoverSelectInput} name=${x.field} choices=${x.choices} initValue=${v[x.field].name} 
-                                    uniqueName=${"unique" + x.field + idx} />`
-                                : html`<input type="text" name=${x.field} defaultValue=${v[x.field]} 
-                                    onFocus=${inputFocusHandler} />`
-                    }
-                        </span>
-                    </li>`
+    const editableInputs = (v: T, idxRow: number) => {
+        return html`${editabilities.filter(x => x.field in v).map((x: Editability<T>, idx: number) => {
+            console.log(idx)
+            return html`
+                <li key=${idx} class="editableListEdit">
+                    <span class="editableListColumn">
+                        <label>${x.field}</label>
+                    </span>
+                    <span class="editableListColumn">
+                        ${x.fieldType === "choice" 
+                            ? html`<${HoverSelectInput} name=${x.field} choices=${x.choices} initValue=${v[x.field]} 
+                                uniqueName=${"unique" + x.field + idx} />`
+                            : html`<input type="text" name=${x.field} defaultValue=${v[x.field]} 
+                                onFocus=${inputFocusHandler} />`
+                }
+                    </span>
+                </li>`
             })}
-        `
+            `
     }
-
     return html`
         <div class="editableListContainer">
             <div class="editableListHeader">

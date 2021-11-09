@@ -36,24 +36,22 @@ const HoverSelectInput: React.FunctionComponent<Props> = observer(({choices, ini
             mainState.app.setOpenSelect(uniqueName)
         }
     }
+
     return html`
-        <input type="text" name=${inputName} value=${currValue.name} class="hoverSelect" onMouseEnter=${() => mainState.app.setOpenSelect(uniqueName)}
+        <div key=${inputName}>
+            <input type="text" name=${inputName} readOnly value=${currValue.name} class="hoverSelect" onMouseEnter=${() => mainState.app.setOpenSelect(uniqueName)}
                 onMouseLeave=${() => mainState.app.setOpenSelect("")} />       
-        <span class="search" onClick=${onClickHeader}>
-        </span>
-        
-        <div class=${"hoverSelectMenuActive"}>
-            <ul class="list">
-                <li>
-                    <ul class="optgroup">
-                        ${choices.map((c: SelectChoice, idx: number) => {
-                            return html`<li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
-                        })}
-                    </ul>
-                </li>
-            </ul>
+            <span class="search" onClick=${onClickHeader}>
+            </span>
+            <div class=${"hoverSelectMenuActive"}>
+                <ul class="optgroup">
+                    ${choices.map((c: SelectChoice, idx: number) => {
+                        return html`<li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
+                    })}
+                </ul>
+            </div>
         </div>
-        
+    
     `
 })
 

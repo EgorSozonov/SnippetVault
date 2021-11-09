@@ -29,8 +29,7 @@ export const mockData = {
     println(it)
 }`,
                 rightId: 6,
-            },
-            
+            },            
         ],
     languages: [
             {id: 1, name: "C#", languageGroup: "Universal", languageGroupOrder: 1, },

@@ -15,8 +15,6 @@ function copyTextToClipboard(text: string) {
     navigator.clipboard.writeText(text);
 }
 
-
-
 function SnippetCode({content, isRight, langId, taskId, } : Props) {
     const snippetContent = html`
         <pre class="snippetCode">
