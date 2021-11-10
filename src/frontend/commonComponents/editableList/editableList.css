@@ -52,3 +52,7 @@
     border-style: solid;
     cursor: pointer;
 }
+
+.editableListSaveButton {
+    margin: 20px;
+}

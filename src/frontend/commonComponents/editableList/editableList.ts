@@ -41,18 +41,19 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     const editSaveHandler = (idx: number) => (e: any) => {
         e.preventDefault()        
         const newValue = {...values[idx]}
-        editabilities.forEach(x => {
-            newValue[x.field] = e.target[x.field].value
+
+        editabilities.forEach(ed => {
+            if (ed.fieldType === "choice") {
+                const newChoiceInd: number = ed.choices!!.findIndex(x => x.name === e.target[ed.field].value)
+                newValue[ed.field] = ed.choices!![newChoiceInd] as any
+            } else {
+                newValue[ed.field] = e.target[ed.field].value
+            }            
         })
-        // TODO save newValue   
     }
 
-    const inputSelectHandler = (idx: number, field: keyof T) => (newValue: SelectChoice) => {
-        const theValue = values[idx]
-    }
     const editableInputs = (v: T, idxRow: number) => {
         return html`${editabilities.filter(x => x.field in v).map((x: Editability<T>, idx: number) => {
-            console.log(idx)
             return html`
                 <li key=${idx} class="editableListEdit">
                     <span class="editableListColumn">
@@ -60,8 +61,8 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                     </span>
                     <span class="editableListColumn">
                         ${x.fieldType === "choice" 
-                            ? html`<${HoverSelectInput} name=${x.field} choices=${x.choices} initValue=${v[x.field]} 
-                                uniqueName=${"unique" + x.field + idx} />`
+                            ? html`<${HoverSelectInput} inputName=${x.field} choices=${x.choices} initValue=${v[x.field]} 
+                                        uniqueName=${"unique" + x.field + idx} />`
                             : html`<input type="text" name=${x.field} defaultValue=${v[x.field]} 
                                 onFocus=${inputFocusHandler} />`
                 }
@@ -85,17 +86,14 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                             ${editabilities.filter(x => x.field in values[0]).map((x: Editability<T>) => {
                                 return html`
                                     <li key=${x.field} class="editableListEdit">
-                                        <span class="editableListColumn">
-                                            <label>${x.field}</label>
-                                        </span>
-                                        <span class="editableListColumn">
-                                            ${x.fieldType === "choice" 
-                                                ? html`<${HoverSelect} choices=${x.choices} currValue=${values[0][x.field]} 
-                                                    selectCallback=${inputSelectHandler} />`
-                                                : html`<input type="text" name=${x.field} defaultValue=${values[0][x.field]} 
-                                                    onFocus=${inputSelectHandler} />`
-                                            }                                            
-                                        </span>
+                                        <form onSubmit=${editSaveHandler(0)}>
+                                            <ul>
+                                                ${editableInputs(values[0], 0)}
+                                            </ul>
+                                            <div className="editableListSaveButton">
+                                                <input type="submit" value="Save" />
+                                            </div>
+                                        </form>
                                     </li>`
                             })}
                         </ul>
@@ -105,28 +103,30 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                     </form>
                 `}
             </div>
-            <ul>
-                ${values.map((v: T, idx: number) => {
-                    return html`
-                        <li key=${idx} id=${"elem" + idx} class="editableListRow">
-                            <div onClick=${() => rowClickHandler(idx)} class=${(openIdx === idx ? " editableListRowActive" : "")}>
-                                <span class="editableListCell">${v.name}</span>
-                            </div>
-                            ${openIdx === idx && html`
-                                <form onSubmit=${editSaveHandler(idx)}>
-                                    <ul>
-                                        ${editableInputs(v, idx)}
-                                    </ul>
-                                    <div>
-                                        <input type="submit" value="Save" />
-                                    </div>
-                                </form>
-                            `}
+            <div>
+                <ul>
+                    ${values.map((v: T, idx: number) => {
+                        return html`
+                            <li key=${idx} id=${"elem" + idx} class="editableListRow">
+                                <div onClick=${() => rowClickHandler(idx)} class=${(openIdx === idx ? " editableListRowActive" : "")}>
+                                    <span class="editableListCell">${v.name}</span>
+                                </div>
+                                ${openIdx === idx && html`
+                                    <form onSubmit=${editSaveHandler(idx)}>
+                                        <ul>
+                                            ${editableInputs(v, idx)}
+                                        </ul>
+                                        <div className="editableListSaveButton">
+                                            <input type="submit" value="Save" />
+                                        </div>
+                                    </form>
+                                `}
 
-                        </li>
-                    `}
-                )}
-            </ul>
+                            </li>
+                        `}
+                    )}
+                </ul>
+            </div>
         </div>
     `
 }

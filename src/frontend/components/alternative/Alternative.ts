@@ -18,13 +18,13 @@ const Alternative: FunctionComponent = observer(({}: any) => {
     const langIdNum: number = parseInt(langId) || -1
     const state = useContext<MainState>(StoreContext)
     const client: IClient = state.app.client
-
+    const language = state.app.languages.find(x => x.id === langIdNum)
+    console.log("languages")
+    console.log(state.app.languages)
     useEffect(() => {        
         fetchFromClient(client.getAlternatives(langIdNum, taskIdNum), state.app.setAlternatives)
     }, [])
 
-    console.log("alternatives:")
-    console.log(state.app.alternatives.length)
     return html`
         <div class="adminAlternative">
             
@@ -41,7 +41,7 @@ const Alternative: FunctionComponent = observer(({}: any) => {
                             Task: foo
                         </div>
                         <div>
-                            Language: bar
+                            Language: ${language ? language.name : ""}
                         </div>
                     </div>
                 </div>
