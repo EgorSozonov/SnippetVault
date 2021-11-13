@@ -1,4 +1,4 @@
-import "./alternative.css"
+import "./Alternative.css"
 import { html } from "htm/react"
 import { useParams } from "react-router";
 import { FunctionComponent, useContext, useEffect } from "react"
@@ -21,53 +21,56 @@ const Alternative: FunctionComponent = observer(({}: any) => {
     const language = state.app.languages.find(x => x.id === langIdNum)
     console.log("languages")
     console.log(state.app.languages)
-    useEffect(() => {        
+    useEffect(() => {
+        fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
         fetchFromClient(client.getAlternatives(langIdNum, taskIdNum), state.app.setAlternatives)
-    }, [])
-
+    }, [])   
+    
     return html`
-        <div class="adminAlternative">
-            
-            <div class="snippetsContainer">
-                <div class="snippetsHeader">
-                    <div class="snippetLeftHeader">
-                        Alternatives
+                 
+        <div class="alternativeBody">
+            <div class="alternativeHeader">
+                <div class="alternativeLeftHeader">
+                    Alternatives
+                </div>
+                <div class="taskForHeader"><${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false} />
+                            
+                </div>
+                <div class="alternativeRightHeader">
+                    <div>
+                        Task: foo
                     </div>
-                    <div class="taskForHeader"><${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false} />
-                                
-                    </div>
-                    <div class="snippetRightHeader">
-                        <div>
-                            Task: foo
-                        </div>
-                        <div>
-                            Language: ${language ? language.name : ""}
-                        </div>
+                    <div>
+                        Language: ${language ? language.name : ""}
                     </div>
                 </div>
-                ${state.app.alternatives.map((alt: AlternativeDTO, idx: number ) => {
-                    console.log("inside `map`")
-                    const evenClass = (idx%2 === 0 ? " evenRow" : "")
-                    return html`
-                        <div class="alternativeContainer" key=${idx}>
-                            <div class=${"alternative alternativeLeftSide" + evenClass}>${alt.primaryCode}</div>
-                            <div class=${"alternativeTimestampContainer" + evenClass}>
-                                <div class="alternativeTimestamp">${fmtDt(alt.tsUpload)}</div>
-                                
-                            </div>
-                            <div class=${"alternative alternativeRightSide" + evenClass}>
-                                <div class="taskRight commentButton" title="Promote to main version">
-                                    P
-                                </div>                                
-                                ${alt.alternativeCode}
-                            </div>
-                        </div>
-                        `
-                })}
-                
             </div>
-
+            <div>asdf</div>
+            ${state.app.alternatives.map((alt: AlternativeDTO, idx: number ) => {
+                console.log("inside `map`")
+                console.log(alt.tsUpload)
+                console.log(fmtDt(alt.tsUpload))
+                const evenClass = (idx%2 === 0 ? " evenRow" : "")
+                return html`
+                    <div class="alternativeRow" key=${idx}>
+                        <div class=${"alternative alternativeLeftSide" + evenClass}>${alt.primaryCode}</div>
+                        <div class=${"alternativeTimestampContainer" + evenClass}>
+                            <div class="alternativeTimestamp">${fmtDt(alt.tsUpload)}</div>
+                            
+                        </div>
+                        <div class=${"alternative alternativeRightSide" + evenClass}>
+                            <div class="taskRight commentButton" title="Promote to main version">
+                                P
+                            </div>                                
+                            ${alt.alternativeCode}
+                        </div>
+                    </div>
+                    `
+            })}
+            
         </div>
+
+        
     `
 })
 
