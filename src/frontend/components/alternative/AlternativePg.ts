@@ -10,12 +10,10 @@ import AlternativeDTO from "../../../common/dto/AlternativeDTO"
 import Toggler from "../../commonComponents/toggler/Toggler"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateFormat"
+import Alternative from "./Alternative";
 
-type Props = {
-    alternative: AlternativeDTO,
-}
 
-const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) => {
+const AlternativePg: FunctionComponent = observer(({}: any) => {
     const { taskId, langId } = useParams<{taskId: string, langId: string}>()
     const taskIdNum: number = parseInt(taskId) || -1
     const langIdNum: number = parseInt(langId) || -1
@@ -31,31 +29,31 @@ const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) =>
     
     return html`
                  
-        <div class="alternativeItem">
-            <div class="alternativeItemHeader">
-                <span>
-                    Date of upload: ${fmtDt(alternative.tsUpload)}
-                </span>
-                <span>
-                    Votes: 23
-                </span>
+        <div class="alternativeBody">
+            <div class="alternativeHeader">
+                <div class="alternativeLeftHeader">
+                    <${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false} />
+                </div>
+                <div class="taskForHeader">
+                    Alternatives
+                </div>
+                <div class="alternativeRightHeader">
+                    <div>
+                        Task: foo
+                    </div>
+                    <div>
+                        Language: ${language ? language.name : ""}
+                    </div>
+                </div>
             </div>
-            <div class="alternativeItemCode">
-                ${alternative.alternativeCode}
-            </div>
-            <div class="alternativeItemButtons">
-                <span>
-                    [V]ote
-                </span>
-                <span>
-                    [C]omments
-                </span>                
-            </div>
-
+            ${state.app.alternatives.map((alt: AlternativeDTO, idx: number ) => {
+                return html`<${Alternative} alternative=${alt} />`
+            })}
+            
         </div>
 
         
     `
 })
 
-export default Alternative
+export default AlternativePg

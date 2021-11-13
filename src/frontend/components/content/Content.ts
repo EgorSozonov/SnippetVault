@@ -7,7 +7,7 @@ import { html } from 'htm/react'
 import TaskGroup from "../admin/TaskGroup"
 import LangGroup from "../admin/LangGroup"
 import NewProposal from "../admin/NewProposal"
-import Alternative from "../alternative/Alternative"
+import Alternative from "../alternative/AlternativePg"
 
 
 const Content: React.FunctionComponent = () => {
