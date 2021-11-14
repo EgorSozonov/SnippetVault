@@ -149,7 +149,7 @@ export const mockData = {
         {langId: 1, taskId: 1, value: {snippetId: 13, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {langId: 1, taskId: 1, value: {snippetId: 14, snippetCode: "foo(blahBlach[4]);", score: 15, 
+        {langId: 1, taskId: 1, value: {snippetId: 14, snippetCode: `foo(blahBlach[4]);\nsfs\nsdf\nsdgsd;`, score: 15, 
             isPrimary: true, comments: [], tsUpload: new Date(2021, 11, 5), },
         },
         {langId: 6, taskId: 1, value: {snippetId: 15, snippetCode: "foo(blahBlach[4]);", score: 10, 

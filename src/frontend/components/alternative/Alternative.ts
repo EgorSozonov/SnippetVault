@@ -15,9 +15,14 @@ type Props = {
 
 const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) => {
     const [isShowingComments, setIsShowingComments] = useState(false)
+    const [isShowingInput, setIsShowingInput] = useState(false)
 
     const flipComments = () => {
         setIsShowingComments(!isShowingComments)
+    }
+
+    const flipReply = () => {
+        setIsShowingInput(!isShowingInput)
     }
 
     const voteHandler = () => {
@@ -29,11 +34,11 @@ const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) =>
     return html`                 
         <div class="alternativeItem">
             <div class="alternativeItemCode">
-                ${alternative.snippetCode}
+                    ${alternative.snippetCode}                
             </div>
             <div class="alternativeItemHeader">
                 <span>
-                    Date of upload: ${fmtDt(alternative.tsUpload)}
+                    Upload date: ${fmtDt(alternative.tsUpload)}
                 </span>
                 <span>
                     Votes: ${alternative.score}
@@ -52,16 +57,27 @@ const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) =>
                 <div class="alternativeItemComments">
                     <ol>
                     ${alternative.comments.map((comm: CommentDTO, idx: number) =>{
-                        return html`<li class="alternativeItemCommentsComment">
-                            <div>[${fmtDt(comm.tsUpload)}] ${comm.authorName} </div>
-                            <div>${comm.text}</div>
+                        return html`<li key=${idx} class="alternativeItemCommentsComment">
+                            <div>
+                                <span class="alternativeItemCommentsAuthor">[${fmtDt(comm.tsUpload)}] ${comm.authorName} 
+                                </span>
+                            </div>
+                            <div class="alternativeItemCommentsText">${comm.text}</div>
                         </li>
                         `
                     })}
                     </ol>
-                    ${isLoggedIn === true && 
-                        html`<textarea></textarea>`
-                    }
+                    
+                    <div onClick=${flipReply}>
+                        <span class="alternativeItemButton">A</span>Add a comment
+                    </div>
+                    ${(isLoggedIn === false && isShowingInput) && html`
+                        Please log in to post comments
+                    `}
+                    ${(isLoggedIn === true && isShowingInput === true) && html`
+                        <textarea></textarea>
+                    `}
+                    
                 </div>
                 `
             }

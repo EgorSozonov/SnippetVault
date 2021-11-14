@@ -29,11 +29,12 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
 
     const indPrimaryAlternative = state.app.alternatives.findIndex(x => x.isPrimary === true)
     const primaryAlternative = indPrimaryAlternative > -1 ? state.app.alternatives[indPrimaryAlternative] : null
+    const nonPrimaryAlternatives = state.app.alternatives.filter((x, idx) => idx !== indPrimaryAlternative)
     
     return html`                         
         <div class="alternativeBody">
             <${AlternativePrimary} primaryAlternative=${primaryAlternative} langId=${langIdNum} taskId=${taskIdNum} />    
-            ${state.app.alternatives.map((alt: AlternativeDTO, idx: number ) => {
+            ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
                 return html`<${Alternative} key=${idx} alternative=${alt} />`
             })}
             <div class="alternativeFooter"></div>

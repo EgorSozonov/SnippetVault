@@ -30,12 +30,6 @@ const Header: React.FunctionComponent = observer(() => {
                     <${HoverGroupSelect} currValue=${state.app.language2} choiceGroups=${state.app.groupedLanguages} uniqueName="Lang2" 
                         selectCallback=${state.app.setLanguage2}><//>                    
                 </div>
-                <div class="choiceInputButton">
-                    ↩ Previous
-                </div>
-                <div class="choiceInputButton headerRightmost">
-                    ↪ Next
-                </div>
             </div>
         </nav>
         `
