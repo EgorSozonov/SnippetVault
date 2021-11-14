@@ -12,6 +12,7 @@ import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateFormat"
 import Alternative from "./Alternative";
 import { stat } from "fs";
+import AlternativePrimary from "./AlternativePrimary";
 
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {
@@ -20,43 +21,22 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     const langIdNum: number = parseInt(langId) || -1
     const state = useContext<MainState>(StoreContext)
     const client: IClient = state.app.client
-    const language = state.app.languages.find(x => x.id === langIdNum)
-    console.log("languages")
-    console.log(state.app.languages)
+
     useEffect(() => {
         fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
         fetchFromClient(client.getAlternatives(langIdNum, taskIdNum), state.app.setAlternatives)
     }, [])
-    const indPrimaryAlternative = state.app.alternatives.findIndex(x => x.isPrimary === true)
 
+    const indPrimaryAlternative = state.app.alternatives.findIndex(x => x.isPrimary === true)
+    const primaryAlternative = indPrimaryAlternative > -1 ? state.app.alternatives[indPrimaryAlternative] : null
     
-    return html`
-                 
+    return html`                         
         <div class="alternativeBody">
-            <div class="alternativeHeader">
-                <div class="alternativeHeaderTitle">Alternatives</div>
-                <div class="alternativeHeaderMain">
-                    <div class="alternativeHeaderMainLeft">
-                        ${indPrimaryAlternative > -1 ? state.app.alternatives[indPrimaryAlternative].snippetCode : ""}
-                    </div>
-                    <div class="alternativeHeaderMainRight">
-                        <div>
-                            <${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false} />
-                        </div>
-                        <div>
-                            Task: foo
-                        </div>
-                        <div>
-                            Language: ${language ? language.name : ""}
-                        </div>
-                    </div>                
-                </div>
-                
-            </div>
+            <${AlternativePrimary} primaryAlternative=${primaryAlternative} langId=${langIdNum} taskId=${taskIdNum} />    
             ${state.app.alternatives.map((alt: AlternativeDTO, idx: number ) => {
-                return html`<${Alternative} alternative=${alt} />`
+                return html`<${Alternative} key=${idx} alternative=${alt} />`
             })}
-            
+            <div class="alternativeFooter"></div>
         </div>
 
         

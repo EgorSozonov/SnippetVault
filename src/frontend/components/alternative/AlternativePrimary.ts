@@ -1,49 +1,53 @@
 import "./Alternative.css"
 import { html } from "htm/react"
-import { useParams } from "react-router";
-import { FunctionComponent, useContext, useEffect } from "react"
+import { FunctionComponent, useContext } from "react"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
-import IClient from "../../interfaces/IClient"
-import { fetchFromClient } from "../../utils/Client"
 import AlternativeDTO from "../../../common/dto/AlternativeDTO"
 import Toggler from "../../commonComponents/toggler/Toggler"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateFormat"
+import LanguageReqDTO from "../../../common/dto/LanguageReqDTO";
 
 type Props = {
-    alternative: AlternativeDTO,
+    primaryAlternative: AlternativeDTO | null,
+    langId: number,
+    taskId: number,
 }
 
-const AlternativePrimary: FunctionComponent<Props> = observer(({alternative}: Props) => {
-
-    
-    return html`
-                 
-        <div class="alternativeItem">
-            <div class="alternativeItemHeader">
-                <span>
-                    Date of upload: ${fmtDt(alternative.tsUpload)}
-                </span>
-                <span>
-                    Votes: 23
-                </span>
+const AlternativePrimary: FunctionComponent<Props> = observer(({
+        primaryAlternative, langId, }: Props) => {
+    const state = useContext<MainState>(StoreContext)    
+    const language = state.app.languages.find(x => x.id === langId)
+    console.log(primaryAlternative)
+    return html`                 
+        <div class="alternativeHeader">
+            <div class="alternativeHeaderTitle">Alternatives</div>
+            <div class="alternativeHeaderMain">
+                <div class="alternativeHeaderMainLeft">
+                    <div class="alternativeHeaderMainLeftCode">
+                        ${primaryAlternative !== null && primaryAlternative.snippetCode}
+                    </div>
+                </div>
+                <div class="alternativeHeaderMainMid">
+                    <div>
+                        Language: ${language && language.name}
+                    </div>
+                    <div>
+                        Task: Walk a folder
+                    </div>
+                </div>
+                <div class="alternativeHeaderMainRight">
+                    <div>
+                        <${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false} />
+                    </div>                    
+                </div>                
             </div>
-            <div class="alternativeItemCode">
-                ${alternative.snippetCode}
-            </div>
-            <div class="alternativeItemButtons">
-                <span>
-                    [V]ote
-                </span>
-                <span>
-                    [C]omments
-                </span>                
-            </div>
-
-        </div>
-
-        
+            <div class="alternativeHeaderMainFooter">
+                <span>Upload date: ${primaryAlternative !== null && fmtDt(primaryAlternative.tsUpload)}</span>
+                <span>Score: ${primaryAlternative !== null && primaryAlternative.score}</span>
+            </div>         
+        </div>        
     `
 })
 

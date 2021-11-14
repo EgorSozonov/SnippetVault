@@ -103,7 +103,27 @@ export const mockData = {
 
     alternatives: [
         {langId: 1, taskId: 1, value: {snippetId: 5, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
-            isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
+            isPrimary: false, comments: [
+                {
+                    authorId: 1,
+                    authorName: "John Doe",
+                    text: "Text of comment",
+                    tsUpload: new Date(2021, 12, 3),
+                },
+                {
+                    authorId: 2,
+                    authorName: "Jane Martha",
+                    text: "Text of reply",
+                    tsUpload: new Date(2021, 12, 4),
+                },
+                {
+                    authorId: 3,
+                    authorName: "John Doe",
+                    text: "Text of reply to reply",
+                    tsUpload: new Date(2021, 12, 6),
+                }
+            ], 
+            tsUpload: new Date(2021, 12, 2), },
         },
         {langId: 1, taskId: 1, value: {snippetId: 6, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
