@@ -15,7 +15,7 @@ type Props = {
     alternative: AlternativeDTO,
 }
 
-const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) => {
+const AlternativePrimary: FunctionComponent<Props> = observer(({alternative}: Props) => {
 
     
     return html`
@@ -26,36 +26,25 @@ const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) =>
                     Date of upload: ${fmtDt(alternative.tsUpload)}
                 </span>
                 <span>
-                    Votes: ${alternative.score}
+                    Votes: 23
                 </span>
             </div>
             <div class="alternativeItemCode">
                 ${alternative.snippetCode}
             </div>
-            <div class="alternativeItemFooter">
+            <div class="alternativeItemButtons">
                 <span>
                     [V]ote
                 </span>
                 <span>
                     [C]omments
-                </span>    
+                </span>                
             </div>
-            <div class="alternativeItemComments">
-                <div class="alternativeItemCommentsComment">
-                    <div>author date</div>
-                    <div>comment 1</div>
-                </div>
-                <div class="alternativeItemCommentsComment">
-                    <div>author date</div>                
-                    <div>comment 2</div>
-                </div>
-                <div class="alternativeItemCommentsComment">
-                    <div>author date</div>
-                    <div>comment 3</div>
-                </div>                                                
-            </div>
-        </div>        
+
+        </div>
+
+        
     `
 })
 
-export default Alternative
+export default AlternativePrimary

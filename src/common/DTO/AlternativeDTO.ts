@@ -1,12 +1,10 @@
 import CommentDTO from "./CommentDTO"
 
 type AlternativeDTO = {
-    primaryId: number,
-    primaryCode: string, 
-    primaryScore: number,
-    alternativeId: number,
-    alternativeCode: string,
-    alternativeScore: number,
+    snippetId: number,
+    snippetCode: string, 
+    score: number,
+    isPrimary: boolean,
     comments: CommentDTO[],
     tsUpload: Date,
 }

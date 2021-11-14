@@ -1,55 +1,54 @@
 .alternativeBody {
     background-color: hsl(0, 0%, 18%);
     padding-top: 20px;
-    padding-left: 1vw;
-    padding-right: 1vw;
+    padding-left: 2vw;
+    padding-right: 2vw;
     display: flex;
     flex-direction: column;
     color: white;
     width: 100%;
+    height: 100%;
 }
 
 .alternativeHeader {
-    display: flex;
-    flex-direction: row;
+    display: block;
     min-height: 2.5em;
+    width: 96vw;
+    border-style: solid;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    border-width: 1px;
 }
 
-.alternativeLeftHeader {
-    width: 41vw;
+.alternativeHeaderTitle {
     text-align: center;
+    width: 100%;
+}
+
+.alternativeHeaderMain {
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    align-items: center;    
+}
+
+.alternativeHeaderMainLeft {
+    width: 40vw;
+    text-align: center;           
     color: hsl(120, 100%, 62%);
-    align-items: center;
-    border-style: solid;
-    border-top-left-radius: 12px;
-    border-width: 1px;
+    
     border-color: hsl(120, 71%, 43%);    
     font-size: 1.2rem;
     font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
 }
 
-.alternativeMidHeader {
-    width: 16vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;    
-    border-color: hsl(0, 0%, 43%);
-}
-
-.alternativeRightHeader {
-    width: 41vw;
+.alternativeHeaderMainRight {
+    width: 40vw;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     color: hsl(60, 100%, 59%);
     border-style: solid;
-    border-top-right-radius: 12px;
     border-width: 1px;
     border-color: hsl(46, 84%, 39%);
     font-size: 1.2rem;
@@ -63,16 +62,6 @@
     width: 100%;
     min-height: 4rem;
     background-color: hsl(0, 0%, 30%);    
-}
-
-
-.alternative {
-    width: 41vw;
-    display: flex;
-    flex-direction: row;
-    border-style: solid;
-    border-width: 1px;
-    border-top-width: 0;
 }
 
 .alternativeLeftSide {
@@ -105,5 +94,47 @@
 }
 
 .alternativeItem {
+    border-bottom-style: solid;
+    border-bottom-color: hsl(0, 0%, 70%);
+    border-bottom-width: 1px;
+    margin-top: 0.5rem;
+    padding: 1rem;
     color: white;
+}
+
+.alternativeItemCode {
+    margin-bottom: 10px;
+}
+
+.alternativeItemPrimary {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    border-style: solid;
+    border-color: hsl(120, 5%, 70%);
+    border-width: 2px;
+    margin-top: 2rem;
+    padding: 1rem;
+    color: white;
+}
+
+.alternativeItemHeader {
+    margin-bottom: 10px;
+}
+
+.alternativeItemHeader span {
+    margin-right: 10px;
+}
+
+.alternativeItemFooter span {
+    margin-right: 10px;
+}
+
+.alternativeItemComments {
+    border-width: 1px;
+    border-style: solid;
+    border-color: hsl(0, 0%, 58%);
+}
+
+.alternativeItemCommentsComment {
+    margin-bottom: 10px;
 }
