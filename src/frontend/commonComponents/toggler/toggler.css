@@ -4,13 +4,13 @@
     color: white;
     cursor: pointer;
     display: inline-flex;
-    background-color: #303030;
+    background-color: hsl(0, 0%, 18%);
 }
 
 .inactiveChoice {
     transition: all 0.5s ease;
     border-radius: 0.5rem;
-    color: #303030;
+    color: hsl(0, 0%, 18%);
 }
 
 .togglerChoice{
@@ -20,13 +20,13 @@
 
 .activeChoiceLeft {
     transition: all 0.8s ease;
-    background-color: #505050;
+    background-color: hsl(0, 0%, 31%);
     color: black;
 }
 
 .activeChoiceRight {
     transition: all 0.8s ease;
-    background-color: #505050;
+    background-color: hsl(0, 0%, 31%);
     color: black;
 }
 
@@ -36,7 +36,7 @@
     flex-direction: column;
     align-items: center;
     z-index: 2;
-    background-color: #505050;
+    background-color: hsl(0, 0%, 31%);
 }
     
 .toggleSwitch.on {
@@ -52,7 +52,7 @@
 .toggleSwitch div {
     width: 5px;
     height: 5px;
-    background-color: #30B0B0;
+    background-color: hsl(180, 57%, 43%);
 }
 
 .togglerLeftRect {
@@ -62,12 +62,12 @@
 }
 
 .togglerLeftRectInactive {
-    border-top-color: #303030;
+    border-top-color: hsl(0, 0%, 18%);
 }
 
 .togglerLeftRectActive {
-    border-top-color: #30B0B0;
-    background-color: #505050;
+    border-top-color: hsl(180, 57%, 43%);
+    background-color: hsl(0, 0%, 31%);
 }
 
 .togglerRightRect {
@@ -77,10 +77,10 @@
 }
 
 .togglerRightRectInactive {
-    border-bottom-color: #303030;
+    border-bottom-color: hsl(0, 0%, 18%);
 }
 
 .togglerRightRectActive {
-    background-color: #505050;
-    border-bottom-color: #30B0B0;
+    background-color: hsl(0, 0%, 31%);
+    border-bottom-color: hsl(180, 57%, 43%);
 }

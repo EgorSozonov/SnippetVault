@@ -12,7 +12,6 @@
 .alternativeHeader {
     display: flex;
     flex-direction: row;
-    width: 100%;
     min-height: 2.5em;
 }
 
@@ -32,17 +31,27 @@
     font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
 }
 
+.alternativeMidHeader {
+    width: 16vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;    
+    border-color: hsl(0, 0%, 43%);
+}
+
 .alternativeRightHeader {
     width: 41vw;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    color: #FFFF30;
+    color: hsl(60, 100%, 59%);
     border-style: solid;
     border-top-right-radius: 12px;
     border-width: 1px;
-    border-color: #ba9510;
+    border-color: hsl(46, 84%, 39%);
     font-size: 1.2rem;
     font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
 }

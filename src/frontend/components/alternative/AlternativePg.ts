@@ -34,7 +34,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
                 <div class="alternativeLeftHeader">
                     <${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false} />
                 </div>
-                <div class="taskForHeader">
+                <div class="alternativeMidHeader">
                     Alternatives
                 </div>
                 <div class="alternativeRightHeader">

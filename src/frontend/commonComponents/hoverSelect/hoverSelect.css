@@ -109,7 +109,7 @@
 }
 
 .hoverSelect ul.optgroup li:hover {
-    background-color: #60FFFF;
+    background-color: hsl(180, 100%, 68%);
 }
 
 .hoverSelect ul.optgroup li label {
