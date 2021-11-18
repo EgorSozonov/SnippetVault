@@ -11,24 +11,39 @@ const routerOpts: Router.IRouterOptions = {
 
 const router: Router = new Router(routerOpts);
 
-router.get("/", async (ctx:Koa.Context) => {
-    ctx.body = "GET ALL";
-});
+router.get("/", async (ctx: Koa.Context) => {
+    ctx.body = "GET ALLR1"
+})
 
-router.get("/:movie_id", async (ctx: Koa.Context) => {
-    ctx.body = "GET SINGLE " + ctx.params.movie_id;
-});
 
-router.post("/", async (ctx:Koa.Context) => {
+router.get("/foo", async (ctx: Koa.Context) => {
+    ctx.body = "GET FOO23 45"
+})
+
+
+router.post("/pst", async (ctx: Koa.Context) => {
     ctx.body = "POST";
 });
 
-router.delete("/:movie_id", async (ctx:Koa.Context) => {
+router.delete("/foo/:movie_id", async (ctx:Koa.Context) => {
     ctx.body = "DELETE";
 });
 
-router.patch("/:movie_id", async (ctx:Koa.Context) => {
+router.patch("/foo/:movie_id", async (ctx:Koa.Context) => {
     ctx.body = "PATCH";
 });
+
+    // getDogs(): Promise<Dog[]> {
+    //     return obj.map<Dog>('SELECT id, legs FROM Dog', [], a => new Dog(a));
+    // }
+
+    // class Dog {
+    // constructor(row: any) {
+    //     this.id = row.id;
+    //     this.legs = row.legs;
+    // }
+    // id: number
+    // legs: number
+    // }
 
 export default router;
