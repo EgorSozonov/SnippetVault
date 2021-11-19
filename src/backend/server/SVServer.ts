@@ -1,9 +1,25 @@
 import Koa from "koa";
 import HttpStatus from "http-status-codes"
 import router from "../api/GetAPI";
+import {Pool } from "pg"
+import Creds from "../db/creds.json"
 
 
 const SVServer: Koa = new Koa()
+const pool = new Pool(Creds)
+
+pool.connect((err, client, release) => {
+    if (err) {
+        return console.error("Error acquiring client", err.stack)
+    }
+    client.query("SELECT NOW()", (err, result) => {
+        release()
+        if (err) {
+            return console.error("Error executing query", err.stack)
+        }
+        console.log(result.rows)
+    })
+})
 
 SVServer.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
     try {
