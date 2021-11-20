@@ -13,13 +13,11 @@ src/frontend/include/*
 src/backend/lib/*
 src/**/.bloop/*
 src/backend.old
-src/backend/.bsp/*
-src/backend/.metals/*
 Src/backend/bin
 src/backend/build
 src/backend/obj
 src/backend/target
-src/backend/src/backend/db/creds.json
+src/backend/src/backend/DBAccess/creds.json
 include/*
 config/creds*
 src/**/creds.json
