@@ -20,7 +20,7 @@ public class API : Controller {
 
     [HttpGet]
     [Route("snippet/{lang1}/{lang2}/{taskGroup}")]
-    public async Task snippet() {
+    public async Task snippet() { 
         string lang1Str = HttpContext.Request.RouteValues["lang1"] as string;
         string lang2Str = HttpContext.Request.RouteValues["lang2"] as string;
         string tgStr = HttpContext.Request.RouteValues["taskGroup"] as string;
@@ -170,7 +170,7 @@ public class API : Controller {
     }
     
     public static async Task homePage(HttpContext context) {
-        var indexHtml = System.IO.File.ReadAllText("bin/StaticFiles/index.html");
+        var indexHtml = System.IO.File.ReadAllText("target/StaticFiles/index.html");
         await context.Response.WriteAsync(indexHtml);
     }
 }
