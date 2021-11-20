@@ -54,10 +54,3 @@ public class PostPGQueries  {
 }
 
 }
-
-
-    useEffect(() => {
-        if (choiceGroups.length > 0) {
-            setSelectedGroup(choiceGroups[0])
-        }
-    }, [choiceGroups])

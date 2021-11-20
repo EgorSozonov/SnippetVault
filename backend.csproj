@@ -4,7 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
     <PropertyGroup>
-        <OutputPath>bin</OutputPath>
+        <OutputPath>target</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
     <ItemGroup>

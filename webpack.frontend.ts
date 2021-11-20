@@ -121,7 +121,7 @@ const webpackFrontend = (args: any): Configuration => {
 			}),
             new Html({
                 title: "Snippet Vault",
-                template: "./public/template.html"
+                template: "./src/frontend/static/template.html"
             }),
             // new CopyWebpackPlugin({
             //     patterns: [
