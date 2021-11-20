@@ -3,6 +3,7 @@
 target/*
 build/*
 bin/*
+obj/*
 src/frontend/node_modules/*
 node_modules/*
 **/.vscode/*
