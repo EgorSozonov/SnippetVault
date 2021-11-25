@@ -22,7 +22,7 @@ public class PostPGQueries  {
         return new PostQueries() {
                 addSnippet=@"
                     INSERT INTO snippet.snippet(""taskLanguageId"", content, ""isApproved"", score)
-                    VALUES (?, ?, 0, 0);", 
+                    VALUES (@tlId, @content, 0, 0);", 
                 approveSnippet=@"
                     UPDATE snippet.snippet
                     SET ""isApproved""=1::bit 
