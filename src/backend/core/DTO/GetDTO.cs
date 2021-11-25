@@ -1,5 +1,5 @@
-using System;
 namespace SnippetVault {
+using System;
     
 
 public class AlternativeDTO {
