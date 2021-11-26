@@ -13,30 +13,21 @@ using Microsoft.AspNetCore.Mvc;
 [Controller]
 [Route("/api/v1/get")]
 public class API : Controller {
-    private readonly IDBContext db;
-    public API(IDBContext _db) {
-        this.db = _db;
+    private readonly IStore st;
+    public API(IStore _st) {
+        this.st = _st;
     }
 
     [HttpGet]
     [Route("snippet/{lang1}/{lang2}/{taskGroup}")]
-    public async Task snippet() { 
-        string lang1Str = HttpContext.Request.RouteValues["lang1"] as string;
-        string lang2Str = HttpContext.Request.RouteValues["lang2"] as string;
-        string tgStr = HttpContext.Request.RouteValues["taskGroup"] as string;
-        if (!int.TryParse(lang1Str, out int lang1)) return;
-        if (!int.TryParse(lang2Str, out int lang2)) return;
-        if (!int.TryParse(tgStr, out int taskGroup)) return;
-
-        await using (var cmd = new NpgsqlCommand(db.getQueries.snippet, db.conn)) { 
-            cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
-            cmd.Parameters.AddWithValue("l2", NpgsqlTypes.NpgsqlDbType.Integer, lang2);
-            cmd.Parameters.AddWithValue("tg", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
-            cmd.Prepare();
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                await readResultSet<SnippetDTO>(reader, HttpContext.Response);
-            }
-        }
+    public async Task snippet([FromRoute] int lang1, [FromRoute] int lang2, [FromRoute] int taskGroup) { 
+        // string lang1Str = HttpContext.Request.RouteValues["lang1"] as string;
+        // string lang2Str = HttpContext.Request.RouteValues["lang2"] as string;
+        // string tgStr = HttpContext.Request.RouteValues["taskGroup"] as string;
+        // if (!int.TryParse(lang1Str, out int lang1)) return;
+        // if (!int.TryParse(lang2Str, out int lang2)) return;
+        // if (!int.TryParse(tgStr, out int taskGroup)) return;
+        await HttpContext.Response.WriteAsJsonAsync(st.getSnippets(taskGroup, lang1, lang2));
     }
 
     [HttpGet]

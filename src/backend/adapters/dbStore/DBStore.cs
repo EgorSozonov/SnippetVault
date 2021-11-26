@@ -16,7 +16,7 @@ public class DBStore : IStore {
         this.db = _db;
     }
 
-    public async Task<string> getSnippets(int taskGroup, int lang1, int lang2)    {
+    public async Task<ReqResult<SnippetDTO>> getSnippets(int taskGroup, int lang1, int lang2)    {
         await using (var cmd = new NpgsqlCommand(db.getQueries.snippet, db.conn)) { 
             cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
             cmd.Parameters.AddWithValue("l2", NpgsqlTypes.NpgsqlDbType.Integer, lang2);
@@ -28,7 +28,24 @@ public class DBStore : IStore {
         }
     }
 
-    private static string readResultSet<T>(NpgsqlDataReader reader) where T : class, new() {
+    public async Task<ReqResult<LanguageDTO>> getLanguages() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.language, db.conn)) { 
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<LanguageDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<TaskGroupDTO>> getTaskGroups() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroup, db.conn)) { 
+            cmd.Prepare();
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<TaskGroupDTO>(reader);
+            }
+        }
+    }
+
+    private static ReqResult<T> readResultSet<T>(NpgsqlDataReader reader) where T : class, new() {
         try {                    
             string[] columnNames = new string[reader.FieldCount];
             for (int i = 0; i < reader.FieldCount; ++i) {
@@ -36,15 +53,15 @@ public class DBStore : IStore {
             }
             var readerSnippet = new DBDeserializer<T>(columnNames);
             if (!readerSnippet.isOK)  {
-                return "Error";
+                return new Err<T>("Error");
             }
 
             var results = readerSnippet.readResults(reader, out string errMsg);
-            if (errMsg != "") return errMsg;
-            return JSON.encode<List<T>>(results);           
+            if (errMsg != "") return new Err<T>(errMsg);
+            return new Success<T>(results);           
         } catch (Exception e) {
             Console.WriteLine(e.Message);
-            return "Exception";
+            return new Err<T>("Exception");
         }  
     }
 }
