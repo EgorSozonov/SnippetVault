@@ -102,7 +102,7 @@ public class MainController : Controller {
         } else {
             HttpContext.Response.StatusCode = 200;
             await HttpContext.Response.WriteAsJsonAsync(api.snippetAdd(dto));
-        }        
+        }
     }
 
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {
