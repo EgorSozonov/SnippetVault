@@ -21,33 +21,33 @@ public class PostPGQueries  {
     public static PostQueries mkPostQueries() {
         return new PostQueries() {
                 addSnippet=@"
-                    INSERT INTO snippet.snippet(""taskLanguageId"", content, ""isApproved"", score)
-                    VALUES (@tlId, @content, 0, 0);", 
+                    INSERT INTO sv.snippet(""taskLanguageId"", content, ""isApproved"", score, ""tsUpload"")
+                    VALUES (@tl, @content, 0::bit, 0, @ts);", 
                 approveSnippet=@"
-                    UPDATE snippet.snippet
+                    UPDATE sv.snippet
                     SET ""isApproved""=1::bit 
                     WHERE id=?;",
-                deleteSnippet=@"DELETE FROM snippet.snippet WHERE id=?;",
-                setPrimarySnippet=@"UPDATE snippet.""taskLanguage"" SET ""primarySnippetId""=? WHERE id=?;",
+                deleteSnippet=@"DELETE FROM sv.snippet WHERE id=@sn;",
+                setPrimarySnippet=@"UPDATE sv.""taskLanguage"" SET ""primarySnippetId""=@sn WHERE id=@tl;",
                 addComment=@"
-                    INSERT INTO snippet.comment(""userId"", ""snippetId"", content, ""dateComment"")
-                    VALUES (?, ?, ?, ?);",
-                deleteComment=@"DELETE FROM snippet.comment WHERE id=?;",
+                    INSERT INTO sv.comment(""userId"", ""snippetId"", content, ""dateComment"")
+                    VALUES (@user, @sn, @content, @ts);",
+                deleteComment=@"DELETE FROM sv.comment WHERE id=@comment;",
                 vote=@"
-                    INSERT INTO snippet.""userVote""(""userId"", ""taskLanguageId"", ""snippetId"")
-                    VALUES (@uId, @tlId, @snId) 
+                    INSERT INTO sv.""userVote""(""userId"", ""taskLanguageId"", ""snippetId"")
+                    VALUES (@user, @tl, @sn) 
                     ON CONFLICT(""userId"", ""taskLanguageId"") 
 	                DO UPDATE SET ""snippetId""=EXCLUDED.""snippetId"";
 
-                    UPDATE snippet.snippet 
-                    SET score=score - 1 WHERE id=???;
+                    UPDATE sv.snippet 
+                    SET score=score - 1 WHERE ""taskLanguageId""=@tl AND id<>@sn;
 
-                    UPDATE snippet.snippet 
-                    SET score=score + 1 WHERE id=@snId;",
-                addTask=@"INSERT INTO snippet.task(name, ""taskGroupId"") VALUES (@nm, @tgId);",
-                addTaskGroup=@"INSERT INTO snippet.""taskGroup""(name, ""isDeleted"") VALUES (@nm, 0::bit);",
-                addLanguage=@"INSERT INTO snippet.language(code, name, ""isDeleted"", ""languageGroupId"") VALUES (@c, @nm, 0::bit, @lgId);",
-                addLanguageGroup=@"INSERT INTO snippet.""languageGroup""(code, name) VALUES (?, ?);",
+                    UPDATE sv.snippet 
+                    SET score=score + 1 WHERE id=@sn;",
+                addTask=@"INSERT INTO sv.task(name, ""taskGroupId"") VALUES (@nm, @tgId);",
+                addTaskGroup=@"INSERT INTO sv.""taskGroup""(name, ""isDeleted"") VALUES (@name, 0::bit);",
+                addLanguage=@"INSERT INTO sv.language(code, name, ""isDeleted"", ""languageGroupId"") VALUES (@code, @name, 0::bit, @lg);",
+                addLanguageGroup=@"INSERT INTO sv.""languageGroup""(code, name) VALUES (@code, @name);",
             
             };
     }

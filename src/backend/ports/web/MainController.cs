@@ -93,6 +93,18 @@ public class MainController : Controller {
         await HttpContext.Response.WriteAsJsonAsync(api.commentsGet(snippetId));
     }
 
+    [HttpPost]
+    [Route("snippet/add")]
+    public async Task snippet([FromBody] CreateSnippetDTO dto) {
+        if (dto.taskLanguageId < 1 || dto.content == null || dto.content.Length < 1) {
+            HttpContext.Response.StatusCode = 500;
+            await HttpContext.Response.WriteAsJsonAsync("Error adding snippet");
+        } else {
+            HttpContext.Response.StatusCode = 200;
+            await HttpContext.Response.WriteAsJsonAsync(api.snippetAdd(dto));
+        }        
+    }
+
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {
         try {                    
             string[] columnNames = new string[reader.FieldCount];

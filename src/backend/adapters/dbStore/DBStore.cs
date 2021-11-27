@@ -86,6 +86,15 @@ public class DBStore : IStore {
         }
     }
 
+    public async Task<int> snippetAdd(CreateSnippetDTO dto) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.addSnippet, db.conn)) { 
+            cmd.Parameters.AddWithValue("tl", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskLanguageId);
+            cmd.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, dto.content);
+            cmd.Parameters.AddWithValue("ts", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+    }
+
     private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        
         await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroupsForLanguages, db.conn)) { 
             cmd.Parameters.AddWithValue("ls", NpgsqlTypes.NpgsqlDbType.Array|NpgsqlTypes.NpgsqlDbType.Integer, langs);

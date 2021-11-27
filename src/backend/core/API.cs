@@ -30,6 +30,15 @@ public class API : IAPI{
         return await st.snippetsGet(lang1, lang2, taskGroup);
     }
 
+    public async Task<string> snippetAdd(CreateSnippetDTO dto) {
+        var res = await st.snippetAdd(dto);
+        if (res > 0) {
+            return "OK";
+        } else {
+            return "err";
+        }
+    }
+
     public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId) {
         return await st.taskGroupsForLangGet(langId);
     }
@@ -53,6 +62,7 @@ public class API : IAPI{
 
 public interface IAPI {
     Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2);
+    Task<string> snippetAdd(CreateSnippetDTO dto);
     Task<ReqResult<LanguageDTO>> languagesGet();
     Task<ReqResult<TaskGroupDTO>> taskGroupsGet();
     Task<ReqResult<ProposalDTO>> proposalsGet();
