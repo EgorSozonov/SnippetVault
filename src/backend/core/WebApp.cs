@@ -22,6 +22,7 @@ public class WebApp {
     public void ConfigureServices(IServiceCollection services) {
         services.Configure<WebConfig>(this.configuration);
         services.AddSingleton<IConfiguration>(this.configuration);
+
         services.AddControllers();
         services.AddRouting();
         services.AddCors(o => o.AddPolicy("SVCorsPolicy", builder => {
@@ -47,14 +48,12 @@ public class WebApp {
         //options.DefaultFileNames.Add("index.html");
         app.UseDefaultFiles(new DefaultFilesOptions());
         app.UseStaticFiles(new StaticFileOptions {
-            FileProvider = new PhysicalFileProvider(
-                Path.Combine(env.ContentRootPath, "StaticFiles"))
+            FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "StaticFiles"))
         });
         app.UseRouting();
 
         app.UseEndpoints(x => {
             x.MapControllers();
-            x.MapGet("/", API.homePage);
         });
 
         //    endpoints => {

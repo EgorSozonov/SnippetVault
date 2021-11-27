@@ -2,7 +2,7 @@ namespace SnippetVault {
 using System.Threading.Tasks;
 
 public interface IStore {
-    Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroupId, int lang1Id, int lang2Id);
+    Task<ReqResult<SnippetDTO>> snippetsGet(int lang1Id, int lang2Id, int taskGroupId);
     Task<ReqResult<LanguageDTO>> languagesGet();
     Task<ReqResult<TaskGroupDTO>> taskGroupsGet();
     Task<ReqResult<ProposalDTO>> proposalsGet();

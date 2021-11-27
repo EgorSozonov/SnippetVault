@@ -25,7 +25,11 @@ class Program {
                     reloadOnChange: false);
             })
             .ConfigureServices(serviceCollection =>
-                serviceCollection.AddScoped<IDBContext, DBContext>())
+                serviceCollection.AddScoped<IDBContext, DBContext>()
+                                 .AddScoped<IAPI, API>()
+                                 .AddScoped<IStaticFiles, StaticFiles>()
+                                 .AddScoped<IStore, DBStore>())
+                                
             .UseStartup<WebApp>();
     }
 }

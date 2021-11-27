@@ -4,8 +4,10 @@ namespace SnippetVault {
 
 public class API : IAPI{
     private readonly IStore st;
-    public API(IStore _st) {
+    private readonly IStaticFiles staticFiles;
+    public API(IStore _st, IStaticFiles _statics) {
         this.st = _st;
+        this.staticFiles = _statics;
     }
 
     public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId){
@@ -24,8 +26,8 @@ public class API : IAPI{
         return await proposalsGet();
     }
 
-    public async Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2) {
-        return await st.snippetsGet(taskGroup, lang1, lang2);
+    public async Task<ReqResult<SnippetDTO>> snippetsGet(int lang1, int lang2, int taskGroup) {
+        return await st.snippetsGet(lang1, lang2, taskGroup);
     }
 
     public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId) {
@@ -43,6 +45,10 @@ public class API : IAPI{
     public async Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup) {
         return await st.tasksFromGroupGet(taskGroup);
     }
+
+    public string homePageGet() {
+        return staticFiles.indexHtmlGet();
+    }
 }
 
 public interface IAPI {
@@ -55,6 +61,7 @@ public interface IAPI {
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2);
     Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);
     Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
+    string homePageGet();
 }
 
 }

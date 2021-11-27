@@ -14,12 +14,11 @@ public class DBStore : IStore {
         this.db = _db;
     }
 
-    public async Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2) {
+    public async Task<ReqResult<SnippetDTO>> snippetsGet(int lang1, int lang2, int taskGroup) {
         await using (var cmd = new NpgsqlCommand(db.getQueries.snippet, db.conn)) { 
             cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
             cmd.Parameters.AddWithValue("l2", NpgsqlTypes.NpgsqlDbType.Integer, lang2);
             cmd.Parameters.AddWithValue("tg", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
-            cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<SnippetDTO>(reader);
             }

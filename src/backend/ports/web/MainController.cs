@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
+using static HttpUtils;
 
 
 [Controller]
@@ -26,7 +27,9 @@ public class MainController : Controller {
         // if (!int.TryParse(lang1Str, out int lang1)) return;
         // if (!int.TryParse(lang2Str, out int lang2)) return;
         // if (!int.TryParse(tgStr, out int taskGroup)) return;
-        await HttpContext.Response.WriteAsJsonAsync(api.snippetsGet(taskGroup, lang1, lang2));
+        Console.WriteLine($"lang1 {lang1} lang2 {lang2} tg {taskGroup}");
+        var result = await api.snippetsGet(taskGroup, lang1, lang2);
+        await sendResult<SnippetDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
@@ -56,11 +59,11 @@ public class MainController : Controller {
     }
 
     [HttpGet]
-    [Route("taskGroupsForLanguage/{langId1}")]
+    [Route("taskGroupsForLanguage/{langId:int}")]
     public async Task taskGroupsForLanguage() {
         string paramStr = HttpContext.Request.RouteValues["langId"] as string;
         if (!int.TryParse(paramStr, out int langId)) return;
-        await taskGroupsForArrayLanguages(new int[] {langId}, HttpContext);
+        await api.taskGroupsForLangGet(langId);
     }
 
     [HttpGet]
@@ -70,22 +73,12 @@ public class MainController : Controller {
         string paramStr2 = HttpContext.Request.RouteValues["langId2"] as string;
         if (!int.TryParse(paramStr1, out int langId1)) return;
         if (!int.TryParse(paramStr2, out int langId2)) return;
-        await taskGroupsForArrayLanguages(new int[] {langId1, langId2}, HttpContext);
+        await api.taskGroupsForLangsGet(langId1, langId2);
     }
 
-
-    private async Task taskGroupsForArrayLanguages(int[] langs, HttpContext context) {        
-        await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroupsForLanguages, db.conn)) { 
-            cmd.Parameters.AddWithValue("ls", NpgsqlTypes.NpgsqlDbType.Array|NpgsqlTypes.NpgsqlDbType.Integer, langs);
-            cmd.Prepare();
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                await readResultSet<TaskGroupDTO>(reader, HttpContext.Response);
-            }
-        }
-    }
 
     [HttpGet]
-    [Route("alternative/{taskLanguageId}")]
+    [Route("alternative/{taskLanguageId:int}")]
     public async Task alternative() {
         string paramStr = HttpContext.Request.RouteValues["taskLanguageId"] as string;
         if (!int.TryParse(paramStr, out int taskLanguageId)) return;
@@ -125,11 +118,7 @@ public class MainController : Controller {
             return;
         }  
     }
-    
-    public static async Task homePage(HttpContext context) {
-        var indexHtml = System.IO.File.ReadAllText("target/StaticFiles/index.html");
-        await context.Response.WriteAsync(indexHtml);
-    }
+
 }
 
 }
