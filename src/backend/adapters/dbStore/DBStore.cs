@@ -1,9 +1,7 @@
 namespace SnippetVault {
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Http;
-    using Npgsql;
+using Npgsql;
 
 
 public class DBStore : IStore {   
@@ -16,7 +14,7 @@ public class DBStore : IStore {
         this.db = _db;
     }
 
-    public async Task<ReqResult<SnippetDTO>> getSnippets(int taskGroup, int lang1, int lang2)    {
+    public async Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2) {
         await using (var cmd = new NpgsqlCommand(db.getQueries.snippet, db.conn)) { 
             cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
             cmd.Parameters.AddWithValue("l2", NpgsqlTypes.NpgsqlDbType.Integer, lang2);
@@ -28,7 +26,7 @@ public class DBStore : IStore {
         }
     }
 
-    public async Task<ReqResult<LanguageDTO>> getLanguages() {
+    public async Task<ReqResult<LanguageDTO>> languagesGet() {
         await using (var cmd = new NpgsqlCommand(db.getQueries.language, db.conn)) { 
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<LanguageDTO>(reader);
@@ -36,9 +34,62 @@ public class DBStore : IStore {
         }
     }
 
-    public async Task<ReqResult<TaskGroupDTO>> getTaskGroups() {
+    public async Task<ReqResult<TaskGroupDTO>> taskGroupsGet() {
         await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroup, db.conn)) { 
             cmd.Prepare();
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<TaskGroupDTO>(reader);
+            }
+        }
+    }
+    public async Task<ReqResult<ProposalDTO>> proposalsGet() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.proposal, db.conn)) { 
+            cmd.Prepare();
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<ProposalDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.task, db.conn)) { 
+            cmd.Parameters.AddWithValue("tg", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<TaskDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId) {
+        return await taskGroupsForArrayLanguages(new int[] {langId});
+    }
+
+    public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2) {
+        return await taskGroupsForArrayLanguages(new int[] {lang1, lang2});
+
+    }
+
+    public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.alternative, db.conn)) { 
+            cmd.Parameters.AddWithValue("tl", NpgsqlTypes.NpgsqlDbType.Integer, taskLanguageId);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<AlternativeDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.alternative, db.conn)) { 
+            cmd.Parameters.AddWithValue("sn", NpgsqlTypes.NpgsqlDbType.Integer, snippetId);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<CommentDTO>(reader);
+            }
+        }
+    }
+
+    private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        
+        await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroupsForLanguages, db.conn)) { 
+            cmd.Parameters.AddWithValue("ls", NpgsqlTypes.NpgsqlDbType.Array|NpgsqlTypes.NpgsqlDbType.Integer, langs);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<TaskGroupDTO>(reader);
             }

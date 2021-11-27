@@ -11,27 +11,15 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc;
 
 [Controller]
-[Route("/api/v1/get")]
-public class API : Controller {
-    private readonly IStore st;
-    public API(IStore _st) {
-        this.st = _st;
+[Route("/adminApi/v1")]
+public class AdminController : Controller {
+    private readonly IAdminAPI admApi;
+    public AdminController(IAdminAPI _api) {
+        this.admApi = _api;
     }
 
-    [HttpGet]
-    [Route("snippet/{lang1}/{lang2}/{taskGroup}")]
-    public async Task snippet([FromRoute] int lang1, [FromRoute] int lang2, [FromRoute] int taskGroup) { 
-        // string lang1Str = HttpContext.Request.RouteValues["lang1"] as string;
-        // string lang2Str = HttpContext.Request.RouteValues["lang2"] as string;
-        // string tgStr = HttpContext.Request.RouteValues["taskGroup"] as string;
-        // if (!int.TryParse(lang1Str, out int lang1)) return;
-        // if (!int.TryParse(lang2Str, out int lang2)) return;
-        // if (!int.TryParse(tgStr, out int taskGroup)) return;
-        await HttpContext.Response.WriteAsJsonAsync(st.getSnippets(taskGroup, lang1, lang2));
-    }
-
-    [HttpGet]
-    [Route("language")]
+    [HttpPost]
+    [Route("language/post")]
     public async Task language() {
         await using (var cmd = new NpgsqlCommand(db.getQueries.language, db.conn)) { 
             //cmd.Prepare();
@@ -42,7 +30,7 @@ public class API : Controller {
     }
 
     [HttpGet]
-    [Route("taskGroup")]
+    [Route("taskGroup/post")]
     public async Task taskGroup() {
         await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroup, db.conn)) { 
             //cmd.Prepare();
@@ -53,7 +41,7 @@ public class API : Controller {
     }    
 
     [HttpGet]
-    [Route("proposal")]
+    [Route("proposal/get")]
     public async Task proposal() {
         await using (var cmd = new NpgsqlCommand(db.getQueries.proposal, db.conn)) { 
             cmd.Prepare();
@@ -160,10 +148,6 @@ public class API : Controller {
         }  
     }
     
-    public static async Task homePage(HttpContext context) {
-        var indexHtml = System.IO.File.ReadAllText("target/StaticFiles/index.html");
-        await context.Response.WriteAsync(indexHtml);
-    }
 }
 
 }
