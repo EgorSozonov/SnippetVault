@@ -28,27 +28,27 @@ class HttpClient implements IClient {
     }
 
     getLanguagesReq(): Promise<EitherMsg<LanguageDTO[]>> {
-        return this.makeGetRequest<LanguageDTO[]>(`get/${ENDPOINTS.languages.get}`)
+        return this.makeGetRequest<LanguageDTO[]>(`${ENDPOINTS.languages.get}`)
     }
 
     getTaskGroups(): Promise<EitherMsg<TaskGroupDTO[]>> {
-        return this.makeGetRequest<TaskGroupDTO[]>(`get/${ENDPOINTS.taskGroups.get}`)
+        return this.makeGetRequest<TaskGroupDTO[]>(`${ENDPOINTS.taskGroups.get}`)
     }
 
     getLanguageGroups(): Promise<EitherMsg<LanguageGroupDTO[]>> {
-        return this.makeGetRequest<LanguageGroupDTO[]>(`get/${ENDPOINTS.languageGroups.get}`)
+        return this.makeGetRequest<LanguageGroupDTO[]>(`${ENDPOINTS.languageGroups.get}`)
     }
 
     getProposals(): Promise<EitherMsg<ProposalDTO[]>> {
-        return this.makeGetRequest<ProposalDTO[]>(`get/${ENDPOINTS.proposals.get}`)
+        return this.makeGetRequest<ProposalDTO[]>(`${ENDPOINTS.proposals.get}`)
     }
 
     getTasks(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
-        return this.makeGetRequest<TaskDTO[]>(`get/${ENDPOINTS.tasks.get}/${tgId}`)
+        return this.makeGetRequest<TaskDTO[]>(`${ENDPOINTS.tasks.get}/${tgId}`)
     }
 
     getAlternatives(langId: number, taskId: number): Promise<EitherMsg<AlternativeDTO[]>> {
-        return this.makeGetRequest<AlternativeDTO[]>(`get/${ENDPOINTS.alternatives.get}/${langId}/${taskId}`)
+        return this.makeGetRequest<AlternativeDTO[]>(`${ENDPOINTS.alternatives.get}/${langId}/${taskId}`)
     }
     
 

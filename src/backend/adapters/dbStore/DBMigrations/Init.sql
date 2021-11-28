@@ -180,7 +180,8 @@ ALTER TABLE sv.language OWNER TO sv_user;
 CREATE TABLE sv."languageGroup" (
     id integer NOT NULL,
     code character varying(16) NOT NULL,
-    name character varying(64) NOT NULL
+    name character varying(64) NOT NULL,
+    "sortingOrder" integer NOT NULL DEFAULT 1
 );
 
 

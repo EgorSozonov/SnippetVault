@@ -65,7 +65,7 @@ public class API : IAPI{
     }
 
     public async Task<int> languageInsert(LanguageDTO dto) {
-        if (dto.name != null && dto.name.Length > 0 && dto.languageGroup != null && dto.languageGroup.id > 0) {
+        if (dto.name != null && dto.name.Length > 0 && dto.lgId > 0) {
             return await st.languageInsert(dto);
         } else {
             return -1;

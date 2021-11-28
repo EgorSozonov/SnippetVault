@@ -34,10 +34,12 @@ public class GetPGQueries  {
 				FROM sv.snippet s 				
 				WHERE s.id=@snId;",
             languages=@"
-                SELECT l.id, l.name AS name, lg.name AS ""languageGroup"" FROM sv.language l
+                SELECT l.id, l.name AS name, lg.id AS ""lgId"", lg.name AS ""lgName"" 
+                FROM sv.language l
 				JOIN sv.""languageGroup"" lg ON l.""languageGroupId""=lg.id;",
             languagesGrouped=@"
-                SELECT l.id, l.name AS name, lg.name AS ""languageGroup"" FROM sv.language l
+                SELECT l.id, l.name AS name, lg.name AS ""languageGroup"", lg.""sortingOrder"" AS ""languageGroupOrder""
+                FROM sv.language l
 				JOIN sv.""languageGroup"" lg ON l.""languageGroupId""=lg.id;",                 
             task=@"SELECT id, name, description FROM sv.""task"" WHERE ""taskGroupId""=@tgId;",
             taskGroup= @"SELECT id, name FROM sv.""taskGroup"" WHERE ""isDeleted""=0::bit;",
@@ -70,9 +72,9 @@ public class GetPGQueries  {
             
             mainCounts = @"
                 SELECT 
-                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS PrimaryCount,
-                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NULL THEN 1 ELSE 0 END) AS AlternativeCount,
-                	SUM(CASE WHEN s.""isApproved""=0::bit THEN 1 ELSE 0 END) AS ProposalCount
+                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount"",
+                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NULL THEN 1 ELSE 0 END) AS ""alternativeCount"",
+                	SUM(CASE WHEN s.""isApproved""=0::bit THEN 1 ELSE 0 END) AS ""proposalCount""
                 FROM sv.snippet s
                 LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;"
         };

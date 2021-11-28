@@ -22,7 +22,8 @@ public class CommentDTO {
 public class LanguageDTO {
     public int id{get; set;}
     public string name{get; set;}
-    public SelectChoice languageGroup{get; set;}
+    public int lgId {get;set;}
+    public string lgName {get;set;}
 }
 
 public class LanguageGroupedDTO {

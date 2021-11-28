@@ -52,42 +52,49 @@ public class MainController : Controller {
     [HttpGet]
     [Route("languages/getGrouped")]
     public async Task languagesGrouped() {
-        await HttpContext.Response.WriteAsJsonAsync(api.languagesGetGrouped());
+        var result = await api.languagesGetGrouped();
+        await sendQueryResult<LanguageGroupedDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
     [Route("languages/get")]
     public async Task languages() {
-        await HttpContext.Response.WriteAsJsonAsync(api.languagesGet());
+        var result = await api.languagesGet();
+        await sendQueryResult<LanguageDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
     [Route("taskGroups")]
     public async Task taskGroup() {
-        await HttpContext.Response.WriteAsJsonAsync(api.taskGroupsGet());
+        var result = await api.taskGroupsGet();
+        await sendQueryResult<TaskGroupDTO>(result, HttpContext.Response);
     }    
 
     [HttpGet]
     [Route("proposals")]
     public async Task proposals() {
-        await HttpContext.Response.WriteAsJsonAsync(api.proposalsGet());
+        var result = await api.proposalsGet();
+        await sendQueryResult<ProposalDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
     [Route("task/{tgId:int}")]
     public async Task task([FromRoute] int tgId) {
-        await HttpContext.Response.WriteAsJsonAsync(api.tasksFromGroupGet(tgId));
+        var result = await api.tasksFromGroupGet(tgId);
+        await sendQueryResult<TaskDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
     [Route("taskGroupsForLanguage/{langId:int}")]
     public async Task taskGroupsForLanguage([FromRoute] int langId) {
+        var result = await api.taskGroupsGet();
         await api.taskGroupsForLangGet(langId);
     }
 
     [HttpGet]
     [Route("taskGroupsForLanguages/{langId1:int}/{langId2:int}")]
     public async Task taskGroupsForLanguages([FromRoute] int langId1, [FromRoute] int langId2) {
+        var result = await api.taskGroupsGet();
         await api.taskGroupsForLangsGet(langId1, langId2);
     }
 

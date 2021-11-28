@@ -43,7 +43,7 @@ public class DBStore : IStore {
     }
 
     public async Task<ReqResult<LanguageDTO>> languagesGet() {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.language, db.conn)) { 
+        await using (var cmd = new NpgsqlCommand(db.getQueries.languages, db.conn)) { 
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<LanguageDTO>(reader);
             }
@@ -160,7 +160,7 @@ public class DBStore : IStore {
     public async Task<int> languageInsert(LanguageDTO dto) {
         await using (var cmd = new NpgsqlCommand(db.postQueries.addLanguage, db.conn)) { 
             cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
-            cmd.Parameters.AddWithValue("lgId", NpgsqlTypes.NpgsqlDbType.Integer, dto.languageGroup.id);
+            cmd.Parameters.AddWithValue("lgId", NpgsqlTypes.NpgsqlDbType.Integer, dto.lgId);
             return await cmd.ExecuteNonQueryAsync();
         }
     }
