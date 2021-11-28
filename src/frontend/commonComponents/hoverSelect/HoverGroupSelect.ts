@@ -60,7 +60,7 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
             
             <div class=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
                 <div class=${"groupName" + (groupSelectMode === true ? " groupNameSelectMode": "")} 
-                    onClick=${onClickGroup}>Selected group: ${selectedGroup.name}</div>
+                    onClick=${onClickGroup}>[${selectedGroup.name}]</div>
                 ${groupSelectMode === true &&
                     html`<ul class="list">
                         <li>

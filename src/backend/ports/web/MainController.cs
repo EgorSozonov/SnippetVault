@@ -102,13 +102,15 @@ public class MainController : Controller {
     [HttpGet]
     [Route("alternatives/{tlId:int}")]
     public async Task alternative([FromRoute] int tlId) {
-        await HttpContext.Response.WriteAsJsonAsync(api.alternativesForTLGet(tlId));
+        var result = await api.alternativesForTLGet(tlId);
+        await sendQueryResult<AlternativeDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
-    [Route("comment/{snId:int}")]
-    public async Task comment([FromRoute] int snId) {
-        await HttpContext.Response.WriteAsJsonAsync(api.commentsGet(snId));
+    [Route("comments/{snId:int}")]
+    public async Task comments([FromRoute] int snId) {
+        var result = await api.commentsGet(snId);
+        await sendQueryResult<CommentDTO>(result, HttpContext.Response);
     }
 
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {

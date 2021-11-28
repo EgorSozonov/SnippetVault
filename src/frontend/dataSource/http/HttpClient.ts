@@ -20,7 +20,7 @@ class HttpClient implements IClient {
     }
 
     getSnippets(lang1: number, lang2: number, taskGroup: number): Promise<EitherMsg<SnippetDTO[]>> {
-        return this.makeGetRequest<SnippetDTO[]>(`${ENDPOINTS.snippets.get}/${lang1}/${lang2}/${taskGroup}`)
+        return this.makeGetRequest<SnippetDTO[]>(`${ENDPOINTS.snippets.get}/${taskGroup}/${lang1}/${lang2}`)
     }
 
     getLanguages(): Promise<EitherMsg<LanguageGroupedDTO[]>> {
