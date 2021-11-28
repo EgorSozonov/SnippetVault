@@ -7,7 +7,7 @@ import AlternativeDTO from "../../../common/dto/AlternativeDTO"
 import Toggler from "../../commonComponents/toggler/Toggler"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateFormat"
-import LanguageReqDTO from "../../../common/dto/LanguageReqDTO";
+import LanguageDTO from "../../../common/dto/LanguageDTO";
 
 type Props = {
     primaryAlternative: AlternativeDTO | null,

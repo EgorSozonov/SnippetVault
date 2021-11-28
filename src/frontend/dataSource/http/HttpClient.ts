@@ -1,8 +1,8 @@
 import { AxiosInstance } from "axios"
 import AlternativeDTO from "../../../common/dto/AlternativeDTO"
-import LanguageDTO from "../../../common/dto/LanguageDTO"
+import LanguageGroupedDTO from "../../../common/dto/LanguageGroupedDTO"
 import LanguageGroupDTO from "../../../common/dto/LanguageGroupDTO"
-import LanguageReqDTO from "../../../common/dto/LanguageReqDTO"
+import LanguageDTO from "../../../common/dto/LanguageDTO"
 import ProposalDTO from "../../../common/dto/ProposalDTO"
 import SnippetDTO from "../../../common/dto/SnippetDTO"
 import TaskDTO from "../../../common/dto/TaskDTO"
@@ -14,40 +14,41 @@ import EitherMsg from "../../types/EitherMsg"
 
 
 class HttpClient implements IClient {
-    constructor(private client: AxiosInstance) {
-        client = createClient();
+    private client: AxiosInstance
+    constructor() {
+        this.client = createClient();
     }
 
     getSnippets(lang1: number, lang2: number, taskGroup: number): Promise<EitherMsg<SnippetDTO[]>> {
-        return this.makeGetRequest<SnippetDTO[]>(`get/${ENDPOINTS.get.snippet}/${lang1}/${lang2}/${taskGroup}`)
+        return this.makeGetRequest<SnippetDTO[]>(`${ENDPOINTS.snippets.get}/${lang1}/${lang2}/${taskGroup}`)
     }
 
-    getLanguages(): Promise<EitherMsg<LanguageDTO[]>> {
-        return this.makeGetRequest<LanguageDTO[]>(`get/${ENDPOINTS.get.language}`)
+    getLanguages(): Promise<EitherMsg<LanguageGroupedDTO[]>> {
+        return this.makeGetRequest<LanguageGroupedDTO[]>(`${ENDPOINTS.languages.getGrouped}`)
     }
 
-    getLanguagesReq(): Promise<EitherMsg<LanguageReqDTO[]>> {
-        return this.makeGetRequest<LanguageReqDTO[]>(`get/${ENDPOINTS.get.languageReq}`)
+    getLanguagesReq(): Promise<EitherMsg<LanguageDTO[]>> {
+        return this.makeGetRequest<LanguageDTO[]>(`get/${ENDPOINTS.languages.get}`)
     }
 
     getTaskGroups(): Promise<EitherMsg<TaskGroupDTO[]>> {
-        return this.makeGetRequest<TaskGroupDTO[]>(`get/${ENDPOINTS.get.taskGroup}`)
+        return this.makeGetRequest<TaskGroupDTO[]>(`get/${ENDPOINTS.taskGroups.get}`)
     }
 
     getLanguageGroups(): Promise<EitherMsg<LanguageGroupDTO[]>> {
-        return this.makeGetRequest<LanguageGroupDTO[]>(`get/${ENDPOINTS.get.languageGroup}`)
+        return this.makeGetRequest<LanguageGroupDTO[]>(`get/${ENDPOINTS.languageGroups.get}`)
     }
 
     getProposals(): Promise<EitherMsg<ProposalDTO[]>> {
-        return this.makeGetRequest<ProposalDTO[]>(`get/${ENDPOINTS.get.proposal}`)
+        return this.makeGetRequest<ProposalDTO[]>(`get/${ENDPOINTS.proposals.get}`)
     }
 
     getTasks(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
-        return this.makeGetRequest<TaskDTO[]>(`get/${ENDPOINTS.get.task}/${tgId}`)
+        return this.makeGetRequest<TaskDTO[]>(`get/${ENDPOINTS.tasks.get}/${tgId}`)
     }
 
     getAlternatives(langId: number, taskId: number): Promise<EitherMsg<AlternativeDTO[]>> {
-        return this.makeGetRequest<AlternativeDTO[]>(`get/${ENDPOINTS.get.alternative}/${langId}/${taskId}`)
+        return this.makeGetRequest<AlternativeDTO[]>(`get/${ENDPOINTS.alternatives.get}/${langId}/${taskId}`)
     }
     
 

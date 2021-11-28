@@ -48,6 +48,10 @@ public class API : IAPI{
         return await proposalsGet();
     }
 
+    public async Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped() {
+        return await st.languagesGetGrouped();
+    }
+
     public async Task<ReqResult<LanguageDTO>> languagesGet() {
         return await st.languagesGet();
     }
@@ -61,7 +65,7 @@ public class API : IAPI{
     }
 
     public async Task<int> languageInsert(LanguageDTO dto) {
-        if (dto.name != null && dto.name.Length > 0 && dto.lgId > 0) {
+        if (dto.name != null && dto.name.Length > 0 && dto.languageGroup != null && dto.languageGroup.id > 0) {
             return await st.languageInsert(dto);
         } else {
             return -1;
@@ -123,6 +127,7 @@ public interface IAPI {
     Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);    
 
     Task<ReqResult<LanguageDTO>> languagesGet();
+    Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
     Task<int> languageGroupInsert(LanguageGroupDTO dto);
     Task<int> languageInsert(LanguageDTO dto);
 

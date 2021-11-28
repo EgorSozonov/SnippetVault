@@ -32,4 +32,9 @@ public sealed class Err<T> : ReqResult<T> {
     }
 }
 
+public sealed class SelectChoice {
+    public int id {get;set;}
+    public string name {get;set;}
+}
+
 }

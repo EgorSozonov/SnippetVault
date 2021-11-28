@@ -4,7 +4,8 @@ namespace SnippetVault {
 public record GetQueries {
     public string snippets {get; init;}
     public string snippet {get; init;}
-    public string language {get; init;}
+    public string languages {get; init;}
+    public string languagesGrouped {get; init;}
     public string task {get; init;}
     public string taskGroup {get; init;}
     public string taskGroupsForLanguages {get; init;}
@@ -32,9 +33,12 @@ public class GetPGQueries  {
                 SELECT s.""taskLanguageId"", s.content, s.""isApproved"", s.score
 				FROM sv.snippet s 				
 				WHERE s.id=@snId;",
-            language=@"
+            languages=@"
                 SELECT l.id, l.name AS name, lg.name AS ""languageGroup"" FROM sv.language l
-				JOIN sv.""languageGroup"" lg ON l.""languageGroupId""=lg.id;", 
+				JOIN sv.""languageGroup"" lg ON l.""languageGroupId""=lg.id;",
+            languagesGrouped=@"
+                SELECT l.id, l.name AS name, lg.name AS ""languageGroup"" FROM sv.language l
+				JOIN sv.""languageGroup"" lg ON l.""languageGroupId""=lg.id;",                 
             task=@"SELECT id, name, description FROM sv.""task"" WHERE ""taskGroupId""=@tgId;",
             taskGroup= @"SELECT id, name FROM sv.""taskGroup"" WHERE ""isDeleted""=0::bit;",
             taskGroupsForLanguages= @"

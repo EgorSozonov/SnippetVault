@@ -11,13 +11,13 @@ import MainState from "../../mobX/MainState"
 import LanguageGroupDTO from "../../../common/dto/LanguageGroupDTO"
 import { Editability } from "../../types/Editability"
 import { fetchFromClient } from "../../utils/Client"
-import LanguageReqDTO from "../../../common/dto/LanguageReqDTO"
+import LanguageDTO from "../../../common/dto/LanguageDTO"
 import IClient from "../../interfaces/IClient"
 
 
 const ListTaskGroups = (props: any) => EditableList<TaskGroupDTO>(props)
 const ListLanguageGroups = (props: any) => EditableList<LanguageGroupDTO>(props)
-const ListLanguages = (props: any) => EditableList<LanguageReqDTO>(props)
+const ListLanguages = (props: any) => EditableList<LanguageDTO>(props)
 
 const editabilityTaskGroup: Editability<TaskGroupDTO>[] = [
     {
@@ -26,7 +26,7 @@ const editabilityTaskGroup: Editability<TaskGroupDTO>[] = [
     }
 ]
 
-const editabilityLanguage: Editability<LanguageReqDTO>[] = [
+const editabilityLanguage: Editability<LanguageDTO>[] = [
     {
         field: "name",
         fieldType: "string",

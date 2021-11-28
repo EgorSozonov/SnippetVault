@@ -1,8 +1,8 @@
-import LanguageDTO from "../../common/dto/LanguageDTO";
+import LanguageGroupedDTO from "../../common/dto/LanguageGroupedDTO";
 
 type LanguageGroup = {
     name: string,
-    languages: LanguageDTO[],
+    languages: LanguageGroupedDTO[],
 }
 
 export default LanguageGroup

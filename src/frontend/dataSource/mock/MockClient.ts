@@ -1,7 +1,7 @@
 import AlternativeDTO from "../../../common/dto/AlternativeDTO"
-import LanguageDTO from "../../../common/dto/LanguageDTO"
+import LanguageGroupedDTO from "../../../common/dto/LanguageGroupedDTO"
 import LanguageGroupDTO from "../../../common/dto/LanguageGroupDTO"
-import LanguageReqDTO from "../../../common/dto/LanguageReqDTO"
+import LanguageDTO from "../../../common/dto/LanguageDTO"
 import ProposalDTO from "../../../common/dto/ProposalDTO"
 import SnippetDTO from "../../../common/dto/SnippetDTO"
 import TaskDTO from "../../../common/dto/TaskDTO"
@@ -16,11 +16,11 @@ class MockClient implements IClient {
         return this.wrapOK(getMockSnippets(lang1, lang2, taskGroup))
     }
 
-    getLanguages(): Promise<EitherMsg<LanguageDTO[]>> {
+    getLanguages(): Promise<EitherMsg<LanguageGroupedDTO[]>> {
         return this.wrapOK(mockData.languages)
     }
 
-    getLanguagesReq(): Promise<EitherMsg<LanguageReqDTO[]>> {
+    getLanguagesReq(): Promise<EitherMsg<LanguageDTO[]>> {
         return this.wrapOK(mockData.languagesReq)
     }
 

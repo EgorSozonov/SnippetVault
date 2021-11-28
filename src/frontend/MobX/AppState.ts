@@ -1,5 +1,5 @@
 import { action, IObservableArray, makeAutoObservable, observable } from "mobx"
-import LanguageDTO from "../../common/dto/LanguageDTO"
+import LanguageGroupedDTO from "../../common/dto/LanguageGroupedDTO"
 import SelectChoice from "../../common/types/SelectChoice"
 import TaskGroupDTO from "../../common/dto/TaskGroupDTO"
 import SnippetDTO from "../../common/dto/SnippetDTO"
@@ -8,14 +8,15 @@ import MockClient from "../dataSource/mock/MockClient"
 import AlternativeDTO from "../../common/dto/AlternativeDTO"
 import LanguageGroupDTO from "../../common/dto/LanguageGroupDTO"
 import SelectGroup from "../../common/types/SelectGroup"
-import LanguageReqDTO from "../../common/dto/LanguageReqDTO"
+import LanguageDTO from "../../common/dto/LanguageDTO"
+import HttpClient from "../dataSource/http/HttpClient"
 
 
 export default class AppState {
     public openSelect = ""
     public snippets: IObservableArray<SnippetDTO> = observable.array([])
     public language1: SelectChoice = {id: 0, name: ""}
-    public languages: IObservableArray<LanguageReqDTO> = observable.array([])
+    public languages: IObservableArray<LanguageDTO> = observable.array([])
     public language2: SelectChoice = {id: 0, name: ""}
     public groupedLanguages: IObservableArray<SelectGroup> = observable.array([])
     public languageGroups: IObservableArray<LanguageGroupDTO> = observable.array([])
@@ -23,7 +24,7 @@ export default class AppState {
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
 
     public alternatives: IObservableArray<AlternativeDTO> = observable.array([])
-    public client: IClient = new MockClient()
+    public client: IClient = new HttpClient()
 
     constructor() {
         makeAutoObservable(this)
@@ -59,7 +60,7 @@ export default class AppState {
         this.openSelect = newValue
     })
 
-    setLanguages = action((newValue: LanguageReqDTO[]): void => {
+    setLanguages = action((newValue: LanguageDTO[]): void => {
         this.languages = observable.array(newValue)
     }) 
 
