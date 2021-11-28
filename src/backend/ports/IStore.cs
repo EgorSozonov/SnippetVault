@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 public interface IStore {
     Task<ReqResult<SnippetDTO>> snippetsGet(int lang1Id, int lang2Id, int taskGroupId);
+    Task<ReqResult<BareSnippetDTO>> snippetGet(int snId);
     Task<ReqResult<LanguageDTO>> languagesGet();
     Task<ReqResult<TaskGroupDTO>> taskGroupsGet();
     Task<ReqResult<ProposalDTO>> proposalsGet();
@@ -14,7 +15,7 @@ public interface IStore {
     Task<int> snippetAdd(CreateSnippetDTO dTO);
     Task<int> snippetApprove(int sn);
     Task<int> snippetDelete(int sn);
-    Task<int> snippetMarkPrimary(int sn);
+    Task<int> snippetMarkPrimary(int tlId, int snId);
     Task<int> taskGroupInsert(TaskGroupDTO dto);
     Task<int> taskInsert(TaskDTO dto);
     Task<int> languageGroupInsert(LanguageGroupDTO dto);

@@ -32,6 +32,30 @@ public class MainController : Controller {
         await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
     }
 
+    [HttpPost]
+    [Route("snippet/add")]
+    public async Task snippet([FromBody] CreateSnippetDTO dto) {
+        await applyPostRequest(api.snippetAdd(dto), HttpContext.Response);        
+    }
+
+    [HttpPost]
+    [Route("snippet/approve/{snId:int}")]
+    public async Task snippetApprove([FromRoute] int snId) {
+        await applyPostRequest(api.snippetApprove(snId), HttpContext.Response);        
+    }
+
+    [HttpPost]
+    [Route("snippet/delete/{snId:int}")]
+    public async Task snippetDelete([FromRoute] int snId) {
+        await applyPostRequest(api.snippetDelete(snId), HttpContext.Response);        
+    }
+
+    [HttpPost]
+    [Route("snippet/markPrimary/{tlId:int}/{snId:int}")]
+    public async Task snippetMarkPrimary([FromRoute] int tlId, [FromRoute] int snId) {
+        await applyPostRequest(api.snippetMarkPrimary(tlId, snId), HttpContext.Response);        
+    }
+
     [HttpGet]
     [Route("language/get")]
     public async Task language() {
@@ -93,17 +117,7 @@ public class MainController : Controller {
         await HttpContext.Response.WriteAsJsonAsync(api.commentsGet(snippetId));
     }
 
-    [HttpPost]
-    [Route("snippet/add")]
-    public async Task snippet([FromBody] CreateSnippetDTO dto) {
-        if (dto.taskLanguageId < 1 || dto.content == null || dto.content.Length < 1) {
-            HttpContext.Response.StatusCode = 500;
-            await HttpContext.Response.WriteAsJsonAsync("Error in request for adding snippet");
-        } else {
-            await applyPostRequest(api.snippetAdd(dto), HttpContext.Response);
-            //await HttpContext.Response.WriteAsJsonAsync(api.snippetAdd(dto));
-        }
-    }
+
 
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {
         try {                    

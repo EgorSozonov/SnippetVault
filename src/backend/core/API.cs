@@ -1,6 +1,6 @@
+namespace SnippetVault {
 using System.Threading.Tasks;
 
-namespace SnippetVault {
 
 public class API : IAPI{
     private readonly IStore st;
@@ -26,8 +26,22 @@ public class API : IAPI{
         return await st.snippetDelete(sn);
     }
 
-    public async Task<int> snippetMarkPrimary(int sn) {
-        return await st.snippetMarkPrimary(sn);
+    public async Task<int> snippetMarkPrimary(int tlId, int snId) {
+        var snippet = await st.snippetGet(snId);
+        if (snippet is Success<BareSnippetDTO> succ) {
+            if (succ.vals != null && succ.vals.Count == 1) {
+                var existingSnip = succ.vals[0];
+                if (existingSnip.isApproved && existingSnip.taskLanguageId == tlId) {
+                    return await st.snippetMarkPrimary(tlId, snId);
+                } else {
+                    return -1;
+                }
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
+        }        
     }    
 
     public async Task<ReqResult<ProposalDTO>> proposalsGet() {
@@ -104,7 +118,7 @@ public interface IAPI {
     Task<int> snippetAdd(CreateSnippetDTO dto);
     Task<int> snippetApprove(int sn);
     Task<int> snippetDelete(int sn);
-    Task<int> snippetMarkPrimary(int sn);
+    Task<int> snippetMarkPrimary(int tlId, int snId);
     Task<ReqResult<ProposalDTO>> proposalsGet();
     Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);    
 

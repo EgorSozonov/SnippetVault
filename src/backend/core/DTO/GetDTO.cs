@@ -48,6 +48,13 @@ public class SnippetDTO {
     public string rightCode {get; set;}
 }
 
+public class BareSnippetDTO {
+    public int taskLanguageId {get; set;}
+    public string content {get; set;}
+    public bool isApproved {get; set;}
+    public int score {get; set;} 
+}
+
 public class TaskDTO {
     public int id{get; set;}
     public string name{get; set;}

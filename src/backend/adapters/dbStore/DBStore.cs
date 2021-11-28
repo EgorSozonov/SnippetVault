@@ -15,12 +15,21 @@ public class DBStore : IStore {
     }
 
     public async Task<ReqResult<SnippetDTO>> snippetsGet(int lang1, int lang2, int taskGroup) {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.snippet, db.conn)) { 
+        await using (var cmd = new NpgsqlCommand(db.getQueries.snippets, db.conn)) { 
             cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
             cmd.Parameters.AddWithValue("l2", NpgsqlTypes.NpgsqlDbType.Integer, lang2);
-            cmd.Parameters.AddWithValue("tg", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
+            cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<SnippetDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<BareSnippetDTO>> snippetGet(int snId) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.snippet, db.conn)) { 
+            cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, snId);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<BareSnippetDTO>(reader);
             }
         }
     }
@@ -52,7 +61,7 @@ public class DBStore : IStore {
 
     public async Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup) {
         await using (var cmd = new NpgsqlCommand(db.getQueries.task, db.conn)) { 
-            cmd.Parameters.AddWithValue("tg", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
+            cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<TaskDTO>(reader);
             }
@@ -70,7 +79,7 @@ public class DBStore : IStore {
 
     public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId) {
         await using (var cmd = new NpgsqlCommand(db.getQueries.alternative, db.conn)) { 
-            cmd.Parameters.AddWithValue("tl", NpgsqlTypes.NpgsqlDbType.Integer, taskLanguageId);
+            cmd.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, taskLanguageId);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<AlternativeDTO>(reader);
             }
@@ -79,7 +88,7 @@ public class DBStore : IStore {
 
     public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
         await using (var cmd = new NpgsqlCommand(db.getQueries.alternative, db.conn)) { 
-            cmd.Parameters.AddWithValue("sn", NpgsqlTypes.NpgsqlDbType.Integer, snippetId);
+            cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, snippetId);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<CommentDTO>(reader);
             }
@@ -88,7 +97,7 @@ public class DBStore : IStore {
 
     public async Task<int> snippetAdd(CreateSnippetDTO dto) {
         await using (var cmd = new NpgsqlCommand(db.postQueries.addSnippet, db.conn)) { 
-            cmd.Parameters.AddWithValue("tl", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskLanguageId);
+            cmd.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskLanguageId);
             cmd.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, dto.content);
             cmd.Parameters.AddWithValue("ts", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now);
             return await cmd.ExecuteNonQueryAsync();
@@ -97,21 +106,22 @@ public class DBStore : IStore {
 
     public async Task<int> snippetApprove(int sn) {
         await using (var cmd = new NpgsqlCommand(db.postQueries.approveSnippet, db.conn)) { 
-            cmd.Parameters.AddWithValue("sn", NpgsqlTypes.NpgsqlDbType.Integer, sn);
+            cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, sn);
             return await cmd.ExecuteNonQueryAsync();
         }
     }
 
     public async Task<int> snippetDelete(int sn) {
         await using (var cmd = new NpgsqlCommand(db.postQueries.deleteSnippet, db.conn)) { 
-            cmd.Parameters.AddWithValue("sn", NpgsqlTypes.NpgsqlDbType.Integer, sn);
+            cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, sn);
             return await cmd.ExecuteNonQueryAsync();
         }
     }
 
-    public async Task<int> snippetMarkPrimary(int sn) {
+    public async Task<int> snippetMarkPrimary(int tlId, int snId) {
         await using (var cmd = new NpgsqlCommand(db.postQueries.markPrimarySnippet, db.conn)) { 
-            cmd.Parameters.AddWithValue("sn", NpgsqlTypes.NpgsqlDbType.Integer, sn);
+            cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, snId);
+            cmd.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, tlId);
             return await cmd.ExecuteNonQueryAsync();
         }
     }

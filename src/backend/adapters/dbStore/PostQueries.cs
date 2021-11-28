@@ -21,36 +21,36 @@ public class PostPGQueries  {
         return new PostQueries() {
                 addSnippet=@"
                     INSERT INTO sv.snippet(""taskLanguageId"", content, ""isApproved"", score, ""tsUpload"")
-                    VALUES (@tl, @content, 0::bit, 0, @ts);", 
+                    VALUES (@tlId, @content, 0::bit, 0, @ts);", 
                 approveSnippet=@"
                     UPDATE sv.snippet
                     SET ""isApproved""=1::bit 
-                    WHERE id=@sn;",
-                deleteSnippet=@"DELETE FROM sv.snippet WHERE id=@sn;",
-                markPrimarySnippet=@"UPDATE sv.""taskLanguage"" SET ""primarySnippetId""=@sn WHERE id=@tl;",
+                    WHERE id=@snId;",
+                deleteSnippet=@"DELETE FROM sv.snippet WHERE id=@snId;",
+                markPrimarySnippet=@"UPDATE sv.""taskLanguage"" SET ""primarySnippetId""=@snId WHERE id=@tlId;",
                 addTask=@"INSERT INTO sv.task(name, ""taskGroupId"", description) VALUES (@name, @tgId, @description);",
                 addTaskGroup=@"INSERT INTO sv.""taskGroup""(name, ""isDeleted"") VALUES (@name, 0::bit);",
                 addLanguage=@"INSERT INTO sv.language(code, name, ""isDeleted"", ""languageGroupId"") VALUES (@code, @name, 0::bit, @lgId);",
                 addLanguageGroup=@"INSERT INTO sv.""languageGroup""(code, name) VALUES (@code, @name);",
                 addComment=@"
                     INSERT INTO sv.comment(""userId"", ""snippetId"", content, ""dateComment"")
-                    VALUES (@user, @sn, @content, @ts);",
+                    VALUES (@userId, @snId, @content, @ts);",
                 deleteComment=@"DELETE FROM sv.comment WHERE id=@comment;",
                 vote=@"
                     BEGIN;
                     WITH existingVote AS (
                         SELECT uv.""snippetId"" FROM sv.""userVote"" uv 
-                        WHERE uv.""userId""=@user AND uv.""taskLanguageId""=1 AND uv.""snippetId""<>@sn LIMIT 1
+                        WHERE uv.""userId""=@user AND uv.""taskLanguageId""=1 AND uv.""snippetId""<>@snId LIMIT 1
                     )
                     UPDATE sv.snippet SET score=score-1 WHERE id IN (SELECT ""snippetId"" FROM existingVote);
                     
                     INSERT INTO sv.""userVote""(""userId"", ""taskLanguageId"", ""snippetId"")
-                    VALUES (@user, @tl, @sn) 
+                    VALUES (@user, @tlId, @snId) 
                     ON CONFLICT(""userId"", ""taskLanguageId"") 
                     DO UPDATE SET ""snippetId""=EXCLUDED.""snippetId"";
 
                     UPDATE sv.snippet 
-                    SET score=score + 1 WHERE id=@sn;  
+                    SET score=score + 1 WHERE id=@snId;
                     
                     COMMIT;
                     ",

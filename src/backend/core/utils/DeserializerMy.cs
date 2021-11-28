@@ -10,6 +10,7 @@ public class DBDeserializer<T> where T : class, new() {
     List<Action<T, double>> settersDouble;
     List<Action<T, decimal>> settersDecimal;
     List<Action<T, string>> settersString;
+    List<Action<T, bool>> settersBool;
     public bool isOK;
 
     private struct PropTarget {
@@ -26,6 +27,7 @@ public class DBDeserializer<T> where T : class, new() {
                                 out settersDouble,
                                 out settersDecimal,
                                 out settersString,
+                                out settersBool,
                                 out string errMsg);
         if (errMsg != "") {
             isOK = false;
@@ -39,6 +41,7 @@ public class DBDeserializer<T> where T : class, new() {
             out List<Action<T, double>> settersDouble,
             out List<Action<T, decimal>> settersDecimal,
             out List<Action<T, string>> settersString,
+            out List<Action<T, bool>> settersBool,
             out string errMsg){
         int numProps = queryColumns.Length;
         var properties = typeof(T).GetProperties();
@@ -48,6 +51,7 @@ public class DBDeserializer<T> where T : class, new() {
         settersString = new List<Action<T, string>>(numProps);
         settersDouble = new List<Action<T, double>>(numProps);
         settersDecimal = new List<Action<T, decimal>>(numProps);
+        settersBool = new List<Action<T, bool>>(numProps);
       
         var dictProps = new Dictionary<string, Pair<string, Type>>();
         foreach (var prop in properties) {
@@ -80,6 +84,10 @@ public class DBDeserializer<T> where T : class, new() {
                 settersString.Add((Action<T, string>) Delegate.CreateDelegate(typeof(Action<T, string>), null,
                                   typeof(T).GetProperty(tp.fst).GetSetMethod()));
                 propTargets[i] = new PropTarget() { indexSetter = settersString.Count - 1, propType = ValueType.strin};
+            } else if (tp.snd == typeof(bool)) {
+                settersBool.Add((Action<T, bool>) Delegate.CreateDelegate(typeof(Action<T, bool>), null,
+                                  typeof(T).GetProperty(tp.fst).GetSetMethod()));
+                propTargets[i] = new PropTarget() { indexSetter = settersBool.Count - 1, propType = ValueType.boole};
             } else {
                 errMsg = $"Unsupported column type ${tp.snd}; only Int, Double, Decimal and String columns are supported!";
                 return;
@@ -103,6 +111,8 @@ public class DBDeserializer<T> where T : class, new() {
                     settersInt[tgt.indexSetter](newVal, reader.IsDBNull(j) ? 0 : reader.GetInt32(j));                      
                 } else if (tgt.propType == ValueType.strin) {
                     settersString[tgt.indexSetter](newVal, reader.IsDBNull(j) ? "" : reader.GetString(j));
+                } else if (tgt.propType == ValueType.boole) {
+                    settersBool[tgt.indexSetter](newVal, reader.IsDBNull(j) ? false : reader.GetBoolean(j));
                 }
             }
             result.Add(newVal);
@@ -116,7 +126,8 @@ public class DBDeserializer<T> where T : class, new() {
         doubl,
         deciml,
         strin,
-        // TODO add dates, datetimes and booleans
+        boole,
+        // TODO add dates, datetimes
     }
 }
 

@@ -2,6 +2,7 @@ namespace SnippetVault {
     
     
 public record GetQueries {
+    public string snippets {get; init;}
     public string snippet {get; init;}
     public string language {get; init;}
     public string task {get; init;}
@@ -16,7 +17,7 @@ public record GetQueries {
 public class GetPGQueries  {
     public static GetQueries mkGetQueries() {
         return new GetQueries() {
-            snippet=@"
+            snippets=@"
                 SELECT sn1.id as ""leftId"", sn1.content as ""leftCode"", t.id AS ""taskId"", t.name AS ""taskName"", 
 				       sn2.id AS ""rightId"", sn2.content AS ""rightCode""
 				FROM sv.""task"" AS t
@@ -26,11 +27,15 @@ public class GetPGQueries  {
 				JOIN sv.language l2 ON l2.id=tl2.""languageId""
 				LEFT JOIN sv.snippet sn1 ON sn1.id=tl1.""primarySnippetId""
 				LEFT JOIN sv.snippet sn2 ON sn2.id=tl2.""primarySnippetId""
-				WHERE t.""taskGroupId""=@tg;", 
+				WHERE t.""taskGroupId""=@tgId;", 
+            snippet=@"
+                SELECT s.""taskLanguageId"", s.content, s.""isApproved"", s.score
+				FROM sv.snippet s 				
+				WHERE s.id=@snId;",
             language=@"
                 SELECT l.id, l.name AS name, lg.name AS ""languageGroup"" FROM sv.language l
 				JOIN sv.""languageGroup"" lg ON l.""languageGroupId""=lg.id;", 
-            task=@"SELECT id, name, description FROM sv.""task"" WHERE ""taskGroupId""=@tg;",
+            task=@"SELECT id, name, description FROM sv.""task"" WHERE ""taskGroupId""=@tgId;",
             taskGroup= @"SELECT id, name FROM sv.""taskGroup"" WHERE ""isDeleted""=0::bit;",
             taskGroupsForLanguages= @"
                 SELECT DISTINCT tg.id, tg.name FROM sv.task t
@@ -51,13 +56,13 @@ public class GetPGQueries  {
 				FROM sv.snippet sn1
 				JOIN sv.""taskLanguage"" tl ON tl.id=sn1.""taskLanguageId""
 				JOIN sv.snippet sn2 ON sn2.id=tl.""primarySnippetId""
-				WHERE sn1.""taskLanguageId""=@tl 
+				WHERE sn1.""taskLanguageId""=@tlId
 				AND sn1.""isApproved""=1::bit AND sn1.id != tl.""primarySnippetId"";",
             comment = @"
                 SELECT c.content, c.""tsUpload"", u.id AS ""userId"", u.name AS ""userName""
 				FROM sv.comment c
 				JOIN sv.user u ON u.id=c.""userId""
-				WHERE c.""snippetId""=@sn;",
+				WHERE c.""snippetId""=@snId;",
             
             mainCounts = @"
                 SELECT 
