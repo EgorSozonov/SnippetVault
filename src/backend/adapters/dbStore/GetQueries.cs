@@ -1,5 +1,6 @@
 namespace SnippetVault {
     
+    
 public record GetQueries {
     public string snippet {get; init;}
     public string language {get; init;}
@@ -9,11 +10,10 @@ public record GetQueries {
     public string proposal {get; init;}
     public string alternative {get; init;}
     public string comment {get; init;}
+    public string mainCounts {get; init;}
 }
 
 public class GetPGQueries  {
-
-
     public static GetQueries mkGetQueries() {
         return new GetQueries() {
             snippet=@"
@@ -58,7 +58,15 @@ public class GetPGQueries  {
 				FROM sv.comment c
 				JOIN sv.user u ON u.id=c.""userId""
 				WHERE c.""snippetId""=@sn;",
-            };
+            
+            mainCounts = @"
+                SELECT 
+                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS PrimaryCount,
+                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NULL THEN 1 ELSE 0 END) AS AlternativeCount,
+                	SUM(CASE WHEN s.""isApproved""=0::bit THEN 1 ELSE 0 END) AS ProposalCount
+                FROM sv.snippet s
+                LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;"
+        };
     }
 }
 

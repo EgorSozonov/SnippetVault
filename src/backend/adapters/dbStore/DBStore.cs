@@ -95,6 +95,58 @@ public class DBStore : IStore {
         }
     }
 
+    public async Task<int> snippetApprove(int sn) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.approveSnippet, db.conn)) { 
+            cmd.Parameters.AddWithValue("sn", NpgsqlTypes.NpgsqlDbType.Integer, sn);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+    }
+
+    public async Task<int> snippetDelete(int sn) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.deleteSnippet, db.conn)) { 
+            cmd.Parameters.AddWithValue("sn", NpgsqlTypes.NpgsqlDbType.Integer, sn);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+    }
+
+    public async Task<int> snippetMarkPrimary(int sn) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.markPrimarySnippet, db.conn)) { 
+            cmd.Parameters.AddWithValue("sn", NpgsqlTypes.NpgsqlDbType.Integer, sn);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+    }
+
+    public async Task<int> taskGroupInsert(TaskGroupDTO dto) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.addTaskGroup, db.conn)) { 
+            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+    }
+
+    public async Task<int> taskInsert(TaskDTO dto) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.addTask, db.conn)) { 
+            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
+            cmd.Parameters.AddWithValue("description", NpgsqlTypes.NpgsqlDbType.Varchar, dto.description);
+            cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, dto.tgId);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+    }
+
+    public async Task<int> languageGroupInsert(LanguageGroupDTO dto) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.addLanguageGroup, db.conn)) { 
+            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+    }
+
+    public async Task<int> languageInsert(LanguageDTO dto) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.addLanguage, db.conn)) { 
+            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
+            cmd.Parameters.AddWithValue("lgId", NpgsqlTypes.NpgsqlDbType.Integer, dto.lgId);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+    }
+
     private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        
         await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroupsForLanguages, db.conn)) { 
             cmd.Parameters.AddWithValue("ls", NpgsqlTypes.NpgsqlDbType.Array|NpgsqlTypes.NpgsqlDbType.Integer, langs);

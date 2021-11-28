@@ -5,7 +5,7 @@ public record PostQueries {
     public string addSnippet {get; init;}
     public string approveSnippet {get; init;}
     public string deleteSnippet {get; init;}
-    public string setPrimarySnippet {get; init;}
+    public string markPrimarySnippet {get; init;}
     public string addComment {get; init;}
     public string deleteComment {get; init;}
     public string vote {get; init;}
@@ -13,11 +13,10 @@ public record PostQueries {
     public string addTaskGroup {get; init;}
     public string addLanguage {get; init;}
     public string addLanguageGroup {get; init;}
+    public string cleanSpamProposals {get; init;}
 }
 
 public class PostPGQueries  {
-
-
     public static PostQueries mkPostQueries() {
         return new PostQueries() {
                 addSnippet=@"
@@ -26,9 +25,13 @@ public class PostPGQueries  {
                 approveSnippet=@"
                     UPDATE sv.snippet
                     SET ""isApproved""=1::bit 
-                    WHERE id=?;",
+                    WHERE id=@sn;",
                 deleteSnippet=@"DELETE FROM sv.snippet WHERE id=@sn;",
-                setPrimarySnippet=@"UPDATE sv.""taskLanguage"" SET ""primarySnippetId""=@sn WHERE id=@tl;",
+                markPrimarySnippet=@"UPDATE sv.""taskLanguage"" SET ""primarySnippetId""=@sn WHERE id=@tl;",
+                addTask=@"INSERT INTO sv.task(name, ""taskGroupId"", description) VALUES (@name, @tgId, @description);",
+                addTaskGroup=@"INSERT INTO sv.""taskGroup""(name, ""isDeleted"") VALUES (@name, 0::bit);",
+                addLanguage=@"INSERT INTO sv.language(code, name, ""isDeleted"", ""languageGroupId"") VALUES (@code, @name, 0::bit, @lgId);",
+                addLanguageGroup=@"INSERT INTO sv.""languageGroup""(code, name) VALUES (@code, @name);",
                 addComment=@"
                     INSERT INTO sv.comment(""userId"", ""snippetId"", content, ""dateComment"")
                     VALUES (@user, @sn, @content, @ts);",
@@ -51,11 +54,7 @@ public class PostPGQueries  {
                     
                     COMMIT;
                     ",
-                addTask=@"INSERT INTO sv.task(name, ""taskGroupId"") VALUES (@nm, @tgId);",
-                addTaskGroup=@"INSERT INTO sv.""taskGroup""(name, ""isDeleted"") VALUES (@name, 0::bit);",
-                addLanguage=@"INSERT INTO sv.language(code, name, ""isDeleted"", ""languageGroupId"") VALUES (@code, @name, 0::bit, @lg);",
-                addLanguageGroup=@"INSERT INTO sv.""languageGroup""(code, name) VALUES (@code, @name);",
-            
+                cleanSpamProposals=@"",
             };
     }
 }

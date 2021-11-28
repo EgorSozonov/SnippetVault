@@ -22,7 +22,13 @@ public class CommentDTO {
 public class LanguageDTO {
     public int id{get; set;}
     public string name{get; set;}
+    public int lgId{get;set;}
     public string languageGroup{get; set;}
+}
+
+public class LanguageGroupDTO {
+    public int id{get; set;}
+    public string name{get; set;}
 }
 
 public class ProposalDTO {
@@ -45,6 +51,7 @@ public class SnippetDTO {
 public class TaskDTO {
     public int id{get; set;}
     public string name{get; set;}
+    public int tgId{get; set;}
     public string description{get; set;}
 }
 

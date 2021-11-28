@@ -29,7 +29,7 @@ public class MainController : Controller {
         // if (!int.TryParse(tgStr, out int taskGroup)) return;
         Console.WriteLine($"lang1 {lang1} lang2 {lang2} tg {taskGroup}");
         var result = await api.snippetsGet(taskGroup, lang1, lang2);
-        await sendResult<SnippetDTO>(result, HttpContext.Response);
+        await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
@@ -98,10 +98,10 @@ public class MainController : Controller {
     public async Task snippet([FromBody] CreateSnippetDTO dto) {
         if (dto.taskLanguageId < 1 || dto.content == null || dto.content.Length < 1) {
             HttpContext.Response.StatusCode = 500;
-            await HttpContext.Response.WriteAsJsonAsync("Error adding snippet");
+            await HttpContext.Response.WriteAsJsonAsync("Error in request for adding snippet");
         } else {
-            HttpContext.Response.StatusCode = 200;
-            await HttpContext.Response.WriteAsJsonAsync(api.snippetAdd(dto));
+            await applyPostRequest(api.snippetAdd(dto), HttpContext.Response);
+            //await HttpContext.Response.WriteAsJsonAsync(api.snippetAdd(dto));
         }
     }
 

@@ -12,6 +12,13 @@ public interface IStore {
     Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);
     Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
     Task<int> snippetAdd(CreateSnippetDTO dTO);
+    Task<int> snippetApprove(int sn);
+    Task<int> snippetDelete(int sn);
+    Task<int> snippetMarkPrimary(int sn);
+    Task<int> taskGroupInsert(TaskGroupDTO dto);
+    Task<int> taskInsert(TaskDTO dto);
+    Task<int> languageGroupInsert(LanguageGroupDTO dto);
+    Task<int> languageInsert(LanguageDTO dto);
 }
 
 }
