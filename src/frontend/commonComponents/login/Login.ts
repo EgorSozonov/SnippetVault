@@ -23,10 +23,21 @@ const Login: React.FunctionComponent<Props> = observer(({choices, currValue, uni
     }
     return html`
         <div>
-            <form onSubmit=${signInHandler}>
-                <input name="login" type="text" />
-                <input name="pw" type="text" />
-                <button>Sign in</button>
+            <form class="loginForm" onSubmit=${signInHandler}>
+                <div>
+                    Log in to provide code proposals:
+                </div>
+                <div>
+                    <label>Username</label>
+                    <input name="login" type="text" />
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input name="pw" type="text" />
+                </div>
+                <div>
+                    <button>Sign in</button>
+                </div>
             </form>            
         </div>
     `

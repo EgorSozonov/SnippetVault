@@ -5,8 +5,6 @@ import LanguageGroup from "../../types/LanguageGroup";
 
 
 export function groupLanguages(langs: LanguageGroupedDTO[]): SelectGroup[] {
-    console.log("langs")
-    console.log(langs)
     if (!langs || langs.length === 0) return []
     const sortedArr = langs.sort((x, y) => x.languageGroupOrder - y.languageGroupOrder)
     const result: SelectGroup[] = sortedArr.reduce((acc: SelectGroup[], x: LanguageGroupedDTO) => {
