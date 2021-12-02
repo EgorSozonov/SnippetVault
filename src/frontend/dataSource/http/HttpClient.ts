@@ -50,6 +50,10 @@ class HttpClient implements IClient {
     getAlternatives(langId: number, taskId: number): Promise<EitherMsg<AlternativeDTO[]>> {
         return this.makeGetRequest<AlternativeDTO[]>(`${ENDPOINTS.alternatives.get}/${langId}/${taskId}`)
     }
+
+    getAdminCounts(): Promise<EitherMsg<string>> {
+        return this.makeGetRequest<string>(`${ENDPOINTS.adminCounts.get}`)
+    }
     
 
     private async makeGetRequest<T>(url: string): Promise<EitherMsg<T>> {

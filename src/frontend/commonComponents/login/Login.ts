@@ -18,8 +18,7 @@ const Login: React.FunctionComponent<Props> = observer(({choices, currValue, uni
     
     const mainState = useContext<MainState>(StoreContext)
     const signInHandler = (e: any) => {
-        console.log("sign in")
-        console.log(e)
+        mainState.user.setUserStatus("user")
     }
     return html`
         <div>

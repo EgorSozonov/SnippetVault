@@ -21,13 +21,18 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, } : Prop
     }
     const saveProposalHandler = () => {
         // TODO state.app.client.
+        if (inputRef && inputRef.current) {
+            console.log("posting:")
+            console.log(inputRef.current.value)
+            inputRef.current.value = ""
+        }
     }
     return html`
         <div>
             ${showInput === true 
             ? html`
                 <p>Propose a snippet ${numberProposals > 0 ? html`${numberProposals} proposals already awaiting premoderation` : ""}:</p>
-                <p><textarea class="snippetTextArea"></textarea></p>
+                <p><textarea class="snippetTextArea" ref=${inputRef}></textarea></p>
                 <p><button class="snippetButton" onClick=${saveProposalHandler}>Save</button></p>
             `
             : html `

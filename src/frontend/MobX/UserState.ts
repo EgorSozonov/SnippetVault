@@ -14,4 +14,8 @@ export default class UserState {
     getName = action((name: string): void => {
 
     })
+
+    setUserStatus = action((newStatus: UserStatus): void => {
+        this.userStatus = newStatus
+    })
 }

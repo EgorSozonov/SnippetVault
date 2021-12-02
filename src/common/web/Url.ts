@@ -42,7 +42,10 @@ export const ENDPOINTS = {
     },
     taskGroups: {
         get: "/taskGroups",
-    }
+    },
+    adminCounts: {
+        get: "/admin/counts",
+    },
 
     // get: {
     //     snippet: "snippet",

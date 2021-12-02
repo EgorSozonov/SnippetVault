@@ -247,8 +247,11 @@ a:visited {
 /* Text input */
 .snippetTextArea {
     height: 4rem;
+    width: max-content;
+    max-width: 90%;
+    max-height: 4rem;
     font-size: 1rem;
-    width: 100%;
+    margin: 0.3rem;
 }
 
 .snippetButton {
