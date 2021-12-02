@@ -42,15 +42,15 @@ export const mockData = {
             {id: 8, name: "PostgreSQL", languageGroup: "Data querying", languageGroupOrder: 3, },
     ],
 
-    languagesReq: LanguageReqDTO[]: [
-            {id: 1, name: "C#", languageGroup: {id: 1, name: "Universal", }, },
-            {id: 2, name: "C++", languageGroup: {id: 1, name: "Universal", }, },
-            {id: 3, name: "Typescript", languageGroup: {id: 2, name: "Scripting", }, },
-            {id: 4, name: "Python", languageGroup: {id: 2, name: "Scripting", }, },
-            {id: 5, name: "MySQL", languageGroup: {id: 3, name: "Data querying", }, },
-            {id: 6, name: "Kotlin", languageGroup: {id: 1, name: "Universal", }, },
-            {id: 7, name: "Haskell", languageGroup: {id: 1, name: "Universal", }, },
-            {id: 8, name: "PostgreSQL", languageGroup: {id: 3, name: "Data querying", }, },
+    languagesReq: [
+            {id: 1, name: "C#", lgId: 1, lgName: "Universal", },
+            {id: 2, name: "C++", lgId: 1, lgName: "Universal", },
+            {id: 3, name: "Typescript", lgId: 2, lgName: "Scripting", },
+            {id: 4, name: "Python", lgId: 2, lgName: "Scripting", },
+            {id: 5, name: "MySQL", lgId: 3, lgName: "Data querying", },
+            {id: 6, name: "Kotlin", lgId: 1, lgName: "Universal", },
+            {id: 7, name: "Haskell", lgId: 1, lgName: "Universal", },
+            {id: 8, name: "PostgreSQL", lgId: 3, lgName: "Data querying", },
     ],
 
     languageGroups: [
