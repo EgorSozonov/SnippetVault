@@ -24,7 +24,11 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, } : Prop
         if (inputRef && inputRef.current) {
             console.log("posting:")
             console.log(inputRef.current.value)
-            inputRef.current.value = ""
+            if (inputRef.current.value.length > 0) {
+
+                state.app.client.postProposal(inputRef.current.value)
+                inputRef.current.value = ""
+            }
         }
     }
     return html`

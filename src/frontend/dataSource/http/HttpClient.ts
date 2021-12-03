@@ -11,6 +11,7 @@ import { ENDPOINTS } from "../../../common/web/Url"
 import createClient from "../../Client"
 import IClient from "../../interfaces/IClient"
 import EitherMsg from "../../types/EitherMsg"
+import ProposalCreateDTO from "../../../common/dto/ProposalCreateDTO"
 
 
 class HttpClient implements IClient {
@@ -54,6 +55,13 @@ class HttpClient implements IClient {
     getAdminCounts(): Promise<EitherMsg<string>> {
         return this.makeGetRequest<string>(`${ENDPOINTS.adminCounts.get}`)
     }
+
+    postProposal(proposal: string, languageTaskId: number): Promise<string> {
+        const payload = {taskLanguageId: languageTaskId, content: proposal, }
+        console.log("payload")
+        console.dir(payload)
+        return this.makePostRequest<ProposalCreateDTO>(`${ENDPOINTS.proposal.post}`, payload)
+    }
     
 
     private async makeGetRequest<T>(url: string): Promise<EitherMsg<T>> {
@@ -66,6 +74,19 @@ class HttpClient implements IClient {
             }
         } catch(e: any) {
             return { isOK: false, errMsg: e.toString() }
+        }
+    }
+
+    private async makePostRequest<T>(url: string, payload: T): Promise<string> {
+        try {
+            const r = await this.client.post<string>(url, payload)
+            if (r.data && r.data === "OK") {
+                return ""
+            } else {
+                return "Error"
+            }
+        } catch(e: any) {
+            return "Error"
         }
     }
 }

@@ -103,7 +103,7 @@ public class DBStore : IStore {
         }
     }
 
-    public async Task<int> snippetAdd(CreateSnippetDTO dto) {
+    public async Task<int> proposalCreate(CreateProposalDTO dto) {
         await using (var cmd = new NpgsqlCommand(db.postQueries.addSnippet, db.conn)) { 
             cmd.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskLanguageId);
             cmd.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, dto.content);

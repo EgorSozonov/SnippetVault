@@ -8,6 +8,9 @@ export const ENDPOINTS = {
         approve: "/snippet/approve",
         delete: "/snippet/delete",
     },
+    proposal: {
+        post: "/proposal/create",
+    },
     proposals: {
         get: "/proposals",
     },

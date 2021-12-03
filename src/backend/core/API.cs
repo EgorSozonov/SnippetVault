@@ -14,8 +14,8 @@ public class API : IAPI{
         return await st.snippetsGet(lang1, lang2, taskGroup);
     }
 
-    public async Task<int> snippetAdd(CreateSnippetDTO dto) {
-        return await st.snippetAdd(dto);
+    public async Task<int> proposalCreate(CreateProposalDTO dto) {
+        return await st.proposalCreate(dto);
     }
 
     public async Task<int> snippetApprove(int sn) {
@@ -119,7 +119,7 @@ public class API : IAPI{
 
 public interface IAPI {
     Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2);
-    Task<int> snippetAdd(CreateSnippetDTO dto);
+    Task<int> proposalCreate(CreateProposalDTO dto);
     Task<int> snippetApprove(int sn);
     Task<int> snippetDelete(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);

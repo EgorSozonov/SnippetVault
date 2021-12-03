@@ -26,9 +26,9 @@ public class MainController : Controller {
     }
 
     [HttpPost]
-    [Route("snippet/create")]
-    public async Task snippet([FromBody] CreateSnippetDTO dto) {
-        await applyPostRequest(api.snippetAdd(dto), HttpContext.Response);        
+    [Route("proposal/create")]
+    public async Task proposalCreate([FromBody] CreateProposalDTO dto) {
+        await applyPostRequest(api.proposalCreate(dto), HttpContext.Response);        
     }
 
     [HttpPost]
