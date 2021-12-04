@@ -1,5 +1,6 @@
 type ProposalCreateDTO = {
-    taskLanguageId: number,
+    langId: number,
+    taskId: number,
     content: string,
 }
 

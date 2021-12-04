@@ -56,10 +56,8 @@ class HttpClient implements IClient {
         return this.makeGetRequest<string>(`${ENDPOINTS.adminCounts.get}`)
     }
 
-    postProposal(proposal: string, languageTaskId: number): Promise<string> {
-        const payload = {taskLanguageId: languageTaskId, content: proposal, }
-        console.log("payload")
-        console.dir(payload)
+    postProposal(proposal: string, langId: number, taskId: number): Promise<string> {
+        const payload = {langId, taskId, content: proposal, }
         return this.makePostRequest<ProposalCreateDTO>(`${ENDPOINTS.proposal.post}`, payload)
     }
     

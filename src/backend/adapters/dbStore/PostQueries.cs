@@ -2,7 +2,8 @@ namespace SnippetVault {
 
 
 public record PostQueries {
-    public string addSnippet {get; init;}
+    public string proposalCreate {get; init;}
+    public string taskLanguageCreate {get; init;}    
     public string approveSnippet {get; init;}
     public string deleteSnippet {get; init;}
     public string markPrimarySnippet {get; init;}
@@ -19,9 +20,15 @@ public record PostQueries {
 public class PostPGQueries  {
     public static PostQueries mkPostQueries() {
         return new PostQueries() {
-                addSnippet=@"
+
+                proposalCreate=@"                  
                     INSERT INTO sv.snippet(""taskLanguageId"", content, ""isApproved"", score, ""tsUpload"")
                     VALUES (@tlId, @content, 0::bit, 0, @ts);", 
+                taskLanguageCreate=@"
+                    INSERT INTO sv.""taskLanguage""(""taskId"", ""languageId"", ""primarySnippetId"")
+                    	VALUES (@taskId, @langId, NULL)
+                    ON CONFLICT (""taskId"", ""languageId"") DO UPDATE SET ""languageId""=@langId
+                    RETURNING id;",
                 approveSnippet=@"
                     UPDATE sv.snippet
                     SET ""isApproved""=1::bit 

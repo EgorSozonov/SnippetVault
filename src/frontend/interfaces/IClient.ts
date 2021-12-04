@@ -19,7 +19,7 @@ type IClient = {
     getTasks: (tgId: number) => Promise<EitherMsg<TaskDTO[]>>
     getAlternatives: (langId: number, taskId: number) => Promise<EitherMsg<AlternativeDTO[]>>
     getAdminCounts: () => Promise<EitherMsg<string>>
-    postProposal: (prop: string, languageTaskId: number) => Promise<string>
+    postProposal: (prop: string, languageId: number, taskId: number) => Promise<string>
 }
 
 // actionOK: (v: SnippetDTO[]) => void, action: (m: string) => void)

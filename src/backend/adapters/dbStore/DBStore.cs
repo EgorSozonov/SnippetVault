@@ -104,11 +104,16 @@ public class DBStore : IStore {
     }
 
     public async Task<int> proposalCreate(CreateProposalDTO dto) {
-        await using (var cmd = new NpgsqlCommand(db.postQueries.addSnippet, db.conn)) { 
-            cmd.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskLanguageId);
-            cmd.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, dto.content);
-            cmd.Parameters.AddWithValue("ts", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now);
-            return await cmd.ExecuteNonQueryAsync();
+        await using (var cmdTL = new NpgsqlCommand(db.postQueries.taskLanguageCreate, db.conn)) { 
+            cmdTL.Parameters.AddWithValue("taskId", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskId);
+            cmdTL.Parameters.AddWithValue("langId", NpgsqlTypes.NpgsqlDbType.Integer, dto.langId);
+            var tlId = cmdTL.ExecuteNonQuery();
+            await using (var cmdProp = new NpgsqlCommand(db.postQueries.proposalCreate, db.conn)) {
+                cmdProp.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, tlId);
+                cmdProp.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, dto.content);
+                cmdProp.Parameters.AddWithValue("ts", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now);
+                return await cmdProp.ExecuteNonQueryAsync();
+            }                        
         }
     }
 

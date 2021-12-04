@@ -27,7 +27,8 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     }, [])
 
     useEffect(() => {
-        fetchFromClient(client.getSnippets(lang1.id, lang2.id, tg.id), state.app.setSnippets)
+        const snippets = client.getSnippets(lang1.id, lang2.id, tg.id)
+        fetchFromClient(snippets, state.app.setSnippets)
     }, [lang1, lang2, tg])
 
     return html`<div class="snippetsBody">
@@ -45,7 +46,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         <div class=${"snippetContent leftSide" + evenClass}>
                             ${snippet.leftCode.length > 0 
                                 ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false} langId=${lang1.id} taskId=${snippet.taskId}><//>`
-                                : html`<${TextInput} numberProposals="4"><//>`}
+                                : html`<${TextInput} taskId=${snippet.taskId} langId=${lang1.id}  numberProposals="4"><//>`}
                         </div>
                         <div class=${"taskContainer" + evenClass}>
                             ${snippet.taskName}
@@ -53,7 +54,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         <div class=${"snippetContent rightSide" + evenClass}>
                             ${snippet.rightCode.length > 0 
                                 ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true} langId=${lang2.id} taskId=${snippet.taskId}><//>`
-                                : html`<${TextInput} numberProposals="4"><//>`}
+                                : html`<${TextInput} taskId=${snippet.taskId} langId=${lang2.id} numberProposals="4"><//>`}
                         </div>
                     </div>`
             })}
