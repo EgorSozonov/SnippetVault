@@ -11,6 +11,7 @@ public class DBDeserializer<T> where T : class, new() {
     List<Action<T, decimal>> settersDecimal;
     List<Action<T, string>> settersString;
     List<Action<T, bool>> settersBool;
+    List<Action<T, DateTime>> settersTS;
     public bool isOK;
 
     private struct PropTarget {
@@ -28,6 +29,7 @@ public class DBDeserializer<T> where T : class, new() {
                                 out settersDecimal,
                                 out settersString,
                                 out settersBool,
+                                out settersTS,
                                 out string errMsg);
         if (errMsg != "") {
             isOK = false;
@@ -42,6 +44,7 @@ public class DBDeserializer<T> where T : class, new() {
             out List<Action<T, decimal>> settersDecimal,
             out List<Action<T, string>> settersString,
             out List<Action<T, bool>> settersBool,
+            out List<Action<T, DateTime>> settersTS,
             out string errMsg){
         int numProps = queryColumns.Length;
         var properties = typeof(T).GetProperties();
@@ -52,6 +55,7 @@ public class DBDeserializer<T> where T : class, new() {
         settersDouble = new List<Action<T, double>>(numProps);
         settersDecimal = new List<Action<T, decimal>>(numProps);
         settersBool = new List<Action<T, bool>>(numProps);
+        settersTS = new List<Action<T, DateTime>>(numProps);
       
         var dictProps = new Dictionary<string, Pair<string, Type>>();
         foreach (var prop in properties) {
@@ -88,8 +92,12 @@ public class DBDeserializer<T> where T : class, new() {
                 settersBool.Add((Action<T, bool>) Delegate.CreateDelegate(typeof(Action<T, bool>), null,
                                   typeof(T).GetProperty(tp.fst).GetSetMethod()));
                 propTargets[i] = new PropTarget() { indexSetter = settersBool.Count - 1, propType = ValueType.boole};
-            } else {
-                errMsg = $"Unsupported column type ${tp.snd}; only Int, Double, Decimal and String columns are supported!";
+            } else if (tp.snd == typeof(DateTime)) {
+                settersTS.Add((Action<T, DateTime>) Delegate.CreateDelegate(typeof(Action<T, DateTime>), null,
+                                  typeof(T).GetProperty(tp.fst).GetSetMethod()));
+                propTargets[i] = new PropTarget() { indexSetter = settersTS.Count - 1, propType = ValueType.timestampe};
+            }  else {
+                errMsg = $"Unsupported column type ${tp.snd}; only Int, Double, Decimal, Timestamp and String columns are supported!";
                 return;
             }
         }
@@ -113,6 +121,8 @@ public class DBDeserializer<T> where T : class, new() {
                     settersString[tgt.indexSetter](newVal, reader.IsDBNull(j) ? "" : reader.GetString(j));
                 } else if (tgt.propType == ValueType.boole) {
                     settersBool[tgt.indexSetter](newVal, reader.IsDBNull(j) ? false : reader.GetBoolean(j));
+                } else if (tgt.propType == ValueType.timestampe) {
+                    settersTS[tgt.indexSetter](newVal, reader.IsDBNull(j) ? DateTime.MinValue : reader.GetDateTime(j));
                 }
             }
             result.Add(newVal);
@@ -127,7 +137,7 @@ public class DBDeserializer<T> where T : class, new() {
         deciml,
         strin,
         boole,
-        // TODO add dates, datetimes
+        timestampe,
     }
 }
 

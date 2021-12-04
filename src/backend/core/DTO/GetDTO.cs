@@ -39,11 +39,11 @@ public class LanguageGroupDTO {
 }
 
 public class ProposalDTO {
-    public int proposalId;
-    public string proposalCode;
-    public string taskName;
-    public string languageName;
-    public DateTime tsUpload;
+    public int proposalId {get; set;}
+    public string proposalCode {get; set;}
+    public string taskName {get; set;}
+    public string languageName {get; set;}
+    public DateTime tsUpload {get; set;}
 }
 
 public class SnippetDTO {
