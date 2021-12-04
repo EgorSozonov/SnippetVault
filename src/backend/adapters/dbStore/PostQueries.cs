@@ -4,7 +4,7 @@ namespace SnippetVault {
 public record PostQueries {
     public string proposalCreate {get; init;}
     public string taskLanguageCreate {get; init;}    
-    public string approveSnippet {get; init;}
+    public string approveProposal {get; init;}
     public string deleteSnippet {get; init;}
     public string markPrimarySnippet {get; init;}
     public string addComment {get; init;}
@@ -29,7 +29,7 @@ public class PostPGQueries  {
                     	VALUES (@taskId, @langId, NULL)
                     ON CONFLICT (""taskId"", ""languageId"") DO UPDATE SET ""languageId""=@langId
                     RETURNING id;",
-                approveSnippet=@"
+                approveProposal=@"
                     UPDATE sv.snippet
                     SET ""isApproved""=1::bit 
                     WHERE id=@snId;",

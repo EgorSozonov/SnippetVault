@@ -12,6 +12,7 @@ import createClient from "../../Client"
 import IClient from "../../interfaces/IClient"
 import EitherMsg from "../../types/EitherMsg"
 import ProposalCreateDTO from "../../../common/dto/ProposalCreateDTO"
+import SnippetIdDTO from "../../../common/dto/SnippetIdDTO"
 
 
 class HttpClient implements IClient {
@@ -56,9 +57,17 @@ class HttpClient implements IClient {
         return this.makeGetRequest<string>(`${ENDPOINTS.adminCounts.get}`)
     }
 
-    postProposal(proposal: string, langId: number, taskId: number): Promise<string> {
+    proposalCreate(proposal: string, langId: number, taskId: number): Promise<string> {
         const payload = {langId, taskId, content: proposal, }
         return this.makePostRequest<ProposalCreateDTO>(`${ENDPOINTS.proposal.post}`, payload)
+    }
+
+    proposalApprove(snId: number): Promise<string> {
+        return this.makePostRequestNoPayload(`${ENDPOINTS.snippet.approve}/${snId}`)
+    }
+
+    snippetMarkPrimary(snId: number): Promise<string> {
+        return this.makePostRequestNoPayload(`${ENDPOINTS.snippet.markPrimary}/${snId}`)
     }
     
 
@@ -78,6 +87,19 @@ class HttpClient implements IClient {
     private async makePostRequest<T>(url: string, payload: T): Promise<string> {
         try {
             const r = await this.client.post<string>(url, payload)
+            if (r.data && r.data === "OK") {
+                return ""
+            } else {
+                return "Error"
+            }
+        } catch(e: any) {
+            return "Error"
+        }
+    }
+
+    private async makePostRequestNoPayload(url: string): Promise<string> {
+        try {
+            const r = await this.client.post<string>(url)
             if (r.data && r.data === "OK") {
                 return ""
             } else {

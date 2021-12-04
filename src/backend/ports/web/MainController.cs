@@ -19,7 +19,7 @@ public class MainController : Controller {
     }
 
     [HttpGet]
-    [Route("snippets/get/{taskGroup:int}/{lang1:int}/{lang2:int}")]
+    [Route("snippets/{taskGroup:int}/{lang1:int}/{lang2:int}")]
     public async Task snippet([FromRoute] int lang1, [FromRoute] int lang2, [FromRoute] int taskGroup) { 
         var result = await api.snippetsGet(taskGroup, lang1, lang2);
         await sendQueryResult<SnippetDTO>(result, HttpContext.Response);

@@ -59,7 +59,7 @@ public class DBStore : IStore {
         }
     }
     public async Task<ReqResult<ProposalDTO>> proposalsGet() {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.proposal, db.conn)) { 
+        await using (var cmd = new NpgsqlCommand(db.getQueries.proposals, db.conn)) { 
             cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<ProposalDTO>(reader);
@@ -118,7 +118,7 @@ public class DBStore : IStore {
     }
 
     public async Task<int> snippetApprove(int sn) {
-        await using (var cmd = new NpgsqlCommand(db.postQueries.approveSnippet, db.conn)) { 
+        await using (var cmd = new NpgsqlCommand(db.postQueries.approveProposal, db.conn)) { 
             cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, sn);
             return await cmd.ExecuteNonQueryAsync();
         }

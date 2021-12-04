@@ -45,7 +45,7 @@ public class API : IAPI{
     }    
 
     public async Task<ReqResult<ProposalDTO>> proposalsGet() {
-        return await proposalsGet();
+        return await st.proposalsGet();
     }
 
     public async Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped() {

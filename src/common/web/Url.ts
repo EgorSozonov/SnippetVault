@@ -1,6 +1,6 @@
 export const ENDPOINTS = {
     snippets: {
-        get: "/snippets/get",
+        get: "/snippets",
     },
     snippet: {
         create: "/snippet/create",

@@ -9,7 +9,7 @@ public record GetQueries {
     public string task {get; init;}
     public string taskGroup {get; init;}
     public string taskGroupsForLanguages {get; init;}
-    public string proposal {get; init;}
+    public string proposals {get; init;}
     public string alternative {get; init;}
     public string comment {get; init;}
     public string mainCounts {get; init;}
@@ -48,8 +48,8 @@ public class GetPGQueries  {
                 JOIN sv.""taskLanguage"" tl ON tl.""taskId""=t.id
                 JOIN sv.""taskGroup"" tg ON tg.id=t.""taskGroupId""
                 WHERE tl.""languageId"" = ANY(@ls);",
-            proposal = @"
-                SELECT lang.name AS ""language"", task.name AS ""task"", 
+            proposals = @"
+                SELECT lang.name AS ""languageName"", task.name AS ""taskName"", 
 					   sn1.id AS ""proposalId"", sn1.content AS ""proposalCode"", sn1.""tsUpload""
 				FROM sv.snippet sn1
 				JOIN sv.""taskLanguage"" tl ON tl.id=sn1.""taskLanguageId""

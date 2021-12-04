@@ -47,9 +47,25 @@ class MockClient implements IClient {
     getAdminCounts(): Promise<EitherMsg<string>> {
         return this.wrapOK("Counts: bla bla")
     }
+
+    proposalCreate(prop: string, languageId: number, taskId: number): Promise<string> {
+        return this.wrapOKString("OK")
+    }
+
+    proposalApprove(snId: number): Promise<string> {
+        return this.wrapOKString("OK")
+    }
+
+    snippetMarkPrimary(snId: number): Promise<string> {
+        return this.wrapOKString("OK")
+    }
     
     private wrapOK<T>(val: T): Promise<EitherMsg<T>> {
         return new Promise((resolve) => resolve({isOK: true, value: val}))
+    }
+
+    private wrapOKString(val: string): Promise<string> {
+        return new Promise((resolve) => resolve(val))
     }
 }
 
