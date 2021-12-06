@@ -6,7 +6,7 @@ import EditableList from '../../commonComponents/editableList/EditableList'
 import TaskGroupDTO from '../../../common/dto/TaskGroupDTO'
 import { Editability } from '../../types/Editability'
 
-const editabilityName: Editability[] = [
+const editabilityName: Editability<TaskGroupDTO>[] = [
     {
         field: "name",
         fieldType: "string",

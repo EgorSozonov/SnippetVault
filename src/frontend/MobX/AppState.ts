@@ -1,15 +1,15 @@
 import { action, IObservableArray, makeAutoObservable, observable } from "mobx"
-import LanguageGroupedDTO from "../../common/dto/LanguageGroupedDTO"
 import SelectChoice from "../../common/types/SelectChoice"
 import TaskGroupDTO from "../../common/dto/TaskGroupDTO"
 import SnippetDTO from "../../common/dto/SnippetDTO"
 import IClient from "../interfaces/IClient"
-import MockClient from "../dataSource/mock/MockClient"
 import AlternativeDTO from "../../common/dto/AlternativeDTO"
 import LanguageGroupDTO from "../../common/dto/LanguageGroupDTO"
 import SelectGroup from "../../common/types/SelectGroup"
 import LanguageDTO from "../../common/dto/LanguageDTO"
 import HttpClient from "../dataSource/http/HttpClient"
+import ProposalDTO from "../../common/dto/ProposalDTO"
+import MockClient from "../dataSource/mock/MockClient"
 
 
 export default class AppState {
@@ -20,11 +20,12 @@ export default class AppState {
     public language2: SelectChoice = {id: 0, name: ""}
     public groupedLanguages: IObservableArray<SelectGroup> = observable.array([])
     public languageGroups: IObservableArray<LanguageGroupDTO> = observable.array([])
+    public proposals: IObservableArray<ProposalDTO> = observable.array([])
     public taskGroup: SelectChoice = {id: 0, name: ""}
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
 
     public alternatives: IObservableArray<AlternativeDTO> = observable.array([])
-    public client: IClient = new HttpClient()
+    public client: IClient = new MockClient()
 
     constructor() {
         makeAutoObservable(this)
@@ -51,6 +52,10 @@ export default class AppState {
     setLanguageGroups = action((newValue: LanguageGroupDTO[]): void => {
         this.languageGroups = observable.array(newValue)
     })
+
+    setProposals = action((newValue: ProposalDTO[]): void => {
+        this.proposals = observable.array(newValue)
+    })    
 
     setTaskGroup = action((newValue: SelectChoice): void => {
         this.taskGroup = newValue

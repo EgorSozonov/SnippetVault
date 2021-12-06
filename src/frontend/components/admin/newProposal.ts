@@ -1,51 +1,54 @@
-import React from 'react'
+import React, { FunctionComponent, useContext, useEffect } from 'react'
 import { NavLink } from 'react-router-dom';
 import EditableList from '../../commonComponents/editableList/EditableList';
 import HeaderRightButton from '../../commonComponents/headerRightButton/HeaderRightButton';
 import Toggler from '../../commonComponents/toggler/Toggler';
 import Proposal from '../../../common/dto/ProposalDTO';
-import "../snippet/snippet.css"
 import "./admin.css"
 import { html } from 'htm/react'
+import { fetchFromClient } from '../../utils/Client';
+import { observer } from 'mobx-react-lite';
+import MainState from '../../mobX/MainState';
+import { StoreContext } from '../../App';
+import IClient from '../../interfaces/IClient';
+import { fmtDt } from '../../utils/DateFormat';
 
 
-const mockProposals: Proposal[] = [
-]
+const NewProposal: FunctionComponent = observer(() => {
+    const state = useContext<MainState>(StoreContext)
+    const client: IClient = state.app.client
+    useEffect(() => {
+        fetchFromClient(client.getProposals(), state.app.setProposals)
+    }, [])
 
-function NewProposal() {
+    const approveHandler = (pId: number) => () => {
+        console.log("approving proposal " + pId)
+    }
     return html`
-        <div class="newProposal">
-            <div class="snippetsContainer">
-                <div class="snippetsHeader">
-                    <div class="snippetLeftHeader">&nbsp;</div>
-                    <div class="taskForHeader">
-                        <${Toggler} leftChoice="Old->new" rightChoice="New->old" initChosen="false" />
-                    </div>
-                    <div class="snippetRightHeader">
-                        New Proposals
-                    </div>
-                </div>
-                ${mockProposals.map((snippet: Proposal, idx: number ) => {
-                    const evenClass = (idx%2 === 0 ? " evenRow" : "")
-                    return html`
-                        <div class="snippetContainer" key=${idx}>
-                            <div class=${"snippet leftSide" + evenClass} >{}</div>
-                            <div class=${"taskContainer" + evenClass}>
-                                <div class="taskLeft">
-                                </div>
-                                <div class="task">
-                                    <span>${snippet.TaskName}</span> <span>${snippet.TSUpload.toString()}</span></div>
-                                <div class="taskRight commentButton" title="Accept">
-                                    A
-                                </div>
-                            </div>
-                            <div class=${"snippet rightSide" + evenClass}>${snippet.ProposalCode}</div>
-                        </div>`
-                })}
-                
+        <div class="newProposals">
+            <div class="newProposalsTitle">
+                <h3>New proposals</h3>
             </div>
+            ${state.app.proposals.map((snippet: Proposal, idx: number ) => {
+                return html`
+                    <div class="proposalContainer" key=${idx}>
+                        <div class=${"proposalHeaderContainer"}>
+
+                            <div>
+                                ${snippet.taskName}
+                            </div>
+                            <div>
+                                ${fmtDt(snippet.tsUpload)}
+                            </div>
+                            <div class="proposalHeaderRight" title="Accept" onClick=${approveHandler(snippet.id)}>
+                                A
+                            </div>
+                        </div>
+                        <div class=${"proposalBody"}>${snippet.code}</div>
+                    </div>`
+            })}            
         </div>
     `
-}
+})
 
 export default NewProposal

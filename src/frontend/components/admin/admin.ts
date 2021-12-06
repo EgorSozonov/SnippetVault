@@ -32,7 +32,7 @@ const editabilityLanguage: Editability<LanguageDTO>[] = [
         fieldType: "string",
     },
     {
-        field: "languageGroup",
+        field: "lgName",
         fieldType: "choice",
         choices: [
             {id: 1, name: "Universal", },
