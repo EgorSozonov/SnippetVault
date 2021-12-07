@@ -40,14 +40,18 @@
 }
 
 .proposalHeaderContainer div {
-    margin-right: 1rem;    
+    margin-right: 0.5rem;    
+    margin-left: 0.5rem;
 }
 
-.proposalHeaderRight {
+.proposalHeaderContainer .proposalHeaderRight {
     margin-left: auto;
     cursor: pointer;
     border-radius: 50%;
     border-style: solid;
+    font-size: 0.8rem;
+    padding: 0.4rem;
+    border-width: 1px;
 }
 
 .proposalBody {

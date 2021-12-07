@@ -22,6 +22,8 @@ function inputFocusHandler(event:any) {
 const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabilities, }: Props<T>) => {
     const [openIdx, setOpenIdx] = useState(-1)
     const [isOpenNew, setOpenNew] = useState(false)
+    console.log("editabilities")
+    console.log(editabilities)
     const rowClickHandler = (idx: number) => {
         if (idx === openIdx) {
             setOpenIdx(-1)
@@ -31,7 +33,14 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     }
 
     const newSaveHandler = (e: any) => {        
-        e.preventDefault()        
+        e.preventDefault()
+        console.log("new handler")
+        console.log(e.target)
+        const formData = new FormData(e.target)
+        for (var [key, value] of formData.entries()) { 
+            console.log(key);
+            console.log(value);
+        }
     }
 
     const newHandler = () => {
@@ -79,26 +88,14 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                 </div>
                 <div class="editableListHeaderButton" onClick=${newHandler}>+</div>
             </div>
-            <div>
+            <div class="editableListAddForm">
                 ${isOpenNew === true && html`
                     <form onSubmit=${newSaveHandler}>
                         <ul>
-                            ${editabilities.filter(x => x.field in values[0]).map((x: Editability<T>) => {
-                                return html`
-                                    <li key=${x.field} class="editableListEdit">
-                                        <form onSubmit=${editSaveHandler(0)}>
-                                            <ul>
-                                                ${editableInputs(values[0], 0)}
-                                            </ul>
-                                            <div className="editableListSaveButton">
-                                                <input type="submit" value="Save" />
-                                            </div>
-                                        </form>
-                                    </li>`
-                            })}
+                            ${editableInputs(values[0], 0)}
                         </ul>
-                        <div>
-                            <input type="submit" value="Save" />
+                        <div class="editableListAddButton">
+                            <input type="submit" value="Save new" />
                         </div>
                     </form>
                 `}

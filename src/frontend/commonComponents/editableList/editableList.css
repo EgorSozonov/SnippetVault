@@ -14,16 +14,16 @@
 
 .editableListRow {
     background-color: white;
-    cursor: pointer;
     padding: 6px;
 }
 
 .editableListRowActive {
-    background-color: aqua;
+    font-weight: bold;
 }
 
 .editableListCell {
     margin-left: 10px;
+    cursor: pointer;
 }
 
 .editableListEdit {
@@ -32,11 +32,28 @@
 
 .editableListColumn {
     width: 200px;
-    display: inline-block;
+    display: inline-flex;
+}
+
+.editableListColumn input {
+    flex: 10;
 }
 
 .editableListHeader {
     display: flex;
+}
+
+.editableListAddForm {
+    background-color: white;
+    padding-top: 0.5rem;
+}
+
+.editableListAddButton {
+    padding: 0.5rem;    
+}
+
+.editableListAddButton input {
+    cursor: pointer;
 }
 
 .editableListTitle {
@@ -54,5 +71,9 @@
 }
 
 .editableListSaveButton {
-    margin: 20px;
+    margin: 0.5rem;
+}
+
+.editableListSaveButton input {
+    cursor: pointer;
 }

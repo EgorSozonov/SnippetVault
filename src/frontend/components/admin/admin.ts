@@ -26,20 +26,7 @@ const editabilityTaskGroup: Editability<TaskGroupDTO>[] = [
     }
 ]
 
-const editabilityLanguage: Editability<LanguageDTO>[] = [
-    {
-        field: "name",
-        fieldType: "string",
-    },
-    {
-        field: "lgName",
-        fieldType: "choice",
-        choices: [
-            {id: 1, name: "Universal", },
-            {id: 2, name: "Scripting", },
-        ]
-    },
-]
+
 
 const Admin: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
@@ -53,6 +40,17 @@ const Admin: FunctionComponent = observer(({}: any) => {
             fieldType: "int",
         },
     ]
+    const editabilityLanguage: Editability<LanguageDTO>[] = [
+    {
+        field: "name",
+        fieldType: "string",
+    },
+    {
+        field: "lgName",
+        fieldType: "choice",
+        choices: state.app.languageGroups.map(x => {return {id: x.id, name: x.name}}),
+    },
+]
     const client: IClient = state.app.client
     useEffect(() => {
         fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
