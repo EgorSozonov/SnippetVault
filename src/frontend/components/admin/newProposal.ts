@@ -23,6 +23,7 @@ const NewProposal: FunctionComponent = observer(() => {
 
     const approveHandler = (pId: number) => () => {
         console.log("approving proposal " + pId)
+        client.proposalApprove(pId)
     }
     return html`
         <div class="newProposals">

@@ -646,3 +646,18 @@ ALTER TABLE ONLY sv."userVote"
 ALTER TABLE ONLY sv."userVote"
     ADD CONSTRAINT "userVote_user_FK" FOREIGN KEY ("userId") REFERENCES sv."user"(id);
 
+
+
+CREATE TABLE IF NOT EXISTS sv.session
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "userId" integer NOT NULL,
+    expiration timestamp with time zone NOT NULL,
+    "accessToken" character varying(96) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT session_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE sv.session OWNER to sv_user;
+
