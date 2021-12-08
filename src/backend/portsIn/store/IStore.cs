@@ -21,6 +21,8 @@ public interface IStore {
     Task<int> taskInsert(TaskDTO dto);
     Task<int> languageGroupInsert(LanguageGroupDTO dto);
     Task<int> languageInsert(LanguageDTO dto);
+
+    Task<ReqResult<UserCredsDTO>> userCredsGet(string userName);
 }
 
 }

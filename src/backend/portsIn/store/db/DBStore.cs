@@ -170,6 +170,9 @@ public class DBStore : IStore {
         }
     }
 
+    public async Task<ReqResult<UserCredsDTO>> userCredsGet(string userName) {
+    }
+
     private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        
         await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroupsForLanguages, db.conn)) { 
             cmd.Parameters.AddWithValue("ls", NpgsqlTypes.NpgsqlDbType.Array|NpgsqlTypes.NpgsqlDbType.Integer, langs);

@@ -112,6 +112,21 @@ public class API : IAPI{
         return await st.commentsGet(snippetId);
     }
 
+    public async Task<ReqResult<SignInDTO>> signIn(string userName, string password) {
+        var mbUserCreds = await st.userCredsGet(userName);
+        if (mbUserCreds is Success<UserCredsDTO> userCreds && userCreds.vals.Count > 0) {
+            bool authenticated = PasswordChecker.checkPassword(userCreds.vals[0], password);
+            if (!authenticated) return new Err<SignInDTO>("Authentication error");
+            
+        } else {
+            return new Err<SignInDTO>("Authentication error");
+        }        
+    }
+
+    public async Task<ReqResult<SignInDTO>> register(string userName, string password) {
+
+    }
+
     public string homePageGet() {
         return staticFiles.indexHtmlGet();
     }
@@ -138,7 +153,10 @@ public interface IAPI {
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId);
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2);
 
-    Task<ReqResult<CommentDTO>> commentsGet(int snippetId);     
+    Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
+
+    Task<ReqResult<SignInDTO>> signIn(string userName, string password);
+    Task<ReqResult<SignInDTO>> register(string userName, string password);
     string homePageGet();
 }
 
