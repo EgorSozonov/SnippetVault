@@ -18,7 +18,7 @@ Src/backend/bin
 src/backend/build
 src/backend/obj
 src/backend/target
-src/backend/adapters/dbStore/creds.json
+src/backend/portsIn/store/db/creds.json
 src/backend/core/auth/*
 include/*
 config/creds*
