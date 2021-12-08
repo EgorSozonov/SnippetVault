@@ -15,7 +15,7 @@ const webpackFrontend = (args: any): Configuration => {
 
 	const config: Configuration = {
 		entry: {
-			"snippetVault": path.resolve("./src/frontend/App.ts"),
+			"snippetVault": path.resolve("./src/frontend/core/App.ts"),
 		},
 		output: {
 			path: path.resolve("./target/frontend"),
@@ -114,14 +114,14 @@ const webpackFrontend = (args: any): Configuration => {
 					{
 						from: "**/*",
 						to: path.resolve("./target/"),
-						context: "./src/frontend/static/",
+						context: "./src/frontend/resources/",
                         noErrorOnMissing: true
 					},
 				]
 			}),
             new Html({
                 title: "Snippet Vault",
-                template: "./src/frontend/static/template.html"
+                template: "./src/frontend/resources/template.html"
             }),
             // new CopyWebpackPlugin({
             //     patterns: [

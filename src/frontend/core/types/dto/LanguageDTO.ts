@@ -1,4 +1,4 @@
-import SelectChoice from "../types/SelectChoice"
+import SelectChoice from "../SelectChoice"
 
 
 type LanguageDTO = {

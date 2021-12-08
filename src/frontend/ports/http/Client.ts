@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { API_PREFIX1, BASE_URL } from '../common/web/Url'
+import { API_PREFIX1, BASE_URL } from '../../core/params/Url'
 
 
 const API_PREFIX = API_PREFIX1

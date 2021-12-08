@@ -1,6 +1,6 @@
-import AlternativeDTO from "../../../common/dto/AlternativeDTO"
-import SnippetDTO from "../../../common/dto/SnippetDTO"
-import TaskDTO from "../../../common/dto/TaskDTO"
+import AlternativeDTO from "../../core/types/dto/AlternativeDTO"
+import SnippetDTO from "../../core/types/dto/SnippetDTO"
+import TaskDTO from "../../core/types/dto/TaskDTO"
 
 export const mockData = {
     snippets: [
