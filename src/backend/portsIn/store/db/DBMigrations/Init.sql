@@ -228,7 +228,13 @@ CREATE TABLE sv.snippet (
     content text NOT NULL,
     "isApproved" bit(1) DEFAULT (0)::bit(1) NOT NULL,
     score integer DEFAULT 0 NOT NULL,
-    "tsUpload" timestamp with time zone NOT NULL DEFAULT '2021-09-01 00:00:00+03'::timestamp with time zone
+    "tsUpload" timestamp with time zone NOT NULL DEFAULT '2021-09-01 00:00:00+03'::timestamp with time zone,
+    "authorId" integer NOT NULL,
+    CONSTRAINT "author_user_FK" FOREIGN KEY ("authorId")
+        REFERENCES sv."user" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
 );
 
 
@@ -247,6 +253,17 @@ ALTER TABLE sv.snippet ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     NO MAXVALUE
     CACHE 1
 );
+
+
+TABLESPACE pg_default;
+
+ALTER TABLE sv.snippet
+    OWNER to sv_user;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON TABLE sv.snippet TO sv_role;
+
+GRANT ALL ON TABLE sv.snippet TO sv_user;
+
 
 
 --
@@ -349,7 +366,9 @@ CREATE TABLE sv."user" (
     "dateJoined" timestamp with time zone NOT NULL,
     email character varying(64),
     hash bit varying(512) NOT NULL,
-    salt character varying(9) NOT NULL
+    salt character varying(9) NOT NULL,
+    expiration date NOT NULL DEFAULT '2021-09-01'::date,
+    "accessToken" character varying(96) COLLATE pg_catalog."default" NOT NULL DEFAULT 'a'::character varying,
 );
 
 
@@ -646,18 +665,4 @@ ALTER TABLE ONLY sv."userVote"
 ALTER TABLE ONLY sv."userVote"
     ADD CONSTRAINT "userVote_user_FK" FOREIGN KEY ("userId") REFERENCES sv."user"(id);
 
-
-
-CREATE TABLE IF NOT EXISTS sv.session
-(
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    "userId" integer NOT NULL,
-    expiration timestamp with time zone NOT NULL,
-    "accessToken" character varying(96) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT session_pkey PRIMARY KEY (id)
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE sv.session OWNER to sv_user;
 

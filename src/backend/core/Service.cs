@@ -2,10 +2,10 @@ namespace SnippetVault {
 using System.Threading.Tasks;
 
 
-public class API : IAPI{
+public class Service : IService {
     private readonly IStore st;
     private readonly IStaticFiles staticFiles;
-    public API(IStore _st, IStaticFiles _statics) {
+    public Service(IStore _st, IStaticFiles _statics) {
         this.st = _st;
         this.staticFiles = _statics;
     }
@@ -124,7 +124,8 @@ public class API : IAPI{
     }
 
     public async Task<ReqResult<SignInDTO>> register(string userName, string password) {
-
+        // check if user exists and if the password is long enough
+        // if everything's OK, insert a row wi
     }
 
     public string homePageGet() {
@@ -132,7 +133,7 @@ public class API : IAPI{
     }
 }
 
-public interface IAPI {
+public interface IService {
     Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2);
     Task<int> proposalCreate(CreateProposalDTO dto);
     Task<int> snippetApprove(int sn);
