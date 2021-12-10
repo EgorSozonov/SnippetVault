@@ -1,4 +1,5 @@
 namespace SnippetVault {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -116,9 +117,14 @@ public class Service : IService {
     public async Task<ReqResult<SignInDTO>> signIn(string userName, string password) {
         var mbUserCreds = await st.userCredsGet(userName);
         if (mbUserCreds is Success<UserCredsDTO> userCreds && userCreds.vals.Count > 0) {
-            bool authenticated = PasswordChecker.checkPassword(userCreds.vals[0], password);
-            if (!authenticated) return new Err<SignInDTO>("Authentication error");
+            var userCred = userCreds.vals[0];
             
+            bool authentic = PasswordChecker.checkPassword(userCred, password);
+            if (!authentic) return new Err<SignInDTO>("Authentication error");
+            return new Success<SignInDTO>(new List<SignInDTO>() {
+                    new SignInDTO() { accessToken = userCred.accessToken, userId = userCred.userId}
+                }
+            );
         } else {
             return new Err<SignInDTO>("Authentication error");
         }        
@@ -132,7 +138,9 @@ public class Service : IService {
 
         // if everything's OK, insert a row with token and expiration
         var newHash = PasswordChecker.makeHash(password, out string newSalt);
-        var newAccessToken = "";
+        var uuid1 = Guid.NewGuid().ToString();
+        var uuid2 = Guid.NewGuid().ToString();
+        var newAccessToken = uuid1 + uuid2;
         var newUserId = await st.userRegister(userName, newHash, newSalt, newAccessToken, System.DateTime.Today);
         return newUserId > 0 ? new Success<SignInDTO>(new List<SignInDTO>() {new SignInDTO() {accessToken = newAccessToken, userId = newUserId}}) 
                              : new Err<SignInDTO>("Error registering user");

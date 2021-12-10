@@ -171,7 +171,12 @@ public class DBStore : IStore {
     }
 
     public async Task<ReqResult<UserCredsDTO>> userCredsGet(string userName) {
-        throw new NotImplementedException();
+        await using (var cmd = new NpgsqlCommand(db.getQueries.alternative, db.conn)) { 
+            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<UserCredsDTO>(reader);
+            }
+        }
     }
 
     public async Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration) {
