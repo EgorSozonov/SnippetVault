@@ -1,7 +1,7 @@
 namespace SnippetVault {
 
 public class SignInDTO {
-    public int sessionId;
+    public int userId;
     public string accessToken;
 }
 
@@ -10,4 +10,5 @@ public class UserCredsDTO {
     public string salt;
     public byte[] hash;
 }
+
 }

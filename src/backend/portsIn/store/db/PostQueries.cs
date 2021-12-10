@@ -14,6 +14,7 @@ public record PostQueries {
     public string addTaskGroup {get; init;}
     public string addLanguage {get; init;}
     public string addLanguageGroup {get; init;}
+    public string userRegister {get; init;}
     public string cleanSpamProposals {get; init;}
 }
 
@@ -61,6 +62,7 @@ public class PostPGQueries  {
                     
                     COMMIT;
                     ",
+                userRegister=@"INSERT INTO sv.user() VALUES (@name, @hash, @salt, @accessToken, @expirationTs) RETURNING id;",
                 cleanSpamProposals=@"",
             };
     }

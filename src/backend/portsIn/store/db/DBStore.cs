@@ -171,6 +171,20 @@ public class DBStore : IStore {
     }
 
     public async Task<ReqResult<UserCredsDTO>> userCredsGet(string userName) {
+        throw new NotImplementedException();
+    }
+
+    public async Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration) {
+        //@name, @hash, @salt, @accessToken, @expirationTs
+        await using (var cmd = new NpgsqlCommand(db.postQueries.userRegister, db.conn)) { 
+            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
+            cmd.Parameters.AddWithValue("salt", NpgsqlTypes.NpgsqlDbType.Varchar, salt);
+            cmd.Parameters.AddWithValue("hash", NpgsqlTypes.NpgsqlDbType.Varchar, salt);
+            cmd.Parameters.AddWithValue("accessToken", NpgsqlTypes.NpgsqlDbType.Varchar, salt);
+            cmd.Parameters.AddWithValue("expirationTs", NpgsqlTypes.NpgsqlDbType.Date, tsExpiration);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+        throw new NotImplementedException();
     }
 
     private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        

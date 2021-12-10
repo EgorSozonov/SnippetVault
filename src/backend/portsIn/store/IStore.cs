@@ -1,5 +1,7 @@
 namespace SnippetVault {
+using System;
 using System.Threading.Tasks;
+
 
 public interface IStore {
     Task<ReqResult<SnippetDTO>> snippetsGet(int lang1Id, int lang2Id, int taskGroupId);
@@ -23,6 +25,7 @@ public interface IStore {
     Task<int> languageInsert(LanguageDTO dto);
 
     Task<ReqResult<UserCredsDTO>> userCredsGet(string userName);
+    Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration);
 }
 
 }

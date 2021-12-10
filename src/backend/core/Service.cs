@@ -1,5 +1,6 @@
 namespace SnippetVault {
-using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
 
 public class Service : IService {
@@ -125,7 +126,16 @@ public class Service : IService {
 
     public async Task<ReqResult<SignInDTO>> register(string userName, string password) {
         // check if user exists and if the password is long enough
-        // if everything's OK, insert a row wi
+        if (password == null || password.Length < 8) {
+            return new Err<SignInDTO>("Error! Password length must be at least 8 symbols");
+        }
+
+        // if everything's OK, insert a row with token and expiration
+        var newHash = PasswordChecker.makeHash(password, out string newSalt);
+        var newAccessToken = "";
+        var newUserId = await st.userRegister(userName, newHash, newSalt, newAccessToken, System.DateTime.Today);
+        return newUserId > 0 ? new Success<SignInDTO>(new List<SignInDTO>() {new SignInDTO() {accessToken = newAccessToken, userId = newUserId}}) 
+                             : new Err<SignInDTO>("Error registering user");
     }
 
     public string homePageGet() {
