@@ -13,8 +13,8 @@ using static HttpUtils;
 [Controller]
 [Route("/api/v1")]
 public class MainController : Controller {
-    private readonly IAPI api;
-    public MainController(IAPI _api) {
+    private readonly IService api;
+    public MainController(IService _api) {
         this.api = _api;
     }
 

@@ -4,8 +4,8 @@ namespace SnippetVault {
     using Microsoft.AspNetCore.Mvc;
 
 public class HomeController : Controller {
-    private readonly IAPI api;
-    public HomeController(IAPI _api) {
+    private readonly IService api;
+    public HomeController(IService _api) {
         this.api = _api;
     }
     

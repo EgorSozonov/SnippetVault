@@ -368,7 +368,7 @@ CREATE TABLE sv."user" (
     hash bit varying(512) NOT NULL,
     salt character varying(9) NOT NULL,
     expiration date NOT NULL DEFAULT '2021-09-01'::date,
-    "accessToken" character varying(96) COLLATE pg_catalog."default" NOT NULL DEFAULT 'a'::character varying,
+    "accessToken" character varying(32) COLLATE pg_catalog."default" NOT NULL DEFAULT 'a'::character varying,
 );
 
 

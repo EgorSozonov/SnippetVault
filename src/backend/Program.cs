@@ -26,7 +26,7 @@ class Program {
             })
             .ConfigureServices(serviceCollection =>
                 serviceCollection.AddScoped<IDBContext, DBContext>()
-                                 .AddScoped<IAPI, API>()
+                                 .AddScoped<IService, Service>()
                                  .AddScoped<IStaticFiles, StaticFiles>()
                                  .AddScoped<IStore, DBStore>())
                                 
