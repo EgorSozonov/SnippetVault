@@ -26,7 +26,8 @@ class Program {
             })
             .ConfigureServices(serviceCollection =>
                 serviceCollection.AddScoped<IDBContext, DBContext>()
-                                 .AddScoped<IService, Service>()
+                                 .AddScoped<IDataService, DataService>()
+                                 .AddScoped<IAuthService, AuthService>()
                                  .AddScoped<IStaticFiles, StaticFiles>()
                                  .AddScoped<IStore, DBStore>())
                                 

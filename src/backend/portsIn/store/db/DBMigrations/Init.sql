@@ -361,14 +361,16 @@ ALTER TABLE sv.task ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 
 CREATE TABLE sv."user" (
-    id integer NOT NULL,
-    name character varying(64) NOT NULL,
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    name character varying(64) COLLATE pg_catalog."default" NOT NULL,
     "dateJoined" timestamp with time zone NOT NULL,
-    email character varying(64),
-    hash bit varying(512) NOT NULL,
-    salt character varying(9) NOT NULL,
+    email character varying(64) COLLATE pg_catalog."default",
     expiration date NOT NULL DEFAULT '2021-09-01'::date,
     "accessToken" character varying(32) COLLATE pg_catalog."default" NOT NULL DEFAULT 'a'::character varying,
+    hash bytea NOT NULL,
+    salt bytea NOT NULL,
+    CONSTRAINT user_pkey PRIMARY KEY (id),
+    CONSTRAINT "user_name_UNIQ" UNIQUE (name)
 );
 
 

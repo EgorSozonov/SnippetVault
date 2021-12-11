@@ -61,8 +61,11 @@ public class PostPGQueries  {
                     SET score=score + 1 WHERE id=@snId;
                     
                     COMMIT;
-                    ",
-                userRegister=@"INSERT INTO sv.user() VALUES (@name, @hash, @salt, @accessToken, @expirationTs) RETURNING id;",
+                ",
+                userRegister=@"
+                    INSERT INTO sv.""user""(name, ""dateJoined"", email, expiration, ""accessToken"", hash, salt)
+                    	VALUES (@name, @tsJoin, @email, @dtExpiration, @accessToken, @hash, @salt);
+                ",
                 cleanSpamProposals=@"",
             };
     }

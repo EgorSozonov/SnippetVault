@@ -13,9 +13,11 @@ using static HttpUtils;
 [Controller]
 [Route("/api/v1")]
 public class MainController : Controller {
-    private readonly IService api;
-    public MainController(IService _api) {
+    private readonly IDataService api;
+    private readonly IAuthService auth;
+    public MainController(IDataService _api, IAuthService _auth) {
         this.api = _api;
+        this.auth = _auth;
     }
 
     [HttpGet]
@@ -111,6 +113,27 @@ public class MainController : Controller {
     public async Task comments([FromRoute] int snId) {
         var result = await api.commentsGet(snId);
         await sendQueryResult<CommentDTO>(result, HttpContext.Response);
+    }
+
+    [HttpPost]
+    [Route("user/register")]
+    public async Task userRegister([FromBody] UserSignInDTO dto) {
+        var result = await auth.userRegister(dto.userName, dto.password);
+        await sendQueryResult<SignInDTO>(result, HttpContext.Response);
+    }
+
+    [HttpPost]
+    [Route("user/signIn")]
+    public async Task userSignIn([FromBody] UserSignInDTO dto) {
+        var result = await auth.userSignIn(dto.userName, dto.password);
+        await sendQueryResult<SignInDTO>(result, HttpContext.Response);
+    }
+
+    [HttpPost]
+    [Route("user/updatePw")]
+    public async Task userUpdatePw([FromBody] UserSignInDTO dto) {
+        var result = await auth.userSignIn(dto.userName, dto.password);
+        await sendQueryResult<SignInDTO>(result, HttpContext.Response);
     }
 
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {
