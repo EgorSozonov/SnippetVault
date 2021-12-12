@@ -63,10 +63,13 @@ public class PostPGQueries  {
                     COMMIT;
                 ",
                 userRegister=@"
-                    INSERT INTO sv.""user""(name, ""dateJoined"", email, expiration, ""accessToken"", hash, salt)
-                    	VALUES (@name, @tsJoin, @email, @dtExpiration, @accessToken, @hash, @salt);
+                    INSERT INTO sv.""user""(name, ""dateJoined"", expiration, ""accessToken"", hash, salt)
+                    	VALUES (@name, @tsJoin, @dtExpiration, @accessToken, 
+                                decode(@hash, 'base64'), decode(@salt, 'base64')) 
+                    ON CONFLICT DO NOTHING RETURNING id;
                 ",
-                cleanSpamProposals=@"",
+                cleanSpamProposals=@"
+                ",
             };
     }
 }

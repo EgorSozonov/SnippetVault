@@ -39,11 +39,13 @@ public class AuthService : IAuthService {
         var uuid2 = Guid.NewGuid().ToString();
         var newAccessToken = uuid1 + uuid2;
         var newUserId = await st.userRegister(userName, newHash, newSalt, newAccessToken, System.DateTime.Today);
-        return newUserId > 0 ? new Success<SignInDTO>(new List<SignInDTO>() {new SignInDTO() {accessToken = newAccessToken, userId = newUserId}}) 
-                             : new Err<SignInDTO>("Error registering user");
+        if (newUserId > 0) {
+            var successList = new List<SignInDTO>() {new SignInDTO() {accessToken = newAccessToken, userId = newUserId}};
+            return new Success<SignInDTO>(successList);
+        } else {
+            return new Err<SignInDTO>("Error registering user");
+        }        
     }
-
-
 }
 
 public interface IAuthService {

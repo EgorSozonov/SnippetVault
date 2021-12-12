@@ -107,7 +107,7 @@ public class DBStore : IStore {
         await using (var cmdTL = new NpgsqlCommand(db.postQueries.taskLanguageCreate, db.conn)) { 
             cmdTL.Parameters.AddWithValue("taskId", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskId);
             cmdTL.Parameters.AddWithValue("langId", NpgsqlTypes.NpgsqlDbType.Integer, dto.langId);
-            var tlId = cmdTL.ExecuteNonQuery();
+            int tlId = (int)cmdTL.ExecuteScalar();
             await using (var cmdProp = new NpgsqlCommand(db.postQueries.proposalCreate, db.conn)) {
                 cmdProp.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, tlId);
                 cmdProp.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, dto.content);
@@ -179,17 +179,18 @@ public class DBStore : IStore {
         }
     }
 
-    public async Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration) {
+    public async Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime dtExpiration) {
         //@name, @hash, @salt, @accessToken, @expirationTs
         await using (var cmd = new NpgsqlCommand(db.postQueries.userRegister, db.conn)) { 
             cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
             cmd.Parameters.AddWithValue("salt", NpgsqlTypes.NpgsqlDbType.Varchar, salt);
-            cmd.Parameters.AddWithValue("hash", NpgsqlTypes.NpgsqlDbType.Varchar, salt);
-            cmd.Parameters.AddWithValue("accessToken", NpgsqlTypes.NpgsqlDbType.Varchar, salt);
-            cmd.Parameters.AddWithValue("expirationTs", NpgsqlTypes.NpgsqlDbType.Date, tsExpiration);
-            return await cmd.ExecuteNonQueryAsync();
+            cmd.Parameters.AddWithValue("hash", NpgsqlTypes.NpgsqlDbType.Varchar, hash);
+            cmd.Parameters.AddWithValue("accessToken", NpgsqlTypes.NpgsqlDbType.Varchar, accessToken);
+            cmd.Parameters.AddWithValue("tsJoin", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now);
+            cmd.Parameters.AddWithValue("dtExpiration", NpgsqlTypes.NpgsqlDbType.Date, dtExpiration);
+            var mbNewInt = cmd.ExecuteScalar();
+            return mbNewInt != null ? (int)mbNewInt : 0;
         }
-        throw new NotImplementedException();
     }
 
     private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        
@@ -202,7 +203,7 @@ public class DBStore : IStore {
     }
 
     private static ReqResult<T> readResultSet<T>(NpgsqlDataReader reader) where T : class, new() {
-        try {                    
+        try {
             string[] columnNames = new string[reader.FieldCount];
             for (int i = 0; i < reader.FieldCount; ++i) {
                 columnNames[i] = reader.GetName(i);
@@ -214,11 +215,11 @@ public class DBStore : IStore {
 
             var results = readerSnippet.readResults(reader, out string errMsg);
             if (errMsg != "") return new Err<T>(errMsg);
-            return new Success<T>(results);           
+            return new Success<T>(results);
         } catch (Exception e) {
             Console.WriteLine(e.Message);
             return new Err<T>("Exception");
-        }  
+        }
     }
 }
 
