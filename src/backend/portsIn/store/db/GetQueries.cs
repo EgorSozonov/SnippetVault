@@ -79,7 +79,7 @@ public class GetPGQueries  {
                 FROM sv.snippet s
                 LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;",
             userCreds = @"
-                SELECT id AS ""userId"", hash, salt, expiration, ""accessToken"" FROM sv.user WHERE name=@name;
+                SELECT id AS ""userId"", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration, ""accessToken"" FROM sv.user WHERE name=@name;
             ",
         };
     }

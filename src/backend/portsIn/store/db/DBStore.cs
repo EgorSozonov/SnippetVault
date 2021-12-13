@@ -171,7 +171,7 @@ public class DBStore : IStore {
     }
 
     public async Task<ReqResult<UserCredsDTO>> userCredsGet(string userName) {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.alternative, db.conn)) { 
+        await using (var cmd = new NpgsqlCommand(db.getQueries.userCreds, db.conn)) { 
             cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<UserCredsDTO>(reader);

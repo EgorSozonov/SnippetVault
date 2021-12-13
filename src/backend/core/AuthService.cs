@@ -13,7 +13,7 @@ public class AuthService : IAuthService {
 
     public async Task<ReqResult<SignInDTO>> userSignIn(string userName, string password) {
         var mbUserCreds = await st.userCredsGet(userName);
-        if (mbUserCreds is Success<UserCredsDTO> userCreds && userCreds.vals.Count > 0) {
+        if (mbUserCreds is Success<UserCredsDTO> userCreds && userCreds.vals.Count == 1) {
             var userCred = userCreds.vals[0];
             
             bool authentic = PasswordChecker.checkPassword(userCred, password);
