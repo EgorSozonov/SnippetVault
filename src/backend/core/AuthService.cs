@@ -15,6 +15,8 @@ public class AuthService : IAuthService {
         var mbUserCreds = await st.userCredsGet(userName);
         if (mbUserCreds is Success<UserCredsDTO> userCreds && userCreds.vals.Count == 1) {
             var userCred = userCreds.vals[0];
+            userCred.hash = EncodingUtils.convertToBcrypt(userCred.hash);
+            userCred.salt = EncodingUtils.convertToBcrypt(userCred.salt);
             
             bool authentic = PasswordChecker.checkPassword(userCred, password);
             if (!authentic) return new Err<SignInDTO>("Authentication error");

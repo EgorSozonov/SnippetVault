@@ -29,15 +29,13 @@ public static class EncodingUtils {
             } else if (src == 46 || src == 47) {
                 resultArray[i] = (byte)(src + 19);
             } else if (src == 89 || src == 90) {
-                resultArray[i] = (byte)(src + 19);
-            } else if (src == 46 || src == 47) {
-                resultArray[i] = (byte)(src + 19);
+                resultArray[i] = (byte)(src + 8);
+            } else if (src == 121 || src == 122) {
+                resultArray[i] = (byte)(src - 73);
             } else if (src == 56) {
                 resultArray[i] = 43;
             } else if (src == 57) {
                 resultArray[i] = 47;
-            } else if (src == 121 || src == 122) {
-                resultArray[i] = (byte)(src - 73);
             }
         }
         // Padding with "="
@@ -54,13 +52,13 @@ public static class EncodingUtils {
         var asciiArray = Encoding.ASCII.GetBytes(inp);
         int j = asciiArray.Length - 1;
         while (j > 0 && asciiArray[j] == 61) --j;
-        int resultLength = j;        
+        int resultLength = j + 1; 
         var resultArray = new byte[resultLength];
         // . -> A [46 <- 65]
         // / -> B [47 <- 66]
         // C-Z are transformed by simple -2 in ASCII
         // Y -> a [89 <- 97]
-        // Z -> b [90 -> 98]
+        // Z -> b [90 <- 98]
         // c-z are transformed by -2 again
         // y is -> 0 [121 <- 48]
         // z is -> 1 [122 <- 49]
@@ -68,22 +66,20 @@ public static class EncodingUtils {
         // 8 -> + [56 <- 43]
         // 9 -> / [57 <- 47]
 
-        for (int i = 0; i < asciiArray.Length; ++i) {
+        for (int i = 0; i < resultLength; ++i) {
             byte src = asciiArray[i];
             if (src >= 50 && (src <= 57) || (src >= 67 && (src <= 90)) || (src >= 99 && (src <= 122))) {
                 resultArray[i] = (byte)(src - 2);
             } else if (src == 65 || src == 66) {
                 resultArray[i] = (byte)(src - 19);
-            } else if (src == 108 || src == 109) {
-                resultArray[i] = (byte)(src - 19);
-            } else if (src == 55 || src == 56) {
-                resultArray[i] = (byte)(src - 19);
+            } else if (src == 97 || src == 98) {
+                resultArray[i] = (byte)(src - 8);
+            }  else if (src == 48 || src == 49) {
+                resultArray[i] = (byte)(src + 73);
             } else if (src == 43) {
                 resultArray[i] = 56;
             } else if (src == 47) {
                 resultArray[i] = 57;
-            } else if (src == 48 || src == 49) {
-                resultArray[i] = (byte)(src + 73);
             }
         }
         return Encoding.ASCII.GetString(resultArray);
