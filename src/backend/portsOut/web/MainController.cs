@@ -125,14 +125,14 @@ public class MainController : Controller {
     [HttpPost]
     [Route("user/signIn")]
     public async Task userSignIn([FromBody] UserSignInDTO dto) {
-        var result = await auth.userSignIn(dto.userName, dto.password);
+        var result = await auth.userAuthenticate(dto.userName, dto.password);
         await sendQueryResult<SignInDTO>(result, HttpContext.Response);
     }
 
     [HttpPost]
     [Route("user/updatePw")]
     public async Task userUpdatePw([FromBody] UserSignInDTO dto) {
-        var result = await auth.userSignIn(dto.userName, dto.password);
+        var result = await auth.userAuthenticate(dto.userName, dto.password);
         await sendQueryResult<SignInDTO>(result, HttpContext.Response);
     }
 
