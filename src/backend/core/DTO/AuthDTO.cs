@@ -6,10 +6,16 @@ public class SignInDTO {
     public string accessToken {get; set;}
 }
 
-public class UserCredsDTO {
+public class AuthenticateDTO {
     public int userId {get; set;}
     public string salt {get; set;}
     public string hash {get; set;}
+    public DateTime expiration {get; set;}
+}
+
+public class AuthorizeDTO {
+    public string accessToken {get; set;}
+    public DateTime expiration {get; set;}
 }
 
 }

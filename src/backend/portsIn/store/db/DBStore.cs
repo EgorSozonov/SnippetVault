@@ -103,7 +103,7 @@ public class DBStore : IStore {
         }
     }
 
-    public async Task<int> proposalCreate(CreateProposalDTO dto) {
+    public async Task<int> proposalCreate(CreateProposalDTO dto, int authorId) {
         await using (var cmdTL = new NpgsqlCommand(db.postQueries.taskLanguageCreate, db.conn)) { 
             cmdTL.Parameters.AddWithValue("taskId", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskId);
             cmdTL.Parameters.AddWithValue("langId", NpgsqlTypes.NpgsqlDbType.Integer, dto.langId);
@@ -170,11 +170,31 @@ public class DBStore : IStore {
         }
     }
 
-    public async Task<ReqResult<UserCredsDTO>> userCredsGet(string userName) {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.userCreds, db.conn)) { 
+    public async Task<ReqResult<AuthenticateDTO>> userAuthentGet(string userName) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.userAuthent, db.conn)) { 
             cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<UserCredsDTO>(reader);
+                return readResultSet<AuthenticateDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<AuthorizeDTO>> userAuthorGet(int userId) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.userAuthor, db.conn)) { 
+            cmd.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Integer, userId);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<AuthorizeDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<int> userUpdateExpiration(int userId, string newToken, DateTime newDate) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.userUpdateExpiration, db.conn)) { 
+            cmd.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Integer, userId);
+            cmd.Parameters.AddWithValue("newDate", NpgsqlTypes.NpgsqlDbType.Date, newDate);
+            cmd.Parameters.AddWithValue("newToken", NpgsqlTypes.NpgsqlDbType.Varchar, newToken);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return await cmd.ExecuteNonQueryAsync();
             }
         }
     }

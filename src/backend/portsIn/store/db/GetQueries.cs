@@ -13,7 +13,8 @@ public record GetQueries {
     public string alternative {get; init;}
     public string comment {get; init;}
     public string mainCounts {get; init;}
-    public string userCreds {get; init;}
+    public string userAuthent {get; init;}
+    public string userAuthor {get; init;}
 }
 
 public class GetPGQueries  {
@@ -78,8 +79,13 @@ public class GetPGQueries  {
                 	SUM(CASE WHEN s.""isApproved""=0::bit THEN 1 ELSE 0 END) AS ""proposalCount""
                 FROM sv.snippet s
                 LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;",
-            userCreds = @"
-                SELECT id AS ""userId"", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration, ""accessToken"" FROM sv.user WHERE name=@name;
+            userAuthent = @"
+                SELECT id AS ""userId"", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration 
+                FROM sv.user WHERE name=@name;
+            ",
+            userAuthor = @"
+                SELECT accessToken, expiration 
+                FROM sv.user WHERE id=@id;
             ",
         };
     }

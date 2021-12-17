@@ -16,7 +16,7 @@ public class DataService : IDataService {
         return await st.snippetsGet(lang1, lang2, taskGroup);
     }
 
-    public async Task<int> proposalCreate(CreateProposalDTO dto) {
+    public async Task<int> proposalCreate(CreateProposalDTO dto, int authorId) {
         return await st.proposalCreate(dto);
     }
 

@@ -15,6 +15,8 @@ public record PostQueries {
     public string addLanguage {get; init;}
     public string addLanguageGroup {get; init;}
     public string userRegister {get; init;}
+    public string userUpdateExpiration {get; init;}
+    public string userSignIn {get; init;}
     public string cleanSpamProposals {get; init;}
 }
 
@@ -63,6 +65,15 @@ public class PostPGQueries  {
                     COMMIT;
                 ",
                 userRegister=@"
+                    INSERT INTO sv.""user""(name, ""dateJoined"", expiration, ""accessToken"", hash, salt)
+                    	VALUES (@name, @tsJoin, @dtExpiration, @accessToken, 
+                                decode(@hash, 'base64'), decode(@salt, 'base64')) 
+                    ON CONFLICT DO NOTHING RETURNING id;
+                ",
+                userUpdateExpiration=@"
+                    UPDATE sv.""user"" SET expiration=@newDate, accessToken=@newToken WHERE id=@id;
+                ",
+                userSignIn=@"
                     INSERT INTO sv.""user""(name, ""dateJoined"", expiration, ""accessToken"", hash, salt)
                     	VALUES (@name, @tsJoin, @dtExpiration, @accessToken, 
                                 decode(@hash, 'base64'), decode(@salt, 'base64')) 

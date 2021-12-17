@@ -15,7 +15,7 @@ public interface IStore {
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2);
     Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);
     Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
-    Task<int> proposalCreate(CreateProposalDTO dTO);
+    Task<int> proposalCreate(CreateProposalDTO dTO, int authorId);
     Task<int> snippetApprove(int sn);
     Task<int> snippetDelete(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
@@ -24,7 +24,9 @@ public interface IStore {
     Task<int> languageGroupInsert(LanguageGroupDTO dto);
     Task<int> languageInsert(LanguageDTO dto);
 
-    Task<ReqResult<UserCredsDTO>> userCredsGet(string userName);
+    Task<ReqResult<AuthenticateDTO>> userAuthentGet(string userName);
+    Task<ReqResult<AuthorizeDTO>> userAuthorGet(int userId);
+    Task<int> userUpdateExpiration(int userId, string newToken, DateTime newDate);
     Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration);
 }
 
