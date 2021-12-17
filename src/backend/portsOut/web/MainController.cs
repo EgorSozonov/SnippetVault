@@ -29,8 +29,11 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("proposal/create")]
-    public async Task proposalCreate([FromBody] CreateProposalDTO dto) {
-        await applyPostRequest(api.proposalCreate(dto), HttpContext.Response);        
+    public async Task proposalCreate([FromBody] CreateProposalDTO dto, [FromHeader] SignInDTO signIn) {
+        if (signIn == null || signIn.accessToken == null || signIn.userId == 0) return;
+        bool authorized = await auth.userAuthorize(signIn.userId, signIn.accessToken);
+        if (!authorized) return;
+        await applyPostRequest(api.proposalCreate(dto, signIn.userId), HttpContext.Response);        
     }
 
     [HttpPost]

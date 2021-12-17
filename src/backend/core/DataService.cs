@@ -17,7 +17,7 @@ public class DataService : IDataService {
     }
 
     public async Task<int> proposalCreate(CreateProposalDTO dto, int authorId) {
-        return await st.proposalCreate(dto);
+        return await st.proposalCreate(dto, authorId);
     }
 
     public async Task<int> snippetApprove(int sn) {
@@ -121,7 +121,7 @@ public class DataService : IDataService {
 
 public interface IDataService {
     Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2);
-    Task<int> proposalCreate(CreateProposalDTO dto);
+    Task<int> proposalCreate(CreateProposalDTO dto, int authorId);
     Task<int> snippetApprove(int sn);
     Task<int> snippetDelete(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
