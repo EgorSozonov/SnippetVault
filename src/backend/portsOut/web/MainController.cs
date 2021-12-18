@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Routing;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using static HttpUtils;
+    using Microsoft.AspNetCore.Authorization;
 
-
-[Controller]
+    [Controller]
 [Route("/api/v1")]
 public class MainController : Controller {
     private readonly IDataService api;
@@ -27,8 +27,9 @@ public class MainController : Controller {
         await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
     }
 
-    [HttpPost]
+    [HttpPost]    
     [Route("proposal/create")]
+    [Authorize(Policy = "MyAccessPolicy")]
     public async Task proposalCreate([FromBody] CreateProposalDTO dto, [FromHeader] SignInDTO signIn) {
         if (signIn == null || signIn.accessToken == null || signIn.userId == 0) return;
         bool authorized = await auth.userAuthorize(signIn.userId, signIn.accessToken);
