@@ -40,11 +40,8 @@ public class WebApp {
         }        
 
         app.UseCors("SVCorsPolicy");
-
-        //app.UseHttpsRedirection();
+        
         DefaultFilesOptions options = new DefaultFilesOptions();
-        //options.DefaultFileNames.Clear();
-        //options.DefaultFileNames.Add("index.html");
         app.UseDefaultFiles(new DefaultFilesOptions());
         app.UseStaticFiles(new StaticFileOptions {
             FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "StaticFiles"))
@@ -55,25 +52,8 @@ public class WebApp {
             x.MapControllers();
         });
 
-
-        //    endpoints => {
-        //     endpoints.MapGet("/", async context => {
-        //         await context.Response.WriteAsync("Hello World!");
-        //     });
-        //     endpoints.MapGet("/api/v1/get/snippet", async context => {
-                
-        //     });
-            // endpoints.MapControllerRoute(
-            //     name: "default",
-            //     pattern: "sv/api/v1/{controller=Home}/{action=Index}");
-            // endpoints.MapControllerRoute(
-            //     name: "default2",
-            //     pattern: "sv/api/v1/{controller=Home}/{action=Index}/{id}");
-        //     endpoints.MapControllers();
-        // }
-        // );
-
-        //app.AddRouting();
+        //app.UseMiddleware<AuthorizeMiddleware>();
+        
     }
 }   
 
