@@ -29,7 +29,11 @@ class Program {
                                  .AddScoped<IDataService, DataService>()
                                  .AddScoped<IAuthService, AuthService>()
                                  .AddScoped<IStaticFiles, StaticFiles>()
-                                 .AddScoped<IStore, DBStore>())
+                                 .AddScoped<IStore, DBStore>()
+                                 .AddScoped<AuthorizeFilter>()
+                                 .AddScoped<Authorize>()
+                                 
+                                 )
                                 
             .UseStartup<WebApp>();
     }

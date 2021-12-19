@@ -8,9 +8,8 @@ using Microsoft.AspNetCore.Routing;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using static HttpUtils;
-    using Microsoft.AspNetCore.Authorization;
 
-    [Controller]
+[Controller]
 [Route("/api/v1")]
 public class MainController : Controller {
     private readonly IDataService api;
@@ -29,12 +28,10 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("proposal/create")]
-    [Authorize]
-    public async Task proposalCreate([FromBody] CreateProposalDTO dto, [FromHeader] SignInDTO signIn) {
-        if (signIn == null || signIn.accessToken == null || signIn.userId == 0) return;
-        bool authorized = await auth.userAuthorize(signIn.userId, signIn.accessToken);
-        if (!authorized) return;
-        await applyPostRequest(api.proposalCreate(dto, signIn.userId), HttpContext.Response);        
+    public async Task proposalCreate([FromBody] CreateProposalDTO dto) {
+        HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
+        int.TryParse(mbUserId[0].ToString(), out int userId); 
+        await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);        
     }
 
     [HttpPost]

@@ -21,9 +21,11 @@ public class WebApp {
     public void ConfigureServices(IServiceCollection services) {
         services.Configure<WebConfig>(this.configuration);
         services.AddSingleton<IConfiguration>(this.configuration);
-
         services.AddControllers();
+        services.AddScoped<Authorize>();
+        services.AddScoped<AuthorizeFilter>();
         services.AddRouting();
+        
         services.AddCors(o => o.AddPolicy("SVCorsPolicy", builder => {
             builder.WithOrigins("http://localhost:47001")
                    .AllowAnyMethod()
@@ -41,15 +43,16 @@ public class WebApp {
 
         app.UseCors("SVCorsPolicy");
         
+        
         DefaultFilesOptions options = new DefaultFilesOptions();
         app.UseDefaultFiles(new DefaultFilesOptions());
         app.UseStaticFiles(new StaticFileOptions {
             FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "StaticFiles"))
         });
         app.UseRouting();
-
-        app.UseEndpoints(x => {
-            x.MapControllers();
+        app.UseEndpoints(endpointRouteBuilder => {
+            
+            endpointRouteBuilder.MapControllers();            
         });
 
         //app.UseMiddleware<AuthorizeMiddleware>();

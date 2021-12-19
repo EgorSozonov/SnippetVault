@@ -25,8 +25,8 @@ public class PostPGQueries  {
         return new PostQueries() {
 
                 proposalCreate=@"                  
-                    INSERT INTO sv.snippet(""taskLanguageId"", content, ""isApproved"", score, ""tsUpload"")
-                    VALUES (@tlId, @content, 0::bit, 0, @ts);", 
+                    INSERT INTO sv.snippet(""taskLanguageId"", content, ""isApproved"", score, ""tsUpload"", ""authorId"")
+                    VALUES (@tlId, @content, 0::bit, 0, @ts, @authorId);", 
                 taskLanguageCreate=@"
                     INSERT INTO sv.""taskLanguage""(""taskId"", ""languageId"", ""primarySnippetId"")
                     	VALUES (@taskId, @langId, NULL)
