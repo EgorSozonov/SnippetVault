@@ -138,7 +138,6 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("user/signIn")]
-    [ServiceFilter(typeof(AuthorizeFilter))]
     public async Task userSignIn([FromBody] SignInDTO dto) {
         var result = await auth.userAuthenticate(dto);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
@@ -154,7 +153,6 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("user/signInAdmin")]
-    [ServiceFilter(typeof(AuthorizeFilter))]
     public async Task userSignInAdmin([FromBody] SignInAdminDTO dto) {
         var result = await auth.userAuthenticateAdmin(dto);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
@@ -162,13 +160,12 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("user/updatePwAdmin")]
-    [ServiceFilter(typeof(AuthorizeFilter))]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task userUpdatePwAdmin([FromBody] SignInAdminDTO dto) {
         var result = await auth.userAuthenticateAdmin(dto);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
         // TODO
     }
-
 
     #endregion
 
