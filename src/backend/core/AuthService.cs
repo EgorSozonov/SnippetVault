@@ -12,31 +12,33 @@ public class AuthService : IAuthService {
     }
 
 
-    public async Task<ReqResult<SignInDTO>> userRegister(string userName, string password) {
-        if (password == null || password.Length < 8) {
-            return new Err<SignInDTO>("Error! Password length must be at least 8 symbols");
+    public async Task<ReqResult<SignInSuccessDTO>> userRegister(SignInDTO dto) {
+        if (dto.password == null || dto.password.Length < 8) {
+            return new Err<SignInSuccessDTO>("Error! Password length must be at least 8 symbols");
         }
 
-        var newHash = PasswordChecker.makeHash(password, out string newSalt);        
+        var newHash = PasswordChecker.makeHash(dto.password, out string newSalt);        
         var newAccessToken = makeAccessToken();
-        var newUserId = await st.userRegister(userName, newHash, newSalt, newAccessToken, System.DateTime.Today);
+        var newUserId = await st.userRegister(dto.userName, newHash, newSalt, newAccessToken, System.DateTime.Today);
         if (newUserId > 0) {
-            var successList = new List<SignInDTO>() {new SignInDTO() {accessToken = newAccessToken, userId = newUserId}};
-            return new Success<SignInDTO>(successList);
+            var successList = new List<SignInSuccessDTO>() {new SignInSuccessDTO() {
+                accessToken = newAccessToken, userId = newUserId}
+                };
+            return new Success<SignInSuccessDTO>(successList);
         } else {
-            return new Err<SignInDTO>("Error registering user");
+            return new Err<SignInSuccessDTO>("Error registering user");
         }        
     }
 
-    public async Task<ReqResult<SignInDTO>> userAuthenticate(string userName, string password) {
-        var mbUserCreds = await st.userAuthentGet(userName);
-        if (mbUserCreds is Success<AuthenticateDTO> userAuthents && userAuthents.vals.Count == 1) {
+    public async Task<ReqResult<SignInSuccessDTO>> userAuthenticate(SignInDTO dto) {
+        var mbUserCreds = await st.userAuthentGet(dto.userName);
+        if (mbUserCreds is Success<AuthenticateIntern> userAuthents && userAuthents.vals.Count == 1) {
             var userAuthent = userAuthents.vals[0];
             userAuthent.hash = EncodingUtils.convertToBcrypt(userAuthent.hash);
             userAuthent.salt = EncodingUtils.convertToBcrypt(userAuthent.salt);
             
-            bool authentic = PasswordChecker.checkPassword(userAuthent, password);
-            if (!authentic) return new Err<SignInDTO>("Authentication error");
+            bool authentic = PasswordChecker.checkPassword(userAuthent, dto.password);
+            if (!authentic) return new Err<SignInSuccessDTO>("Authentication error");
 
             string accessToken = "";
             if (userAuthent.expiration.Date != DateTime.Today) {
@@ -45,18 +47,47 @@ public class AuthService : IAuthService {
             }
             
 
-            return new Success<SignInDTO>(new List<SignInDTO>() {
-                    new SignInDTO() { accessToken = accessToken, userId = userAuthent.userId, }
+            return new Success<SignInSuccessDTO>(new List<SignInSuccessDTO>() {
+                    new SignInSuccessDTO() { accessToken = accessToken, userId = userAuthent.userId, }
                 }
             );
         } else {
-            return new Err<SignInDTO>("Authentication error");
+            return new Err<SignInSuccessDTO>("Authentication error");
+        }
+    }
+
+    public async Task<ReqResult<SignInSuccessDTO>> userAuthenticateAdmin(SignInAdminDTO dto) {
+        var err = new Err<SignInSuccessDTO>("Authentication error");
+        if (dto.userName != AdminPasswordChecker.adminName) return err;
+        var mbUserCreds = await st.userAuthentGet(dto.userName);
+
+        if (mbUserCreds is Success<AuthenticateIntern> userAuthents && userAuthents.vals.Count == 1) {
+            
+            var userAuthent = userAuthents.vals[0];
+            userAuthent.hash = EncodingUtils.convertToBcrypt(userAuthent.hash);
+            userAuthent.salt = EncodingUtils.convertToBcrypt(userAuthent.salt);
+            
+            bool authentic = AdminPasswordChecker.checkAdminPassword(userAuthent, dto);
+            if (!authentic) return err;
+
+            string accessToken = "";
+            if (userAuthent.expiration.Date != DateTime.Today) {
+                accessToken = makeAccessToken();
+                await st.userUpdateExpiration(userAuthent.userId, accessToken, DateTime.Today);                
+            }            
+
+            return new Success<SignInSuccessDTO>(new List<SignInSuccessDTO>() {
+                    new SignInSuccessDTO() { accessToken = accessToken, userId = userAuthent.userId, }
+                }
+            );
+        } else {
+            return err;
         }
     }
 
     public async Task<bool> userAuthorize(int userId, string accessToken) {
         var mbUserAuthor = await st.userAuthorGet(userId);
-        if (mbUserAuthor is Success<AuthorizeDTO> userAuthors && userAuthors.vals.Count == 1) {
+        if (mbUserAuthor is Success<AuthorizeIntern> userAuthors && userAuthors.vals.Count == 1) {
             var userAuthor = userAuthors.vals[0];            
             bool authorized = userAuthor.expiration.Date == DateTime.Today && userAuthor.accessToken == accessToken;
             return authorized;
@@ -66,8 +97,8 @@ public class AuthService : IAuthService {
     }
 
     public async Task<bool> userAuthorizeAdmin(string accessToken) {
-        var mbUserAuthor = await st.userAdminData(accessToken);
-        if (mbUserAuthor is Success<AuthorizeDTO> userAuthors && userAuthors.vals.Count == 1) {
+        var mbUserAuthor = await st.userAdminAuthor();
+        if (mbUserAuthor is Success<AuthorizeIntern> userAuthors && userAuthors.vals.Count == 1) {
             var userAuthor = userAuthors.vals[0];            
             bool authorized = userAuthor.expiration.Date == DateTime.Today && userAuthor.accessToken == accessToken;
             return authorized;
@@ -85,8 +116,9 @@ public class AuthService : IAuthService {
 }
 
 public interface IAuthService {    
-    Task<ReqResult<SignInDTO>> userRegister(string userName, string password);
-    Task<ReqResult<SignInDTO>> userAuthenticate(string userName, string password);
+    Task<ReqResult<SignInSuccessDTO>> userRegister(SignInDTO dto);
+    Task<ReqResult<SignInSuccessDTO>> userAuthenticate(SignInDTO dto);
+    Task<ReqResult<SignInSuccessDTO>> userAuthenticateAdmin(SignInAdminDTO dto);
     Task<bool> userAuthorize(int userId, string accessToken);
     Task<bool> userAuthorizeAdmin(string accessToken);
 }

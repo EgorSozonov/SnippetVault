@@ -2,20 +2,19 @@ using System;
 namespace SnippetVault {
 
 public class SignInDTO {
-    public int userId {get; set;}
-    public string accessToken {get; set;}
+    public string userName {get; set;}
+    public string password {get; set;}
 }
 
-public class AuthenticateDTO {
-    public int userId {get; set;}
-    public string salt {get; set;}
-    public string hash {get; set;}
-    public DateTime expiration {get; set;}
+public class SignInAdminDTO {
+    public string userName {get; set; }
+    public string password1 {get; set; }
+    public string password2 {get; set; }
 }
 
-public class AuthorizeDTO {
-    public string accessToken {get; set;}
-    public DateTime expiration {get; set;}
+public class SignInSuccessDTO {
+    public int userId;
+    public string accessToken;
 }
 
 }

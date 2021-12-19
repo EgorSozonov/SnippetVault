@@ -174,29 +174,38 @@ public class DBStore : IStore {
     #endregion
 
     #region Users
-    public async Task<ReqResult<AuthenticateDTO>> userAuthentGet(string userName) {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.userAuthent, db.conn)) { 
+    public async Task<ReqResult<AuthenticateIntern>> userAuthentGet(string userName) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.userAuthentData, db.conn)) { 
             cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<AuthenticateDTO>(reader);
+                return readResultSet<AuthenticateIntern>(reader);
             }
         }
     }
 
-    public async Task<ReqResult<AuthorizeDTO>> userAuthorGet(int userId) {
+    public async Task<ReqResult<AuthorizeIntern>> userAuthorGet(int userId) {
         await using (var cmd = new NpgsqlCommand(db.getQueries.userAuthor, db.conn)) { 
             cmd.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Integer, userId);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<AuthorizeDTO>(reader);
+                return readResultSet<AuthorizeIntern>(reader);
             }
         }
     }
 
-    public async Task<ReqResult<AuthorizeDTO>> userAdminData(string accessToken) {
+    public async Task<ReqResult<AuthenticateIntern>> userAdminAuthent(string accessToken) {
         await using (var cmd = new NpgsqlCommand(db.getQueries.userAdminData, db.conn)) { 
             cmd.Parameters.AddWithValue("accessToken", NpgsqlTypes.NpgsqlDbType.Integer, accessToken);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<AuthorizeDTO>(reader);
+                return readResultSet<AuthenticateIntern>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<AuthorizeIntern>> userAdminAuthor() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.userAdminAuthor, db.conn)) { 
+            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Integer, AdminPasswordChecker.adminName);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<AuthorizeIntern>(reader);
             }
         }
     }

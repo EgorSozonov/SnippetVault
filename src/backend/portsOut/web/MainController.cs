@@ -131,26 +131,44 @@ public class MainController : Controller {
     [HttpPost]
     [Route("user/register")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task userRegister([FromBody] UserSignInDTO dto) {
-        var result = await auth.userRegister(dto.userName, dto.password);
-        await sendQueryResult<SignInDTO>(result, HttpContext.Response);
+    public async Task userRegister([FromBody] SignInDTO dto) {
+        var result = await auth.userRegister(dto);
+        await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
     }
 
     [HttpPost]
     [Route("user/signIn")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task userSignIn([FromBody] UserSignInDTO dto) {
-        var result = await auth.userAuthenticate(dto.userName, dto.password);
-        await sendQueryResult<SignInDTO>(result, HttpContext.Response);
+    public async Task userSignIn([FromBody] SignInDTO dto) {
+        var result = await auth.userAuthenticate(dto);
+        await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
     }
 
     [HttpPost]
     [Route("user/updatePw")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task userUpdatePw([FromBody] UserSignInDTO dto) {
-        var result = await auth.userAuthenticate(dto.userName, dto.password);
-        await sendQueryResult<SignInDTO>(result, HttpContext.Response);
+    public async Task userUpdatePw([FromBody] SignInDTO dto) {
+        var result = await auth.userAuthenticate(dto);
+        await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
     }
+
+    [HttpPost]
+    [Route("user/signInAdmin")]
+    [ServiceFilter(typeof(AuthorizeFilter))]
+    public async Task userSignInAdmin([FromBody] SignInAdminDTO dto) {
+        var result = await auth.userAuthenticateAdmin(dto);
+        await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
+    }
+
+    [HttpPost]
+    [Route("user/updatePwAdmin")]
+    [ServiceFilter(typeof(AuthorizeFilter))]
+    public async Task userUpdatePwAdmin([FromBody] SignInAdminDTO dto) {
+        var result = await auth.userAuthenticateAdmin(dto);
+        await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
+        // TODO
+    }
+
 
     #endregion
 

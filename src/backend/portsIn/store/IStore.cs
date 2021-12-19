@@ -24,9 +24,10 @@ public interface IStore {
     Task<int> languageGroupInsert(LanguageGroupDTO dto);
     Task<int> languageInsert(LanguageDTO dto);
 
-    Task<ReqResult<AuthenticateDTO>> userAuthentGet(string userName);
-    Task<ReqResult<AuthorizeDTO>> userAuthorGet(int userId);
-    Task<ReqResult<AuthorizeDTO>> userAdminData(string accessToken);
+    Task<ReqResult<AuthenticateIntern>> userAuthentGet(string userName);
+    Task<ReqResult<AuthorizeIntern>> userAuthorGet(int userId);
+    Task<ReqResult<AuthenticateIntern>> userAdminAuthent(string accessToken);
+    Task<ReqResult<AuthorizeIntern>> userAdminAuthor();
     Task<int> userUpdateExpiration(int userId, string newToken, DateTime newDate);
     Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration);
 }

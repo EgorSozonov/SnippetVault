@@ -6,9 +6,5 @@ public class CreateProposalDTO {
     public string content { get; set; }
 }
 
-public class UserSignInDTO {
-    public string userName {get; set; }
-    public string password {get; set; }
-}
 
 }
