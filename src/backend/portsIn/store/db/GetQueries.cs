@@ -15,6 +15,7 @@ public record GetQueries {
     public string mainCounts {get; init;}
     public string userAuthent {get; init;}
     public string userAuthor {get; init;}
+    public string userAdminData {get;init;}
 }
 
 public class GetPGQueries  {
@@ -87,6 +88,9 @@ public class GetPGQueries  {
                 SELECT ""accessToken"", expiration 
                 FROM sv.user WHERE id=@id;
             ",
+            userAdminData = @"
+                SELECT ""accessToken"", expiration 
+                FROM sv.user WHERE name='" + AdminPasswordChecker.adminName + "';",            
         };
     }
 }

@@ -14,6 +14,8 @@ public class DBStore : IStore {
         this.db = _db;
     }
 
+    #region Snippets
+
     public async Task<ReqResult<SnippetDTO>> snippetsGet(int lang1, int lang2, int taskGroup) {
         await using (var cmd = new NpgsqlCommand(db.getQueries.snippets, db.conn)) { 
             cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
@@ -34,30 +36,6 @@ public class DBStore : IStore {
         }
     }
 
-    public async Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped() {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.languagesGrouped, db.conn)) { 
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<LanguageGroupedDTO>(reader);
-            }
-        }
-    }
-
-    public async Task<ReqResult<LanguageDTO>> languagesGet() {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.languages, db.conn)) { 
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<LanguageDTO>(reader);
-            }
-        }
-    }
-
-    public async Task<ReqResult<TaskGroupDTO>> taskGroupsGet() {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroup, db.conn)) { 
-            cmd.Prepare();
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<TaskGroupDTO>(reader);
-            }
-        }
-    }
     public async Task<ReqResult<ProposalDTO>> proposalsGet() {
         await using (var cmd = new NpgsqlCommand(db.getQueries.proposals, db.conn)) { 
             cmd.Prepare();
@@ -67,41 +45,6 @@ public class DBStore : IStore {
         }
     }
 
-    public async Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup) {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.task, db.conn)) { 
-            cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<TaskDTO>(reader);
-            }
-        }
-    }
-
-    public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId) {
-        return await taskGroupsForArrayLanguages(new int[] {langId});
-    }
-
-    public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2) {
-        return await taskGroupsForArrayLanguages(new int[] {lang1, lang2});
-
-    }
-
-    public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId) {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.alternative, db.conn)) { 
-            cmd.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, taskLanguageId);
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<AlternativeDTO>(reader);
-            }
-        }
-    }
-
-    public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
-        await using (var cmd = new NpgsqlCommand(db.getQueries.alternative, db.conn)) { 
-            cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, snippetId);
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<CommentDTO>(reader);
-            }
-        }
-    }
 
     public async Task<int> proposalCreate(CreateProposalDTO dto, int authorId) {
         await using (var cmdTL = new NpgsqlCommand(db.postQueries.taskLanguageCreate, db.conn)) { 
@@ -140,6 +83,63 @@ public class DBStore : IStore {
         }
     }
 
+    public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.alternative, db.conn)) { 
+            cmd.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, taskLanguageId);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<AlternativeDTO>(reader);
+            }
+        }
+    }
+    #endregion
+
+    #region TasksLanguages
+
+    public async Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.languagesGrouped, db.conn)) { 
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<LanguageGroupedDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<LanguageDTO>> languagesGet() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.languages, db.conn)) { 
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<LanguageDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<TaskGroupDTO>> taskGroupsGet() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroup, db.conn)) { 
+            cmd.Prepare();
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<TaskGroupDTO>(reader);
+            }
+        }
+    }
+
+
+    public async Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.task, db.conn)) { 
+            cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<TaskDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId) {
+        return await taskGroupsForArrayLanguages(new int[] {langId});
+    }
+
+    public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2) {
+        return await taskGroupsForArrayLanguages(new int[] {lang1, lang2});
+
+    }
+
+
     public async Task<int> taskGroupInsert(TaskGroupDTO dto) {
         await using (var cmd = new NpgsqlCommand(db.postQueries.addTaskGroup, db.conn)) { 
             cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
@@ -171,6 +171,9 @@ public class DBStore : IStore {
         }
     }
 
+    #endregion
+
+    #region Users
     public async Task<ReqResult<AuthenticateDTO>> userAuthentGet(string userName) {
         await using (var cmd = new NpgsqlCommand(db.getQueries.userAuthent, db.conn)) { 
             cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
@@ -189,6 +192,15 @@ public class DBStore : IStore {
         }
     }
 
+    public async Task<ReqResult<AuthorizeDTO>> userAdminData(string accessToken) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.userAdminData, db.conn)) { 
+            cmd.Parameters.AddWithValue("accessToken", NpgsqlTypes.NpgsqlDbType.Integer, accessToken);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<AuthorizeDTO>(reader);
+            }
+        }
+    }
+
     public async Task<int> userUpdateExpiration(int userId, string newToken, DateTime newDate) {
         await using (var cmd = new NpgsqlCommand(db.postQueries.userUpdateExpiration, db.conn)) { 
             cmd.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Integer, userId);
@@ -201,7 +213,6 @@ public class DBStore : IStore {
     }
 
     public async Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime dtExpiration) {
-        //@name, @hash, @salt, @accessToken, @expirationTs
         await using (var cmd = new NpgsqlCommand(db.postQueries.userRegister, db.conn)) { 
             cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
             cmd.Parameters.AddWithValue("salt", NpgsqlTypes.NpgsqlDbType.Varchar, salt);
@@ -213,6 +224,16 @@ public class DBStore : IStore {
             return mbNewInt != null ? (int)mbNewInt : 0;
         }
     }
+
+    public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.alternative, db.conn)) { 
+            cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, snippetId);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<CommentDTO>(reader);
+            }
+        }
+    }
+    #endregion
 
     private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        
         await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroupsForLanguages, db.conn)) { 
@@ -243,7 +264,5 @@ public class DBStore : IStore {
         }
     }
 }
-
-
 
 }

@@ -65,6 +65,17 @@ public class AuthService : IAuthService {
         }
     }
 
+    public async Task<bool> userAuthorizeAdmin(string accessToken) {
+        var mbUserAuthor = await st.userAdminData(accessToken);
+        if (mbUserAuthor is Success<AuthorizeDTO> userAuthors && userAuthors.vals.Count == 1) {
+            var userAuthor = userAuthors.vals[0];            
+            bool authorized = userAuthor.expiration.Date == DateTime.Today && userAuthor.accessToken == accessToken;
+            return authorized;
+        } else {
+            return false;
+        }
+    }
+
     private string makeAccessToken() {
         var uuid1 = Guid.NewGuid().ToString();
         var uuid2 = Guid.NewGuid().ToString();
@@ -77,6 +88,7 @@ public interface IAuthService {
     Task<ReqResult<SignInDTO>> userRegister(string userName, string password);
     Task<ReqResult<SignInDTO>> userAuthenticate(string userName, string password);
     Task<bool> userAuthorize(int userId, string accessToken);
+    Task<bool> userAuthorizeAdmin(string accessToken);
 }
 
 }

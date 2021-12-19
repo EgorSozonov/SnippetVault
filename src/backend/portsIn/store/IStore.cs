@@ -26,6 +26,7 @@ public interface IStore {
 
     Task<ReqResult<AuthenticateDTO>> userAuthentGet(string userName);
     Task<ReqResult<AuthorizeDTO>> userAuthorGet(int userId);
+    Task<ReqResult<AuthorizeDTO>> userAdminData(string accessToken);
     Task<int> userUpdateExpiration(int userId, string newToken, DateTime newDate);
     Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration);
 }

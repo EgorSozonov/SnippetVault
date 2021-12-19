@@ -19,6 +19,7 @@ public class MainController : Controller {
         this.auth = _auth;
     }
 
+    #region Snippets
     [HttpGet]
     [Route("snippets/{taskGroup:int}/{lang1:int}/{lang2:int}")]
     public async Task snippet([FromRoute] int lang1, [FromRoute] int lang2, [FromRoute] int taskGroup) { 
@@ -37,21 +38,42 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("snippet/approve/{snId:int}")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task snippetApprove([FromRoute] int snId) {
         await applyPostRequest(api.snippetApprove(snId), HttpContext.Response);        
     }
 
     [HttpPost]
     [Route("snippet/delete/{snId:int}")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task snippetDelete([FromRoute] int snId) {
         await applyPostRequest(api.snippetDelete(snId), HttpContext.Response);        
     }
 
     [HttpPost]
     [Route("snippet/markPrimary/{tlId:int}/{snId:int}")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task snippetMarkPrimary([FromRoute] int tlId, [FromRoute] int snId) {
         await applyPostRequest(api.snippetMarkPrimary(tlId, snId), HttpContext.Response);        
     }
+
+    [HttpGet]
+    [Route("proposals")]
+    public async Task proposals() {
+        var result = await api.proposalsGet();
+        await sendQueryResult<ProposalDTO>(result, HttpContext.Response);
+    }
+
+    [HttpGet]
+    [Route("alternatives/{tlId:int}")]
+    public async Task alternative([FromRoute] int tlId) {
+        var result = await api.alternativesForTLGet(tlId);
+        await sendQueryResult<AlternativeDTO>(result, HttpContext.Response);
+    }
+
+    #endregion
+
+    #region TasksLanguages
 
     [HttpGet]
     [Route("languages/getGrouped")]
@@ -72,13 +94,6 @@ public class MainController : Controller {
     public async Task taskGroup() {
         var result = await api.taskGroupsGet();
         await sendQueryResult<TaskGroupDTO>(result, HttpContext.Response);
-    }    
-
-    [HttpGet]
-    [Route("proposals")]
-    public async Task proposals() {
-        var result = await api.proposalsGet();
-        await sendQueryResult<ProposalDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
@@ -102,13 +117,9 @@ public class MainController : Controller {
         await api.taskGroupsForLangsGet(langId1, langId2);
     }
 
+    #endregion
 
-    [HttpGet]
-    [Route("alternatives/{tlId:int}")]
-    public async Task alternative([FromRoute] int tlId) {
-        var result = await api.alternativesForTLGet(tlId);
-        await sendQueryResult<AlternativeDTO>(result, HttpContext.Response);
-    }
+    #region Users
 
     [HttpGet]
     [Route("comments/{snId:int}")]
@@ -119,6 +130,7 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("user/register")]
+    [ServiceFilter(typeof(AuthorizeFilter))]
     public async Task userRegister([FromBody] UserSignInDTO dto) {
         var result = await auth.userRegister(dto.userName, dto.password);
         await sendQueryResult<SignInDTO>(result, HttpContext.Response);
@@ -126,6 +138,7 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("user/signIn")]
+    [ServiceFilter(typeof(AuthorizeFilter))]
     public async Task userSignIn([FromBody] UserSignInDTO dto) {
         var result = await auth.userAuthenticate(dto.userName, dto.password);
         await sendQueryResult<SignInDTO>(result, HttpContext.Response);
@@ -133,10 +146,13 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("user/updatePw")]
+    [ServiceFilter(typeof(AuthorizeFilter))]
     public async Task userUpdatePw([FromBody] UserSignInDTO dto) {
         var result = await auth.userAuthenticate(dto.userName, dto.password);
         await sendQueryResult<SignInDTO>(result, HttpContext.Response);
     }
+
+    #endregion
 
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {
         try {                    
