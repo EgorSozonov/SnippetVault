@@ -84,7 +84,7 @@ public class GetPGQueries  {
                 FROM sv.user WHERE name=@name;
             ",
             userAuthor = @"
-                SELECT accessToken, expiration 
+                SELECT ""accessToken"", expiration 
                 FROM sv.user WHERE id=@id;
             ",
         };

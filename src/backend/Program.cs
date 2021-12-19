@@ -31,7 +31,6 @@ class Program {
                                  .AddScoped<IStaticFiles, StaticFiles>()
                                  .AddScoped<IStore, DBStore>()
                                  .AddScoped<AuthorizeFilter>()
-                                 .AddScoped<Authorize>()
                                  
                                  )
                                 

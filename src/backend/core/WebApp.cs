@@ -22,7 +22,6 @@ public class WebApp {
         services.Configure<WebConfig>(this.configuration);
         services.AddSingleton<IConfiguration>(this.configuration);
         services.AddControllers();
-        services.AddScoped<Authorize>();
         services.AddScoped<AuthorizeFilter>();
         services.AddRouting();
         

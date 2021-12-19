@@ -28,7 +28,7 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("proposal/create")]
-    [AuthorizeFilter]
+    [ServiceFilter(typeof(AuthorizeFilter))]
     public async Task proposalCreate([FromBody] CreateProposalDTO dto) {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
         int.TryParse(mbUserId[0].ToString(), out int userId); 
