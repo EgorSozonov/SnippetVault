@@ -106,15 +106,23 @@ public class MainController : Controller {
     [HttpGet]
     [Route("taskGroupsForLanguage/{langId:int}")]
     public async Task taskGroupsForLanguage([FromRoute] int langId) {
-        var result = await api.taskGroupsGet();
-        await api.taskGroupsForLangGet(langId);
+        var result = await api.taskGroupsForLangGet(langId);
+        await sendQueryResult<TaskGroupDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
     [Route("taskGroupsForLanguages/{langId1:int}/{langId2:int}")]
     public async Task taskGroupsForLanguages([FromRoute] int langId1, [FromRoute] int langId2) {
-        var result = await api.taskGroupsGet();
-        await api.taskGroupsForLangsGet(langId1, langId2);
+        //var result = await api.taskGroupsGet();
+        var result = await api.taskGroupsForLangsGet(langId1, langId2);
+        await sendQueryResult<TaskGroupDTO>(result, HttpContext.Response);
+    }
+
+    [HttpGet]
+    [Route("admin/stats")]
+    public async Task statsForAdmin() {
+        var result = await api.statsForAdmin();
+        await sendQueryResult<StatsDTO>(result, HttpContext.Response);
     }
 
     #endregion

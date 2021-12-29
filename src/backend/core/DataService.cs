@@ -108,6 +108,11 @@ public class DataService : IDataService {
         }
     }
 
+    public async Task<ReqResult<StatsDTO>> statsForAdmin() {        
+        var result = await st.statsForAdmin();
+        return result;
+    }
+
     public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
         return await st.commentsGet(snippetId);
     }
@@ -130,6 +135,7 @@ public interface IDataService {
     Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
     Task<int> languageGroupInsert(LanguageGroupDTO dto);
     Task<int> languageInsert(LanguageDTO dto);
+    Task<ReqResult<StatsDTO>> statsForAdmin();
 
     Task<ReqResult<TaskGroupDTO>> taskGroupsGet();
     Task<int> taskGroupInsert(TaskGroupDTO dto);

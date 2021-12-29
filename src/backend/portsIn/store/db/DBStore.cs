@@ -242,6 +242,14 @@ public class DBStore : IStore {
             }
         }
     }
+
+    public async Task<ReqResult<StatsDTO>> statsForAdmin() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.statsForAdmin, db.conn)) {             
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<StatsDTO>(reader);
+            }
+        }
+    }
     #endregion
 
     private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        

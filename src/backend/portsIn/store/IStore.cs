@@ -23,6 +23,7 @@ public interface IStore {
     Task<int> taskInsert(TaskDTO dto);
     Task<int> languageGroupInsert(LanguageGroupDTO dto);
     Task<int> languageInsert(LanguageDTO dto);
+    Task<ReqResult<StatsDTO>> statsForAdmin();
 
     Task<ReqResult<AuthenticateIntern>> userAuthentGet(string userName);
     Task<ReqResult<AuthorizeIntern>> userAuthorGet(int userId);

@@ -12,11 +12,11 @@ public record GetQueries {
     public string proposals {get; init;}
     public string alternative {get; init;}
     public string comment {get; init;}
-    public string mainCounts {get; init;}
     public string userAuthentData {get; init;}
     public string userAuthor {get; init;}
     public string userAdminData {get;init;}
     public string userAdminAuthor {get;init;}
+    public string statsForAdmin {get; init;}
 }
 
 public class GetPGQueries  {
@@ -72,15 +72,7 @@ public class GetPGQueries  {
                 SELECT c.content, c.""tsUpload"", u.id AS ""userId"", u.name AS ""userName""
 				FROM sv.comment c
 				JOIN sv.user u ON u.id=c.""userId""
-				WHERE c.""snippetId""=@snId;",
-            
-            mainCounts = @"
-                SELECT 
-                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount"",
-                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NULL THEN 1 ELSE 0 END) AS ""alternativeCount"",
-                	SUM(CASE WHEN s.""isApproved""=0::bit THEN 1 ELSE 0 END) AS ""proposalCount""
-                FROM sv.snippet s
-                LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;",
+				WHERE c.""snippetId""=@snId;",           
             userAuthentData = @"
                 SELECT id AS ""userId"", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration 
                 FROM sv.user WHERE name=@name;
@@ -95,7 +87,14 @@ public class GetPGQueries  {
             userAdminAuthor = @"
                 SELECT ""accessToken"", expiration 
                 FROM sv.user WHERE name=@name;
-            ",         
+            ",
+            statsForAdmin = @"
+                SELECT 
+                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount"",
+                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NULL THEN 1 ELSE 0 END) AS ""alternativeCount"",
+                	SUM(CASE WHEN s.""isApproved""=0::bit THEN 1 ELSE 0 END) AS ""proposalCount""
+                FROM sv.snippet s
+                LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;",
         };
     }
 }

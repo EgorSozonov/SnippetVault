@@ -74,4 +74,10 @@ public class TaskGroupDTO {
     public string name{get; set;}
 }
 
+public class StatsDTO {
+    public int primaryCount {get; set;}
+    public int alternativeCount {get; set;}
+    public int proposalCount {get; set;}
+}
+
 }
