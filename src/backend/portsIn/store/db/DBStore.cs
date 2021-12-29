@@ -93,7 +93,7 @@ public class DBStore : IStore {
     }
     #endregion
 
-    #region TasksLanguages
+    #region Admin
 
     public async Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped() {
         await using (var cmd = new NpgsqlCommand(db.getQueries.languagesGrouped, db.conn)) { 
@@ -139,36 +139,20 @@ public class DBStore : IStore {
 
     }
 
+    public async Task<int> taskGroupCU(TaskGroupCUDTO dto) {
+        return await createOrUpdate<TaskGroupCUDTO>(db.postQueries.taskGroupCreate, db.postQueries.taskGroupUpdate, taskGroupParamAdder, dto);
+    }   
 
-    public async Task<int> taskGroupInsert(TaskGroupDTO dto) {
-        await using (var cmd = new NpgsqlCommand(db.postQueries.addTaskGroup, db.conn)) { 
-            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
-            return await cmd.ExecuteNonQueryAsync();
-        }
+    public async Task<int> taskCU(TaskCUDTO dto) {
+        return await createOrUpdate<TaskCUDTO>(db.postQueries.taskCreate, db.postQueries.taskUpdate, taskParamAdder, dto);
     }
 
-    public async Task<int> taskInsert(TaskDTO dto) {
-        await using (var cmd = new NpgsqlCommand(db.postQueries.addTask, db.conn)) { 
-            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
-            cmd.Parameters.AddWithValue("description", NpgsqlTypes.NpgsqlDbType.Varchar, dto.description);
-            cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, dto.tgId);
-            return await cmd.ExecuteNonQueryAsync();
-        }
+    public async Task<int> languageGroupCU(LanguageGroupCUDTO dto) {
+        return await createOrUpdate<LanguageGroupCUDTO>(db.postQueries.languageGroupCreate, db.postQueries.languageGroupUpdate, languageGroupParamAdder, dto);
     }
 
-    public async Task<int> languageGroupInsert(LanguageGroupDTO dto) {
-        await using (var cmd = new NpgsqlCommand(db.postQueries.addLanguageGroup, db.conn)) { 
-            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
-            return await cmd.ExecuteNonQueryAsync();
-        }
-    }
-
-    public async Task<int> languageInsert(LanguageDTO dto) {
-        await using (var cmd = new NpgsqlCommand(db.postQueries.addLanguage, db.conn)) { 
-            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
-            cmd.Parameters.AddWithValue("lgId", NpgsqlTypes.NpgsqlDbType.Integer, dto.lgId);
-            return await cmd.ExecuteNonQueryAsync();
-        }
+    public async Task<int> languageCU(LanguageCUDTO dto) {
+        return await createOrUpdate<LanguageCUDTO>(db.postQueries.languageCreate, db.postQueries.languageUpdate, languageParamAdder, dto);
     }
 
     #endregion
@@ -279,6 +263,46 @@ public class DBStore : IStore {
             Console.WriteLine(e.Message);
             return new Err<T>("Exception");
         }
+    }
+
+    private async Task<int> createOrUpdate<T>(string urlCreate, string urlUpdate, Action<NpgsqlCommand, T> paramsAdder, T dto) where T: CUDTO {
+        if (dto.existingId == null) {
+            await using (var cmd = new NpgsqlCommand(urlCreate, db.conn)) { 
+                paramsAdder(cmd, dto);
+                return await cmd.ExecuteNonQueryAsync();
+            }
+        } else {
+            await using (var cmd = new NpgsqlCommand(urlUpdate, db.conn)) { 
+                paramsAdder(cmd, dto);
+                cmd.Parameters.AddWithValue("existingId", NpgsqlTypes.NpgsqlDbType.Integer, dto.existingId);
+                return await cmd.ExecuteNonQueryAsync();
+            }            
+        }    
+    }
+
+    private static void taskParamAdder(NpgsqlCommand cmd, TaskCUDTO dto) {
+        cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
+        cmd.Parameters.AddWithValue("description", NpgsqlTypes.NpgsqlDbType.Varchar, dto.description);
+        cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, dto.tgId);
+    }
+
+    private static void taskGroupParamAdder(NpgsqlCommand cmd, TaskGroupCUDTO dto) {
+        cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
+        cmd.Parameters.AddWithValue("code", NpgsqlTypes.NpgsqlDbType.Varchar, dto.code);
+        cmd.Parameters.AddWithValue("isDeleted", NpgsqlTypes.NpgsqlDbType.Bit, dto.isDeleted);
+    }
+
+    private static void languageGroupParamAdder(NpgsqlCommand cmd, LanguageGroupCUDTO dto) {
+        cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
+        cmd.Parameters.AddWithValue("code", NpgsqlTypes.NpgsqlDbType.Varchar, dto.code);
+        cmd.Parameters.AddWithValue("sortingOrder", NpgsqlTypes.NpgsqlDbType.Integer, dto.sortingOrder);
+    }
+
+    private static void languageParamAdder(NpgsqlCommand cmd, LanguageCUDTO dto) {
+        cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
+        cmd.Parameters.AddWithValue("code", NpgsqlTypes.NpgsqlDbType.Varchar, dto.code);
+        cmd.Parameters.AddWithValue("lgId", NpgsqlTypes.NpgsqlDbType.Integer, dto.lgId);
+        cmd.Parameters.AddWithValue("isDeleted", NpgsqlTypes.NpgsqlDbType.Bit, dto.isDeleted);
     }
 }
 

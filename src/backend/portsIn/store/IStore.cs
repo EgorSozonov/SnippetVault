@@ -19,10 +19,10 @@ public interface IStore {
     Task<int> snippetApprove(int sn);
     Task<int> snippetDelete(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
-    Task<int> taskGroupInsert(TaskGroupDTO dto);
-    Task<int> taskInsert(TaskDTO dto);
-    Task<int> languageGroupInsert(LanguageGroupDTO dto);
-    Task<int> languageInsert(LanguageDTO dto);
+    Task<int> taskGroupCU(TaskGroupCUDTO dto);
+    Task<int> taskCU(TaskCUDTO dto);
+    Task<int> languageGroupCU(LanguageGroupCUDTO dto);
+    Task<int> languageCU(LanguageCUDTO dto);
     Task<ReqResult<StatsDTO>> statsForAdmin();
 
     Task<ReqResult<AuthenticateIntern>> userAuthentGet(string userName);

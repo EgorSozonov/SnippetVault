@@ -14,6 +14,8 @@ public class DataService : IDataService {
         return await st.snippetsGet(lang1, lang2, taskGroup);
     }
 
+    #region Snippets
+
     public async Task<int> proposalCreate(CreateProposalDTO dto, int authorId) {
         return await st.proposalCreate(dto, authorId);
     }
@@ -48,6 +50,18 @@ public class DataService : IDataService {
         return await st.proposalsGet();
     }
 
+    public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId){
+        return await st.alternativesForTLGet(taskLanguageId);
+    }
+
+    public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
+        return await st.commentsGet(snippetId);
+    }
+
+    #endregion
+
+    #region Admin   
+
     public async Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped() {
         return await st.languagesGetGrouped();
     }
@@ -56,24 +70,14 @@ public class DataService : IDataService {
         return await st.languagesGet();
     }
 
-    public async Task<int> languageGroupInsert(LanguageGroupDTO dto) {
-        if (dto.name != null && dto.name.Length > 0) {
-            return await st.languageGroupInsert(dto);
-        } else {
-            return -1;
-        }
+    public async Task<int> languageGroupCU(LanguageGroupCUDTO dto) {
+        if (string.IsNullOrEmpty(dto.name) || string.IsNullOrEmpty(dto.code)) return -1;
+        return await st.languageGroupCU(dto);            
     }
 
-    public async Task<int> languageInsert(LanguageDTO dto) {
-        if (dto.name != null && dto.name.Length > 0 && dto.lgId > 0) {
-            return await st.languageInsert(dto);
-        } else {
-            return -1;
-        }
-    }
-
-    public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId){
-        return await st.alternativesForTLGet(taskLanguageId);
+    public async Task<int> languageCU(LanguageCUDTO dto) {
+        if (string.IsNullOrEmpty(dto.name) || string.IsNullOrEmpty(dto.code)) return -1;
+        return await st.languageCU(dto);
     }
 
     public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId) {
@@ -92,20 +96,14 @@ public class DataService : IDataService {
         return await st.tasksFromGroupGet(taskGroup);
     }
 
-    public async Task<int> taskGroupInsert(TaskGroupDTO dto) {
-        if (dto.name != null && dto.name.Length > 0) {
-            return await st.taskGroupInsert(dto);
-        } else {
-            return -1;
-        }
+    public async Task<int> taskGroupCU(TaskGroupCUDTO dto) {
+        if (string.IsNullOrEmpty(dto.name) || string.IsNullOrEmpty(dto.code)) return -1;
+        return await st.taskGroupCU(dto);
     }
 
-    public async Task<int> taskInsert(TaskDTO dto) {
-        if (dto.name != null && dto.name.Length > 0 && dto.tgId > 0) {
-            return await st.taskInsert(dto);
-        } else {
-            return -1;
-        }
+    public async Task<int> taskCU(TaskCUDTO dto) {
+        if (string.IsNullOrEmpty(dto.name) || string.IsNullOrEmpty(dto.description)) return -1;
+        return await st.taskCU(dto);
     }
 
     public async Task<ReqResult<StatsDTO>> statsForAdmin() {        
@@ -113,9 +111,8 @@ public class DataService : IDataService {
         return result;
     }
 
-    public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
-        return await st.commentsGet(snippetId);
-    }
+    #endregion
+
 
     public string homePageGet() {
         return staticFiles.indexHtmlGet();
@@ -133,13 +130,13 @@ public interface IDataService {
 
     Task<ReqResult<LanguageDTO>> languagesGet();
     Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
-    Task<int> languageGroupInsert(LanguageGroupDTO dto);
-    Task<int> languageInsert(LanguageDTO dto);
+    Task<int> languageGroupCU(LanguageGroupCUDTO dto);
+    Task<int> languageCU(LanguageCUDTO dto);
     Task<ReqResult<StatsDTO>> statsForAdmin();
 
     Task<ReqResult<TaskGroupDTO>> taskGroupsGet();
-    Task<int> taskGroupInsert(TaskGroupDTO dto);
-    Task<int> taskInsert(TaskDTO dto);
+    Task<int> taskGroupCU(TaskGroupCUDTO dto);
+    Task<int> taskCU(TaskCUDTO dto);
     Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup);
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId);
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2);

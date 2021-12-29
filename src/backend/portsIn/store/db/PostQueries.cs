@@ -10,10 +10,14 @@ public record PostQueries {
     public string addComment {get; init;}
     public string deleteComment {get; init;}
     public string vote {get; init;}
-    public string addTask {get; init;}
-    public string addTaskGroup {get; init;}
-    public string addLanguage {get; init;}
-    public string addLanguageGroup {get; init;}
+    public string taskCreate {get; init;}
+    public string taskUpdate {get; init;}
+    public string taskGroupCreate {get; init;}
+    public string taskGroupUpdate {get; init;}
+    public string languageCreate {get; init;}
+    public string languageUpdate {get; init;}
+    public string languageGroupCreate {get; init;}
+    public string languageGroupUpdate {get; init;}
     public string userRegister {get; init;}
     public string userUpdateExpiration {get; init;}
     public string userSignIn {get; init;}
@@ -37,11 +41,21 @@ public class PostPGQueries  {
                     SET ""isApproved""=1::bit 
                     WHERE id=@snId;",
                 deleteSnippet=@"DELETE FROM sv.snippet WHERE id=@snId;",
-                markPrimarySnippet=@"UPDATE sv.""taskLanguage"" SET ""primarySnippetId""=@snId WHERE id=@tlId;",
-                addTask=@"INSERT INTO sv.task(name, ""taskGroupId"", description) VALUES (@name, @tgId, @description);",
-                addTaskGroup=@"INSERT INTO sv.""taskGroup""(name, ""isDeleted"") VALUES (@name, 0::bit);",
-                addLanguage=@"INSERT INTO sv.language(code, name, ""isDeleted"", ""languageGroupId"") VALUES (@code, @name, 0::bit, @lgId);",
-                addLanguageGroup=@"INSERT INTO sv.""languageGroup""(code, name) VALUES (@code, @name);",
+                markPrimarySnippet=@"UPDATE sv.""taskLanguage"" SET ""primarySnippetId""=@snId WHERE id=@tlId AND ""isDeleted""=0::bit;",
+                taskCreate=@"INSERT INTO sv.task(name, ""taskGroupId"", description) VALUES (@name, @tgId, @description);",  // TODO check for isDeleted
+                taskUpdate=@"UPDATE sv.task SET name=@name, ""taskGroupId""=@tgId, description=@description
+                WHERE id=@existingId;",  // TODO check for isDeleted
+                taskGroupCreate=@"INSERT INTO sv.""taskGroup""(name, code, ""isDeleted"") VALUES (@name, @code, 0::bit);",
+                taskGroupUpdate=@"UPDATE sv.""taskGroup"" SET name=@name, ""isDeleted""=@isDeleted
+                WHERE id=@existingId;",
+                languageCreate=@"INSERT INTO sv.language(code, name, ""isDeleted"", ""languageGroupId"") VALUES (@code, @name, 0::bit, @lgId);",
+                languageUpdate=@"UPDATE sv.language SET code=@code, name=@name, 
+                ""isDeleted""=@isDeleted, ""languageGroupId""=@lgId 
+                WHERE id=@existingId;",
+                languageGroupCreate=@"INSERT INTO sv.""languageGroup""(code, name, ""sortingOrder"") 
+                VALUES (@code, @name, @sortingOrder);",
+                languageGroupUpdate=@"UPDATE sv.""languageGroup"" SET code=@code, name=@name, ""sortingOrder""=@sortingOrder
+                WHERE id=@existingId;",
                 addComment=@"
                     INSERT INTO sv.comment(""userId"", ""snippetId"", content, ""dateComment"")
                     VALUES (@userId, @snId, @content, @ts);",
