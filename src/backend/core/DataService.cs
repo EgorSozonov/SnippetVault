@@ -29,7 +29,7 @@ public class DataService : IDataService {
     public async Task<int> snippetMarkPrimary(int tlId, int snId) {
         var snippet = await st.snippetGet(snId);
         if (snippet is Success<BareSnippetDTO> succ) {
-            if (succ.vals != null && succ.vals.Count == 1) {
+            if (succ.vals != null && succ.vals.Count ==  1) {
                 var existingSnip = succ.vals[0];
                 if (existingSnip.isApproved && existingSnip.taskLanguageId == tlId) {
                     return await st.snippetMarkPrimary(tlId, snId);

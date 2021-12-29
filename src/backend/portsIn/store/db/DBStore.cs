@@ -203,7 +203,7 @@ public class DBStore : IStore {
 
     public async Task<ReqResult<AuthorizeIntern>> userAdminAuthor() {
         await using (var cmd = new NpgsqlCommand(db.getQueries.userAdminAuthor, db.conn)) { 
-            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Integer, AdminPasswordChecker.adminName);
+            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, AdminPasswordChecker.adminName);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<AuthorizeIntern>(reader);
             }

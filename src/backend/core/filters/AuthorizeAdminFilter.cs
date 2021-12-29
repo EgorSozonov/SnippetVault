@@ -22,11 +22,8 @@ public class AuthorizeAdminFilter : Attribute, IAsyncActionFilter    {
             context.HttpContext.Request.Headers.TryGetValue("accessToken", out var accessTokens);
             string accessToken = accessTokens.First();
             bool authorized = await authService.userAuthorizeAdmin(accessToken);
-            if (!authorized) context.Result = new UnauthorizedResult();            
-            
+            if (!authorized) context.Result = new UnauthorizedResult();                        
         } catch (Exception) { context.Result = new BadRequestResult() {}; }
-
-        if (context.Result == null) await continuation();
 
         if (context.Result == null) await continuation();
     }

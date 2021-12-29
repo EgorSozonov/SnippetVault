@@ -125,6 +125,42 @@ public class MainController : Controller {
         await sendQueryResult<StatsDTO>(result, HttpContext.Response);
     }
 
+    [HttpPost]
+    [Route("language/cu")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
+    public async Task languageCreateUpdate([FromBody] CreateProposalDTO dto) {
+        HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
+        int.TryParse(mbUserId[0].ToString(), out int userId); 
+        await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);        
+    }
+
+    [HttpPost]
+    [Route("languageGroup/cu")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
+    public async Task languageGroupCreateUpdate([FromBody] CreateProposalDTO dto) {
+        HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
+        int.TryParse(mbUserId[0].ToString(), out int userId); 
+        await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);        
+    }
+
+    [HttpPost]
+    [Route("task/cu")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
+    public async Task taskCreateUpdate([FromBody] CreateProposalDTO dto) {
+        HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
+        int.TryParse(mbUserId[0].ToString(), out int userId); 
+        await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);        
+    }
+
+    [HttpPost]
+    [Route("taskGroup/cu")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
+    public async Task taskGroupCreateUpdate([FromBody] CreateProposalDTO dto) {
+        HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
+        int.TryParse(mbUserId[0].ToString(), out int userId); 
+        await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);        
+    }            
+
     #endregion
 
     #region Users
@@ -138,7 +174,6 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("user/register")]
-    [ServiceFilter(typeof(AuthorizeFilter))]
     public async Task userRegister([FromBody] SignInDTO dto) {
         var result = await auth.userRegister(dto);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
