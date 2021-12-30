@@ -1,6 +1,6 @@
 import { useState } from "react"
 import "./toggler.css"
-import { html } from 'htm/react'
+import { html } from "htm/react"
 
 
 type Props = {

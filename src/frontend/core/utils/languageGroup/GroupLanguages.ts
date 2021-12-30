@@ -1,7 +1,6 @@
-import LanguageGroupedDTO from "../../../common/dto/LanguageGroupedDTO";
-import SelectGroup from "../../../common/types/SelectGroup";
-import EitherMsg from "../../types/EitherMsg";
-import LanguageGroup from "../../types/LanguageGroup";
+import LanguageGroupedDTO from "../../types/dto/LanguageGroupedDTO"
+import SelectGroup from "../../types/SelectGroup"
+import EitherMsg from "../../types/EitherMsg"
 
 
 export function groupLanguages(langs: LanguageGroupedDTO[]): SelectGroup[] {

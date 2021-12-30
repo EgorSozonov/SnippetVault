@@ -10,9 +10,8 @@ import TaskGroupDTO from "../../core/types/dto/TaskGroupDTO"
 import { ENDPOINTS } from "../../core/params/Url"
 import createClient from "./Client"
 import IClient from "../IClient"
-import EitherMsg from "../../types/EitherMsg"
+import EitherMsg from "../../core/types/EitherMsg"
 import ProposalCreateDTO from "../../core/types/dto/ProposalCreateDTO"
-import SnippetIdDTO from "../../core/types/dto/SnippetIdDTO"
 
 
 class HttpClient implements IClient {

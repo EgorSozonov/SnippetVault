@@ -3,11 +3,11 @@ import { html } from "htm/react"
 import { FunctionComponent, useContext } from "react"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
-import AlternativeDTO from "../../../common/dto/AlternativeDTO"
+import AlternativeDTO from "../../types/dto/AlternativeDTO"
 import Toggler from "../../commonComponents/toggler/Toggler"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateFormat"
-import LanguageDTO from "../../../common/dto/LanguageDTO";
+
 
 type Props = {
     primaryAlternative: AlternativeDTO | null,

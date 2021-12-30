@@ -1,5 +1,5 @@
 import "./headerRightButton.css"
-import { html } from 'htm/react'
+import { html } from "htm/react"
 
 
 type Props = {

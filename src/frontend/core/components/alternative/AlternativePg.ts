@@ -4,15 +4,12 @@ import { useParams } from "react-router";
 import { FunctionComponent, useContext, useEffect } from "react"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
-import IClient from "../../interfaces/IClient"
+import IClient from "../../../ports/IClient"
 import { fetchFromClient } from "../../utils/Client"
-import AlternativeDTO from "../../../common/dto/AlternativeDTO"
-import Toggler from "../../commonComponents/toggler/Toggler"
+import AlternativeDTO from "../../types/dto/AlternativeDTO"
 import { observer } from "mobx-react-lite"
-import { fmtDt } from "../../utils/DateFormat"
-import Alternative from "./Alternative";
-import { stat } from "fs";
-import AlternativePrimary from "./AlternativePrimary";
+import Alternative from "./Alternative"
+import AlternativePrimary from "./AlternativePrimary"
 
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {

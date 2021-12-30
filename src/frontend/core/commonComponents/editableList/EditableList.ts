@@ -1,11 +1,9 @@
-import { useRef, useState } from "react"
-import IHasName from "../../interfaces/IHasName"
-import IStringKeyed from "../../interfaces/IStringKeyed"
+import { useState } from "react"
+import IHasName from "../../types/IHasName"
+import IStringKeyed from "../../types/IStringKeyed"
 import "./editableList.css"
-import { html } from 'htm/react'
+import { html } from "htm/react"
 import { Editability } from "../../types/Editability"
-import HoverSelect from "../hoverSelect/HoverSelect"
-import SelectChoice from "../../../common/types/SelectChoice"
 import HoverSelectInput from "../hoverSelect/HoverSelectInput"
 
 

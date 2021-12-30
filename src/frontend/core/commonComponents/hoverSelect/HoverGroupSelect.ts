@@ -4,8 +4,8 @@ import { html } from 'htm/react'
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import {observer} from 'mobx-react-lite'
-import SelectChoice from "../../../common/types/SelectChoice"
-import SelectGroup from "../../../common/types/SelectGroup"
+import SelectChoice from "../../types/SelectChoice"
+import SelectGroup from "../../types/SelectGroup"
 
 
 type Props = {

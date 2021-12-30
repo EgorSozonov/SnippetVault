@@ -3,4 +3,4 @@ type UserStatus =
     | "user"
     | "admin"
 
-export default UserStatus    
+export default UserStatus

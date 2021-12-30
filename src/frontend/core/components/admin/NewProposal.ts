@@ -1,17 +1,13 @@
-import React, { FunctionComponent, useContext, useEffect } from 'react'
-import { NavLink } from 'react-router-dom';
-import EditableList from '../../commonComponents/editableList/EditableList';
-import HeaderRightButton from '../../commonComponents/headerRightButton/HeaderRightButton';
-import Toggler from '../../commonComponents/toggler/Toggler';
-import Proposal from '../../../common/dto/ProposalDTO';
+import { FunctionComponent, useContext, useEffect } from "react"
+import Proposal from "../../types/dto/ProposalDTO"
 import "./admin.css"
-import { html } from 'htm/react'
-import { fetchFromClient } from '../../utils/Client';
-import { observer } from 'mobx-react-lite';
-import MainState from '../../mobX/MainState';
-import { StoreContext } from '../../App';
-import IClient from '../../interfaces/IClient';
-import { fmtDt } from '../../utils/DateFormat';
+import { html } from "htm/react"
+import { fetchFromClient } from "../../utils/Client"
+import { observer } from "mobx-react-lite"
+import MainState from "../../mobX/MainState"
+import { StoreContext } from "../../App"
+import IClient from "../../../ports/IClient"
+import { fmtDt } from "../../utils/DateFormat"
 
 
 const NewProposal: FunctionComponent = observer(() => {

@@ -1,4 +1,4 @@
-import SnippetDTO from "../../../common/dto/SnippetDTO"
+import SnippetDTO from "../../types/dto/SnippetDTO"
 import Header from "./Header"
 import TextInput from "./TextInput"
 import "./snippet.css"
@@ -9,7 +9,7 @@ import { FunctionComponent, useContext, useEffect} from "react"
 import MainState from "../../mobX/MainState"
 import { observer } from "mobx-react-lite"
 import { fetchFromClient, fetchFromClientTransform } from "../../utils/Client"
-import IClient from "../../interfaces/IClient"
+import IClient from "../../../ports/IClient"
 import { groupLanguages, } from "../../utils/languageGroup/GroupLanguages"
 
 

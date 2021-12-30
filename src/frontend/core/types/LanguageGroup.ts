@@ -1,4 +1,4 @@
-import LanguageGroupedDTO from "../../common/dto/LanguageGroupedDTO";
+import LanguageGroupedDTO from "../types/dto/LanguageGroupedDTO";
 
 type LanguageGroup = {
     name: string,
