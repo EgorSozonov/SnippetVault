@@ -31,6 +31,8 @@ public interface IStore {
     Task<ReqResult<AuthorizeIntern>> userAdminAuthor();
     Task<int> userUpdateExpiration(int userId, string newToken, DateTime newDate);
     Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration);
+    Task<int> userVote(int userId, int tlId, int snId);
+    Task<int> commentCreate(int userId, int snId, string content, DateTime ts);
 }
 
 }

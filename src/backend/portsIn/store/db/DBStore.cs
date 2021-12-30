@@ -234,6 +234,26 @@ public class DBStore : IStore {
             }
         }
     }
+
+    public async Task<int> userVote(int userId, int tlId, int snId) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.vote, db.conn)) { 
+            cmd.Parameters.AddWithValue("userId", NpgsqlTypes.NpgsqlDbType.Integer, userId);
+            cmd.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, tlId);
+            cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, snId);
+            return await cmd.ExecuteNonQueryAsync();            
+        }
+    }
+
+    public async Task<int> commentCreate(int userId, int snId, string content, DateTime ts) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.commentCreate, db.conn)) { 
+            cmd.Parameters.AddWithValue("userId", NpgsqlTypes.NpgsqlDbType.Integer, userId);
+            cmd.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, content);
+            cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, snId);
+            cmd.Parameters.AddWithValue("ts", NpgsqlTypes.NpgsqlDbType.TimestampTz, ts);
+            return await cmd.ExecuteNonQueryAsync();            
+        }
+    }
+
     #endregion
 
     private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        

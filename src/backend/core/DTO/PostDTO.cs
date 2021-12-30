@@ -6,6 +6,11 @@ public class CreateProposalDTO {
     public string content { get; set; }
 }
 
+public class VoteDTO {
+    public int snId {get; set;}
+
+}
+
 public class CUDTO {
     public int? existingId {get; set;}
 }
@@ -34,6 +39,11 @@ public class LanguageGroupCUDTO : CUDTO {
     public string code {get; set;}
     public string name {get; set;}
     public bool isDeleted {get; set;}
+}
+
+public class CommentCUDTO : CUDTO {
+    public int snId {get; set;}
+    public string content {get; set;}
 }
 
 }

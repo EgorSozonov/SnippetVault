@@ -32,7 +32,7 @@ public class MainController : Controller {
     [ServiceFilter(typeof(AuthorizeFilter))]
     public async Task proposalCreate([FromBody] CreateProposalDTO dto) {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
-        int.TryParse(mbUserId[0].ToString(), out int userId); 
+        int.TryParse(mbUserId[0].ToString(), out int userId);
         await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);        
     }
 
@@ -113,7 +113,6 @@ public class MainController : Controller {
     [HttpGet]
     [Route("taskGroupsForLanguages/{langId1:int}/{langId2:int}")]
     public async Task taskGroupsForLanguages([FromRoute] int langId1, [FromRoute] int langId2) {
-        //var result = await api.taskGroupsGet();
         var result = await api.taskGroupsForLangsGet(langId1, langId2);
         await sendQueryResult<TaskGroupDTO>(result, HttpContext.Response);
     }
@@ -200,6 +199,24 @@ public class MainController : Controller {
         var result = await auth.userAuthenticateAdmin(dto);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
         // TODO
+    }
+
+    [HttpPost]
+    [Route("user/vote")]
+    [ServiceFilter(typeof(AuthorizeFilter))]
+    public async Task userVote([FromBody] VoteDTO dto) {        
+        HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
+        int.TryParse(mbUserId[0].ToString(), out int userId);
+        await applyPostRequest(api.userVote(dto, userId), HttpContext.Response);
+    }
+
+    [HttpPost]
+    [Route("user/commentCreate")]
+    [ServiceFilter(typeof(AuthorizeFilter))]
+    public async Task commentCreate([FromBody] CommentCUDTO dto) {
+        HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
+        int.TryParse(mbUserId[0].ToString(), out int userId);
+        await applyPostRequest(api.commentCreate(dto, userId), HttpContext.Response);        
     }
 
     #endregion

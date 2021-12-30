@@ -7,8 +7,8 @@ public record PostQueries {
     public string approveProposal {get; init;}
     public string deleteSnippet {get; init;}
     public string markPrimarySnippet {get; init;}
-    public string addComment {get; init;}
-    public string deleteComment {get; init;}
+    public string commentCreate {get; init;}
+    public string commentDelete {get; init;}
     public string vote {get; init;}
     public string taskCreate {get; init;}
     public string taskUpdate {get; init;}
@@ -56,20 +56,20 @@ public class PostPGQueries  {
                 VALUES (@code, @name, @sortingOrder);",
                 languageGroupUpdate=@"UPDATE sv.""languageGroup"" SET code=@code, name=@name, ""sortingOrder""=@sortingOrder
                 WHERE id=@existingId;",
-                addComment=@"
+                commentCreate=@"
                     INSERT INTO sv.comment(""userId"", ""snippetId"", content, ""dateComment"")
                     VALUES (@userId, @snId, @content, @ts);",
-                deleteComment=@"DELETE FROM sv.comment WHERE id=@comment;",
+                commentDelete=@"DELETE FROM sv.comment WHERE id=@comment;",
                 vote=@"
                     BEGIN;
                     WITH existingVote AS (
                         SELECT uv.""snippetId"" FROM sv.""userVote"" uv 
-                        WHERE uv.""userId""=@user AND uv.""taskLanguageId""=1 AND uv.""snippetId""<>@snId LIMIT 1
+                        WHERE uv.""userId""=@userId AND uv.""taskLanguageId""=1 AND uv.""snippetId""<>@snId LIMIT 1
                     )
                     UPDATE sv.snippet SET score=score-1 WHERE id IN (SELECT ""snippetId"" FROM existingVote);
                     
                     INSERT INTO sv.""userVote""(""userId"", ""taskLanguageId"", ""snippetId"")
-                    VALUES (@user, @tlId, @snId) 
+                    VALUES (@userId, @tlId, @snId) 
                     ON CONFLICT(""userId"", ""taskLanguageId"") 
                     DO UPDATE SET ""snippetId""=EXCLUDED.""snippetId"";
 
