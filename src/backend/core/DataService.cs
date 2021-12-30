@@ -58,6 +58,14 @@ public class DataService : IDataService {
         return await st.commentsGet(snippetId);
     }
 
+    public async Task<int> userVote(VoteDTO dto, int userId) {
+        return await st.userVote(userId, dto.tlId, dto.snId);
+    }
+
+    public async Task<int> commentCreate(CommentCUDTO dto, int userId) {
+        return await st.commentCreate(userId, dto.snId, dto.content, System.DateTime.Now);
+    }
+
     #endregion
 
     #region Admin   
@@ -141,6 +149,8 @@ public interface IDataService {
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId);
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2);
     Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
+    Task<int> userVote(VoteDTO dto, int userId);
+    Task<int> commentCreate(CommentCUDTO dto, int userId);
 
     string homePageGet();
 }

@@ -57,14 +57,14 @@ public class PostPGQueries  {
                 languageGroupUpdate=@"UPDATE sv.""languageGroup"" SET code=@code, name=@name, ""sortingOrder""=@sortingOrder
                 WHERE id=@existingId;",
                 commentCreate=@"
-                    INSERT INTO sv.comment(""userId"", ""snippetId"", content, ""dateComment"")
+                    INSERT INTO sv.comment(""userId"", ""snippetId"", content, ""tsUpload"")
                     VALUES (@userId, @snId, @content, @ts);",
                 commentDelete=@"DELETE FROM sv.comment WHERE id=@comment;",
                 vote=@"
                     BEGIN;
                     WITH existingVote AS (
                         SELECT uv.""snippetId"" FROM sv.""userVote"" uv 
-                        WHERE uv.""userId""=@userId AND uv.""taskLanguageId""=1 AND uv.""snippetId""<>@snId LIMIT 1
+                        WHERE uv.""userId""=@userId AND uv.""taskLanguageId""=@tlId AND uv.""snippetId""<>@snId LIMIT 1
                     )
                     UPDATE sv.snippet SET score=score-1 WHERE id IN (SELECT ""snippetId"" FROM existingVote);
                     

@@ -8,7 +8,7 @@ public class CreateProposalDTO {
 
 public class VoteDTO {
     public int snId {get; set;}
-
+    public int tlId {get; set;}
 }
 
 public class CUDTO {
