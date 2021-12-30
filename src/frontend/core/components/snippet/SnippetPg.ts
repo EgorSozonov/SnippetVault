@@ -5,7 +5,8 @@ import "./snippet.css"
 import SnippetCode from "./SnippetCode"
 import { html } from "htm/react"
 import { StoreContext } from "../../App"
-import { FunctionComponent, useContext, useEffect} from "react"
+import { FunctionComponent, useContext, useEffect,} from "react"
+import { useSearchParams } from "react-router-dom"
 import MainState from "../../mobX/MainState"
 import { observer } from "mobx-react-lite"
 import { fetchFromClient, fetchFromClientTransform } from "../../utils/Client"
@@ -20,6 +21,14 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const lang2 = state.app.language2
     const tg = state.app.taskGroup
     const client: IClient = state.app.client
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const lang1Code = searchParams.get('lang1')
+    const lang2IdStr = searchParams.get('lang2')
+    const taskIdStr = searchParams.get('task')
+    // If all query params present and at least one of them doesn't match Redux, make a new request to server
+    // Otherwise, if all params are present in Redux, make a new request to server and update the URL if it doesn't match
 
     useEffect(() => {
         fetchFromClientTransform(client.getLanguages(), groupLanguages, state.app.setGroupedLanguages)

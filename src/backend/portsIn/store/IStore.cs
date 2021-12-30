@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 
 public interface IStore {
-    Task<ReqResult<SnippetDTO>> snippetsGet(int lang1Id, int lang2Id, int taskGroupId);
+    Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroupId, int lang1Id, int lang2Id);
+    Task<ReqResult<SnippetDTO>> snippetsGetByCode(string taskGroupCode, string lang1Code, string lang2Code);
     Task<ReqResult<BareSnippetDTO>> snippetGet(int snId);
     Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
     Task<ReqResult<LanguageDTO>> languagesGet();

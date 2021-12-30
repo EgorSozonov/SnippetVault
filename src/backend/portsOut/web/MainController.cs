@@ -20,10 +20,18 @@ public class MainController : Controller {
     }
 
     #region Snippets
+
     [HttpGet]
     [Route("snippets/{taskGroup:int}/{lang1:int}/{lang2:int}")]
-    public async Task snippet([FromRoute] int lang1, [FromRoute] int lang2, [FromRoute] int taskGroup) { 
+    public async Task snippets([FromRoute] int taskGroup, [FromRoute] int lang1, [FromRoute] int lang2) { 
         var result = await api.snippetsGet(taskGroup, lang1, lang2);
+        await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
+    }
+
+    [HttpGet]
+    [Route("snippets/byCode")]
+    public async Task snippetsByCode([FromQuery] string lang1, [FromQuery] string lang2, [FromQuery] string taskGroup) { 
+        var result = await api.snippetsGetByCode(taskGroup, lang1, lang2);
         await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
     }
 

@@ -15,7 +15,7 @@ const Content: React.FunctionComponent = () => {
     <${BrowserRouter}>
         <div class="browserRouter">            
             <${Switch}>
-                <${Route} exact=${true} path=${PATHS["snippet"].url}>                    
+                <${Route} exact=${true} path=${`${PATHS["snippet"].url}/*`}>                    
                     <${SnippetPg} />
                 <//>
                 <${Route} path=${PATHS["alternative"].url}>   

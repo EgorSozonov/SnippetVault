@@ -13,15 +13,15 @@ import AlternativePrimary from "./AlternativePrimary"
 
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {
-    const { taskId, langId } = useParams<{taskId: string, langId: string}>()
-    const taskIdNum: number = parseInt(taskId) || -1
-    const langIdNum: number = parseInt(langId) || -1
+    const { tlId } = useParams<{ tlId: string }>()
+    const tlIdNum: number = parseInt(tlId) || -1
+
     const state = useContext<MainState>(StoreContext)
     const client: IClient = state.app.client
 
     useEffect(() => {
         fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
-        fetchFromClient(client.getAlternatives(langIdNum, taskIdNum), state.app.setAlternatives)
+        fetchFromClient(client.getAlternatives(tlIdNum), state.app.setAlternatives)
     }, [])
 
     const indPrimaryAlternative = state.app.alternatives.findIndex(x => x.isPrimary === true)

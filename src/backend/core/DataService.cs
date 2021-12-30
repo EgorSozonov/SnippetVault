@@ -10,8 +10,12 @@ public class DataService : IDataService {
         this.staticFiles = _statics;
     }
 
-    public async Task<ReqResult<SnippetDTO>> snippetsGet(int lang1, int lang2, int taskGroup) {
-        return await st.snippetsGet(lang1, lang2, taskGroup);
+    public async Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2) {
+        return await st.snippetsGet(taskGroup, lang1, lang2);
+    }
+
+    public async Task<ReqResult<SnippetDTO>> snippetsGetByCode(string taskGroup, string lang1, string lang2) {
+        return await st.snippetsGetByCode(taskGroup, lang1, lang2);
     }
 
     #region Snippets
@@ -129,6 +133,7 @@ public class DataService : IDataService {
 
 public interface IDataService {
     Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2);
+    Task<ReqResult<SnippetDTO>> snippetsGetByCode(string taskGroup, string lang1, string lang2);
     Task<int> proposalCreate(CreateProposalDTO dto, int authorId);
     Task<int> snippetApprove(int sn);
     Task<int> snippetDelete(int sn);

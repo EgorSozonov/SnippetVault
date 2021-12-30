@@ -16,11 +16,22 @@ public class DBStore : IStore {
 
     #region Snippets
 
-    public async Task<ReqResult<SnippetDTO>> snippetsGet(int lang1, int lang2, int taskGroup) {
+    public async Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2) {
         await using (var cmd = new NpgsqlCommand(db.getQueries.snippets, db.conn)) { 
             cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
             cmd.Parameters.AddWithValue("l2", NpgsqlTypes.NpgsqlDbType.Integer, lang2);
             cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<SnippetDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<SnippetDTO>> snippetsGetByCode(string taskGroup, string lang1, string lang2) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.snippetsByCode, db.conn)) { 
+            cmd.Parameters.AddWithValue("l1Code", NpgsqlTypes.NpgsqlDbType.Varchar, lang1);
+            cmd.Parameters.AddWithValue("l2Code", NpgsqlTypes.NpgsqlDbType.Varchar, lang2);
+            cmd.Parameters.AddWithValue("tgCode", NpgsqlTypes.NpgsqlDbType.Varchar, taskGroup);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<SnippetDTO>(reader);
             }
