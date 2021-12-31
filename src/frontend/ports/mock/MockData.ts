@@ -108,7 +108,7 @@ export const mockData = {
     ],
 
     alternatives: [
-        {langId: 1, taskId: 1, value: {snippetId: 5, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
+        {tlId: 1, value: {snippetId: 5, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
             isPrimary: false, comments: [
                 {
                     authorId: 1,
@@ -131,37 +131,37 @@ export const mockData = {
             ], 
             tsUpload: new Date(2021, 12, 2), },
         },
-        {langId: 1, taskId: 1, value: {snippetId: 6, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {snippetId: 6, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {langId: 1, taskId: 1, value: {snippetId: 7, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
+        {tlId: 1, value: {snippetId: 7, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },
-        {langId: 1, taskId: 1, value: {snippetId: 8, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {snippetId: 8, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {langId: 1, taskId: 1, value: {snippetId: 9, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
+        {tlId: 1, value: {snippetId: 9, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },
-        {langId: 1, taskId: 1, value: {snippetId: 10, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {snippetId: 10, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {langId: 1, taskId: 1, value: {snippetId: 11, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
+        {tlId: 1, value: {snippetId: 11, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },
-        {langId: 1, taskId: 1, value: {snippetId: 12, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {snippetId: 12, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {langId: 1, taskId: 1, value: {snippetId: 13, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {snippetId: 13, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {langId: 1, taskId: 1, value: {snippetId: 14, snippetCode: `foo(blahBlach[4]);\nsfs\nsdf\nsdgsd;`, score: 15, 
+        {tlId: 1, value: {snippetId: 14, snippetCode: `foo(blahBlach[4]);\nsfs\nsdf\nsdgsd;`, score: 15, 
             isPrimary: true, comments: [], tsUpload: new Date(2021, 11, 5), },
         },
-        {langId: 6, taskId: 1, value: {snippetId: 15, snippetCode: "foo(blahBlach[4]);", score: 10, 
+        {tlId: 6, value: {snippetId: 15, snippetCode: "foo(blahBlach[4]);", score: 10, 
             isPrimary: true, comments: [], tsUpload: new Date(2021, 12, 1), },
         },    
-        {langId: 6, taskId: 1, value: {snippetId: 16, snippetCode: "javaAlternative(blahBlach[6]);", score: 5, 
+        {tlId: 6, value: {snippetId: 16, snippetCode: "javaAlternative(blahBlach[6]);", score: 5, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },            
     ],
@@ -189,6 +189,6 @@ export function getMockTasksByCode(tgCode: string): TaskDTO[] {
     return mockData.tasks.filter(x => x.tgId == tgId).map(y => y.value)
 }
 
-export function getMockAlternatives(langId: number, taskId: number): AlternativeDTO[] {
+export function getMockAlternatives(tlId: number): AlternativeDTO[] {
     return mockData.alternatives.filter(x => x.langId == langId && x.taskId == taskId).map(y => y.value)
 }

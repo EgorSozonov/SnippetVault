@@ -44,8 +44,8 @@ class MockClient implements IClient {
         return this.wrapOK(getMockTasks(tgId))
     }
 
-    getAlternatives(langId: number, taskId: number): Promise<EitherMsg<AlternativeDTO[]>> {
-        return this.wrapOK(getMockAlternatives(langId, taskId))
+    getAlternatives(tlId: number): Promise<EitherMsg<AlternativeDTO[]>> {
+        return this.wrapOK(getMockAlternatives(tlId))
     }
 
     getAdminCounts(): Promise<EitherMsg<string>> {
