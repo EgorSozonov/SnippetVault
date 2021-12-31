@@ -10,7 +10,8 @@ import EitherMsg from "../core/types/EitherMsg"
 
 
 type IClient = {
-    getSnippets: (lang1: number, lang2: number, taskGroup: number) => Promise<EitherMsg<SnippetDTO[]>>
+    getSnippets: (taskGroup: number, lang1: number, lang2: number) => Promise<EitherMsg<SnippetDTO[]>>
+    getSnippetsByCode: (taskGroup: string, lang1: string, lang2: string) => Promise<EitherMsg<SnippetDTO[]>>
     getLanguages: () => Promise<EitherMsg<LanguageGroupedDTO[]>>
     getLanguagesReq: () => Promise<EitherMsg<LanguageDTO[]>>
     getTaskGroups: () => Promise<EitherMsg<TaskGroupDTO[]>>

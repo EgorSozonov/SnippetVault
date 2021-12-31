@@ -1,6 +1,3 @@
-import SelectChoice from "../SelectChoice"
-
-
 type LanguageDTO = {
     id: number,
     name: string,

@@ -12,6 +12,8 @@ import { observer } from "mobx-react-lite"
 import { fetchFromClient, fetchFromClientTransform } from "../../utils/Client"
 import IClient from "../../../ports/IClient"
 import { groupLanguages, } from "../../utils/languageGroup/GroupLanguages"
+import { checkNonempty } from "../../utils/StringUtils"
+import EitherMsg from "../../types/EitherMsg"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -24,11 +26,24 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const lang1Code = searchParams.get('lang1')
-    const lang2IdStr = searchParams.get('lang2')
-    const taskIdStr = searchParams.get('task')
-    // If all query params present and at least one of them doesn't match Redux, make a new request to server
-    // Otherwise, if all params are present in Redux, make a new request to server and update the URL if it doesn't match
+    
+    let fetchPromise: (Promise<EitherMsg<SnippetDTO[]>> | null) = null
+
+    const lang1Code = searchParams.get("lang1")
+    const lang2Code = searchParams.get("lang2")
+    const taskCode = searchParams.get("task")
+    const nonEmptyParams = checkNonempty([taskCode, lang1Code, lang2Code, ])
+
+    // If all query params present and at least one of them doesn"t match Redux, make a new request to server and update the Redux ids.
+    // Otherwise, if all params are present in Redux, update the URL if it doesn't match.
+    if (nonEmptyParams.length > 0
+      && (tg.code !== nonEmptyParams[0] || lang1.code !== nonEmptyParams[1] || lang2.code !== nonEmptyParams[2])) {
+        //fetchPromise = client.getSnippetsByCode(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
+        state.app.trySetChoices(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
+    } else if (lang1.id > 0 && lang2.id > 0 && tg.id > 0) {
+        setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
+    }
+    
 
     useEffect(() => {
         fetchFromClientTransform(client.getLanguages(), groupLanguages, state.app.setGroupedLanguages)
@@ -36,8 +51,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     }, [])
 
     useEffect(() => {
-        const snippets = client.getSnippets(lang1.id, lang2.id, tg.id)
-        fetchFromClient(snippets, state.app.setSnippets)
+        fetchFromClient(client.getSnippets(tg.id, lang1.id, lang2.id), state.app.setSnippets)
     }, [lang1, lang2, tg])
 
     return html`<div class="snippetsBody">

@@ -1,5 +1,5 @@
 import React from "react"
-import  { BrowserRouter, Switch, Route } from "react-router-dom"
+import  { BrowserRouter, Routes, Route } from "react-router-dom"
 import PATHS from "../../params/Path"
 import SnippetPg from "../snippet/SnippetPg"
 import Admin from "../admin/Admin"
@@ -14,7 +14,7 @@ const Content: React.FunctionComponent = () => {
     return html`
     <${BrowserRouter}>
         <div class="browserRouter">            
-            <${Switch}>
+            <${Routes}>
                 <${Route} exact=${true} path=${`${PATHS["snippet"].url}/*`}>                    
                     <${SnippetPg} />
                 <//>

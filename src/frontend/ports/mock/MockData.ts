@@ -7,39 +7,45 @@ export const mockData = {
             {    
                 leftCode: "str.Reverse();",
                 leftId: 1,
+                leftTlId: 1,
                 taskId: 1,
                 taskName: "Reverse string",
                 rightCode: "str.reverse();",
                 rightId: 6,
+                rightTlId: 2,
             },            
             {    
                 leftCode: "int ind = str.IndexOf(otherStr);",
                 leftId: 1,
+                leftTlId: 3,
                 taskId: 2,
                 taskName: "Find substring",
                 rightCode: "int ind = str.indexOf(otherStr);",
                 rightId: 6,
+                rightTlId: 4,
             },
             {    
                 leftCode: `string[] files = Directory.GetFiles(thePath, "*", SearchOption.TopDirectoryOnly);`,
                 leftId: 1,
+                leftTlId: 5,
                 taskId: 4,
                 taskName: "Walk a folder",
                 rightCode: `File(thePath).walk().forEach {
     println(it)
 }`,
                 rightId: 6,
+                rightTlId: 6,
             },            
         ],
     languages: [
-            {id: 1, name: "C#", languageGroup: "Universal", languageGroupOrder: 1, },
-            {id: 2, name: "C++", languageGroup: "Universal", languageGroupOrder: 1, },
-            {id: 3, name: "Typescript", languageGroup: "Scripting", languageGroupOrder: 2, },
-            {id: 4, name: "Python", languageGroup: "Scripting", languageGroupOrder: 2, },
-            {id: 5, name: "MySQL", languageGroup: "Data querying", languageGroupOrder: 3, },
-            {id: 6, name: "Kotlin", languageGroup: "Universal", languageGroupOrder: 1, },
-            {id: 7, name: "Haskell", languageGroup: "Universal", languageGroupOrder: 1, },
-            {id: 8, name: "PostgreSQL", languageGroup: "Data querying", languageGroupOrder: 3, },
+            {id: 1, name: "C#", code: "CS", languageGroup: "Universal", languageGroupOrder: 1, },
+            {id: 2, name: "C++", code: "CPP", languageGroup: "Universal", languageGroupOrder: 1, },
+            {id: 3, name: "Typescript", code: "TS", languageGroup: "Scripting", languageGroupOrder: 2, },
+            {id: 4, name: "Python", code: "PY", languageGroup: "Scripting", languageGroupOrder: 2, },
+            {id: 5, name: "MySQL", code: "SQL1", languageGroup: "Data querying", languageGroupOrder: 3, },
+            {id: 6, name: "Kotlin", code: "KOT", languageGroup: "Universal", languageGroupOrder: 1, },
+            {id: 7, name: "Haskell", code: "HS", languageGroup: "Universal", languageGroupOrder: 1, },
+            {id: 8, name: "PostgreSQL", code: "SQL2", languageGroup: "Data querying", languageGroupOrder: 3, },
     ],
 
     languagesReq: [
@@ -60,10 +66,10 @@ export const mockData = {
     ],
 
     taskGroups: [
-        {id: 1, name: "String manipulation"},
-        {id: 2, name: "File system"},
-        {id: 3, name: "Primitive types"},
-        {id: 4, name: "Math"},
+        {id: 1, code: "STRINGS", name: "String manipulation"},
+        {id: 2, code: "FILES", name: "File system"},
+        {id: 3, code: "PRIMTYPES", name: "Primitive types"},
+        {id: 4, code: "MATH", name: "Math"},
     ],
 
     tasks: [
@@ -161,12 +167,25 @@ export const mockData = {
     ],
 }
 
-export function getMockSnippets(lang1: number, lang2: number, tgId: number): SnippetDTO[] {
+export function getMockSnippets(tgId: number, lang1: number, lang2: number): SnippetDTO[] {
     const tasks = getMockTasks(tgId)
     return mockData.snippets.filter(x => x.leftId == lang1 && tasks.some(y => y.id == x.taskId) && x.rightId == lang2)
 }
 
+export function getMockSnippetsByCode(tgCode: string, lang1Code: string, lang2Code: string): SnippetDTO[] {
+    const tasks = getMockTasksByCode(tgCode)
+    const lang1 = mockData.languages.find(x => x.code === lang1Code)
+    const lang2 = mockData.languages.find(x => x.code === lang2Code)
+    if (!lang1 || !lang2) return []
+    return mockData.snippets.filter(x => x.leftId == lang1.id && tasks.some(y => y.id == x.taskId) && x.rightId == lang2.id)
+}
+
 export function getMockTasks(tgId: number): TaskDTO[] {
+    return mockData.tasks.filter(x => x.tgId == tgId).map(y => y.value)
+}
+
+export function getMockTasksByCode(tgCode: string): TaskDTO[] {
+    const tgId = mockData.taskGroups.find(x => x.code === tgCode)?.id
     return mockData.tasks.filter(x => x.tgId == tgId).map(y => y.value)
 }
 

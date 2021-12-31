@@ -45,6 +45,28 @@ export default class AppState {
         this.language2 = newValue
     })
 
+    trySetChoices = action((tgCode: string, lang1Code: string, lang2Code: string): void => {
+        const tryTG = this.taskGroups.find(x => x.code === tgCode)
+        let tryL1
+        let tryL2
+        for (let lg of this.groupedLanguages) {
+            let tryLang = lg.choices.find(x => x.code === lang1Code)
+            if (tryLang) tryL1 = tryLang
+            tryLang = lg.choices.find(x => x.code === lang2Code)
+            if (tryLang) tryL2 = tryLang
+            if (tryL1 && tryL2) break
+        }
+        console.log("tryTG tryL1 TryL2")
+        console.log(tryTG)
+        console.log(tryL1)
+        console.log(tryL2)
+        if (tryL1 && tryL2 && tryTG) {
+            this.language1 = tryL1
+            this.language2 = tryL2
+            this.taskGroup = tryTG
+        }        
+    })
+
     setGroupedLanguages = action((newValue: SelectGroup[]): void => {
         this.groupedLanguages = observable.array(newValue)
     })
