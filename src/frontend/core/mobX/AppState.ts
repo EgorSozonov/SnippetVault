@@ -47,6 +47,8 @@ export default class AppState {
 
     trySetChoices = action((tgCode: string, lang1Code: string, lang2Code: string): void => {
         const tryTG = this.taskGroups.find(x => x.code === tgCode)
+        console.log("tgCode "+ tgCode)
+        if (this.taskGroups.length > 0) console.log(this.taskGroups[0].code)
         let tryL1
         let tryL2
         for (let lg of this.groupedLanguages) {
@@ -56,10 +58,10 @@ export default class AppState {
             if (tryLang) tryL2 = tryLang
             if (tryL1 && tryL2) break
         }
-        // console.log("tryTG tryL1 TryL2")
-        // console.log(tryTG)
-        // console.log(tryL1)
-        // console.log(tryL2)
+        console.log("tryTG tryL1 TryL2")
+        console.log(tryTG)
+        console.log(tryL1)
+        console.log(tryL2)
         if (tryL1 && tryL2 && tryTG) {
             this.language1 = tryL1
             this.language2 = tryL2
@@ -92,12 +94,10 @@ export default class AppState {
     }) 
 
     setTaskGroups = action((newValue: TaskGroupDTO[]): void => {
-        this.taskGroups = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name}}))
+        this.taskGroups = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name, code: x.code, }}))
     })  
 
     setAlternatives = action((newValue: AlternativeDTO[]): void => {
-        console.log("newValue")
-        console.log(newValue)
         this.alternatives = observable.array(newValue)
     })  
 

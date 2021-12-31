@@ -72,7 +72,7 @@ public class GetPGQueries  {
             task=@"SELECT id, name, description FROM sv.""task"" WHERE ""taskGroupId""=@tgId;",
             taskGroup= @"SELECT id, name, code FROM sv.""taskGroup"" WHERE ""isDeleted""=0::bit;",
             taskGroupsForLanguages= @"
-                SELECT DISTINCT tg.id, tg.name FROM sv.task t
+                SELECT DISTINCT tg.id, tg.name, tg.code FROM sv.task t
                 JOIN sv.""taskLanguage"" tl ON tl.""taskId""=t.id
                 JOIN sv.""taskGroup"" tg ON tg.id=t.""taskGroupId""
                 WHERE tl.""languageId"" = ANY(@ls);",
