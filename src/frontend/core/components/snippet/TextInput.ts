@@ -14,8 +14,6 @@ type Props = {
 }
 
 const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, taskId, } : Props) => {
-    console.log("langId")
-    console.log(langId)
     const state = useContext<MainState>(StoreContext)
     const inputRef = useRef<HTMLTextAreaElement>(null)
     const userStatus = state.user.userStatus
@@ -29,7 +27,7 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, 
             console.log("posting:")
             console.log(inputRef.current.value)
             if (inputRef.current.value.length > 0) {
-                state.app.client.postProposal(inputRef.current.value, langId, taskId)
+                state.app.client.proposalCreate(inputRef.current.value, langId, taskId)
                 inputRef.current.value = ""
             }
         }

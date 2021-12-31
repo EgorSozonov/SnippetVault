@@ -11,34 +11,21 @@ import Alternative from "../alternative/AlternativePg"
 
 
 const Content: React.FunctionComponent = () => {
+    
     return html`
-    <${BrowserRouter}>
-        <div class="browserRouter">            
-            <${Routes}>
-                <${Route} exact=${true} path=${`${PATHS["snippet"].url}/*`}>                    
-                    <${SnippetPg} />
+        <${BrowserRouter}>
+            <div class="browserRouter">
+                <${Routes}>
+                    <${Route} exact="true" path=${`${PATHS["snippet"].url}`} element=${html`<${SnippetPg} />`} />                    
+                    <${Route} exact="true" path=${PATHS["alternative"].url} element=${html`<${Alternative} />`} />
+                    <${Route} exact="true" path=${PATHS["proposal"].url} element=${html`<${NewProposal} />`} />                         
+                    <${Route} exact="true" path=${PATHS["taskGroup"].url} element=${html`<${TaskGroup} />`} /> 
+                    <${Route} exact="true" path=${PATHS["languageGroup"].url} element=${html`<${LangGroup} />`} />
+                    <${Route} exact="true" path=${PATHS["admin"].url} element=${html`<${Admin} />`} /> 
+                    <${Route} path="/" element=${html`<${SnippetPg} />`} />
                 <//>
-                <${Route} path=${PATHS["alternative"].url}>   
-                    <${Alternative} />
-                <//>
-                <${Route} exact=${true} path=${PATHS["proposal"].url}>                    
-                    <${NewProposal} />
-                <//>
-                <${Route} exact=${true} path=${PATHS["taskGroup"].url}>                    
-                    <${TaskGroup} />
-                <//>
-                <${Route} exact=${true} path=${PATHS["languageGroup"].url}>                    
-                    <${LangGroup} />
-                <//>
-                <${Route} exact=${true} path=${PATHS["admin"].url}>                    
-                    <${Admin} />
-                <//>
-                <${Route}>
-                    <${SnippetPg} />
-                <//>
-            <//>
-        </div>
-    <//>
+            </div>
+        <//>
     `
 }
 

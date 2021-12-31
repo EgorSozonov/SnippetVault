@@ -7,19 +7,16 @@ import AlternativeDTO from "../../types/dto/AlternativeDTO"
 import Toggler from "../../commonComponents/toggler/Toggler"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateFormat"
+import LanguageDTO from "../../types/dto/LanguageDTO"
 
 
 type Props = {
-    primaryAlternative: AlternativeDTO | null,
-    langId: number,
-    taskId: number,
+    primaryAlternative: AlternativeDTO | null,    
+    lang: LanguageDTO,
 }
 
 const AlternativePrimary: FunctionComponent<Props> = observer(({
-        primaryAlternative, langId, }: Props) => {
-    const state = useContext<MainState>(StoreContext)    
-    const language = state.app.languages.find(x => x.id === langId)
-    console.log(primaryAlternative)
+        primaryAlternative, lang, }: Props) => {
     return html`                 
         <div class="alternativeHeader">
             <div class="alternativeHeaderTitle">Alternatives</div>
@@ -31,7 +28,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({
                 </div>
                 <div class="alternativeHeaderMainMid">
                     <div>
-                        Language: ${language && language.name}
+                        Language: ${lang.name}
                     </div>
                     <div>
                         Task: Walk a folder

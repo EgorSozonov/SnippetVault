@@ -13,11 +13,16 @@ import AlternativePrimary from "./AlternativePrimary"
 
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {
-    const { tlId } = useParams<{ tlId: string }>()
+    const { tlId, langId } = useParams<{ tlId: string, langId: string, }>()
+    if (!tlId || !langId) return (html`<></>`)
+
     const tlIdNum: number = parseInt(tlId) || -1
+    const langIdNum: number = parseInt(langId) || -1
 
     const state = useContext<MainState>(StoreContext)
     const client: IClient = state.app.client
+    const lang = state.app.languages.find(x => x.id === langIdNum)
+    if (!lang) return (html`<></>`)
 
     useEffect(() => {
         fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
@@ -30,7 +35,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     
     return html`                         
         <div class="alternativeBody">
-            <${AlternativePrimary} primaryAlternative=${primaryAlternative} langId=${langIdNum} taskId=${taskIdNum} />    
+            <${AlternativePrimary} primaryAlternative=${primaryAlternative} lang=${lang} />
             ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
                 return html`<${Alternative} key=${idx} alternative=${alt} />`
             })}

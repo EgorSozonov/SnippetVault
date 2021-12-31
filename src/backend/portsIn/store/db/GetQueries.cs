@@ -66,7 +66,7 @@ public class GetPGQueries  {
                 FROM sv.language l
 				JOIN sv.""languageGroup"" lg ON l.""languageGroupId""=lg.id;",
             languagesGrouped=@"
-                SELECT l.id, l.name AS name, lg.name AS ""languageGroup"", lg.""sortingOrder"" AS ""languageGroupOrder""
+                SELECT l.id, l.name AS name, l.code, lg.name AS ""languageGroup"", lg.""sortingOrder"" AS ""languageGroupOrder""
                 FROM sv.language l
 				JOIN sv.""languageGroup"" lg ON l.""languageGroupId""=lg.id;",                 
             task=@"SELECT id, name, description FROM sv.""task"" WHERE ""taskGroupId""=@tgId;",

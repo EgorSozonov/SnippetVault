@@ -14,40 +14,41 @@ public class SnippetDTO {
 }
 
 public class AlternativeDTO {
-    public int primaryId;
-    public string primaryCode;
-    public int primaryScore;
-    public int alternativeId;
-    public string alternativeCode;
-    public int alternativeScore;
-    public DateTime tsUpload;
+    public int primaryId {get; set;}
+    public string primaryCode {get; set;}
+    public int primaryScore {get; set;}
+    public int alternativeId {get; set;}
+    public string alternativeCode {get; set;}
+    public int alternativeScore {get; set;}
+    public DateTime tsUpload {get; set;}
 }
 
 public class CommentDTO {
-    public int id;
-    public string author;
-    public DateTime ts;
-    public string content;
+    public int id {get; set;}
+    public string author {get; set;}
+    public DateTime ts {get; set;}
+    public string content {get; set;}
 }
 
 public class LanguageDTO {
-    public int id{get; set;}
-    public string name{get; set;}
-    public string code{get; set;}
+    public int id {get; set;}
+    public string name {get; set;}
+    public string code {get; set;}
     public int lgId {get;set;}
     public string lgName {get;set;}
 }
 
 public class LanguageGroupedDTO {
-    public int id{get; set;}
-    public string name{get; set;}
-    public string languageGroup{get; set;}
-    public int languageGroupOrder {get;set;}
+    public int id {get; set;}
+    public string code {get; set;}
+    public string name {get; set;}
+    public string languageGroup {get; set;}
+    public int languageGroupOrder {get; set;}
 }
 
 public class LanguageGroupDTO {
-    public int id{get; set;}
-    public string name{get; set;}
+    public int id {get; set;}
+    public string name {get; set;}
 }
 
 public class ProposalDTO {
@@ -66,10 +67,10 @@ public class BareSnippetDTO {
 }
 
 public class TaskDTO {
-    public int id{get; set;}
-    public string name{get; set;}
-    public int tgId{get; set;}
-    public string description{get; set;}
+    public int id {get; set;}
+    public string name {get; set;}
+    public int tgId {get; set;}
+    public string description {get; set;}
 }
 
 public class TaskGroupDTO {

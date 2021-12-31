@@ -25,7 +25,7 @@ export default class AppState {
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
 
     public alternatives: IObservableArray<AlternativeDTO> = observable.array([])
-    public client: IClient = new MockClient()
+    public client: IClient = new HttpClient()
 
     constructor() {
         makeAutoObservable(this)
@@ -56,10 +56,10 @@ export default class AppState {
             if (tryLang) tryL2 = tryLang
             if (tryL1 && tryL2) break
         }
-        console.log("tryTG tryL1 TryL2")
-        console.log(tryTG)
-        console.log(tryL1)
-        console.log(tryL2)
+        // console.log("tryTG tryL1 TryL2")
+        // console.log(tryTG)
+        // console.log(tryL1)
+        // console.log(tryL2)
         if (tryL1 && tryL2 && tryTG) {
             this.language1 = tryL1
             this.language2 = tryL2
