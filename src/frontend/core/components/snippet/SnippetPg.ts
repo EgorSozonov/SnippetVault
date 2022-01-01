@@ -21,10 +21,8 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const lang1 = state.app.language1
     const lang2 = state.app.language2
     const tg = state.app.taskGroup
+    //const codes = state.app.codesFromUrl
 
-    console.log("task groups")
-    
-    console.log(state.app.taskGroup.code)
     const client: IClient = state.app.client
 
     const [searchParams, setSearchParams] = useSearchParams();   
@@ -36,26 +34,25 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
 
     // If all query params present and at least one of them doesn't match Redux, make a new request to server and update the Redux ids.
     // Otherwise, if all params are present in Redux, update the URL if it doesn't match.
-    if (nonEmptyParams.length > 0
-      && (tg.code !== nonEmptyParams[0] || lang1.code !== nonEmptyParams[1] || lang2.code !== nonEmptyParams[2])) {
-        //console.log("nonEmptyParams")
-        //console.log(nonEmptyParams)
-        state.app.trySetChoices(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
-    } else if (lang1.id > 0 && lang2.id > 0 && tg.id > 0) {
-        //console.log("setting search params")
-        //console.log(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
-        //setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
+    if (nonEmptyParams.length > 0) {
+          console.log("p1")
+        const newCodeFromUrl = {tg: nonEmptyParams[0], lang1: nonEmptyParams[1], lang2: nonEmptyParams[2], }
+        state.app.setCodesFromUrl(newCodeFromUrl)
+    } else if (nonEmptyParams.length < 3 && lang1.id > 0 && lang2.id > 0 && tg.id > 0) {
+        console.log("p2")
+        state.app.refreshCodesFromSelects()
+        setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
     }
     
 
     useEffect(() => {
         fetchFromClientTransform(client.getLanguages(), groupLanguages, state.app.setGroupedLanguages)
         fetchFromClient(client.getTaskGroups(), state.app.setTaskGroups)
+        if (nonEmptyParams.length > 0) {
+            fetchFromClient(client.getSnippetsByCode(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2]), state.app.setSnippets)
+        }
     }, [])
 
-    useEffect(() => {
-        fetchFromClient(client.getSnippets(tg.id, lang1.id, lang2.id), state.app.setSnippets)
-    }, [lang1, lang2, tg])
 
     return html`<div class="snippetsBody">
         <${Header} />

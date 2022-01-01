@@ -10,16 +10,20 @@ import LanguageDTO from "../types/dto/LanguageDTO"
 import ProposalDTO from "../types/dto/ProposalDTO"
 import HttpClient from "../../ports/http/HttpClient"
 import MockClient from "../../ports/mock/MockClient"
+import CodesFromUrl from "../types/CodesFromUrl"
 
 
 export default class AppState {
     public openSelect = ""
     public snippets: IObservableArray<SnippetDTO> = observable.array([])
-    public language1: SelectChoice = {id: 0, name: ""}
-    public languages: IObservableArray<LanguageDTO> = observable.array([])
+    public language1: SelectChoice = {id: 0, name: ""}    
     public language2: SelectChoice = {id: 0, name: ""}
+    public codesFromUrl: CodesFromUrl = { tg: "", lang1: "", lang2: "", }
+
+    public languages: IObservableArray<LanguageDTO> = observable.array([])
     public groupedLanguages: IObservableArray<SelectGroup> = observable.array([])
     public languageGroups: IObservableArray<LanguageGroupDTO> = observable.array([])
+
     public proposals: IObservableArray<ProposalDTO> = observable.array([])
     public taskGroup: SelectChoice = {id: 0, name: ""}
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
@@ -39,38 +43,57 @@ export default class AppState {
 
     setLanguage1 = action((newValue: SelectChoice): void => {
         this.language1 = newValue
+        this.refreshCodesFromSelects()
     })
 
     setLanguage2 = action((newValue: SelectChoice): void => {
         this.language2 = newValue
+        this.refreshCodesFromSelects()
     })
 
-    trySetChoices = action((tgCode: string, lang1Code: string, lang2Code: string): void => {
-        const tryTG = this.taskGroups.find(x => x.code === tgCode)
-        console.log("tgCode "+ tgCode)
-        if (this.taskGroups.length > 0) console.log(this.taskGroups[0].code)
-        let tryL1
-        let tryL2
-        for (let lg of this.groupedLanguages) {
-            let tryLang = lg.choices.find(x => x.code === lang1Code)
-            if (tryLang) tryL1 = tryLang
-            tryLang = lg.choices.find(x => x.code === lang2Code)
-            if (tryLang) tryL2 = tryLang
-            if (tryL1 && tryL2) break
+    setCodesFromUrl = action((newValue: CodesFromUrl): void => {        
+        this.codesFromUrl = newValue
+        this.refreshSelectsFromCodes(newValue)
+    })
+
+
+    /**
+     * Try refreshing ids of selected langs/tg from URL codes.
+     * Might fail if the languages or TGs aren't loaded yet.
+     */
+    refreshSelectsFromCodes = action((newValue: CodesFromUrl) => {        
+        if (this.taskGroups.length > 0 && newValue.tg.length > 0) {            
+            const tryTG = this.taskGroups.find(x => x.code === newValue.tg)
+            if (tryTG) this.taskGroup = tryTG            
         }
-        console.log("tryTG tryL1 TryL2")
-        console.log(tryTG)
-        console.log(tryL1)
-        console.log(tryL2)
-        if (tryL1 && tryL2 && tryTG) {
-            this.language1 = tryL1
-            this.language2 = tryL2
-            this.taskGroup = tryTG
-        }        
+        if (this.groupedLanguages.length > 0) {
+            for (let lg of this.groupedLanguages) {
+                if (newValue.lang1.length > 0) {
+                    let tryLang = lg.choices.find(x => x.code === newValue.lang1)
+                    if (tryLang) this.language1 = tryLang
+                }
+                if (newValue.lang2.length > 0) {
+                    let tryLang = lg.choices.find(x => x.code === newValue.lang2)
+                    if (tryLang) this.language2 = tryLang
+                }                
+            }
+        }
+    })
+
+    /**
+     * Refresh codes of selected langs/tg from ids
+     */
+    refreshCodesFromSelects = action(() => {
+        if (this.language1.code && this.language1.code.length > 0 && this.language2.code && this.language2.code.length > 0 
+        && this.taskGroup.code && this.taskGroup.code.length > 0) {
+            this.codesFromUrl = {tg: this.taskGroup.code, lang1: this.language1.code, lang2: this.language2.code, }            
+        }
     })
 
     setGroupedLanguages = action((newValue: SelectGroup[]): void => {
         this.groupedLanguages = observable.array(newValue)
+        this.refreshSelectsFromCodes(this.codesFromUrl)
+
     })
 
     setLanguageGroups = action((newValue: LanguageGroupDTO[]): void => {
@@ -83,6 +106,7 @@ export default class AppState {
 
     setTaskGroup = action((newValue: SelectChoice): void => {
         this.taskGroup = newValue
+        this.refreshCodesFromSelects()
     })    
 
     setOpenSelect = action((newValue: string): void => {
@@ -95,6 +119,7 @@ export default class AppState {
 
     setTaskGroups = action((newValue: TaskGroupDTO[]): void => {
         this.taskGroups = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name, code: x.code, }}))
+        this.refreshSelectsFromCodes(this.codesFromUrl)
     })  
 
     setAlternatives = action((newValue: AlternativeDTO[]): void => {
