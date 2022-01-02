@@ -79,13 +79,13 @@ export default class AppState {
 
 
     setCodesFromUrl = action((tgCode: string, l1Code: string, l2Code: string) => {
-        if (tgCode.length > 0 && tgCode !== "undefined" && this.tg.code !== tgCode) {
+        if (tgCode.length > 0 && tgCode !== "undefined" && this.tg.code === "") {
             this.tg = updateUrl(this.tg, tgCode)
         }
-        if (l1Code.length > 0 && l1Code !== "undefined" && this.l1.code !== l1Code) {
+        if (l1Code.length > 0 && l1Code !== "undefined" && this.l1.code === "") {
             this.l1 = updateUrl(this.l1, l1Code)
         }
-        if (l2Code.length > 0 && l2Code !== "undefined" && this.l2.code !== l2Code) {  
+        if (l2Code.length > 0 && l2Code !== "undefined" && this.l2.code === "") {  
             this.l2 = updateUrl(this.l2, l2Code)
         }
     })

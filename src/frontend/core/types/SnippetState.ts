@@ -20,7 +20,8 @@ export function updateCode(oldState: SnippetState, newCode: string): SnippetStat
 
 // ChoicesLoaded -> ChoicesLoaded
 export function updateId(oldState: SnippetState, newId: number): SnippetState {
-    if (oldState.type !== "ChoicesLoaded") return oldState
+    if (oldState.type !== "ChoicesLoaded" || oldState.id === newId) return oldState
+    
     const tryFindNewValue = oldState.choices.find(x => x.id === newId)
     if (!tryFindNewValue || !tryFindNewValue.code) return oldState
     return {...oldState, id: newId, code: tryFindNewValue.code, name: tryFindNewValue.name, }
@@ -50,9 +51,6 @@ export function updateWithChoicesUrl(oldState: SnippetState, newChoices: SelectC
 }
 
 export function isStateOK(st: SnippetState[]): boolean {
-    console.log(st[0].code)
-    console.log(st[1].code)
-    console.log(st[2].code)
     const f = !st.some(x => x.code === ""|| x.code === "undefined")
     return f
 }

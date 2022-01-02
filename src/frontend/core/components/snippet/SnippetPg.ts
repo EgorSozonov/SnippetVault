@@ -33,17 +33,13 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const taskCode = searchParams.get("task")
     const nonEmptyParams = checkNonempty([taskCode, lang1Code, lang2Code, ])
     
-
     // If all query params present and at least one of them doesn't match Redux, make a new request to server and update the Redux ids.
     // Otherwise, if all params are present in Redux, update the URL if it doesn't match.
     if (nonEmptyParams.length > 0) {
         state.app.setCodesFromUrl(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
-    }
-    
+    }    
 
     useEffect(() => {
-        console.log("eff 1");
-
         (async () => { 
             if (state.app.groupedLanguages.length > 0) return
             const resultLangs: EitherMsg<LanguageGroupedDTO[]> = await client.getLanguages() 
@@ -65,9 +61,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     }, [])
 
     useEffect( () => {
-        console.log("eff 2")
-
-        if (isStateOK([tg, lang1, lang2])) {            
+        if (isStateOK([tg, lang1, lang2])) {
             setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
         }
     }, [lang1, lang2, tg])
