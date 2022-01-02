@@ -9,6 +9,7 @@ import TaskGroupDTO from "../../core/types/dto/TaskGroupDTO"
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
 import {mockData, getMockTasks, getMockAlternatives, getMockSnippets, getMockSnippetsByCode} from "./MockData"
+import { SignInAdminDTO, SignInDTO } from "../../core/types/dto/AuthDTO"
 
 
 class MockClient implements IClient {
@@ -62,6 +63,18 @@ class MockClient implements IClient {
 
     snippetMarkPrimary(snId: number): Promise<string> {
         return this.wrapOKString("OK")
+    }
+
+    userRegister(dto: SignInDTO) {
+        return this.wrapOK({userId: 0, accessToken: "", })
+    }
+    
+    userSignIn(dto: SignInDTO) {
+        return this.wrapOK({userId: 0, accessToken: "", })
+    }
+
+    adminSignIn(dto: SignInAdminDTO) {
+        return this.wrapOK({userId: 0, accessToken: "", })
     }
     
     private wrapOK<T>(val: T): Promise<EitherMsg<T>> {

@@ -37,7 +37,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     // Otherwise, if all params are present in Redux, update the URL if it doesn't match.
     if (nonEmptyParams.length > 0) {
         state.app.setCodesFromUrl(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
-    }    
+    }
 
     useEffect(() => {
         (async () => { 
@@ -55,14 +55,12 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         if (state.app.taskGroups.length < 1) {
             fetchFromClient(client.getTaskGroups(), state.app.setTaskGroups)
         }
-        if (isStateOK([tg, lang1, lang2])) {
-            fetchFromClient(client.getSnippetsByCode(tg.code, lang1.code, lang2.code), state.app.setSnippets)
-        }
     }, [])
 
     useEffect( () => {
         if (isStateOK([tg, lang1, lang2])) {
             setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
+            fetchFromClient(client.getSnippetsByCode(tg.code, lang1.code, lang2.code), state.app.setSnippets)
         }
     }, [lang1, lang2, tg])
 

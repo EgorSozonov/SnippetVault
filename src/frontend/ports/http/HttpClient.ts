@@ -11,6 +11,7 @@ import createClient from "./Client"
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
 import ProposalCreateDTO from "../../core/types/dto/ProposalCreateDTO"
+import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
 
 
 class HttpClient implements IClient {
@@ -61,7 +62,7 @@ class HttpClient implements IClient {
 
     proposalCreate(proposal: string, langId: number, taskId: number): Promise<string> {
         const payload = {langId, taskId, content: proposal, }
-        return this.makePostRequest<ProposalCreateDTO>(`/proposal/create`, payload)
+        return this.makePostRequestForString<ProposalCreateDTO>(`/proposal/create`, payload)
     }
 
     proposalApprove(snId: number): Promise<string> {
@@ -92,6 +93,18 @@ class HttpClient implements IClient {
         return this.makePostRequestNoPayload(`/taskGroup/cu`)
     }
 
+    userRegister(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO>> {
+        return this.makePostRequest("/user/register", dto)
+    }
+    
+    userSignIn(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO>> {
+        return this.makePostRequest("/user/signIn", dto)
+    }
+
+    adminSignIn(dto: SignInAdminDTO): Promise<EitherMsg<SignInSuccessDTO>> {
+        return this.makePostRequest("/user/signInAdmin", dto)
+    }
+
 
     private async makeGetRequest<T>(url: string): Promise<EitherMsg<T>> {
         try {
@@ -106,7 +119,7 @@ class HttpClient implements IClient {
         }
     }
 
-    private async makePostRequest<T>(url: string, payload: T): Promise<string> {
+    private async makePostRequestForString<T>(url: string, payload: T): Promise<string> {
         try {
             const r = await this.client.post<string>(url, payload)
             if (r.data && r.data === "OK") {
@@ -129,6 +142,15 @@ class HttpClient implements IClient {
             }
         } catch(e: any) {
             return "Error"
+        }
+    }
+
+    private async makePostRequest<T, U>(url: string, payload: T): Promise<EitherMsg<U>> {
+        try {
+            const r = await this.client.post<U>(url, payload)
+            return {isOK: true, value: r.data, }            
+        } catch(e: any) {
+            return {isOK: false, errMsg: e, }
         }
     }
 }

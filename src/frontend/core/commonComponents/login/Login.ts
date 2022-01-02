@@ -10,15 +10,13 @@ import SelectChoice from "../../types/SelectChoice"
 type Props = {
     choices: SelectChoice[],
     currValue: SelectChoice,
-    uniqueName: string,
     selectCallback: (c: SelectChoice) => void,
 }
 
-const Login: React.FunctionComponent<Props> = observer(({choices, currValue, uniqueName, selectCallback, }) => {
-    
-    const mainState = useContext<MainState>(StoreContext)
+const Login: React.FunctionComponent<Props> = observer(({choices, currValue, selectCallback, }) => {    
+    const state = useContext<MainState>(StoreContext)
     const signInHandler = (e: any) => {
-        mainState.user.setUserStatus("user")
+        state.app.client.us
     }
     return html`
         <div>

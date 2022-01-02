@@ -1,3 +1,7 @@
 .loginForm {
     display: block;
 }
+
+.loginForm label {
+    width: 200px;
+}

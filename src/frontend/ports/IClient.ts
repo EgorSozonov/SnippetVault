@@ -7,6 +7,7 @@ import SnippetDTO from "../core/types/dto/SnippetDTO"
 import TaskDTO from "../core/types/dto/TaskDTO"
 import TaskGroupDTO from "../core/types/dto/TaskGroupDTO"
 import EitherMsg from "../core/types/EitherMsg"
+import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../core/types/dto/AuthDTO"
 
 
 type IClient = {
@@ -23,6 +24,10 @@ type IClient = {
     proposalCreate: (prop: string, languageId: number, taskId: number) => Promise<string>
     proposalApprove: (snId: number) => Promise<string>
     snippetMarkPrimary: (snId: number) => Promise<string>
+
+    userRegister: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO>>
+    userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO>>
+    adminSignIn: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO>>
 }
 
 // actionOK: (v: SnippetDTO[]) => void, action: (m: string) => void)

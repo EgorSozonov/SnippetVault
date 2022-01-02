@@ -1,6 +1,6 @@
 import "./snippet.css"
 import { html } from 'htm/react'
-import { FunctionComponent, useContext, useRef } from "react"
+import { FunctionComponent, useContext, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
@@ -17,12 +17,10 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, 
     const state = useContext<MainState>(StoreContext)
     const inputRef = useRef<HTMLTextAreaElement>(null)
     const userStatus = state.user.userStatus
-    let showInput = false
-    if (userStatus === "user" || userStatus === "admin") {
-        showInput = true
-    }
+    let [showInput, setShowInput] = useState(false)
+
+    const signedIn = (userStatus === "user" || userStatus === "admin") 
     const saveProposalHandler = () => {
-        // TODO state.app.client.
         if (inputRef && inputRef.current) {
             console.log("posting:")
             console.log(inputRef.current.value)
@@ -33,17 +31,24 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, 
         }
     }
     return html`
-        <div>
-            ${showInput === true 
-            ? html`
-                <p>Propose a snippet ${numberProposals > 0 ? html`${numberProposals} proposals already awaiting premoderation` : ""}:</p>
-                <p><textarea class="snippetTextArea" ref=${inputRef}></textarea></p>
-                <p><button class="snippetButton" onClick=${saveProposalHandler}>Save</button></p>
-            `
-            : html `
-                <${Login} />
-            ` }
-            
+        <div class="snippetTextInput">
+            ${showInput === true &&
+            (signedIn 
+                ? html`
+                    <p>Propose a snippet ${numberProposals > 0 ? html`${numberProposals} proposals already awaiting premoderation` : ""}:</p>
+                    <p><textarea class="snippetTextArea" ref=${inputRef}></textarea></p>
+                    <p><button class="snippetButton" onClick=${saveProposalHandler}>Save</button></p>
+                    <div class="snippetPlusButton" onClick=${() => setShowInput(false)}>-</div>
+                `
+                : html `
+                    <${Login} />
+                    <div class="snippetPlusButton" onClick=${() => setShowInput(false)}>-</div>
+                ` )
+            }
+
+            ${showInput === false &&
+                html`<div class="snippetPlusButton" onClick=${() => setShowInput(true)}><span>+</span></div>`
+            }            
         </div>
     ` 
       
