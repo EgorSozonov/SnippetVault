@@ -11,21 +11,31 @@ import ProposalDTO from "../types/dto/ProposalDTO"
 import HttpClient from "../../ports/http/HttpClient"
 import MockClient from "../../ports/mock/MockClient"
 import CodesFromUrl from "../types/CodesFromUrl"
+import SnippetState, { updateId, updateWithChoicesUrl } from "../types/SnippetState"
 
 
 export default class AppState {
     public openSelect = ""
     public snippets: IObservableArray<SnippetDTO> = observable.array([])
+
+
     public language1: SelectChoice = {id: 0, name: ""}    
     public language2: SelectChoice = {id: 0, name: ""}
     public codesFromUrl: CodesFromUrl = { tg: "", lang1: "", lang2: "", }
+    public taskGroup: SelectChoice = {id: 0, name: ""}
+
+
+    public l1: SnippetState = {type: "UrlChangedNoChoices", code: "", }
+    public l2: SnippetState = {type: "UrlChangedNoChoices", code: "", }
+    public tg: SnippetState = {type: "UrlChangedNoChoices", code: "", }
+
 
     public languages: IObservableArray<LanguageDTO> = observable.array([])
     public groupedLanguages: IObservableArray<SelectGroup> = observable.array([])
     public languageGroups: IObservableArray<LanguageGroupDTO> = observable.array([])
 
     public proposals: IObservableArray<ProposalDTO> = observable.array([])
-    public taskGroup: SelectChoice = {id: 0, name: ""}
+    
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
 
     public alternatives: IObservableArray<AlternativeDTO> = observable.array([])
@@ -41,21 +51,47 @@ export default class AppState {
         this.snippets = observable.array(newValue)
     })  
 
+
+
+
+
     setLanguage1 = action((newValue: SelectChoice): void => {
-        this.language1 = newValue
-        this.refreshCodesFromSelects()
+        this.l1 = updateId(this.l1, newValue.id)
+        
+        //this.language1 = newValue
+        //this.refreshCodesFromSelects()
     })
 
     setLanguage2 = action((newValue: SelectChoice): void => {
-        this.language2 = newValue
-        this.refreshCodesFromSelects()
+        this.l2 = updateId(this.l2, newValue.id)
+
+        //this.language2 = newValue
+        //this.refreshCodesFromSelects()
     })
+
+    setTaskGroup = action((newValue: SelectChoice): void => {
+        this.tg = updateId(this.tg, newValue.id)
+
+        //this.taskGroup = newValue
+        //this.refreshCodesFromSelects()
+    }) 
 
     setCodesFromUrl = action((newValue: CodesFromUrl): void => {        
         this.codesFromUrl = newValue
         this.refreshSelectsFromCodes(newValue)
     })
 
+    setLanguageList = action((newValue: SelectChoice[]): void => {
+        this.l1 = updateWithChoicesUrl(this.l1, newValue)
+        this.l2 = updateWithChoicesUrl(this.l2, newValue)
+    }) 
+
+    setTaskGroups = action((newValue: TaskGroupDTO[]): void => {
+        const newArr = newValue.map(x =>  {return {id: x.id, name: x.name, code: x.code, }})
+        this.taskGroups = observable.array(newArr)
+        this.refreshSelectsFromCodes(this.codesFromUrl)
+        this.tg = updateWithChoicesUrl(this.tg, newArr)
+    })  
 
     /**
      * Try refreshing ids of selected langs/tg from URL codes.
@@ -93,7 +129,6 @@ export default class AppState {
     setGroupedLanguages = action((newValue: SelectGroup[]): void => {
         this.groupedLanguages = observable.array(newValue)
         this.refreshSelectsFromCodes(this.codesFromUrl)
-
     })
 
     setLanguageGroups = action((newValue: LanguageGroupDTO[]): void => {
@@ -102,12 +137,7 @@ export default class AppState {
 
     setProposals = action((newValue: ProposalDTO[]): void => {
         this.proposals = observable.array(newValue)
-    })    
-
-    setTaskGroup = action((newValue: SelectChoice): void => {
-        this.taskGroup = newValue
-        this.refreshCodesFromSelects()
-    })    
+    })   
 
     setOpenSelect = action((newValue: string): void => {
         this.openSelect = newValue
@@ -117,13 +147,9 @@ export default class AppState {
         this.languages = observable.array(newValue)
     }) 
 
-    setTaskGroups = action((newValue: TaskGroupDTO[]): void => {
-        this.taskGroups = observable.array(newValue.map(x =>  {return {id: x.id, name: x.name, code: x.code, }}))
-        this.refreshSelectsFromCodes(this.codesFromUrl)
-    })  
+
 
     setAlternatives = action((newValue: AlternativeDTO[]): void => {
         this.alternatives = observable.array(newValue)
-    })  
-
+    })
 }

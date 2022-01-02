@@ -1,6 +1,8 @@
 import LanguageGroupedDTO from "../../types/dto/LanguageGroupedDTO"
 import SelectGroup from "../../types/SelectGroup"
 import EitherMsg from "../../types/EitherMsg"
+import SelectChoice from "../../types/SelectChoice"
+import { ids } from "webpack"
 
 
 export function groupLanguages(langs: LanguageGroupedDTO[]): SelectGroup[] {
@@ -32,4 +34,9 @@ export async function groupLanguagesAsync(langs: Promise<EitherMsg<LanguageGroup
         return acc
     }, [])
     return result
+}
+
+export function languageListOfGrouped(langs: LanguageGroupedDTO[]): SelectChoice[] {
+    if (!langs || langs.length === 0) return []    
+    return langs.map(x => { return {name: x.name, code: x.code, id: x.id, } })
 }

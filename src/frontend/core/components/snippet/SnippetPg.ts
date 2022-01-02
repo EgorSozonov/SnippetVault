@@ -11,24 +11,26 @@ import MainState from "../../mobX/MainState"
 import { observer } from "mobx-react-lite"
 import { fetchFromClient, fetchFromClientTransform } from "../../utils/Client"
 import IClient from "../../../ports/IClient"
-import { groupLanguages, } from "../../utils/languageGroup/GroupLanguages"
+import { groupLanguages, languageListOfGrouped, } from "../../utils/languageGroup/GroupLanguages"
 import { checkNonempty } from "../../utils/StringUtils"
+import { isStateOK } from "../../types/SnippetState"
+import EitherMsg from "../../types/EitherMsg"
+import LanguageGroupedDTO from "../../types/dto/LanguageGroupedDTO"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
     const snippets = state.app.snippets
-    const lang1 = state.app.language1
-    const lang2 = state.app.language2
-    const tg = state.app.taskGroup
-    //const codes = state.app.codesFromUrl
+    const lang1 = state.app.l1
+    const lang2 = state.app.l2
+    const tg = state.app.tg
 
     const client: IClient = state.app.client
 
     const [searchParams, setSearchParams] = useSearchParams();   
     const lang1Code = searchParams.get("lang1")
     const lang2Code = searchParams.get("lang2")
-    const taskCode = searchParams.get("task")    
+    const taskCode = searchParams.get("task")
     const nonEmptyParams = checkNonempty([taskCode, lang1Code, lang2Code, ])
     
 
@@ -46,12 +48,32 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     
 
     useEffect(() => {
-        fetchFromClientTransform(client.getLanguages(), groupLanguages, state.app.setGroupedLanguages)
+        //fetchFromClientTransform(client.getLanguages(), groupLanguages, state.app.setGroupedLanguages)
+        const foo: (() => EitherMsg<LanguageGroupedDTO[]>) = async () => { 
+            const res: EitherMsg<LanguageGroupedDTO[]> = await client.getLanguages() 
+            return res
+        }
+        const resultLangs: EitherMsg<LanguageGroupedDTO[]> = foo()
+        if (resultLangs.isOK === true) {
+            state.app.setGroupedLanguages(groupLanguages(resultLangs.value))
+            const langList = languageListOfGrouped(resultLangs.value)
+            state.app.setLanguageList(langList)
+        } else {
+            console.log(resultLangs.errMsg)
+        }
+        
+
         fetchFromClient(client.getTaskGroups(), state.app.setTaskGroups)
-        if (nonEmptyParams.length > 0) {
-            fetchFromClient(client.getSnippetsByCode(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2]), state.app.setSnippets)
+        if (isStateOK([tg, lang1, lang2])) {
+            fetchFromClient(client.getSnippetsByCode(tg.code, lang1.code, lang2.code), state.app.setSnippets)
         }
     }, [])
+
+    useEffect( () => {
+        if (isStateOK([tg, lang1, lang2])) {
+            setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
+        }
+    }, [lang1, lang2, tg])
 
 
     return html`<div class="snippetsBody">
