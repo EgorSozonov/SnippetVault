@@ -66,15 +66,15 @@ class MockClient implements IClient {
     }
 
     userRegister(dto: SignInDTO) {
-        return this.wrapOK({userId: 0, accessToken: "", })
+        return this.wrapOK([{userId: 0, accessToken: "", }])
     }
     
     userSignIn(dto: SignInDTO) {
-        return this.wrapOK({userId: 0, accessToken: "", })
+        return this.wrapOK([{userId: 0, accessToken: "", }])
     }
 
     adminSignIn(dto: SignInAdminDTO) {
-        return this.wrapOK({userId: 0, accessToken: "", })
+        return this.wrapOK([{userId: 0, accessToken: "", }])
     }
     
     private wrapOK<T>(val: T): Promise<EitherMsg<T>> {

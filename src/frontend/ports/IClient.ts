@@ -25,9 +25,9 @@ type IClient = {
     proposalApprove: (snId: number) => Promise<string>
     snippetMarkPrimary: (snId: number) => Promise<string>
 
-    userRegister: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO>>
-    userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO>>
-    adminSignIn: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO>>
+    userRegister: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
+    userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
+    adminSignIn: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
 }
 
 // actionOK: (v: SnippetDTO[]) => void, action: (m: string) => void)

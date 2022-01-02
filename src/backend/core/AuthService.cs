@@ -45,7 +45,6 @@ public class AuthService : IAuthService {
                 accessToken = makeAccessToken();
                 await st.userUpdateExpiration(userAuthent.userId, accessToken, DateTime.Today);                
             }
-            
 
             return new Success<SignInSuccessDTO>(new List<SignInSuccessDTO>() {
                     new SignInSuccessDTO() { accessToken = accessToken, userId = userAuthent.userId, }
@@ -61,8 +60,7 @@ public class AuthService : IAuthService {
         if (dto.userName != AdminPasswordChecker.adminName) return err;
         var mbUserCreds = await st.userAuthentGet(dto.userName);
 
-        if (mbUserCreds is Success<AuthenticateIntern> userAuthents && userAuthents.vals.Count == 1) {
-            
+        if (mbUserCreds is Success<AuthenticateIntern> userAuthents && userAuthents.vals.Count == 1) {            
             var userAuthent = userAuthents.vals[0];
             userAuthent.hash = EncodingUtils.convertToBcrypt(userAuthent.hash);
             userAuthent.salt = EncodingUtils.convertToBcrypt(userAuthent.salt);

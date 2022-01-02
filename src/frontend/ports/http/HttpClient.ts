@@ -93,15 +93,15 @@ class HttpClient implements IClient {
         return this.makePostRequestNoPayload(`/taskGroup/cu`)
     }
 
-    userRegister(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO>> {
+    userRegister(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
         return this.makePostRequest("/user/register", dto)
     }
     
-    userSignIn(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO>> {
+    userSignIn(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
         return this.makePostRequest("/user/signIn", dto)
     }
 
-    adminSignIn(dto: SignInAdminDTO): Promise<EitherMsg<SignInSuccessDTO>> {
+    adminSignIn(dto: SignInAdminDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
         return this.makePostRequest("/user/signInAdmin", dto)
     }
 

@@ -85,7 +85,8 @@ public class PostPGQueries  {
                     ON CONFLICT DO NOTHING RETURNING id;
                 ",
                 userUpdateExpiration=@"
-                    UPDATE sv.""user"" SET expiration=@newDate, accessToken=@newToken WHERE id=@id;
+                    UPDATE sv.""user"" SET expiration=@newDate, ""accessToken""=@newToken 
+                    WHERE id=@id;
                 ",
                 userSignIn=@"
                     INSERT INTO sv.""user""(name, ""dateJoined"", expiration, ""accessToken"", hash, salt)

@@ -4,7 +4,7 @@ export type SignInSuccessDTO = {
 }
 
 export type SignInDTO = {
-    userName: number,
+    userName: string,
     password: string,
 }
 

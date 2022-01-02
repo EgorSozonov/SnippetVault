@@ -13,8 +13,8 @@ public class SignInAdminDTO {
 }
 
 public class SignInSuccessDTO {
-    public int userId;
-    public string accessToken;
+    public int userId {get; set; }
+    public string accessToken {get; set; }
 }
 
 }

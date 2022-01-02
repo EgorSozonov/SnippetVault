@@ -210,9 +210,7 @@ public class DBStore : IStore {
             cmd.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Integer, userId);
             cmd.Parameters.AddWithValue("newDate", NpgsqlTypes.NpgsqlDbType.Date, newDate);
             cmd.Parameters.AddWithValue("newToken", NpgsqlTypes.NpgsqlDbType.Varchar, newToken);
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return await cmd.ExecuteNonQueryAsync();
-            }
+            return await cmd.ExecuteNonQueryAsync();
         }
     }
 

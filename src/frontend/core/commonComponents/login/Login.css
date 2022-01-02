@@ -2,6 +2,16 @@
     display: block;
 }
 
-.loginForm label {
+.loginFormLabel {
     width: 200px;
+    text-align: left;
+}
+
+.loginFormInput {
+    width: 200px;
+    margin-bottom: 0.5rem;
+}
+
+.loginFormButtons {
+    margin-bottom: 0.5rem;
 }
