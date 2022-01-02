@@ -9,7 +9,7 @@ import TaskGroupDTO from "../../core/types/dto/TaskGroupDTO"
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
 import {mockData, getMockTasks, getMockAlternatives, getMockSnippets, getMockSnippetsByCode} from "./MockData"
-import { SignInAdminDTO, SignInDTO } from "../../core/types/dto/AuthDTO"
+import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
 
 
 class MockClient implements IClient {
@@ -53,7 +53,7 @@ class MockClient implements IClient {
         return this.wrapOK("Counts: bla bla")
     }
 
-    proposalCreate(prop: string, languageId: number, taskId: number): Promise<string> {
+    proposalCreate(prop: string, languageId: number, taskId: number, headers: SignInSuccessDTO): Promise<string> {
         return this.wrapOKString("OK")
     }
 

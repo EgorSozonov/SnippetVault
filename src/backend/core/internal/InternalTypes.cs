@@ -6,6 +6,7 @@ public class AuthenticateIntern {
     public string salt {get; set;}
     public string hash {get; set;}
     public DateTime expiration {get; set;}
+    public string accessToken {get; set;}
 }
 
 public class AuthorizeIntern {

@@ -98,7 +98,7 @@ public class GetPGQueries  {
 				JOIN sv.user u ON u.id=c.""userId""
 				WHERE c.""snippetId""=@snId;",           
             userAuthentData = @"
-                SELECT id AS ""userId"", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration 
+                SELECT id AS ""userId"", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration, ""accessToken""
                 FROM sv.user WHERE name=@name;
             ",
             userAuthor = @"

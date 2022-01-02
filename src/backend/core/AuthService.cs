@@ -44,6 +44,8 @@ public class AuthService : IAuthService {
             if (userAuthent.expiration.Date != DateTime.Today) {
                 accessToken = makeAccessToken();
                 await st.userUpdateExpiration(userAuthent.userId, accessToken, DateTime.Today);                
+            } else {
+                accessToken = userAuthent.accessToken;
             }
 
             return new Success<SignInSuccessDTO>(new List<SignInSuccessDTO>() {

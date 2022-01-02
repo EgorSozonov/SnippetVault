@@ -21,21 +21,22 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, 
 
     const signedIn = (userStatus === "user" || userStatus === "admin") 
     const saveProposalHandler = () => {
-        if (inputRef && inputRef.current) {
-            console.log("posting:")
-            console.log(inputRef.current.value)
-            if (inputRef.current.value.length > 0) {
-                state.app.client.proposalCreate(inputRef.current.value, langId, taskId)
-                inputRef.current.value = ""
-            }
+        const accToken = state.user.accessToken
+        const userId = state.user.userId
+        if (userId < 0 || accToken === "") return
+
+        if (inputRef && inputRef.current && inputRef.current.value.length > 0) {
+            state.app.client.proposalCreate(inputRef.current.value, langId, taskId, {userId: userId, accessToken: accToken, })
+            inputRef.current.value = ""            
         }
     }
+
     return html`
         <div class="snippetTextInput">
             ${showInput === true &&
             (signedIn 
                 ? html`
-                    <p>Propose a snippet ${numberProposals > 0 ? html`${numberProposals} proposals already awaiting premoderation` : ""}:</p>
+                    <p>Propose a snippet:</p>
                     <p><textarea class="snippetTextArea" ref=${inputRef}></textarea></p>
                     <p><button class="snippetButton" onClick=${saveProposalHandler}>Save</button></p>
                     <div class="snippetPlusButton" onClick=${() => setShowInput(false)}>-</div>

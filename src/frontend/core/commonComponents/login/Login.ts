@@ -18,32 +18,19 @@ const Login: React.FunctionComponent<Props> = observer(({choices, currValue, sel
     const state = useContext<MainState>(StoreContext)
     const unameRef = useRef<HTMLInputElement>(null)
     const pwRef = useRef<HTMLInputElement>(null)
-    const signInHandler = async (e: any) => {
+    const signInOrRegisterHandler = (isRegistering: boolean) => async () => {
         if (!unameRef.current || !pwRef.current) return
         const uName: string = unameRef.current.value
         const pw: string = pwRef.current.value
         const dto: SignInDTO = {userName: uName, password: pw, }
 
-        const response = await state.app.client.userSignIn(dto)
-        console.log("response")
-        console.log(response)
+        const response = isRegistering === true ? await state.app.client.userRegister(dto) : await state.app.client.userSignIn(dto)
         if (response.isOK === true) {
-            console.log(response.value[0])
+            const userData = response.value[0]
+            state.user.signIn(userData.userId, userData.accessToken, uName)
         } else {
             console.log(response.errMsg)
         }
-        
-    }
-
-    const registerHandler = async (e: any) => {
-        if (!unameRef.current || !pwRef.current) return
-        const uName: string = unameRef.current.value
-        const pw: string = pwRef.current.value
-        const dto: SignInDTO = {userName: uName, password: pw, }
-
-        const res = await state.app.client.userRegister(dto)
-        console.log("result")
-        console.log(res)
     }
 
     return html`
@@ -56,11 +43,11 @@ const Login: React.FunctionComponent<Props> = observer(({choices, currValue, sel
             <input class="loginFormInput" ref=${unameRef} type="text" />
                             
             <div class="loginFormLabel">Password</div>
-            <input class="loginFormInput" ref=${pwRef} type="text" />
+            <input class="loginFormInput" type="password" ref=${pwRef} type="text" />
             
             <div class="loginFormButtons">
-                <button onClick=${signInHandler}>Sign in</button>
-                <button onClick=${registerHandler}>Register</button>
+                <button onClick=${signInOrRegisterHandler(false)}>Sign in</button>
+                <button onClick=${signInOrRegisterHandler(true)}>Register</button>
             </div>
         </div>
     `

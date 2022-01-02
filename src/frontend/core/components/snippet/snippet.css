@@ -59,8 +59,13 @@
     border-top-left-radius: 10px;
 }
 
+.headerUsername {
+    
+}
 
+/* ------------- */
 /* Snippets body */
+/* ------------- */
 
 .snippetsBody {
     background-color: hsl(0, 0%, 18%);
@@ -180,7 +185,9 @@
     padding: 0;
 }
 
-/* Comments */
+/* ------------- */
+/* Comments      */
+/* ------------- */
 
 .commentButton {
     cursor: pointer;
@@ -201,8 +208,9 @@
     background-color: hsl(0, 0%, 18%);
 }
 
-
+/* --------------- */
 /* Common elements */
+/* --------------- */
 p {
     margin: 0;
 }

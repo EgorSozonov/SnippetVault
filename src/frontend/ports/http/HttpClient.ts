@@ -60,9 +60,9 @@ class HttpClient implements IClient {
         return this.makeGetRequest<string>(`/admin/counts`)
     }
 
-    proposalCreate(proposal: string, langId: number, taskId: number): Promise<string> {
+    proposalCreate(proposal: string, langId: number, taskId: number, headers: SignInSuccessDTO): Promise<string> {
         const payload = {langId, taskId, content: proposal, }
-        return this.makePostRequestForString<ProposalCreateDTO>(`/proposal/create`, payload)
+        return this.makePostRequestForString<ProposalCreateDTO>(`/proposal/create`, payload, headers)
     }
 
     proposalApprove(snId: number): Promise<string> {
@@ -119,9 +119,11 @@ class HttpClient implements IClient {
         }
     }
 
-    private async makePostRequestForString<T>(url: string, payload: T): Promise<string> {
+    private async makePostRequestForString<T>(url: string, payload: T, headers: SignInSuccessDTO): Promise<string> {
         try {
-            const r = await this.client.post<string>(url, payload)
+            const r = await this.client.post<string>(url, payload, 
+                { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, }, }
+            )
             if (r.data && r.data === "OK") {
                 return ""
             } else {

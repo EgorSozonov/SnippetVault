@@ -13,3 +13,4 @@ export type SignInAdminDTO = {
     password1: string,
     password2: string,
 }
+

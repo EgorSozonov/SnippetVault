@@ -3,8 +3,9 @@ import UserStatus from "../types/UserStatus"
 
 
 export default class UserState {
-    public authToken: string = ""
+    public accessToken: string = ""
     public userName: string = ""
+    public userId: number = -1
     public userStatus: UserStatus = "guest"
 
     constructor() {
@@ -15,7 +16,19 @@ export default class UserState {
 
     })
 
-    setUserStatus = action((newStatus: UserStatus): void => {
-        this.userStatus = newStatus
+    signIn = action((userId: number, accessToken: string, userName: string): void => {
+        if (accessToken.length < 1) return
+
+        this.userStatus = "user"
+        this.accessToken = accessToken
+        this.userName = userName
+        this.userId = userId
+    })
+
+    signOut = action((): void => {
+        this.userStatus = "guest"
+        this.accessToken = ""
+        this.userName = ""
+        this.userId = -1
     })
 }

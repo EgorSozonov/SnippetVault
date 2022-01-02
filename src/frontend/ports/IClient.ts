@@ -21,7 +21,7 @@ type IClient = {
     getTasks: (tgId: number) => Promise<EitherMsg<TaskDTO[]>>
     getAlternatives: (tlId: number) => Promise<EitherMsg<AlternativeDTO[]>>
     getAdminCounts: () => Promise<EitherMsg<string>>
-    proposalCreate: (prop: string, languageId: number, taskId: number) => Promise<string>
+    proposalCreate: (prop: string, languageId: number, taskId: number, headers: SignInSuccessDTO) => Promise<string>
     proposalApprove: (snId: number) => Promise<string>
     snippetMarkPrimary: (snId: number) => Promise<string>
 
