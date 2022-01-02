@@ -20,8 +20,7 @@ function inputFocusHandler(event:any) {
 const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabilities, }: Props<T>) => {
     const [openIdx, setOpenIdx] = useState(-1)
     const [isOpenNew, setOpenNew] = useState(false)
-    console.log("editabilities")
-    console.log(editabilities)
+
     const rowClickHandler = (idx: number) => {
         if (idx === openIdx) {
             setOpenIdx(-1)
@@ -32,8 +31,6 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
 
     const newSaveHandler = (e: any) => {        
         e.preventDefault()
-        console.log("new handler")
-        console.log(e.target)
         const formData = new FormData(e.target)
         for (var [key, value] of formData.entries()) { 
             console.log(key);

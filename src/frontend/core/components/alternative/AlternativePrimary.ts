@@ -41,7 +41,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({
                 </div>                
             </div>
             <div class="alternativeHeaderMainFooter">
-                <span>Upload date: ${primaryAlternative !== null && fmtDt(primaryAlternative.tsUpload)}</span>
+                // <span>Upload date: ${primaryAlternative !== null && fmtDt(primaryAlternative.tsUpload)}</span>
                 <span>Score: ${primaryAlternative !== null && primaryAlternative.score}</span>
             </div>         
         </div>        

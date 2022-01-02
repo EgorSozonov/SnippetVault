@@ -1,6 +1,6 @@
 type Proposal = {
-    id: number,
-    code: string,
+    proposalId: number,
+    proposalCode: string,
     taskName: string,
     languageName: string,
     tsUpload: Date,

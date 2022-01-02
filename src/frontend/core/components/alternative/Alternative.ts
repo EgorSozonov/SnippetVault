@@ -37,9 +37,9 @@ const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) =>
                     ${alternative.snippetCode}                
             </div>
             <div class="alternativeItemHeader">
-                <span>
-                    Upload date: ${fmtDt(alternative.tsUpload)}
-                </span>
+                // <span>
+                //     Upload date: ${fmtDt(alternative.tsUpload)}
+                // </span>
                 <span>
                     Votes: ${alternative.score}
                 </span>

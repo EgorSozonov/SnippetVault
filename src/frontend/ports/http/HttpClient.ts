@@ -65,32 +65,32 @@ class HttpClient implements IClient {
         return this.makePostRequestForString<ProposalCreateDTO>(`/proposal/create`, payload, headers)
     }
 
-    proposalApprove(snId: number): Promise<string> {
-        return this.makePostRequestNoPayload(`/snippet/approve/${snId}`)
+    proposalApprove(snId: number, headers: SignInSuccessDTO): Promise<string> {
+        return this.makePostRequestNoPayload(`/snippet/approve/${snId}`, headers)
     }
 
-    snippetMarkPrimary(snId: number): Promise<string> {
-        return this.makePostRequestNoPayload(`/snippet/markPrimary/${snId}`)
+    snippetMarkPrimary(snId: number, headers: SignInSuccessDTO): Promise<string> {
+        return this.makePostRequestNoPayload(`/snippet/markPrimary/${snId}`, headers)
     }
 
-    languageCU(): Promise<string> {
+    languageCU(headers: SignInSuccessDTO): Promise<string> {
         // TODO 
-        return this.makePostRequestNoPayload(`/language/cu`)
+        return this.makePostRequestNoPayload(`/language/cu`, headers)
     }
 
-    languageGroupCU(): Promise<string> {
+    languageGroupCU(headers: SignInSuccessDTO): Promise<string> {
         // TODO 
-        return this.makePostRequestNoPayload(`languageGroup/cu`)
+        return this.makePostRequestNoPayload(`languageGroup/cu`, headers)
     }
 
-    taskCU(): Promise<string> {
+    taskCU(headers: SignInSuccessDTO): Promise<string> {
         // TODO 
-        return this.makePostRequestNoPayload(`/task/cu`)
+        return this.makePostRequestNoPayload(`/task/cu`, headers)
     }
 
-    taskGroupCU(): Promise<string> {
+    taskGroupCU(headers: SignInSuccessDTO): Promise<string> {
         // TODO 
-        return this.makePostRequestNoPayload(`/taskGroup/cu`)
+        return this.makePostRequestNoPayload(`/taskGroup/cu`, headers)
     }
 
     userRegister(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
@@ -134,7 +134,7 @@ class HttpClient implements IClient {
         }
     }
 
-    private async makePostRequestNoPayload(url: string): Promise<string> {
+    private async makePostRequestNoPayload(url: string, headers: SignInSuccessDTO): Promise<string> {
         try {
             const r = await this.client.post<string>(url)
             if (r.data && r.data === "OK") {

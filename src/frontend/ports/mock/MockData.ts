@@ -85,22 +85,22 @@ export const mockData = {
 
     proposals: [
         {
-            id: 10,
-            code: "proposal code();",
+            proposalId: 10,
+            proposalCode: "proposal code();",
             taskName: "Walk a folder",
             languageName: "C#",
             tsUpload: new Date(2021, 11, 28),
         },
         {
-            id: 11,
-            code: "a different code(5);",
+            proposalId: 11,
+            proposalCode: "a different code(5);",
             taskName: "Walk a folder",
             languageName: "C#",
             tsUpload: new Date(2021, 10, 25),
         },
         {
-            id: 12,
-            code: "public static virtual void final sin(double x) throws AComplexBusinessExceptionEveryTime()",
+            proposalId: 12,
+            proposalCode: "public static virtual void final sin(double x) throws AComplexBusinessExceptionEveryTime()",
             taskName: "Sine function",
             languageName: "Java",
             tsUpload: new Date(2021, 11, 22),

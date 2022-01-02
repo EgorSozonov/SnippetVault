@@ -26,8 +26,6 @@ const editabilityTaskGroup: Editability<TaskGroupDTO>[] = [
     }
 ]
 
-
-
 const Admin: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
     const editabilitiesLanguageGroup: Editability<LanguageGroupDTO>[] = [
@@ -41,22 +39,24 @@ const Admin: FunctionComponent = observer(({}: any) => {
         },
     ]
     const editabilityLanguage: Editability<LanguageDTO>[] = [
-    {
-        field: "name",
-        fieldType: "string",
-    },
-    {
-        field: "lgName",
-        fieldType: "choice",
-        choices: state.app.languageGroups.map(x => {return {id: x.id, name: x.name}}),
-    },
-]
+        {
+            field: "name",
+            fieldType: "string",
+        },
+        {
+            field: "lgName",
+            fieldType: "choice",
+            choices: state.app.languageGroups.map(x => {return {id: x.id, name: x.name}}),
+        },
+    ]
+
     const client: IClient = state.app.client
     useEffect(() => {
         fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
         fetchFromClient(state.app.client.getTaskGroups(), state.app.setTaskGroups)
         fetchFromClient(state.app.client.getLanguageGroups(), state.app.setLanguageGroups)
     }, [])
+
     return html`
         <div class="adminContainer">
             <div>

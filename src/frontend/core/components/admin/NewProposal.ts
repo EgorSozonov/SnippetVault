@@ -18,9 +18,12 @@ const NewProposal: FunctionComponent = observer(() => {
     }, [])
 
     const approveHandler = (pId: number) => () => {
-        console.log("approving proposal " + pId)
-        client.proposalApprove(pId)
+        const accToken = state.user.accessToken
+        const userId = state.user.userId
+        if (userId < 0 || accToken === "") return
+        client.proposalApprove(pId, {userId: userId, accessToken: accToken, })
     }
+    
     return html`
         <div class="newProposals">
             <div class="newProposalsTitle">
@@ -34,14 +37,12 @@ const NewProposal: FunctionComponent = observer(() => {
                             <div>
                                 ${snippet.taskName}
                             </div>
-                            <div>
-                                ${fmtDt(snippet.tsUpload)}
-                            </div>
+
                             <div class="proposalHeaderRight" title="Accept" onClick=${approveHandler(snippet.id)}>
                                 A
                             </div>
                         </div>
-                        <div class=${"proposalBody"}>${snippet.code}</div>
+                        <div class=${"proposalBody"}>${snippet.proposalCode}</div>
                     </div>`
             })}            
         </div>
