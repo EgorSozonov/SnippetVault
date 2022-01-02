@@ -11,7 +11,7 @@ import ProposalDTO from "../types/dto/ProposalDTO"
 import HttpClient from "../../ports/http/HttpClient"
 import MockClient from "../../ports/mock/MockClient"
 import CodesFromUrl from "../types/CodesFromUrl"
-import SnippetState, { updateId, updateWithChoicesUrl } from "../types/SnippetState"
+import SnippetState, { updateCode, updateId, updateUrl, updateWithChoicesUrl, updateWithoutChoices } from "../types/SnippetState"
 
 
 export default class AppState {
@@ -25,9 +25,9 @@ export default class AppState {
     public taskGroup: SelectChoice = {id: 0, name: ""}
 
 
-    public l1: SnippetState = {type: "UrlChangedNoChoices", code: "", }
-    public l2: SnippetState = {type: "UrlChangedNoChoices", code: "", }
-    public tg: SnippetState = {type: "UrlChangedNoChoices", code: "", }
+    public l1: SnippetState = {type: "ChoicesAbsent", code: "", }
+    public l2: SnippetState = {type: "ChoicesAbsent", code: "", }
+    public tg: SnippetState = {type: "ChoicesAbsent", code: "", }
 
 
     public languages: IObservableArray<LanguageDTO> = observable.array([])
@@ -54,31 +54,16 @@ export default class AppState {
 
 
 
-
     setLanguage1 = action((newValue: SelectChoice): void => {
         this.l1 = updateId(this.l1, newValue.id)
-        
-        //this.language1 = newValue
-        //this.refreshCodesFromSelects()
     })
 
     setLanguage2 = action((newValue: SelectChoice): void => {
         this.l2 = updateId(this.l2, newValue.id)
-
-        //this.language2 = newValue
-        //this.refreshCodesFromSelects()
     })
 
     setTaskGroup = action((newValue: SelectChoice): void => {
         this.tg = updateId(this.tg, newValue.id)
-
-        //this.taskGroup = newValue
-        //this.refreshCodesFromSelects()
-    }) 
-
-    setCodesFromUrl = action((newValue: CodesFromUrl): void => {        
-        this.codesFromUrl = newValue
-        this.refreshSelectsFromCodes(newValue)
     })
 
     setLanguageList = action((newValue: SelectChoice[]): void => {
@@ -89,46 +74,24 @@ export default class AppState {
     setTaskGroups = action((newValue: TaskGroupDTO[]): void => {
         const newArr = newValue.map(x =>  {return {id: x.id, name: x.name, code: x.code, }})
         this.taskGroups = observable.array(newArr)
-        this.refreshSelectsFromCodes(this.codesFromUrl)
         this.tg = updateWithChoicesUrl(this.tg, newArr)
     })  
 
-    /**
-     * Try refreshing ids of selected langs/tg from URL codes.
-     * Might fail if the languages or TGs aren't loaded yet.
-     */
-    refreshSelectsFromCodes = action((newValue: CodesFromUrl) => {        
-        if (this.taskGroups.length > 0 && newValue.tg.length > 0) {            
-            const tryTG = this.taskGroups.find(x => x.code === newValue.tg)
-            if (tryTG) this.taskGroup = tryTG            
-        }
-        if (this.groupedLanguages.length > 0) {
-            for (let lg of this.groupedLanguages) {
-                if (newValue.lang1.length > 0) {
-                    let tryLang = lg.choices.find(x => x.code === newValue.lang1)
-                    if (tryLang) this.language1 = tryLang
-                }
-                if (newValue.lang2.length > 0) {
-                    let tryLang = lg.choices.find(x => x.code === newValue.lang2)
-                    if (tryLang) this.language2 = tryLang
-                }                
-            }
-        }
-    })
 
-    /**
-     * Refresh codes of selected langs/tg from ids
-     */
-    refreshCodesFromSelects = action(() => {
-        if (this.language1.code && this.language1.code.length > 0 && this.language2.code && this.language2.code.length > 0 
-        && this.taskGroup.code && this.taskGroup.code.length > 0) {
-            this.codesFromUrl = {tg: this.taskGroup.code, lang1: this.language1.code, lang2: this.language2.code, }            
+    setCodesFromUrl = action((tgCode: string, l1Code: string, l2Code: string) => {
+        if (tgCode.length > 0 && tgCode !== "undefined" && this.tg.code !== tgCode) {
+            this.tg = updateUrl(this.tg, tgCode)
+        }
+        if (l1Code.length > 0 && l1Code !== "undefined" && this.l1.code !== l1Code) {
+            this.l1 = updateUrl(this.l1, l1Code)
+        }
+        if (l2Code.length > 0 && l2Code !== "undefined" && this.l2.code !== l2Code) {  
+            this.l2 = updateUrl(this.l2, l2Code)
         }
     })
 
     setGroupedLanguages = action((newValue: SelectGroup[]): void => {
         this.groupedLanguages = observable.array(newValue)
-        this.refreshSelectsFromCodes(this.codesFromUrl)
     })
 
     setLanguageGroups = action((newValue: LanguageGroupDTO[]): void => {

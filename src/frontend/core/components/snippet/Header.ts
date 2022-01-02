@@ -17,18 +17,24 @@ const Header: React.FunctionComponent = observer(() => {
             <div class="headerContainer">
                 <div class="choiceInput headerLeftmost">
                     <div class="headerDropdownLabel"><label >Task group:</label></div>
-                    <${HoverSelect} currValue=${state.app.taskGroup} choices=${state.app.taskGroups} uniqueName="TaskGroupChoice"
-                        selectCallback=${state.app.setTaskGroup}><//>
+                    ${state.app.tg.type === "ChoicesLoaded" && 
+                        html`<${HoverSelect} currValue=${state.app.tg} choices=${state.app.tg.choices} uniqueName="TaskGroupChoice"
+                        selectCallback=${state.app.setTaskGroup}><//>`
+                    }                    
                 </div>
                 <div class="choiceInput">
                     <div class="headerDropdownLabel"><label >Language 1:</label></div>
-                    <${HoverGroupSelect} currValue=${state.app.language1} choiceGroups=${state.app.groupedLanguages} uniqueName="Lang1"
-                        selectCallback=${state.app.setLanguage1}><//>
+                    ${state.app.l1.type === "ChoicesLoaded" && 
+                        html`<${HoverSelect} currValue=${state.app.l1} choices=${state.app.l1.choices} uniqueName="Lang1Choice"
+                        selectCallback=${state.app.setTaskGroup}><//>`
+                    }
                 </div>
                 <div class="choiceInput">
                     <div class="headerDropdownLabel"><label >Language 2:</label></div>
-                    <${HoverGroupSelect} currValue=${state.app.language2} choiceGroups=${state.app.groupedLanguages} uniqueName="Lang2" 
-                        selectCallback=${state.app.setLanguage2}><//>                    
+                    ${state.app.l2.type === "ChoicesLoaded" && 
+                        html`<${HoverSelect} currValue=${state.app.l2} choices=${state.app.l2.choices} uniqueName="Lang2Choice"
+                        selectCallback=${state.app.setTaskGroup}><//>`
+                    }                    
                 </div>
             </div>
         </nav>
