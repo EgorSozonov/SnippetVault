@@ -5,16 +5,13 @@ import "./editableList.css"
 import { html } from "htm/react"
 import { Editability } from "../../types/Editability"
 import HoverSelectInput from "../hoverSelect/HoverSelectInput"
+import { inputFocusHandler } from "../../utils/ComponentUtils"
 
 
 type Props<T extends IStringKeyed & IHasName> = {
     values: T[],
     title: string,
     editabilities: Editability<T>[],
-}
-
-function inputFocusHandler(event:any) {
-    event.target.select()
 }
 
 const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabilities, }: Props<T>) => {
@@ -35,6 +32,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
         for (var [key, value] of formData.entries()) { 
             console.log(key);
             console.log(value);
+            // TODO
         }
     }
 
@@ -100,7 +98,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                     ${values.map((v: T, idx: number) => {
                         return html`
                             <li key=${idx} id=${"elem" + idx} class="editableListRow">
-                                <div onClick=${() => rowClickHandler(idx)} class=${(openIdx === idx ? " editableListRowActive" : "")}>
+                                <div onClick=${() => rowClickHandler(idx)} class=${(openIdx === idx ? "editableListRowActive" : "")}>
                                     <span class="editableListCell">${v.name}</span>
                                 </div>
                                 ${openIdx === idx && html`

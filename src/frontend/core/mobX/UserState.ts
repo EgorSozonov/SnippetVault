@@ -6,7 +6,7 @@ export default class UserState {
     public accessToken: string = ""
     public userName: string = ""
     public userId: number = -1
-    public userStatus: UserStatus = "guest"
+    public userStatus: UserStatus = "admin" // TODO guest
 
     constructor() {
         makeAutoObservable(this)
@@ -26,11 +26,9 @@ export default class UserState {
     })
 
     signInAdmin = action((userId: number, accessToken: string, userName: string): void => {
-        if (accessToken.length < 1) return
+        if (accessToken.length < 1) return   
 
-        
         this.userStatus = "admin"
-        console.log(this.userStatus)
         this.accessToken = accessToken
         this.userName = userName
         this.userId = userId
