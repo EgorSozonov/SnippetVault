@@ -1,5 +1,5 @@
 import { FunctionComponent, useContext, useEffect } from "react"
-import Proposal from "../../types/dto/ProposalDTO"
+import ProposalDTO from "../../types/dto/ProposalDTO"
 import "./admin.css"
 import { html } from "htm/react"
 import { fetchFromClient } from "../../utils/Client"
@@ -23,26 +23,43 @@ const NewProposal: FunctionComponent = observer(() => {
         if (userId < 0 || accToken === "") return
         client.proposalApprove(pId, {userId: userId, accessToken: accToken, })
     }
+
+    const declineHandler = (pId: number) => () => {
+        const accToken = state.user.accessToken
+        const userId = state.user.userId
+        if (userId < 0 || accToken === "") return
+        client.proposalDecline(pId, {userId: userId, accessToken: accToken, })
+    }
     
     return html`
         <div class="newProposals">
             <div class="newProposalsTitle">
                 <h3>New proposals</h3>
             </div>
-            ${state.app.proposals.map((snippet: Proposal, idx: number ) => {
+            ${state.app.proposals.map((proposal: ProposalDTO, idx: number ) => {
                 return html`
                     <div class="proposalContainer" key=${idx}>
                         <div class=${"proposalHeaderContainer"}>
-
                             <div>
-                                ${snippet.taskName}
+                                ${proposal.taskName}
+                            </div>
+                            <div>
+                                ${proposal.languageName}
+                            </div>
+                            <div>
+                                ${proposal.author}
                             </div>
 
-                            <div class="proposalHeaderRight" title="Accept" onClick=${approveHandler(snippet.id)}>
+                            <div class="proposalHeaderRight" title="Accept">
+                                <div class="proposalHeaderButton" onClick=${declineHandler(proposal.proposalId)} title="Decline proposal">
+                                X
+                                </div>
+                                <div class="proposalHeaderButton" onClick=${approveHandler(proposal.proposalId)} title="Approve proposal">
                                 A
+                                </div>
                             </div>
                         </div>
-                        <div class=${"proposalBody"}>${snippet.proposalCode}</div>
+                        <div class=${"proposalBody"}>${proposal.proposalCode}</div>
                     </div>`
             })}            
         </div>

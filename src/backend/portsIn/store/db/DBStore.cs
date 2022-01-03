@@ -73,14 +73,14 @@ public class DBStore : IStore {
     }
 
     public async Task<int> snippetApprove(int sn) {
-        await using (var cmd = new NpgsqlCommand(db.postQueries.approveProposal, db.conn)) { 
+        await using (var cmd = new NpgsqlCommand(db.postQueries.snippetApprove, db.conn)) { 
             cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, sn);
             return await cmd.ExecuteNonQueryAsync();
         }
     }
 
-    public async Task<int> snippetDelete(int sn) {
-        await using (var cmd = new NpgsqlCommand(db.postQueries.deleteSnippet, db.conn)) { 
+    public async Task<int> snippetDecline(int sn) {
+        await using (var cmd = new NpgsqlCommand(db.postQueries.snippetDecline, db.conn)) { 
             cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, sn);
             return await cmd.ExecuteNonQueryAsync();
         }

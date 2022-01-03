@@ -61,6 +61,10 @@ class MockClient implements IClient {
         return this.wrapOKString("OK")
     }
 
+    proposalDecline(snId: number): Promise<string> {
+        return this.wrapOKString("OK")
+    }
+
     snippetMarkPrimary(snId: number): Promise<string> {
         return this.wrapOKString("OK")
     }

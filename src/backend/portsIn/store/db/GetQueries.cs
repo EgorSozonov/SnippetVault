@@ -58,7 +58,7 @@ public class GetPGQueries  {
                 LEFT JOIN sv.snippet sn1 ON sn1.id=tl1.""primarySnippetId""
                 LEFT JOIN sv.snippet sn2 ON sn2.id=tl2.""primarySnippetId"";", 
             snippet=@"
-                SELECT s.""taskLanguageId"", s.content, s.""isApproved"", s.score
+                SELECT s.""taskLanguageId"", s.content, s.status, s.score
 				FROM sv.snippet s 				
 				WHERE s.id=@snId;",
             languages=@"
@@ -78,12 +78,13 @@ public class GetPGQueries  {
                 WHERE tl.""languageId"" = ANY(@ls);",
             proposals = @"
                 SELECT lang.name AS ""languageName"", task.name AS ""taskName"", 
-					   sn1.id AS ""proposalId"", sn1.content AS ""proposalCode"", sn1.""tsUpload""
-				FROM sv.snippet sn1
-				JOIN sv.""taskLanguage"" tl ON tl.id=sn1.""taskLanguageId""
+					   sn.id AS ""proposalId"", sn.content AS ""proposalCode"", sn.""tsUpload"", u.name AS author, u.id AS ""authorId""
+				FROM sv.snippet sn
+				JOIN sv.""taskLanguage"" tl ON tl.id=sn.""taskLanguageId""
 				JOIN sv.task task ON task.id=tl.""taskId""
 				JOIN sv.language lang ON lang.id=tl.""languageId""
-				WHERE sn1.""isApproved""=0::bit;",
+                JOIN sv.user u ON u.id=sn.""authorId""
+				WHERE sn.status=1;",
             alternative = @"
                 SELECT sn2.id AS ""primaryId"", sn2.content AS ""primaryCode"", sn2.score AS ""primaryScore"",
 					   sn1.id AS ""alternativeId"", sn1.content AS ""alternativeCode"", sn1.score AS ""alternativeScore"", sn1.""tsUpload""
@@ -91,7 +92,7 @@ public class GetPGQueries  {
 				JOIN sv.""taskLanguage"" tl ON tl.id=sn1.""taskLanguageId""
 				JOIN sv.snippet sn2 ON sn2.id=tl.""primarySnippetId""
 				WHERE sn1.""taskLanguageId""=@tlId
-				AND sn1.""isApproved""=1::bit AND sn1.id != tl.""primarySnippetId"";",
+				AND sn1.status=3 AND sn1.id != tl.""primarySnippetId"";",
             comment = @"
                 SELECT c.content, c.""tsUpload"", u.id AS ""userId"", u.name AS ""userName""
 				FROM sv.comment c
@@ -114,9 +115,9 @@ public class GetPGQueries  {
             ",
             statsForAdmin = @"
                 SELECT 
-                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount"",
-                	SUM(CASE WHEN s.""isApproved""=1::bit AND tl.id IS NULL THEN 1 ELSE 0 END) AS ""alternativeCount"",
-                	SUM(CASE WHEN s.""isApproved""=0::bit THEN 1 ELSE 0 END) AS ""proposalCount""
+                	SUM(CASE WHEN s.status=3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount"",
+                	SUM(CASE WHEN s.status=3 AND tl.id IS NULL THEN 1 ELSE 0 END) AS ""alternativeCount"",
+                	SUM(CASE WHEN s.status=1 THEN 1 ELSE 0 END) AS ""proposalCount""
                 FROM sv.snippet s
                 LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;",
         };

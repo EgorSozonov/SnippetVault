@@ -28,8 +28,8 @@ public class DataService : IDataService {
         return await st.snippetApprove(sn);
     }
 
-    public async Task<int> snippetDelete(int sn) {
-        return await st.snippetDelete(sn);
+    public async Task<int> snippetDecline(int sn) {
+        return await st.snippetDecline(sn);
     }
 
     public async Task<int> snippetMarkPrimary(int tlId, int snId) {
@@ -37,7 +37,7 @@ public class DataService : IDataService {
         if (snippet is Success<BareSnippetDTO> succ) {
             if (succ.vals != null && succ.vals.Count ==  1) {
                 var existingSnip = succ.vals[0];
-                if (existingSnip.isApproved && existingSnip.taskLanguageId == tlId) {
+                if (existingSnip.status == SnippetStatus.Approved && existingSnip.taskLanguageId == tlId) {
                     return await st.snippetMarkPrimary(tlId, snId);
                 } else {
                     return -1;
@@ -136,7 +136,7 @@ public interface IDataService {
     Task<ReqResult<SnippetDTO>> snippetsGetByCode(string taskGroup, string lang1, string lang2);
     Task<int> proposalCreate(CreateProposalDTO dto, int authorId);
     Task<int> snippetApprove(int sn);
-    Task<int> snippetDelete(int sn);
+    Task<int> snippetDecline(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
     Task<ReqResult<ProposalDTO>> proposalsGet();
     Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);    

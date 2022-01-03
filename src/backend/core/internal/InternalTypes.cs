@@ -14,4 +14,10 @@ public class AuthorizeIntern {
     public DateTime expiration {get; set;}
 }
 
+public enum SnippetStatus {
+    Proposal = 1,
+    Declined = 2,
+    Approved = 3,
+}
+
 }

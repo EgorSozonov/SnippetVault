@@ -53,10 +53,10 @@ public class MainController : Controller {
     }
 
     [HttpPost]
-    [Route("snippet/delete/{snId:int}")]
+    [Route("snippet/decline/{snId:int}")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task snippetDelete([FromRoute] int snId) {
-        await applyPostRequest(api.snippetDelete(snId), HttpContext.Response);        
+    public async Task snippetDecline([FromRoute] int snId) {
+        await applyPostRequest(api.snippetDecline(snId), HttpContext.Response);        
     }
 
     [HttpPost]

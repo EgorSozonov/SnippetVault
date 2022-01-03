@@ -23,6 +23,7 @@ type IClient = {
     getAdminCounts: () => Promise<EitherMsg<string>>
     proposalCreate: (prop: string, languageId: number, taskId: number, headers: SignInSuccessDTO) => Promise<string>
     proposalApprove: (snId: number, headers: SignInSuccessDTO) => Promise<string>
+    proposalDecline: (snId: number, headers: SignInSuccessDTO) => Promise<string>
     snippetMarkPrimary: (snId: number, headers: SignInSuccessDTO) => Promise<string>
 
     userRegister: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>

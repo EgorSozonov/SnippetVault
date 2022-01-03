@@ -69,6 +69,10 @@ class HttpClient implements IClient {
         return this.makePostRequestNoPayload(`/snippet/approve/${snId}`, headers)
     }
 
+    proposalDecline(snId: number, headers: SignInSuccessDTO): Promise<string> {
+        return this.makePostRequestNoPayload(`/snippet/decline/${snId}`, headers)
+    }
+
     snippetMarkPrimary(snId: number, headers: SignInSuccessDTO): Promise<string> {
         return this.makePostRequestNoPayload(`/snippet/markPrimary/${snId}`, headers)
     }

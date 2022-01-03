@@ -18,7 +18,7 @@ public interface IStore {
     Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
     Task<int> proposalCreate(CreateProposalDTO dTO, int authorId);
     Task<int> snippetApprove(int sn);
-    Task<int> snippetDelete(int sn);
+    Task<int> snippetDecline(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
     Task<int> taskGroupCU(TaskGroupCUDTO dto);
     Task<int> taskCU(TaskCUDTO dto);

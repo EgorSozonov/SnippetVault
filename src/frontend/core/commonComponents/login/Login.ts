@@ -43,7 +43,7 @@ const Login: React.FunctionComponent<Props> = observer(({choices, currValue, sel
             <input class="loginFormInput" ref=${unameRef} type="text" />
                             
             <div class="loginFormLabel">Password</div>
-            <input class="loginFormInput" type="password" ref=${pwRef} type="text" />
+            <input class="loginFormInput" type="password" ref=${pwRef} />
             
             <div class="loginFormButtons">
                 <button onClick=${signInOrRegisterHandler(false)}>Sign in</button>

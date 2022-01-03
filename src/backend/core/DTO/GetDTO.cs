@@ -54,6 +54,8 @@ public class LanguageGroupDTO {
 public class ProposalDTO {
     public int proposalId {get; set;}
     public string proposalCode {get; set;}
+    public int authorId {get; set;}
+    public string author {get; set;}
     public string taskName {get; set;}
     public string languageName {get; set;}
     public DateTime tsUpload {get; set;}
@@ -62,7 +64,7 @@ public class ProposalDTO {
 public class BareSnippetDTO {
     public int taskLanguageId {get; set;}
     public string content {get; set;}
-    public bool isApproved {get; set;}
+    public SnippetStatus status {get; set;}
     public int score {get; set;} 
 }
 

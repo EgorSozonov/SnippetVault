@@ -4,8 +4,8 @@ namespace SnippetVault {
 public record PostQueries {
     public string proposalCreate {get; init;}
     public string taskLanguageCreate {get; init;}    
-    public string approveProposal {get; init;}
-    public string deleteSnippet {get; init;}
+    public string snippetApprove {get; init;}
+    public string snippetDecline {get; init;}
     public string markPrimarySnippet {get; init;}
     public string commentCreate {get; init;}
     public string commentDelete {get; init;}
@@ -29,18 +29,20 @@ public class PostPGQueries  {
         return new PostQueries() {
 
                 proposalCreate=@"                  
-                    INSERT INTO sv.snippet(""taskLanguageId"", content, ""isApproved"", score, ""tsUpload"", ""authorId"")
-                    VALUES (@tlId, @content, 0::bit, 0, @ts, @authorId);", 
+                    INSERT INTO sv.snippet(""taskLanguageId"", content, status, score, ""tsUpload"", ""authorId"")
+                    VALUES (@tlId, @content, 1, 0, @ts, @authorId);", 
                 taskLanguageCreate=@"
                     INSERT INTO sv.""taskLanguage""(""taskId"", ""languageId"", ""primarySnippetId"")
                     	VALUES (@taskId, @langId, NULL)
                     ON CONFLICT (""taskId"", ""languageId"") DO UPDATE SET ""languageId""=@langId
                     RETURNING id;",
-                approveProposal=@"
+                snippetApprove=@"
                     UPDATE sv.snippet
-                    SET ""isApproved""=1::bit 
+                    SET status=3 
                     WHERE id=@snId;",
-                deleteSnippet=@"DELETE FROM sv.snippet WHERE id=@snId;",
+                snippetDecline=@"UPDATE sv.snippet
+                    SET status=2 
+                    WHERE id=@snId;",
                 markPrimarySnippet=@"UPDATE sv.""taskLanguage"" SET ""primarySnippetId""=@snId WHERE id=@tlId AND ""isDeleted""=0::bit;",
                 taskCreate=@"INSERT INTO sv.task(name, ""taskGroupId"", description) VALUES (@name, @tgId, @description);",  // TODO check for isDeleted
                 taskUpdate=@"UPDATE sv.task SET name=@name, ""taskGroupId""=@tgId, description=@description
