@@ -9,7 +9,7 @@ export type SignInDTO = {
 }
 
 export type SignInAdminDTO = {
-    userName: number,
+    userName: string,
     password1: string,
     password2: string,
 }

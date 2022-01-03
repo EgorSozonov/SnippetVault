@@ -25,6 +25,17 @@ export default class UserState {
         this.userId = userId
     })
 
+    signInAdmin = action((userId: number, accessToken: string, userName: string): void => {
+        if (accessToken.length < 1) return
+
+        
+        this.userStatus = "admin"
+        console.log(this.userStatus)
+        this.accessToken = accessToken
+        this.userName = userName
+        this.userId = userId
+    })
+
     signOut = action((): void => {
         this.userStatus = "guest"
         this.accessToken = ""

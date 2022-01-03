@@ -13,6 +13,7 @@ import { Editability } from "../../types/Editability"
 import { fetchFromClient } from "../../utils/Client"
 import LanguageDTO from "../../types/dto/LanguageDTO"
 import IClient from "../../../ports/IClient"
+import AdminLogin from "./AdminLogin"
 
 
 const ListTaskGroups = (props: any) => EditableList<TaskGroupDTO>(props)
@@ -57,19 +58,28 @@ const Admin: FunctionComponent = observer(({}: any) => {
         fetchFromClient(state.app.client.getLanguageGroups(), state.app.setLanguageGroups)
     }, [])
 
+    console.log(state.user.userStatus)
     return html`
         <div class="adminContainer">
-            <div>
-                <${NavLink} to=${PATHS["snippet"].url}>
-                    <div class="adminHeader">Back to snippets</div>
-                <//>
-            </div>
-            <${ListTaskGroups} values=${state.app.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"></EditableList>
-            <${ListLanguageGroups} values=${state.app.languageGroups} editabilities=${editabilitiesLanguageGroup} title="Language Groups"></EditableList>
-            <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"></EditableList>
-            <div>
-                <${NewProposal} />
-            </div>
+            ${state.user.userStatus !== "admin"            
+            ? html`
+                    <${AdminLogin} />
+                `
+            : html`
+                    <div>
+                        <${NavLink} to=${PATHS["snippet"].url}>
+                            <div class="adminHeader">Back to snippets</div>
+                        <//>
+                    </div>
+                    <${ListTaskGroups} values=${state.app.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"></EditableList>
+                    <${ListLanguageGroups} values=${state.app.languageGroups} editabilities=${editabilitiesLanguageGroup} title="Language Groups"></EditableList>
+                    <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"></EditableList>
+                    <div>
+                        <${NewProposal} />
+                    </div>
+                `
+            }
+            
         </div>
     `
 })

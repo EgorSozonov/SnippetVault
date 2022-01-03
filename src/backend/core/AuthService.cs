@@ -17,7 +17,9 @@ public class AuthService : IAuthService {
             return new Err<SignInSuccessDTO>("Error! Password length must be at least 8 symbols");
         }
 
-        var newHash = PasswordChecker.makeHash(dto.password, out string newSalt);        
+        string newSalt = "";
+        var newHash = (dto.userName != AdminPasswordChecker.adminName) 
+            ? PasswordChecker.makeHash(dto.password, out newSalt) : AdminPasswordChecker.makeHash(dto.password, out newSalt);
         var newAccessToken = makeAccessToken();
         var newUserId = await st.userRegister(dto.userName, newHash, newSalt, newAccessToken, System.DateTime.Today);
         if (newUserId > 0) {
@@ -74,7 +76,9 @@ public class AuthService : IAuthService {
             if (userAuthent.expiration.Date != DateTime.Today) {
                 accessToken = makeAccessToken();
                 await st.userUpdateExpiration(userAuthent.userId, accessToken, DateTime.Today);                
-            }            
+            } else {
+                accessToken = userAuthent.accessToken;
+            }
 
             return new Success<SignInSuccessDTO>(new List<SignInSuccessDTO>() {
                     new SignInSuccessDTO() { accessToken = accessToken, userId = userAuthent.userId, }

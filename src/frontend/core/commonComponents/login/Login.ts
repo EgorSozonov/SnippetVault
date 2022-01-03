@@ -8,13 +8,7 @@ import SelectChoice from "../../types/SelectChoice"
 import { SignInDTO } from "../../types/dto/AuthDTO"
 
 
-type Props = {
-    choices: SelectChoice[],
-    currValue: SelectChoice,
-    selectCallback: (c: SelectChoice) => void,
-}
-
-const Login: React.FunctionComponent<Props> = observer(({choices, currValue, selectCallback, }) => {    
+const Login: React.FunctionComponent = observer(() => {    
     const state = useContext<MainState>(StoreContext)
     const unameRef = useRef<HTMLInputElement>(null)
     const pwRef = useRef<HTMLInputElement>(null)
