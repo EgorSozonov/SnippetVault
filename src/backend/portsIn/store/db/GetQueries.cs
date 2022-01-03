@@ -89,10 +89,10 @@ public class GetPGQueries  {
                 SELECT sn2.id AS ""primaryId"", sn2.content AS ""primaryCode"", sn2.score AS ""primaryScore"",
 					   sn1.id AS ""alternativeId"", sn1.content AS ""alternativeCode"", sn1.score AS ""alternativeScore"", sn1.""tsUpload""
 				FROM sv.snippet sn1
-				JOIN sv.""taskLanguage"" tl ON tl.id=sn1.""taskLanguageId""
-				JOIN sv.snippet sn2 ON sn2.id=tl.""primarySnippetId""
-				WHERE sn1.""taskLanguageId""=@tlId
-				AND sn1.status=3 AND sn1.id != tl.""primarySnippetId"";",
+				JOIN sv.""taskLanguage"" tl ON tl.id = sn1.""taskLanguageId""
+				JOIN sv.snippet sn2 ON sn2.id = tl.""primarySnippetId""
+				WHERE sn1.""taskLanguageId"" = @tlId
+				  AND sn1.status = 3 AND sn1.id != tl.""primarySnippetId"";",
             comment = @"
                 SELECT c.content, c.""tsUpload"", u.id AS ""userId"", u.name AS ""userName""
 				FROM sv.comment c

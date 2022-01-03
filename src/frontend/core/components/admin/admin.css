@@ -67,3 +67,9 @@
     padding: 0.5rem;
     color: hsl(120, 100%, 70%);
 }
+
+.adminSignOutButton {
+    margin: 2rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+}

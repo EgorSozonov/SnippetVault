@@ -58,7 +58,6 @@ const Admin: FunctionComponent = observer(({}: any) => {
         fetchFromClient(state.app.client.getLanguageGroups(), state.app.setLanguageGroups)
     }, [])
 
-    console.log(state.user.userStatus)
     return html`
         <div class="adminContainer">
             ${state.user.userStatus !== "admin"            
@@ -66,6 +65,7 @@ const Admin: FunctionComponent = observer(({}: any) => {
                     <${AdminLogin} />
                 `
             : html`
+                    <div class="adminSignOutButton" onClick=${state.user.signOut}>(sign out)</div>
                     <div>
                         <${NavLink} to=${PATHS["snippet"].url}>
                             <div class="adminHeader">Back to snippets</div>

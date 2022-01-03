@@ -24,15 +24,17 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     const lang = state.app.languages.find(x => x.id === langIdNum)
     if (!lang) return (html`<></>`)
 
+    
     useEffect(() => {
         fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
         fetchFromClient(client.getAlternatives(tlIdNum), state.app.setAlternatives)
     }, [])
 
+    
     const indPrimaryAlternative = state.app.alternatives.findIndex(x => x.isPrimary === true)
     const primaryAlternative = indPrimaryAlternative > -1 ? state.app.alternatives[indPrimaryAlternative] : null
     const nonPrimaryAlternatives = state.app.alternatives.filter((x, idx) => idx !== indPrimaryAlternative)
-    
+        
     return html`                         
         <div class="alternativeBody">
             <${AlternativePrimary} primaryAlternative=${primaryAlternative} lang=${lang} />

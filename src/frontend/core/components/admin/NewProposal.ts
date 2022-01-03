@@ -57,17 +57,16 @@ const NewProposal: FunctionComponent = observer(() => {
 
                             <div class="proposalHeaderRight" title="Accept">
                                 <div class="proposalHeaderButton" onClick=${declineHandler(proposal.proposalId)} title="Decline proposal">
-                                X
+                                    X
                                 </div>
                                 <div class="proposalHeaderButton" onClick=${approveHandler(proposal.proposalId)} title="Approve proposal">
-                                A
+                                    A
                                 </div>
                             </div>
                         </div>
                         <div class=${"proposalBody"}>${proposal.proposalCode}</div>
                     </div>`
-            })}
-            
+            })}            
         </div>
         <${Dialog} state=${confirmationDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />
     `

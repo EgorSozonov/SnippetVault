@@ -24,10 +24,14 @@ public class AuthorizeFilter : Attribute, IAsyncActionFilter    {
             int.TryParse(userIdStr, out int userId);
 
             context.HttpContext.Request.Headers.TryGetValue("accessToken", out var accessTokens);
-            string accessToken = accessTokens.First();
+            if (accessTokens.Any()) {
+                string accessToken = accessTokens.First();
 
-            bool authorized = await authService.userAuthorize(userId, accessToken);
-            if (!authorized) context.Result = new UnauthorizedResult();            
+                bool authorized = await authService.userAuthorize(userId, accessToken);
+                if (!authorized) context.Result = new UnauthorizedResult();
+            } else {
+                context.Result = new UnauthorizedResult();
+            }            
         } catch (Exception e) {
             context.Result = new BadRequestResult() {};
         }

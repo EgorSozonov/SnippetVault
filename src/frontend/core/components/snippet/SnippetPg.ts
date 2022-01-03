@@ -79,7 +79,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                     <div class="snippetRow" key=${idx}>
                         <div class=${"snippetContent leftSide" + evenClass}>
                             ${snippet.leftCode.length > 0 
-                                ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false} langId=${idOf(lang1)} taskId=${snippet.taskId}><//>`
+                                ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false} langId=${idOf(lang1)} tlId=${snippet.leftTlId}><//>`
                                 : html`<${TextInput} taskId=${snippet.taskId} langId=${idOf(lang1)}  numberProposals="4"><//>`}
                         </div>
                         <div class=${"taskContainer" + evenClass}>
@@ -87,7 +87,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         </div>
                         <div class=${"snippetContent rightSide" + evenClass}>
                             ${snippet.rightCode.length > 0 
-                                ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true} langId=${idOf(lang2)} taskId=${snippet.taskId}><//>`
+                                ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true} langId=${idOf(lang2)} tlId=${snippet.rightTlId}><//>`
                                 : html`<${TextInput} taskId=${snippet.taskId} langId=${idOf(lang2)} numberProposals="4"><//>`}
                         </div>
                     </div>`

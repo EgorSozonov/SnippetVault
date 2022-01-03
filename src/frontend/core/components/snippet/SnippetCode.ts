@@ -8,21 +8,22 @@ type Props = {
     content: string,
     isRight: boolean,
     langId: number,
-    taskId: number
+    taskId: number,
+    tlId: number,
 }
 
 function copyTextToClipboard(text: string) {
     navigator.clipboard.writeText(text);
 }
 
-function SnippetCode({content, isRight, langId, taskId, } : Props) {
+function SnippetCode({content, isRight, langId, tlId, } : Props) {
     const snippetContent = html`
         <pre class="snippetCode">
             ${content}
         </pre>
         `
     const alternativesLink = html`
-        <${NavLink} exact to=${`${PATHS["alternative"].urlPrefix}/${langId}/${taskId}`}>
+        <${NavLink} exact to=${`${PATHS["alternative"].urlPrefix}?tlId=${tlId}&langId=${langId}`}>
             <div title="Alternative versions" class="commentButton">
                 A
             </div>

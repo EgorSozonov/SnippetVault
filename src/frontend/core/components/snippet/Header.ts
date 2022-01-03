@@ -39,7 +39,7 @@ const Header: React.FunctionComponent = observer(() => {
                         selectCallback=${state.app.setLanguage2}><//>`
                     }                    
                 </div>
-                ${state.user.userName.length > 0 && 
+                ${(state.user.userStatus === "user" && state.user.userName.length > 0) && 
                     html`
                         <div class="headerUsername headerRightmost choiceInput">
                             <div>${state.user.userName}</div>
