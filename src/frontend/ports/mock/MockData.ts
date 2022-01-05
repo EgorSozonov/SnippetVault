@@ -82,12 +82,13 @@ export const mockData = {
         {tgId: 4, value: {id: 7, name: "Sine function"}, },
         {tgId: 4, value: {id: 8, name: "Cosine function"}, },
     ],
-
     proposals: [
         {
             proposalId: 10,
             proposalCode: "proposal code();",
             taskName: "Walk a folder",
+            authorId: 1,
+            author: "Joe",
             languageName: "C#",
             tsUpload: new Date(2021, 11, 28),
         },
@@ -95,6 +96,8 @@ export const mockData = {
             proposalId: 11,
             proposalCode: "a different code(5);",
             taskName: "Walk a folder",
+            authorId: 1,
+            author: "Joe",
             languageName: "C#",
             tsUpload: new Date(2021, 10, 25),
         },
@@ -102,6 +105,8 @@ export const mockData = {
             proposalId: 12,
             proposalCode: "public static virtual void final sin(double x) throws AComplexBusinessExceptionEveryTime()",
             taskName: "Sine function",
+            authorId: 1,
+            author: "Joe",
             languageName: "Java",
             tsUpload: new Date(2021, 11, 22),
         },                

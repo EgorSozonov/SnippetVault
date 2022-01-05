@@ -77,7 +77,7 @@ public class MainController : Controller {
     [Route("alternatives/{tlId:int}")]
     public async Task alternative([FromRoute] int tlId) {
         var result = await api.alternativesForTLGet(tlId);
-        await sendQueryResult<AlternativeDTO>(result, HttpContext.Response);
+        await sendQueryResult<AlternativesDTO>(result, HttpContext.Response);
     }
 
     #endregion

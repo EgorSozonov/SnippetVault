@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import AlternativeDTO from "../../core/types/dto/AlternativeDTO"
+import { AlternativesDTO } from "../../core/types/dto/AlternativeDTO"
 import LanguageGroupedDTO from "../../core/types/dto/LanguageGroupedDTO"
 import LanguageGroupDTO from "../../core/types/dto/LanguageGroupDTO"
 import LanguageDTO from "../../core/types/dto/LanguageDTO"
@@ -52,8 +52,8 @@ class HttpClient implements IClient {
         return this.makeGetRequest<TaskDTO[]>(`/tasks/${tgId}`)
     }
 
-    getAlternatives(tlId: number): Promise<EitherMsg<AlternativeDTO[]>> {
-        return this.makeGetRequest<AlternativeDTO[]>(`/alternatives/${tlId}`)
+    getAlternatives(tlId: number): Promise<EitherMsg<AlternativesDTO[]>> {
+        return this.makeGetRequest<AlternativesDTO[]>(`/alternatives/${tlId}`)
     }
 
     getAdminCounts(): Promise<EitherMsg<string>> {

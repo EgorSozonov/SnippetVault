@@ -13,13 +13,15 @@ public class SnippetDTO {
     public int rightTlId {get; set;}
 }
 
+public class AlternativesDTO {
+    public AlternativeDTO primary {get; set;}
+    public AlternativeDTO[] rows {get; set;}
+}
+
 public class AlternativeDTO {
-    public int primaryId {get; set;}
-    public string primaryCode {get; set;}
-    public int primaryScore {get; set;}
-    public int alternativeId {get; set;}
-    public string alternativeCode {get; set;}
-    public int alternativeScore {get; set;}
+    public int id {get; set;}
+    public string code {get; set;}
+    public int score {get; set;}
     public DateTime tsUpload {get; set;}
 }
 

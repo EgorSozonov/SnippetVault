@@ -1,4 +1,4 @@
-import AlternativeDTO from "../core/types/dto/AlternativeDTO"
+import { AlternativesDTO } from "../core/types/dto/AlternativeDTO"
 import LanguageGroupedDTO from "../core/types/dto/LanguageGroupedDTO"
 import LanguageGroupDTO from "../core/types/dto/LanguageGroupDTO"
 import LanguageDTO from "../core/types/dto/LanguageDTO"
@@ -19,7 +19,7 @@ type IClient = {
     getLanguageGroups: () => Promise<EitherMsg<LanguageGroupDTO[]>>
     getProposals: () => Promise<EitherMsg<ProposalDTO[]>>
     getTasks: (tgId: number) => Promise<EitherMsg<TaskDTO[]>>
-    getAlternatives: (tlId: number) => Promise<EitherMsg<AlternativeDTO[]>>
+    getAlternatives: (tlId: number) => Promise<EitherMsg<AlternativesDTO[]>>
     getAdminCounts: () => Promise<EitherMsg<string>>
     proposalCreate: (prop: string, languageId: number, taskId: number, headers: SignInSuccessDTO) => Promise<string>
     proposalApprove: (snId: number, headers: SignInSuccessDTO) => Promise<string>

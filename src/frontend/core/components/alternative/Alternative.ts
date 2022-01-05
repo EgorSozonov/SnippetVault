@@ -1,7 +1,7 @@
 import "./Alternative.css"
 import { html } from "htm/react"
 import { FunctionComponent, useContext, useState } from "react"
-import AlternativeDTO from "../../types/dto/AlternativeDTO"
+import { AlternativeDTO } from "../../types/dto/AlternativeDTO"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateFormat"
 import CommentDTO from "../../types/dto/CommentDTO"
@@ -10,7 +10,7 @@ import { StoreContext } from "../../App"
 
 
 type Props = {
-    alternative: AlternativeDTO,
+    alternative: AlternativeDTO | null,
 }
 
 const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) => {
@@ -34,14 +34,14 @@ const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) =>
     return html`                 
         <div class="alternativeItem">
             <div class="alternativeItemCode">
-                    ${alternative.snippetCode}                
+                    ${alternative !== null && alternative.code}                
             </div>
             <div class="alternativeItemHeader">
-                // <span>
-                //     Upload date: ${fmtDt(alternative.tsUpload)}
-                // </span>
                 <span>
-                    Votes: ${alternative.score}
+                     Upload date: alternative.tsUpload
+                </span>
+                <span>
+                    Votes: ${alternative !== null && alternative.score}
                 </span>
             </div>            
             <div class="alternativeItemFooter">
@@ -55,18 +55,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) =>
             ${isShowingComments === true &&
                 html`
                 <div class="alternativeItemComments">
-                    <ol>
-                    ${alternative.comments.map((comm: CommentDTO, idx: number) =>{
-                        return html`<li key=${idx} class="alternativeItemCommentsComment">
-                            <div>
-                                <span class="alternativeItemCommentsAuthor">[${fmtDt(comm.tsUpload)}] ${comm.authorName} 
-                                </span>
-                            </div>
-                            <div class="alternativeItemCommentsText">${comm.text}</div>
-                        </li>
-                        `
-                    })}
-                    </ol>
+                    
                     
                     <div onClick=${flipReply}>
                         <span class="alternativeItemButton">A</span>Add a comment

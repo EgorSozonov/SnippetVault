@@ -6,7 +6,7 @@ import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import IClient from "../../../ports/IClient"
 import { fetchFromClient } from "../../utils/Client"
-import AlternativeDTO from "../../types/dto/AlternativeDTO"
+import { AlternativeDTO } from "../../types/dto/AlternativeDTO"
 import { observer } from "mobx-react-lite"
 import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
@@ -14,30 +14,31 @@ import AlternativePrimary from "./AlternativePrimary"
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {
     const { tlId, langId } = useParams<{ tlId: string, langId: string, }>()
-    if (!tlId || !langId) return (html`<></>`)
+    if (!tlId || !langId) return (html`<div></div>`)
 
     const tlIdNum: number = parseInt(tlId) || -1
     const langIdNum: number = parseInt(langId) || -1
-
+    if (tlIdNum < 0 || langIdNum < 0) return (html`<div></div>`)
     const state = useContext<MainState>(StoreContext)
     const client: IClient = state.app.client
-    const lang = state.app.languages.find(x => x.id === langIdNum)
-    if (!lang) return (html`<></>`)
-
+    const lang = state.app.languages.find(x => x.id === langIdNum) || null
+    
     
     useEffect(() => {
-        fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
+        if (lang === null) {
+            fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
+        }
         fetchFromClient(client.getAlternatives(tlIdNum), state.app.setAlternatives)
     }, [])
-
     
-    const indPrimaryAlternative = state.app.alternatives.findIndex(x => x.isPrimary === true)
-    const primaryAlternative = indPrimaryAlternative > -1 ? state.app.alternatives[indPrimaryAlternative] : null
-    const nonPrimaryAlternatives = state.app.alternatives.filter((x, idx) => idx !== indPrimaryAlternative)
+    const alternatives = state.app.alternatives.length > 0 ? state.app.alternatives[0] : null
+    if (alternatives === null) return (html`<div></div>`)
+    const primaryAlternative = alternatives.primary
+    const nonPrimaryAlternatives = alternatives.rows
         
     return html`                         
         <div class="alternativeBody">
-            <${AlternativePrimary} primaryAlternative=${primaryAlternative} lang=${lang} />
+            <${AlternativePrimary} primaryAlternative=${primaryAlternative} key=${0} lang=${lang} />
             ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
                 return html`<${Alternative} key=${idx} alternative=${alt} />`
             })}

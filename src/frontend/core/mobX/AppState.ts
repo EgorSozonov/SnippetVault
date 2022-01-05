@@ -3,7 +3,7 @@ import SelectChoice from "../types/SelectChoice"
 import TaskGroupDTO from "../types/dto/TaskGroupDTO"
 import SnippetDTO from "../types/dto/SnippetDTO"
 import IClient from "../../ports/IClient"
-import AlternativeDTO from "../types/dto/AlternativeDTO"
+import { AlternativesDTO } from "../types/dto/AlternativeDTO"
 import LanguageGroupDTO from "../types/dto/LanguageGroupDTO"
 import SelectGroup from "../types/SelectGroup"
 import LanguageDTO from "../types/dto/LanguageDTO"
@@ -38,7 +38,7 @@ export default class AppState {
     
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
 
-    public alternatives: IObservableArray<AlternativeDTO> = observable.array([])
+    public alternatives: IObservableArray<AlternativesDTO> = observable.array([])
     public client: IClient = new HttpClient()
 
     constructor() {
@@ -112,7 +112,7 @@ export default class AppState {
 
 
 
-    setAlternatives = action((newValue: AlternativeDTO[]): void => {
+    setAlternatives = action((newValue: AlternativesDTO[]): void => {
         this.alternatives = observable.array(newValue)
     })
 }

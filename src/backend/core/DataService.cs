@@ -1,5 +1,7 @@
 namespace SnippetVault {
-using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
 
 public class DataService : IDataService {
@@ -54,8 +56,37 @@ public class DataService : IDataService {
         return await st.proposalsGet();
     }
 
-    public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId){
-        return await st.alternativesForTLGet(taskLanguageId);
+    public async Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId){
+        var allAlternatives = await st.alternativesForTLGet(taskLanguageId);
+        
+        if (allAlternatives is Success<AlternativeDTO> succ) {
+            var uniques = new HashSet<int>();
+            AlternativeDTO primary = null;
+            int primaryId = -1;
+            foreach (var alt in succ.vals) {
+                if (uniques.Contains(alt.id)) {
+                    primary = alt;
+                    primaryId = alt.id;
+                    break;
+                }
+                uniques.Add(alt.id);
+            }
+            if (primary != null) {
+                return new Success<AlternativesDTO>(
+                    new List<AlternativesDTO>() {
+                        new AlternativesDTO() {
+                            primary = primary,
+                            rows = succ.vals.Where(x => x.id != primaryId).ToArray(),
+                        }
+                    }
+                );
+            } else {
+                return new Err<AlternativesDTO>("Error: no primary alternative was found");
+            }
+        } else {
+            return new Err<AlternativesDTO>("Error: no alternatives found");
+        }
+        
     }
 
     public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
@@ -139,7 +170,7 @@ public interface IDataService {
     Task<int> snippetDecline(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
     Task<ReqResult<ProposalDTO>> proposalsGet();
-    Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);    
+    Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId);    
 
     Task<ReqResult<LanguageDTO>> languagesGet();
     Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
