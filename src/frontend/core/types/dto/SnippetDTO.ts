@@ -1,4 +1,4 @@
-type SnippetDTO = {
+export type SnippetDTO = {
     leftCode: string,
     leftId: number,
     leftTlId: number,
@@ -9,4 +9,32 @@ type SnippetDTO = {
     rightTlId: number,
 }
 
-export default SnippetDTO
+export type ProposalDTO = {
+    proposalId: number,
+    proposalCode: string,
+    authorId: number,
+    author: string,
+    taskName: string,
+    languageName: string,
+    tsUpload: Date,
+}
+
+export type ProposalCreateDTO = {
+    langId: number,
+    taskId: number,
+    content: string,
+}
+
+export type AlternativesDTO = {
+    primary: AlternativeDTO,
+    rows: AlternativeDTO[],
+}
+
+export type AlternativeDTO = {
+    id: number,
+    code: string,
+    score: number,
+    tsUpload: Date,
+}
+
+

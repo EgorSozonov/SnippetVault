@@ -15,9 +15,10 @@ public record GetQueries {
     public string comment {get; init;}
     public string userAuthentData {get; init;}
     public string userAuthor {get; init;}
-    public string userAdminData {get;init;}
-    public string userAdminAuthor {get;init;}
+    public string userAdminData {get; init;}
+    public string userAdminAuthor {get; init;}
     public string statsForAdmin {get; init;}
+    public string userProfile {get; init;}
 }
 
 public class GetPGQueries  {
@@ -120,6 +121,8 @@ public class GetPGQueries  {
                 	SUM(CASE WHEN s.status=1 THEN 1 ELSE 0 END) AS ""proposalCount""
                 FROM sv.snippet s
                 LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;",
+            userProfile = @"
+            ",
         };
     }
 }

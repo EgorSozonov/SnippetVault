@@ -89,4 +89,11 @@ public class StatsDTO {
     public int proposalCount {get; set;}
 }
 
+public class ProfileDTO {
+    public int proposalCount {get; set;}
+    public int approvedCount {get; set;}
+    public int primaryCount {get; set;}
+    public DateTime tsJoined {get; set;}
+}
+
 }

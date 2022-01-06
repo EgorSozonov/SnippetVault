@@ -228,6 +228,13 @@ public class MainController : Controller {
         await applyPostRequest(api.commentCreate(dto, userId), HttpContext.Response);        
     }
 
+    [HttpGet]
+    [Route("user/profile")]
+    [ServiceFilter(typeof(AuthorizeFilter))]
+    public async Task userProfile([FromRoute] int userId) {        
+        await applyPostRequest(api.userProfile(userId), HttpContext.Response);        
+    }
+
     #endregion
 
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {
