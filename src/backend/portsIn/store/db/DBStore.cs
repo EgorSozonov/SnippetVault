@@ -56,7 +56,6 @@ public class DBStore : IStore {
         }
     }
 
-
     public async Task<int> proposalCreate(CreateProposalDTO dto, int authorId) {
         await using (var cmdTL = new NpgsqlCommand(db.postQueries.taskLanguageCreate, db.conn)) { 
             cmdTL.Parameters.AddWithValue("taskId", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskId);
@@ -122,6 +121,14 @@ public class DBStore : IStore {
         }
     }
 
+    public async Task<ReqResult<LanguageGroupDTO>> languageGroupsGet() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.languageGroups, db.conn)) { 
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<LanguageGroupDTO>(reader);
+            }
+        }
+    }
+
     public async Task<ReqResult<TaskGroupDTO>> taskGroupsGet() {
         await using (var cmd = new NpgsqlCommand(db.getQueries.taskGroup, db.conn)) { 
             cmd.Prepare();
@@ -147,12 +154,11 @@ public class DBStore : IStore {
 
     public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2) {
         return await taskGroupsForArrayLanguages(new int[] {lang1, lang2});
-
     }
 
     public async Task<int> taskGroupCU(TaskGroupCUDTO dto) {
         return await createOrUpdate<TaskGroupCUDTO>(db.postQueries.taskGroupCreate, db.postQueries.taskGroupUpdate, taskGroupParamAdder, dto);
-    }   
+    }
 
     public async Task<int> taskCU(TaskCUDTO dto) {
         return await createOrUpdate<TaskCUDTO>(db.postQueries.taskCreate, db.postQueries.taskUpdate, taskParamAdder, dto);

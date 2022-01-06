@@ -1,4 +1,5 @@
 import { action, makeAutoObservable } from "mobx"
+import { ProfileDTO } from "../types/dto/UserDTO"
 import UserStatus from "../types/UserStatus"
 
 
@@ -7,6 +8,7 @@ export default class UserState {
     public userName: string = ""
     public userId: number = -1
     public userStatus: UserStatus = "admin" // TODO guest
+    public profile: ProfileDTO | null = null
 
     constructor() {
         makeAutoObservable(this)
@@ -39,5 +41,9 @@ export default class UserState {
         this.accessToken = ""
         this.userName = ""
         this.userId = -1
+    })
+
+    setProfile = action((newValue: ProfileDTO[]): void => {
+        this.profile = newValue.length === 1 ? newValue[0] : null
     })
 }

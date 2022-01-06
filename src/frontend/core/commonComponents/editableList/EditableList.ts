@@ -15,6 +15,7 @@ type Props<T extends IStringKeyed & IHasName> = {
 }
 
 const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabilities, }: Props<T>) => {
+    if (!values || values.length < 1) return html`<div></div>`
     const [openIdx, setOpenIdx] = useState(-1)
     const [isOpenNew, setOpenNew] = useState(false)
 

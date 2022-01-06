@@ -16,6 +16,30 @@
 }
 
 
+.adminHeaderButton {
+    cursor: pointer;
+    width: 150px;
+    height: 3em;
+    color: hsl(0, 0%, 94%);
+    border-style: groove;
+    border-width: 1px;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.adminHeaderPanel {
+    display: flex;
+    color: white;
+    justify-content: space-evenly;
+}
+
+.adminHeaderPanel > div {
+    margin-top: 1rem;
+}
+
 /* Proposals */
 .newProposals {
     font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;

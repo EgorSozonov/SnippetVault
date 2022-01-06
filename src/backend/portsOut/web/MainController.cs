@@ -99,6 +99,13 @@ public class MainController : Controller {
     }
 
     [HttpGet]
+    [Route("languageGroups")]
+    public async Task languageGroups() {
+        var result = await api.languageGroupsGet();
+        await sendQueryResult<LanguageGroupDTO>(result, HttpContext.Response);
+    }
+
+    [HttpGet]
     [Route("taskGroups")]
     public async Task taskGroup() {
         var result = await api.taskGroupsGet();

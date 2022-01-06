@@ -13,10 +13,6 @@ import PATHS from "../../params/Path"
 const Header: React.FunctionComponent = observer(() => {
     const state = useContext<MainState>(StoreContext)
 
-    const signOutHandler = () => {
-        state.user.signOut()
-    }
-
     return (html `
         <nav>
             <div class="headerContainer">
@@ -49,8 +45,7 @@ const Header: React.FunctionComponent = observer(() => {
                                 <div class="headerProfileButton">
                                     Profile
                                 </div>
-                            <//> 
-                            <div><button onClick=${signOutHandler}>Sign out</button></div>
+                            <//>                             
                         </div>
                     `
                 }

@@ -3,10 +3,10 @@ import { NavLink } from "react-router-dom"
 import PATHS from "../../params/Path"
 import { html } from "htm/react"
 import EditableList from "../../commonComponents/editableList/EditableList"
-import LanguageGroupDTO from "../../types/dto/LanguageGroupDTO"
 import { Editability } from "../../types/Editability"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
+import { LanguageGroupDTO } from "../../types/dto/AuxDTO"
 
 
 const ListLGs = (props: any) => EditableList<LanguageGroupDTO>(props)

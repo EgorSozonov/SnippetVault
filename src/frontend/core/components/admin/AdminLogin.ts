@@ -3,7 +3,7 @@ import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
 import MainState from "../../mobX/MainState"
-import { SignInAdminDTO, SignInDTO } from "../../types/dto/AuthDTO"
+import { SignInAdminDTO } from "../../types/dto/AuthDTO"
 
 
 const AdminLogin: FunctionComponent = observer(({}: any) => {

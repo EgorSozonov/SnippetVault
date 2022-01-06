@@ -9,6 +9,7 @@ public interface IStore {
     Task<ReqResult<BareSnippetDTO>> snippetGet(int snId);
     Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
     Task<ReqResult<LanguageDTO>> languagesGet();
+    Task<ReqResult<LanguageGroupDTO>> languageGroupsGet();
     Task<ReqResult<TaskGroupDTO>> taskGroupsGet();
     Task<ReqResult<ProposalDTO>> proposalsGet();
     Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup);

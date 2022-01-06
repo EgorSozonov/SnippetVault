@@ -3,7 +3,7 @@ import  { BrowserRouter, Routes, Route } from "react-router-dom"
 import PATHS from "../../params/Path"
 import SnippetPg from "../snippet/SnippetPg"
 import Admin from "../admin/Admin"
-import { html } from 'htm/react'
+import { html } from "htm/react"
 import TaskGroup from "../admin/TaskGroup"
 import LangGroup from "../admin/LangGroup"
 import NewProposal from "../admin/NewProposal"

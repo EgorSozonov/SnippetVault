@@ -1,4 +1,3 @@
-import SnippetDTO from "../../types/dto/SnippetDTO0"
 import Header from "./Header"
 import TextInput from "./TextInput"
 import "./snippet.css"
@@ -15,7 +14,8 @@ import { groupLanguages, languageListOfGrouped, } from "../../utils/languageGrou
 import { checkNonempty } from "../../utils/StringUtils"
 import { idOf, isStateOK, stringOf } from "../../types/SnippetState"
 import EitherMsg from "../../types/EitherMsg"
-import LanguageGroupedDTO from "../../types/dto/LanguageGroupedDTO"
+import { LanguageGroupedDTO } from "../../types/dto/AuxDTO"
+import { SnippetDTO } from "../../types/dto/SnippetDTO"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {

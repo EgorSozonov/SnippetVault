@@ -6,7 +6,6 @@ import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import IClient from "../../../ports/IClient"
 import { fetchFromClient } from "../../utils/Client"
-
 import { observer } from "mobx-react-lite"
 import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
@@ -23,8 +22,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
     const client: IClient = state.app.client
     const lang = state.app.languages.find(x => x.id === langIdNum) || null
-    
-    
+        
     useEffect(() => {
         if (lang === null) {
             fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
@@ -44,9 +42,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
                 return html`<${Alternative} key=${idx} alternative=${alt} />`
             })}
             <div class="alternativeFooter"></div>
-        </div>
-
-        
+        </div>        
     `
 })
 

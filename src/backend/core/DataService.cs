@@ -131,6 +131,10 @@ public class DataService : IDataService {
         return await st.languageGroupCU(dto);            
     }
 
+    public async Task<ReqResult<LanguageGroupDTO>> languageGroupsGet() {
+        return await st.languageGroupsGet();
+    }
+
     public async Task<int> languageCU(LanguageCUDTO dto) {
         if (string.IsNullOrEmpty(dto.name) || string.IsNullOrEmpty(dto.code)) return -1;
         return await st.languageCU(dto);
@@ -192,6 +196,7 @@ public interface IDataService {
     Task<ReqResult<LanguageDTO>> languagesGet();
     Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
     Task<int> languageGroupCU(LanguageGroupCUDTO dto);
+    Task<ReqResult<LanguageGroupDTO>> languageGroupsGet();
     Task<int> languageCU(LanguageCUDTO dto);
     Task<ReqResult<StatsDTO>> statsForAdmin();
 

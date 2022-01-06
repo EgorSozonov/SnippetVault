@@ -6,6 +6,7 @@ public record GetQueries {
     public string snippetsByCode {get; init;}
     public string snippet {get; init;}
     public string languages {get; init;}
+    public string languageGroups {get; init;}
     public string languagesGrouped {get; init;}
     public string task {get; init;}
     public string taskGroup {get; init;}
@@ -73,6 +74,9 @@ public class GetPGQueries  {
                 FROM sv.language l
 				JOIN sv.""languageGroup"" lg ON l.""languageGroupId""=lg.id;",                 
             task=@"SELECT id, name, description FROM sv.""task"" WHERE ""taskGroupId""=@tgId;",
+            languageGroups=@"
+                SELECT id, name FROM sv.""languageGroup"";
+            ",
             taskGroup= @"SELECT id, name, code FROM sv.""taskGroup"" WHERE ""isDeleted""=0::bit;",
             taskGroupsForLanguages= @"
                 SELECT DISTINCT tg.id, tg.name, tg.code FROM sv.task t
@@ -132,8 +136,8 @@ public class GetPGQueries  {
                 	SUM(CASE WHEN s.status = 3 THEN 1 ELSE 0 END) AS ""approvedCount"",
                 	SUM(CASE WHEN s.status = 3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount""
                 FROM sv.snippet s
-                LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id
-                WHERE ""authorId""=@userId;
+                LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId"" = s.id
+                WHERE ""authorId"" = @userId;
             ",
             userData = @"SELECT name, ""dateJoined"" AS ""tsJoined"" FROM sv.user WHERE id=@userId;",
         };

@@ -1,5 +1,5 @@
 import "./snippet.css"
-import { html } from 'htm/react'
+import { html } from "htm/react"
 import { FunctionComponent, useContext, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import MainState from "../../mobX/MainState"

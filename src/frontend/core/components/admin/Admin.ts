@@ -2,18 +2,16 @@ import { FunctionComponent, useContext, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import EditableList from "../../commonComponents/editableList/EditableList"
 import PATHS from "../../params/Path"
-import TaskGroupDTO from "../../types/dto/TaskGroupDTO"
 import NewProposal from "./NewProposal"
 import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
 import MainState from "../../mobX/MainState"
-import LanguageGroupDTO from "../../types/dto/LanguageGroupDTO"
 import { Editability } from "../../types/Editability"
 import { fetchFromClient } from "../../utils/Client"
-import LanguageDTO from "../../types/dto/LanguageDTO"
 import IClient from "../../../ports/IClient"
 import AdminLogin from "./AdminLogin"
+import { LanguageGroupDTO, LanguageDTO, TaskGroupDTO } from "../../types/dto/AuxDTO"
 
 
 const ListTaskGroups = (props: any) => EditableList<TaskGroupDTO>(props)
@@ -54,8 +52,9 @@ const Admin: FunctionComponent = observer(({}: any) => {
     const client: IClient = state.app.client
     useEffect(() => {
         fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
-        fetchFromClient(state.app.client.getTaskGroups(), state.app.setTaskGroups)
-        fetchFromClient(state.app.client.getLanguageGroups(), state.app.setLanguageGroups)
+        fetchFromClient(client.getTaskGroups(), state.app.setTaskGroups)
+        fetchFromClient(client.getLanguageGroups(), state.app.setLanguageGroups)
+        fetchFromClient(client.getAdminStats(), state.app.setStats)
     }, [])
 
     return html`
@@ -64,12 +63,23 @@ const Admin: FunctionComponent = observer(({}: any) => {
             ? html`
                     <${AdminLogin} />
                 `
-            : html`
-                    <div class="adminSignOutButton" onClick=${state.user.signOut}>(sign out)</div>
-                    <div>
-                        <${NavLink} to=${PATHS["snippet"].url}>
-                            <div class="adminHeader">Back to snippets</div>
-                        <//>
+            : html`                    
+                    <div class="adminHeaderPanel">
+                        <div>
+                            ${state.app.stats !== null && 
+                                html`
+                                    <div>Total proposals: ${state.app.stats.proposalCount}</div>
+                                    <div>Of those proposals, approved primary snippets: ${state.app.stats.primaryCount}</div>
+                                    <div>Approved alternatives: ${state.app.stats.alternativeCount}</div>
+                                    <div>Active users count: ${state.app.stats.userCount}</div>
+                                `}
+                        </div>
+                        <div>
+                            <${NavLink} to=${PATHS["snippet"].url}>
+                                <div class="adminHeaderButton">Back to snippets</div>
+                            <//>
+                        </div>
+                        <div class="adminHeaderButton" onClick=${state.user.signOut}>(sign out)</div>
                     </div>
                     <${ListTaskGroups} values=${state.app.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"></EditableList>
                     <${ListLanguageGroups} values=${state.app.languageGroups} editabilities=${editabilitiesLanguageGroup} title="Language Groups"></EditableList>

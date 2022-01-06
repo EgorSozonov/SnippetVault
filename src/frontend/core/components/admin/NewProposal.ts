@@ -1,5 +1,4 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react"
-import ProposalDTO from "../../types/dto/ProposalDTO"
 import "./admin.css"
 import { html } from "htm/react"
 import { fetchFromClient } from "../../utils/Client"
@@ -10,6 +9,7 @@ import IClient from "../../../ports/IClient"
 import { fmtDt } from "../../utils/DateFormat"
 import Dialog from "../../commonComponents/dialog/Dialog"
 import DialogState from "../../commonComponents/dialog/DialogState"
+import { ProposalDTO } from "../../types/dto/SnippetDTO"
 
 
 const NewProposal: FunctionComponent = observer(() => {
