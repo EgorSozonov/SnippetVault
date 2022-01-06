@@ -244,6 +244,12 @@ public class DBStore : IStore {
         }
     }
 
+    public async Task<long> userCount() {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.userCount, db.conn)) {
+            return (long)cmd.ExecuteScalar();            
+        }
+    }
+
     public async Task<int> userVote(int userId, int tlId, int snId) {
         await using (var cmd = new NpgsqlCommand(db.postQueries.vote, db.conn)) { 
             cmd.Parameters.AddWithValue("userId", NpgsqlTypes.NpgsqlDbType.Integer, userId);

@@ -35,7 +35,7 @@ public class StatsDTO {
     public int primaryCount {get; set;}
     public int alternativeCount {get; set;}
     public int proposalCount {get; set;}
-    public int userCount {get; set;}
+    public long userCount {get; set;}
 }
 
 }

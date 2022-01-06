@@ -25,6 +25,7 @@ public interface IStore {
     Task<int> languageGroupCU(LanguageGroupCUDTO dto);
     Task<int> languageCU(LanguageCUDTO dto);
     Task<ReqResult<StatsDTO>> statsForAdmin();
+    Task<long> userCount();
 
     Task<ReqResult<AuthenticateIntern>> userAuthentGet(string userName);
     Task<ReqResult<AuthorizeIntern>> userAuthorGet(int userId);

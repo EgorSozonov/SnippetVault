@@ -18,6 +18,7 @@ public record GetQueries {
     public string userAdminData {get; init;}
     public string userAdminAuthor {get; init;}
     public string statsForAdmin {get; init;}
+    public string userCount {get; init;}
     public string userProfile {get; init;}
     public string userData {get; init;}
 }
@@ -122,6 +123,9 @@ public class GetPGQueries  {
                 	SUM(CASE WHEN s.status=1 THEN 1 ELSE 0 END) AS ""proposalCount""
                 FROM sv.snippet s
                 LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;",
+            userCount = @"
+                SELECT COUNT(*)
+                FROM sv.user WHERE ""isDeleted"" = 0::bit;",
             userProfile = @"
                 SELECT
                 	SUM(CASE WHEN s.status IN (1, 3) THEN 1 ELSE 0 END) AS ""proposalCount"",

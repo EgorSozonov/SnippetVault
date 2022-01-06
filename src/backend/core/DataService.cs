@@ -164,6 +164,10 @@ public class DataService : IDataService {
 
     public async Task<ReqResult<StatsDTO>> statsForAdmin() {        
         var result = await st.statsForAdmin();
+        var userCount = await st.userCount();
+        if (result is Success<StatsDTO> stats) {
+            stats.vals[0].userCount = userCount;
+        }
         return result;
     }
 
