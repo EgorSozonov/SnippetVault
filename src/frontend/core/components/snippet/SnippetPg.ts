@@ -1,4 +1,4 @@
-import SnippetDTO from "../../types/dto/SnippetDTO"
+import SnippetDTO from "../../types/dto/SnippetDTO0"
 import Header from "./Header"
 import TextInput from "./TextInput"
 import "./snippet.css"

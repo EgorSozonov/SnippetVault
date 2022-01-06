@@ -1,5 +1,5 @@
 import AlternativeDTO from "../../core/types/dto/AlternativeDTO"
-import SnippetDTO from "../../core/types/dto/SnippetDTO"
+import SnippetDTO from "../../core/types/dto/SnippetDTO0"
 import TaskDTO from "../../core/types/dto/TaskDTO"
 
 export const mockData = {

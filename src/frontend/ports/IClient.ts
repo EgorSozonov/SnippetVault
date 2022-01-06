@@ -3,7 +3,7 @@ import LanguageGroupedDTO from "../core/types/dto/LanguageGroupedDTO"
 import LanguageGroupDTO from "../core/types/dto/LanguageGroupDTO"
 import LanguageDTO from "../core/types/dto/LanguageDTO"
 import ProposalDTO from "../core/types/dto/ProposalDTO"
-import SnippetDTO from "../core/types/dto/SnippetDTO"
+import SnippetDTO from "../core/types/dto/SnippetDTO0"
 import TaskDTO from "../core/types/dto/TaskDTO"
 import TaskGroupDTO from "../core/types/dto/TaskGroupDTO"
 import EitherMsg from "../core/types/EitherMsg"
@@ -28,6 +28,7 @@ type IClient = {
 
     userRegister: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
+    userProfile: (userId: number) => Promise<EitherMsg<ProfileDTO[]>>
     adminSignIn: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
 }
 
