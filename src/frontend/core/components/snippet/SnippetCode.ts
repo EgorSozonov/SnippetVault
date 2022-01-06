@@ -27,7 +27,7 @@ function SnippetCode({content, isRight, langId, tlId, } : Props) {
             <div title="Alternative versions" class="commentButton">
                 A
             </div>
-        <//>    
+        <//> 
     `        
     return html`
         ${isRight === true

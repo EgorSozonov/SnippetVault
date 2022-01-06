@@ -1,3 +1,14 @@
+export type TaskDTO = {
+    id: number,
+    name: string,
+}
+
+export type TaskGroupDTO = {
+    id: number,
+    name: string,
+    code: string,
+}
+
 export type LanguageDTO = {
     id: number,
     name: string,
@@ -17,15 +28,4 @@ export type LanguageGroupedDTO = {
     code: string,
     languageGroup: string,
     languageGroupOrder: number,
-}
-
-export type TaskGroupDTO = {
-    id: number,
-    name: string,
-    code: string,
-}
-
-export type Task = {
-    id: number,
-    name: string,
 }

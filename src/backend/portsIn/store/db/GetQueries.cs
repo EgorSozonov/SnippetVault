@@ -19,6 +19,7 @@ public record GetQueries {
     public string userAdminAuthor {get; init;}
     public string statsForAdmin {get; init;}
     public string userProfile {get; init;}
+    public string userData {get; init;}
 }
 
 public class GetPGQueries  {
@@ -122,7 +123,15 @@ public class GetPGQueries  {
                 FROM sv.snippet s
                 LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;",
             userProfile = @"
+                SELECT
+                	SUM(CASE WHEN s.status IN (1, 3) THEN 1 ELSE 0 END) AS ""proposalCount"",
+                	SUM(CASE WHEN s.status = 3 THEN 1 ELSE 0 END) AS ""approvedCount"",
+                	SUM(CASE WHEN s.status = 3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount""
+                FROM sv.snippet s
+                LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id
+                WHERE ""authorId""=@userId;
             ",
+            userData = @"SELECT name, ""dateJoined"" AS ""tsJoined"" FROM sv.user WHERE id=@userId;",
         };
     }
 }

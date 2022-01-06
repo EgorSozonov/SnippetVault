@@ -11,3 +11,10 @@ export type ProfileDTO = {
     primaryCount: number,
     tsJoined: Date,
 }
+
+export type StatsDTO = {
+    primaryCount: number,
+    alternativeCount: number,
+    proposalCount: number,
+    userCount: number,
+}

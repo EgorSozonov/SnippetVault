@@ -6,6 +6,8 @@ import { useContext } from "react"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import { observer } from "mobx-react-lite"
+import { NavLink } from "react-router-dom"
+import PATHS from "../../params/Path"
 
 
 const Header: React.FunctionComponent = observer(() => {
@@ -43,6 +45,11 @@ const Header: React.FunctionComponent = observer(() => {
                     html`
                         <div class="headerUsername headerRightmost choiceInput">
                             <div>${state.user.userName}</div>
+                            <${NavLink} exact to=${`${PATHS["profile"].urlPrefix}`}>
+                                <div class="headerProfileButton">
+                                    Profile
+                                </div>
+                            <//> 
                             <div><button onClick=${signOutHandler}>Sign out</button></div>
                         </div>
                     `

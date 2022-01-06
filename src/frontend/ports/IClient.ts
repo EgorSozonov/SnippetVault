@@ -1,13 +1,8 @@
-import { AlternativesDTO } from "../core/types/dto/AlternativeDTO"
-import LanguageGroupedDTO from "../core/types/dto/LanguageGroupedDTO"
-import LanguageGroupDTO from "../core/types/dto/LanguageGroupDTO"
-import LanguageDTO from "../core/types/dto/LanguageDTO"
-import ProposalDTO from "../core/types/dto/ProposalDTO"
-import SnippetDTO from "../core/types/dto/SnippetDTO0"
-import TaskDTO from "../core/types/dto/TaskDTO"
-import TaskGroupDTO from "../core/types/dto/TaskGroupDTO"
 import EitherMsg from "../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../core/types/dto/AuthDTO"
+import { LanguageDTO, LanguageGroupDTO, LanguageGroupedDTO, TaskDTO, TaskGroupDTO } from "../core/types/dto/AuxDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO } from "../core/types/dto/SnippetDTO"
+import { ProfileDTO, StatsDTO } from "../core/types/dto/UserDTO"
 
 
 type IClient = {
@@ -20,7 +15,7 @@ type IClient = {
     getProposals: () => Promise<EitherMsg<ProposalDTO[]>>
     getTasks: (tgId: number) => Promise<EitherMsg<TaskDTO[]>>
     getAlternatives: (tlId: number) => Promise<EitherMsg<AlternativesDTO[]>>
-    getAdminCounts: () => Promise<EitherMsg<string>>
+    getAdminStats: () => Promise<EitherMsg<StatsDTO[]>>
     proposalCreate: (prop: string, languageId: number, taskId: number, headers: SignInSuccessDTO) => Promise<string>
     proposalApprove: (snId: number, headers: SignInSuccessDTO) => Promise<string>
     proposalDecline: (snId: number, headers: SignInSuccessDTO) => Promise<string>
@@ -30,6 +25,7 @@ type IClient = {
     userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     userProfile: (userId: number) => Promise<EitherMsg<ProfileDTO[]>>
     adminSignIn: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
+
 }
 
 // actionOK: (v: SnippetDTO[]) => void, action: (m: string) => void)

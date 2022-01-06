@@ -33,6 +33,8 @@ public interface IStore {
     Task<int> userUpdateExpiration(int userId, string newToken, DateTime newDate);
     Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration);
     Task<int> userVote(int userId, int tlId, int snId);
+    Task<ReqResult<ProfileDTO>> userProfile(int userId);
+    Task<ReqResult<UserDTO>> userData(int userId);
     Task<int> commentCreate(int userId, int snId, string content, DateTime ts);
 }
 

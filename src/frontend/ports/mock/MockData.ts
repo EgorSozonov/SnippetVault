@@ -1,6 +1,6 @@
-import AlternativeDTO from "../../core/types/dto/AlternativeDTO"
-import SnippetDTO from "../../core/types/dto/SnippetDTO0"
-import TaskDTO from "../../core/types/dto/TaskDTO"
+import { TaskDTO } from "../../core/types/dto/AuxDTO"
+import { SnippetDTO, AlternativeDTO, AlternativesDTO } from "../../core/types/dto/SnippetDTO"
+
 
 export const mockData = {
     snippets: [
@@ -112,64 +112,48 @@ export const mockData = {
         },                
     ],
 
+    primaryAlternative: {id: 5, code: "differentFoo(blahBlach[4]);", score: 10,                          
+            tsUpload: new Date(2021, 12, 2), },
+        
     alternatives: [
-        {tlId: 1, value: {snippetId: 5, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
-            isPrimary: false, comments: [
-                {
-                    authorId: 1,
-                    authorName: "John Doe",
-                    text: "Text of comment",
-                    tsUpload: new Date(2021, 12, 3),
-                },
-                {
-                    authorId: 2,
-                    authorName: "Jane Martha",
-                    text: "Text of reply",
-                    tsUpload: new Date(2021, 12, 4),
-                },
-                {
-                    authorId: 3,
-                    authorName: "John Doe",
-                    text: "Text of reply to reply",
-                    tsUpload: new Date(2021, 12, 6),
-                }
-            ], 
+        {tlId: 1, value: {id: 5, code: "differentFoo(blahBlach[4]);", score: 10,                          
             tsUpload: new Date(2021, 12, 2), },
         },
-        {tlId: 1, value: {snippetId: 6, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {id: 6, code: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {tlId: 1, value: {snippetId: 7, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
+        {tlId: 1, value: {id: 7, code: "differentFoo(blahBlach[4]);", score: 10, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },
-        {tlId: 1, value: {snippetId: 8, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {id: 8, code: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {tlId: 1, value: {snippetId: 9, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
+        {tlId: 1, value: {id: 9, code: "differentFoo(blahBlach[4]);", score: 10, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },
-        {tlId: 1, value: {snippetId: 10, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {id: 10, code: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {tlId: 1, value: {snippetId: 11, snippetCode: "differentFoo(blahBlach[4]);", score: 10, 
+        {tlId: 1, value: {id: 11, code: "differentFoo(blahBlach[4]);", score: 10, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },
-        {tlId: 1, value: {snippetId: 12, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {id: 12, code: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {tlId: 1, value: {snippetId: 13, snippetCode: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {id: 13, code: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {tlId: 1, value: {snippetId: 14, snippetCode: `foo(blahBlach[4]);\nsfs\nsdf\nsdgsd;`, score: 15, 
+        {tlId: 1, value: {id: 14, code: `foo(blahBlach[4]);\nsfs\nsdf\nsdgsd;`, score: 15, 
             isPrimary: true, comments: [], tsUpload: new Date(2021, 11, 5), },
         },
-        {tlId: 6, value: {snippetId: 15, snippetCode: "foo(blahBlach[4]);", score: 10, 
+        {tlId: 6, value: {id: 15, code: "foo(blahBlach[4]);", score: 10, 
             isPrimary: true, comments: [], tsUpload: new Date(2021, 12, 1), },
         },    
-        {tlId: 6, value: {snippetId: 16, snippetCode: "javaAlternative(blahBlach[6]);", score: 5, 
+        {tlId: 6, value: {id: 16, code: "javaAlternative(blahBlach[6]);", score: 5, 
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },            
     ],
+    userProfile: { proposalCount: 10, approvedCount: 4, primaryCount: 1, tsJoined: new Date()},
 }
 
 export function getMockSnippets(tgId: number, lang1: number, lang2: number): SnippetDTO[] {
@@ -194,6 +178,7 @@ export function getMockTasksByCode(tgCode: string): TaskDTO[] {
     return mockData.tasks.filter(x => x.tgId == tgId).map(y => y.value)
 }
 
-export function getMockAlternatives(tlId: number): AlternativeDTO[] {
-    return mockData.alternatives.filter(x => x.langId == langId && x.taskId == taskId).map(y => y.value)
+export function getMockAlternatives(tlId: number): AlternativesDTO[] {
+    const rows = mockData.alternatives.filter(x => x.tlId === tlId).map(y => y.value)
+    return [{primary: mockData.primaryAlternative, rows, }]
 }

@@ -1,15 +1,11 @@
-import { AlternativesDTO } from "../../core/types/dto/AlternativeDTO"
-import LanguageGroupedDTO from "../../core/types/dto/LanguageGroupedDTO"
-import LanguageGroupDTO from "../../core/types/dto/LanguageGroupDTO"
-import LanguageDTO from "../../core/types/dto/LanguageDTO"
-import ProposalDTO from "../../core/types/dto/ProposalDTO"
-import SnippetDTO from "../../core/types/dto/SnippetDTO0"
-import TaskDTO from "../../core/types/dto/TaskDTO"
-import TaskGroupDTO from "../../core/types/dto/TaskGroupDTO"
+
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
 import {mockData, getMockTasks, getMockAlternatives, getMockSnippets, getMockSnippetsByCode} from "./MockData"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
+import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO } from "../../core/types/dto/AuxDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO } from "../../core/types/dto/SnippetDTO"
+import { StatsDTO } from "../../core/types/dto/UserDTO"
 
 
 class MockClient implements IClient {
@@ -49,8 +45,8 @@ class MockClient implements IClient {
         return this.wrapOK(getMockAlternatives(tlId))
     }
 
-    getAdminCounts(): Promise<EitherMsg<string>> {
-        return this.wrapOK("Counts: bla bla")
+    getAdminStats(): Promise<EitherMsg<StatsDTO[]>> {
+        return this.wrapOK([])
     }
 
     proposalCreate(prop: string, languageId: number, taskId: number, headers: SignInSuccessDTO): Promise<string> {
@@ -79,6 +75,10 @@ class MockClient implements IClient {
 
     adminSignIn(dto: SignInAdminDTO) {
         return this.wrapOK([{userId: 0, accessToken: "", }])
+    }
+
+    userProfile() {
+        return this.wrapOK([mockData.userProfile])
     }
     
     private wrapOK<T>(val: T): Promise<EitherMsg<T>> {

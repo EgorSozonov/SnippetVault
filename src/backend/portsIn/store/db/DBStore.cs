@@ -253,6 +253,24 @@ public class DBStore : IStore {
         }
     }
 
+    public async Task<ReqResult<ProfileDTO>> userProfile(int userId) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.userProfile, db.conn)) { 
+            cmd.Parameters.AddWithValue("userId", NpgsqlTypes.NpgsqlDbType.Integer, userId);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<ProfileDTO>(reader);
+            }
+        }
+    }
+
+    public async Task<ReqResult<UserDTO>> userData(int userId) {
+        await using (var cmd = new NpgsqlCommand(db.getQueries.userData, db.conn)) { 
+            cmd.Parameters.AddWithValue("userId", NpgsqlTypes.NpgsqlDbType.Integer, userId);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<UserDTO>(reader);
+            }
+        }
+    }
+
     public async Task<int> commentCreate(int userId, int snId, string content, DateTime ts) {
         await using (var cmd = new NpgsqlCommand(db.postQueries.commentCreate, db.conn)) { 
             cmd.Parameters.AddWithValue("userId", NpgsqlTypes.NpgsqlDbType.Integer, userId);

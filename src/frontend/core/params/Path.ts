@@ -5,6 +5,7 @@ type Page =
     | "proposal"
     | "taskGroup"
     | "languageGroup"
+    | "profile"
 
 type PagePath = { 
     url: string, 
@@ -23,6 +24,7 @@ const PATHS: Paths = {
     "taskGroup": {description: "Edit task group", url: "/taskGroup/:tgId", urlPrefix: "/taskGroup", },
     "languageGroup": {description: "Edit language group", url: "/languageGroup/:lgId", urlPrefix: "/languageGroup", },
     "admin": {description: "Admin page", url: "/adminning"},
+    "profile": {description: "Profile", url: "/profile"},
 }
 
 export default PATHS

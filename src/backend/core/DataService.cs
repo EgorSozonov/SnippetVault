@@ -89,12 +89,25 @@ public class DataService : IDataService {
         
     }
 
+    #endregion
+
+    #region User
+
     public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
         return await st.commentsGet(snippetId);
     }
 
     public async Task<int> userVote(VoteDTO dto, int userId) {
         return await st.userVote(userId, dto.tlId, dto.snId);
+    }
+
+    public async Task<ReqResult<ProfileDTO>> userProfile(int userId) {
+        var profileIncomplete = await st.userProfile(userId);
+        var userData = await st.userData(userId);
+        if (profileIncomplete is Success<ProfileDTO> prof && userData is Success<UserDTO> usr) {
+            prof.vals[0].tsJoined = usr.vals[0].tsJoined;
+        }
+        return profileIncomplete;
     }
 
     public async Task<int> commentCreate(CommentCUDTO dto, int userId) {
@@ -186,6 +199,7 @@ public interface IDataService {
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2);
     Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
     Task<int> userVote(VoteDTO dto, int userId);
+    Task<ReqResult<ProfileDTO>> userProfile(int userId);
     Task<int> commentCreate(CommentCUDTO dto, int userId);
 
     string homePageGet();

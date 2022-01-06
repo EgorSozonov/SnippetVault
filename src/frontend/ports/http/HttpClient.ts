@@ -1,17 +1,11 @@
 import { AxiosInstance } from "axios"
-import { AlternativesDTO } from "../../core/types/dto/AlternativeDTO"
-import LanguageGroupedDTO from "../../core/types/dto/LanguageGroupedDTO"
-import LanguageGroupDTO from "../../core/types/dto/LanguageGroupDTO"
-import LanguageDTO from "../../core/types/dto/LanguageDTO"
-import ProposalDTO from "../../core/types/dto/ProposalDTO"
-import SnippetDTO from "../../core/types/dto/SnippetDTO0"
-import TaskDTO from "../../core/types/dto/TaskDTO"
-import TaskGroupDTO from "../../core/types/dto/TaskGroupDTO"
 import createClient from "./Client"
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
-import ProposalCreateDTO from "../../core/types/dto/ProposalCreateDTO"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
+import { ProfileDTO, StatsDTO } from "../../core/types/dto/UserDTO"
+import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO } from "../../core/types/dto/AuxDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO } from "../../core/types/dto/SnippetDTO"
 
 
 class HttpClient implements IClient {
@@ -56,8 +50,8 @@ class HttpClient implements IClient {
         return this.makeGetRequest<AlternativesDTO[]>(`/alternatives/${tlId}`)
     }
 
-    getAdminCounts(): Promise<EitherMsg<string>> {
-        return this.makeGetRequest<string>(`/admin/counts`)
+    getAdminStats(): Promise<EitherMsg<StatsDTO[]>> {
+        return this.makeGetRequest<StatsDTO[]>(`/admin/stats`)
     }
 
     proposalCreate(proposal: string, langId: number, taskId: number, headers: SignInSuccessDTO): Promise<string> {
@@ -107,6 +101,10 @@ class HttpClient implements IClient {
 
     adminSignIn(dto: SignInAdminDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
         return this.makePostRequest("/user/signInAdmin", dto)
+    }
+
+    userProfile(): Promise<EitherMsg<ProfileDTO[]>> {
+        return this.makeGetRequest("/user/profile")
     }
 
 

@@ -6,10 +6,11 @@ import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import IClient from "../../../ports/IClient"
 import { fetchFromClient } from "../../utils/Client"
-import { AlternativeDTO } from "../../types/dto/AlternativeDTO"
+
 import { observer } from "mobx-react-lite"
 import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
+import { AlternativeDTO } from "../../types/dto/SnippetDTO";
 
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {

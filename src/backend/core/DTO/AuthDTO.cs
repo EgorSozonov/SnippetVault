@@ -1,5 +1,6 @@
-using System;
 namespace SnippetVault {
+using System;
+    
 
 public class SignInDTO {
     public string userName {get; set;}

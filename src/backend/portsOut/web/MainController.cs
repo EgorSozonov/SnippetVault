@@ -231,8 +231,11 @@ public class MainController : Controller {
     [HttpGet]
     [Route("user/profile")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task userProfile([FromRoute] int userId) {        
-        await applyPostRequest(api.userProfile(userId), HttpContext.Response);        
+    public async Task userProfile() {        
+        HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
+        int.TryParse(mbUserId[0].ToString(), out int userId);
+        var result = await api.userProfile(userId);
+        await sendQueryResult<ProfileDTO>(result, HttpContext.Response);        
     }
 
     #endregion
