@@ -41,9 +41,9 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
         
     return html`                         
         <div class="alternativeBody">
-            <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} key=${0} lang=${lang} />
+            <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} />
             ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
-                return html`<${Alternative} key=${idx} alternative=${alt} />`
+                return html`<${Alternative} key=${idx} alternative=${alt} tlId=${tlIdNum} />`
             })}
             <div class="alternativeFooter"></div>
         </div>        

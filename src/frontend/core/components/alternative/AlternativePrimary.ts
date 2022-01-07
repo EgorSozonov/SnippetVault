@@ -13,10 +13,11 @@ type Props = {
     primaryAlternative: AlternativeDTO | null,    
     lang: LanguageDTO | null,
     task: TaskDTO,
+    tlId: number,
 }
 
 const AlternativePrimary: FunctionComponent<Props> = observer(({
-        primaryAlternative, lang, task, }: Props) => {
+        primaryAlternative, lang, task, tlId, }: Props) => {
     return html`                 
         <div class="alternativeHeader">
             <div class="alternativeHeaderTitle">Alternatives</div>

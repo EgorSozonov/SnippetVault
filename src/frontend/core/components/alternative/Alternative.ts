@@ -8,6 +8,7 @@ import { StoreContext } from "../../App"
 import { AlternativeDTO } from "../../types/dto/SnippetDTO"
 import { VoteDTO } from "../../types/dto/UserDTO"
 import { SignInSuccessDTO } from "../../types/dto/AuthDTO"
+import { fetchFromClient } from "../../utils/Client"
 
 
 type Props = {
@@ -29,11 +30,17 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
 
     const voteHandler = (snId: number) => () => {
         const headers: SignInSuccessDTO = {userId: state.user.userId, accessToken: state.user.accessToken, }
+        
         if (headers.userId < 0) return
         const voteDTO: VoteDTO = {snId, tlId}
-        state.app.client.userVote(voteDTO, headers)        
+        state.app.client.userVote(voteDTO, headers)
+            .then((r) => {
+                if (r && r.status === "OK") {
+                    fetchFromClient(state.app.client.alternativesGet(tlId), state.app.alternativesSet)
+                }
+            })
     }
-    
+
     const isLoggedIn = state.user.userStatus === "user"
 
     return html`                 
@@ -48,11 +55,11 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
                 <span>
                     Votes: ${alternative.score}
                 </span>
-            </div>            
-            <div class="alternativeItemFooter">
                 <span class="alternativeItemFooterVote" onClick=${voteHandler(alternative.id)}>
                     <span class="alternativeItemButton">V</span>Vote
                 </span>
+            </div>            
+            <div class="alternativeItemFooter">                
                 <span class="alternativeItemFooterComments" onClick=${flipComments}>
                     <span class="alternativeItemButton">C</span>Comments
                 </span>    

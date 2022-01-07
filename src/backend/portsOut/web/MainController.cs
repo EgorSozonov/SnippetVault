@@ -75,7 +75,15 @@ public class MainController : Controller {
 
     [HttpGet]
     [Route("alternatives/{tlId:int}")]
-    public async Task alternative([FromRoute] int tlId) {
+    public async Task alternatives([FromRoute] int tlId) {
+        var result = await api.alternativesForTLGet(tlId);
+        await sendQueryResult<AlternativesDTO>(result, HttpContext.Response);
+    }
+
+    [HttpGet]
+    [Route("alternatives/{tlId:int}")]
+    public async Task alternativesForUser([FromRoute] int tlId) {
+        // TODO
         var result = await api.alternativesForTLGet(tlId);
         await sendQueryResult<AlternativesDTO>(result, HttpContext.Response);
     }
