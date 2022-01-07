@@ -58,8 +58,9 @@ public class DataService : IDataService {
 
     public async Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId){
         var allAlternatives = await st.alternativesForTLGet(taskLanguageId);
+        var mbTask = await st.taskForTLGet(taskLanguageId);
         
-        if (allAlternatives is Success<AlternativeDTO> succ) {
+        if (allAlternatives is Success<AlternativeDTO> succ && mbTask is Success<TaskDTO> task) {
             var uniques = new HashSet<int>();
             AlternativeDTO primary = null;
             int primaryId = -1;
@@ -76,6 +77,7 @@ public class DataService : IDataService {
                     new List<AlternativesDTO>() {
                         new AlternativesDTO() {
                             primary = primary,
+                            task = task.vals[0],
                             rows = succ.vals.Where(x => x.id != primaryId).ToArray(),
                         }
                     }

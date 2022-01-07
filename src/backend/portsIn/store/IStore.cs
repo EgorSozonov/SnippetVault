@@ -15,7 +15,7 @@ public interface IStore {
     Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup);
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId);
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2);
-    Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);
+    Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);    
     Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
     Task<int> proposalCreate(CreateProposalDTO dTO, int authorId);
 
@@ -23,6 +23,7 @@ public interface IStore {
     Task<int> snippetDecline(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
     Task<int> taskGroupCU(TaskGroupCUDTO dto);
+    Task<ReqResult<TaskDTO>> taskForTLGet(int taskLanguageId);
     Task<int> taskCU(TaskCUDTO dto);
     Task<int> languageGroupCU(LanguageGroupCUDTO dto);
     Task<int> languageCU(LanguageCUDTO dto);

@@ -5,7 +5,7 @@ using System;
 public class TaskDTO {
     public int id {get; set;}
     public string name {get; set;}
-    public int tgId {get; set;}
+    public string taskGroupName {get; set;}
     public string description {get; set;}
 }
 

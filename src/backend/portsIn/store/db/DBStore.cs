@@ -231,7 +231,6 @@ public class DBStore : IStore {
     ";
     public async Task<ReqResult<TaskGroupDTO>> taskGroupsGet() {
         await using (var cmd = new NpgsqlCommand(taskGroupsGetQ, db.conn)) { 
-            cmd.Prepare();
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<TaskGroupDTO>(reader);
             }
@@ -266,6 +265,20 @@ public class DBStore : IStore {
     ";
     public async Task<int> taskGroupCU(TaskGroupCUDTO dto) {
         return await createOrUpdate<TaskGroupCUDTO>(taskGroupCreateQ, taskGroupUpdateQ, taskGroupParamAdder, dto);
+    }
+
+    private static readonly string taskForTLGetQ = @"
+        SELECT t.id, tg.name AS ""taskGroupName"", t.name, t.description FROM sv.""taskLanguage"" tl
+        JOIN sv.task t ON t.id=tl.""taskId""
+        JOIN sv.""taskGroup"" tg ON tg.id=t.""taskGroupId""
+        WHERE tl.id = 30;
+    ";
+    public async Task<ReqResult<TaskDTO>> taskForTLGet(int taskLanguageId) {
+        await using (var cmd = new NpgsqlCommand(taskForTLGetQ, db.conn)) { 
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<TaskDTO>(reader);
+            }
+        }
     }
 
     private static readonly string taskCreateQ = @"

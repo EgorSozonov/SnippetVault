@@ -14,14 +14,13 @@ import { empty } from "../../utils/ComponentUtils";
 
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {
-    const { taskId, langId, tlId } = useParams<{ tlId: string, taskId: string, langId: string, }>()
-    if (!taskId || !langId || !tlId) return empty
+    const { langId, tlId } = useParams<{ tlId: string, langId: string, }>()
+    if (!langId || !tlId) return empty
 
-    const taskIdNum: number = parseInt(taskId) || -1
     const langIdNum: number = parseInt(langId) || -1
     const tlIdNum: number = parseInt(tlId) || -1    
     
-    if (taskIdNum < 0 || langIdNum < 0 || tlIdNum < 0) return empty
+    if (langIdNum < 0 || tlIdNum < 0) return empty
 
     const state = useContext<MainState>(StoreContext)
     const client: IClient = state.app.client
@@ -42,7 +41,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
         
     return html`                         
         <div class="alternativeBody">
-            <${AlternativePrimary} primaryAlternative=${primaryAlternative} key=${0} lang=${lang} />
+            <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} key=${0} lang=${lang} />
             ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
                 return html`<${Alternative} key=${idx} alternative=${alt} />`
             })}

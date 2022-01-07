@@ -12,11 +12,11 @@ import TaskGroup from "../admin/TaskGroup"
 type Props = {
     primaryAlternative: AlternativeDTO | null,    
     lang: LanguageDTO | null,
-    task: TaskDTO | null,
+    task: TaskDTO,
 }
 
 const AlternativePrimary: FunctionComponent<Props> = observer(({
-        primaryAlternative, lang, }: Props) => {
+        primaryAlternative, lang, task, }: Props) => {
     return html`                 
         <div class="alternativeHeader">
             <div class="alternativeHeaderTitle">Alternatives</div>
@@ -31,7 +31,10 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({
                         ${lang !== null && lang.name}
                     </div>
                     <div>
-                        Task: ${task !== null && TaskGroup}
+                        Task: ${task.taskGroupName} / ${task.name}
+                    </div>
+                    <div>
+                        Description: ${task.description}
                     </div>
                 </div>
                 <div class="alternativeHeaderMainRight">

@@ -38,6 +38,7 @@ public class SnippetDTO {
 
 public class AlternativesDTO {
     public AlternativeDTO primary {get; set;}
+    public TaskDTO task {get; set;}
     public AlternativeDTO[] rows {get; set;}
 }
 
