@@ -46,6 +46,10 @@ class HttpClient implements IClient {
         return this.makeGetRequest<AlternativesDTO[]>(`/alternatives/${tlId}`)
     }
 
+    alternativesForUserGet(tlId: number, userId: number): Promise<EitherMsg<AlternativesDTO[]>> {
+        return this.makeGetRequest<AlternativesDTO[]>(`/alternativesForUser/${tlId}/${userId}`)
+    }
+
     adminStatsGet(): Promise<EitherMsg<StatsDTO[]>> {
         return this.makeGetRequest<StatsDTO[]>(`/admin/stats`)
     }

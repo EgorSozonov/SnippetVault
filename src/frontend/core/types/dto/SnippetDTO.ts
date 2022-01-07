@@ -38,6 +38,7 @@ export type AlternativeDTO = {
     code: string,
     score: number,
     tsUpload: Date,
+    voteFlag: boolean,
 }
 
 

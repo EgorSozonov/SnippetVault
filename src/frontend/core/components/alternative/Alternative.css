@@ -138,13 +138,20 @@
     margin-right: 10px;
 }
 
-.alternativeItemFooter {
+.alternativeFooterVote {
     margin-bottom: 1rem;
 }
 
-.alternativeItemFooter span {
+.alternativeFooterVote span {
     margin-right: 10px;
     cursor: pointer;
+}
+
+.alternativeFooterVoted {
+    border: solid 2px hsl(120, 90%, 65%);
+    border-radius: 0.2rem;
+    padding: 0.2rem;
+    color: hsl(120, 90%, 65%);
 }
 
 .alternativeItemComments {    

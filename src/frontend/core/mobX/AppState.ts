@@ -7,8 +7,9 @@ import MockClient from "../../ports/mock/MockClient"
 import CodesFromUrl from "../components/snippet/utils/CodesFromUrl"
 import SnippetState, { updateId, updateUrl, updateWithChoicesUrl, } from "../components/snippet/utils/SnippetState"
 import { LanguageDTO, LanguageGroupDTO, TaskGroupDTO } from "../types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO } from "../types/dto/SnippetDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO } from "../types/dto/SnippetDTO"
 import { StatsDTO } from "../types/dto/UserDTO"
+import { AlternativesSort } from "../components/alternative/utils/Types"
 
 
 export default class AppState {
@@ -33,7 +34,8 @@ export default class AppState {
     
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
 
-    public alternatives: IObservableArray<AlternativesDTO> = observable.array([])
+    public alternatives: AlternativesDTO | null = null
+    public alternativesSort: AlternativesSort = "byDate"
     public client: IClient = new HttpClient()
 
     constructor() {
@@ -103,7 +105,28 @@ export default class AppState {
     }) 
 
     alternativesSet = action((newValue: AlternativesDTO[]): void => {
-        this.alternatives = observable.array(newValue)
+        if (!newValue || newValue === null || newValue.length !== 1) {
+            this.alternatives = null
+            return
+        }
+        const alternativesNew = newValue[0]
+        const sorted = this.alternativesSort === "byDate"
+            ? alternativesNew.rows.sort((x, y) => x.tsUpload < y.tsUpload ? -1 : 1)
+            : alternativesNew.rows.sort((x, y) => x.score - y.score)
+
+        this.alternatives = {task: alternativesNew.task, primary: alternativesNew.primary, rows: sorted, }
+    })
+
+    alternativesResort = action((newValue: AlternativesSort): void => {
+        if (this.alternatives === null) {
+            this.alternativesSort = newValue
+            return
+        }
+
+        const sorted = newValue === "byDate"
+            ? this.alternatives.rows.sort((x, y) => x.tsUpload < y.tsUpload ? -1 : 1)
+            : this.alternatives.rows.sort((x, y) => x.score - y.score)
+        this.alternatives.rows = sorted
     })
 
     statsSet = action((newValue: StatsDTO[]): void => {

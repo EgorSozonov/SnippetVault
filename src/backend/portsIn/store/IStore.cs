@@ -15,7 +15,8 @@ public interface IStore {
     Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup);
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId);
     Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2);
-    Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);    
+    Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);
+    Task<ReqResult<AlternativeDTO>> alternativesForUserGet(int taskLanguageId, int userId);
     Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
     Task<int> proposalCreate(CreateProposalDTO dTO, int authorId);
 

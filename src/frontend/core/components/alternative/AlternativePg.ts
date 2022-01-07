@@ -23,6 +23,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     if (langIdNum < 0 || tlIdNum < 0) return empty
 
     const state = useContext<MainState>(StoreContext)
+    const userId = state.user.userId
     const client: IClient = state.app.client
     const lang = state.app.languages.find(x => x.id === langIdNum) || null
 
@@ -30,10 +31,15 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
         if (lang === null) {
             fetchFromClient(client.languagesReqGet(), state.app.languagesSet)
         }
-        fetchFromClient(client.alternativesGet(tlIdNum), state.app.alternativesSet)
+        if (userId > -1) {
+            fetchFromClient(client.alternativesForUserGet(tlIdNum, userId), state.app.alternativesSet)
+        } else {
+            fetchFromClient(client.alternativesGet(tlIdNum), state.app.alternativesSet)
+        }
+        
     }, [])
     
-    const alternatives = state.app.alternatives.length > 0 ? state.app.alternatives[0] : null
+    const alternatives = state.app.alternatives
     
     if (alternatives === null) return empty
     const primaryAlternative = alternatives.primary

@@ -36,7 +36,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
         state.app.client.userVote(voteDTO, headers)
             .then((r) => {
                 if (r && r.status === "OK") {
-                    fetchFromClient(state.app.client.alternativesGet(tlId), state.app.alternativesSet)
+                    fetchFromClient(state.app.client.alternativesForUserGet(tlId, headers.userId), state.app.alternativesSet)
                 }
             })
     }
@@ -55,9 +55,20 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
                 <span>
                     Votes: ${alternative.score}
                 </span>
-                <span class="alternativeItemFooterVote" onClick=${voteHandler(alternative.id)}>
-                    <span class="alternativeItemButton">V</span>Vote
-                </span>
+                ${alternative.voteFlag 
+                    ? html`
+                            <span class="alternativeFooterVoted">
+                                Voted!
+                            </span>
+                            
+                        `
+                    : html`
+                           <span class="alternativeFooterVote" onClick=${voteHandler(alternative.id)}>
+                                <span class="alternativeItemButton">V</span>Vote
+                            </span>
+                        `
+                }
+                
             </div>            
             <div class="alternativeItemFooter">                
                 <span class="alternativeItemFooterComments" onClick=${flipComments}>

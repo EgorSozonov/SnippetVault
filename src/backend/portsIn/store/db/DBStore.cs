@@ -175,7 +175,8 @@ public class DBStore : IStore {
 
         UNION ALL 
 
-        SELECT sn.id, sn.content, sn.""tsUpload"", sn.score FROM sv.snippet sn
+        SELECT sn.id, sn.content, sn.""tsUpload"", sn.score
+        FROM sv.snippet sn
         WHERE sn.""taskLanguageId""=@tlId;
     ";
     public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId) {
@@ -186,6 +187,32 @@ public class DBStore : IStore {
             }
         }
     }
+
+    private static readonly string alternativesForUserGetQ = @"
+        SELECT sn.id, sn.content AS code, sn.""tsUpload"", sn.score, 
+               (CASE WHEN uv.""snippetId"" IS NULL THEN FALSE ELSE TRUE END) AS ""voteFlag""
+        FROM sv.""taskLanguage"" tl
+        JOIN sv.snippet sn ON sn.id=tl.""primarySnippetId""
+        LEFT JOIN sv.""userVote"" uv ON uv.""userId"" = @userId AND uv.""snippetId""=sn.id
+        WHERE tl.id=@tlId
+
+        UNION ALL 
+
+        SELECT sn.id, sn.content, sn.""tsUpload"", sn.score, 
+               (CASE WHEN uv.""snippetId"" IS NULL THEN FALSE ELSE TRUE END) AS ""voteFlag""
+        FROM sv.snippet sn
+        LEFT JOIN sv.""userVote"" uv ON uv.""userId"" = @userId AND uv.""snippetId"" = sn.id
+        WHERE sn.""taskLanguageId""=@tlId;
+    ";
+    public async Task<ReqResult<AlternativeDTO>> alternativesForUserGet(int taskLanguageId, int userId) {
+        await using (var cmd = new NpgsqlCommand(alternativesForUserGetQ, db.conn)) { 
+            cmd.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, taskLanguageId);
+            cmd.Parameters.AddWithValue("userId", NpgsqlTypes.NpgsqlDbType.Integer, userId);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<AlternativeDTO>(reader);
+            }
+        }
+    }    
     #endregion
 
     #region Admin

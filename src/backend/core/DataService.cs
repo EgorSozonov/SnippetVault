@@ -56,8 +56,8 @@ public class DataService : IDataService {
         return await st.proposalsGet();
     }
 
-    public async Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId){
-        var allAlternatives = await st.alternativesForTLGet(taskLanguageId);
+    public async Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId, int? userId){
+        var allAlternatives = userId == null ? await st.alternativesForTLGet(taskLanguageId) : await st.alternativesForUserGet(taskLanguageId, (int)userId);
         var mbTask = await st.taskForTLGet(taskLanguageId);
         
         if (allAlternatives is Success<AlternativeDTO> succ && mbTask is Success<TaskDTO> task) {
@@ -87,8 +87,7 @@ public class DataService : IDataService {
             }
         } else {
             return new Err<AlternativesDTO>("Error: no alternatives found");
-        }
-        
+        }        
     }
 
     #endregion
@@ -193,7 +192,7 @@ public interface IDataService {
     Task<int> snippetDecline(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
     Task<ReqResult<ProposalDTO>> proposalsGet();
-    Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId);    
+    Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId, int? userId);
 
     Task<ReqResult<LanguageDTO>> languagesGet();
     Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
