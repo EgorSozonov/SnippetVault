@@ -12,6 +12,11 @@ export type ProfileDTO = {
     tsJoined: Date,
 }
 
+export type VoteDTO = {
+    snId: number,
+    tlId: number,
+}
+
 export type StatsDTO = {
     primaryCount: number,
     alternativeCount: number,

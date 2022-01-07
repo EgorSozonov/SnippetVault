@@ -3,7 +3,7 @@ import createClient from "./HttpConfig"
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
-import { ProfileDTO, StatsDTO } from "../../core/types/dto/UserDTO"
+import { ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO, PostResponseDTO } from "../../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO } from "../../core/types/dto/SnippetDTO"
 
@@ -85,6 +85,10 @@ class HttpClient implements IClient {
 
     userRegister(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
         return this.makePostRequest("/user/register", dto)
+    }
+
+    userVote(dto: VoteDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        return this.makePostRequestForString("/user/vote", dto, headers)
     }
     
     userSignIn(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {

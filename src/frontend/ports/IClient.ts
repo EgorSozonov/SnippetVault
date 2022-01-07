@@ -2,7 +2,7 @@ import EitherMsg from "../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../core/types/dto/AuthDTO"
 import { LanguageDTO, LanguageGroupDTO, LanguageGroupedDTO, PostResponseDTO, TaskDTO, TaskGroupDTO } from "../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO } from "../core/types/dto/SnippetDTO"
-import { ProfileDTO, StatsDTO } from "../core/types/dto/UserDTO"
+import { ProfileDTO, StatsDTO, VoteDTO } from "../core/types/dto/UserDTO"
 
 
 type IClient = {
@@ -26,6 +26,7 @@ type IClient = {
     taskGroupCU: (headers: SignInSuccessDTO) => Promise<PostResponseDTO> 
 
     userRegister: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
+    userVote: (dto: VoteDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     userProfile: (headers: SignInSuccessDTO) => Promise<EitherMsg<ProfileDTO[]>>
     adminSignIn: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>

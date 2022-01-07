@@ -6,16 +6,19 @@ import { fmtDt } from "../../utils/DateFormat"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import { AlternativeDTO } from "../../types/dto/SnippetDTO"
+import { VoteDTO } from "../../types/dto/UserDTO"
+import { SignInSuccessDTO } from "../../types/dto/AuthDTO"
 
 
 type Props = {
-    alternative: AlternativeDTO | null,
+    alternative: AlternativeDTO,
+    tlId: number,
 }
 
-const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) => {
+const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: Props) => {
     const [isShowingComments, setIsShowingComments] = useState(false)
     const [isShowingInput, setIsShowingInput] = useState(false)
-
+    const state = useContext<MainState>(StoreContext)
     const flipComments = () => {
         setIsShowingComments(!isShowingComments)
     }
@@ -24,27 +27,30 @@ const Alternative: FunctionComponent<Props> = observer(({alternative}: Props) =>
         setIsShowingInput(!isShowingInput)
     }
 
-    const voteHandler = () => {
-        console.log("vote handler")
+    const voteHandler = (snId: number) => () => {
+        const headers: SignInSuccessDTO = {userId: state.user.userId, accessToken: state.user.accessToken, }
+        if (headers.userId < 0) return
+        const voteDTO: VoteDTO = {snId, tlId}
+        state.app.client.userVote(voteDTO, headers)        
     }
-    const state = useContext<MainState>(StoreContext)
+    
     const isLoggedIn = state.user.userStatus === "user"
 
     return html`                 
         <div class="alternativeItem">
             <div class="alternativeItemCode">
-                    ${alternative !== null && alternative.code}                
+                    ${alternative.code}                
             </div>
             <div class="alternativeItemHeader">
                 <span>
                      Upload date: alternative.tsUpload
                 </span>
                 <span>
-                    Votes: ${alternative !== null && alternative.score}
+                    Votes: ${alternative.score}
                 </span>
             </div>            
             <div class="alternativeItemFooter">
-                <span class="alternativeItemFooterVote" onClick=${voteHandler}>
+                <span class="alternativeItemFooterVote" onClick=${voteHandler(alternative.id)}>
                     <span class="alternativeItemButton">V</span>Vote
                 </span>
                 <span class="alternativeItemFooterComments" onClick=${flipComments}>
