@@ -29,9 +29,8 @@ public interface IStore {
     Task<long> userCount();
 
     Task<ReqResult<AuthenticateIntern>> userAuthentGet(string userName);
-    Task<ReqResult<AuthorizeIntern>> userAuthorGet(int userId);
-    Task<ReqResult<AuthenticateIntern>> userAdminAuthent(string accessToken);
-    Task<ReqResult<AuthorizeIntern>> userAdminAuthor();
+    Task<ReqResult<AuthorizeIntern>> userAuthorizGet(int userId);
+    Task<ReqResult<AuthorizeIntern>> userAdminAuthoriz();
     Task<int> userUpdateExpiration(int userId, string newToken, DateTime newDate);
     Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration);
     Task<int> userVote(int userId, int tlId, int snId);

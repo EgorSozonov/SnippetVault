@@ -90,7 +90,7 @@ public class AuthService : IAuthService {
     }
 
     public async Task<bool> userAuthorize(int userId, string accessToken) {
-        var mbUserAuthor = await st.userAuthorGet(userId);
+        var mbUserAuthor = await st.userAuthorizGet(userId);
         if (mbUserAuthor is Success<AuthorizeIntern> userAuthors && userAuthors.vals.Count == 1) {
             var userAuthor = userAuthors.vals[0];            
             bool authorized = userAuthor.expiration.Date == DateTime.Today && userAuthor.accessToken == accessToken;
@@ -101,7 +101,7 @@ public class AuthService : IAuthService {
     }
 
     public async Task<bool> userAuthorizeAdmin(string accessToken) {
-        var mbUserAuthor = await st.userAdminAuthor();
+        var mbUserAuthor = await st.userAdminAuthoriz();
         if (mbUserAuthor is Success<AuthorizeIntern> userAuthors && userAuthors.vals.Count == 1) {
             var userAuthor = userAuthors.vals[0];            
             bool authorized = userAuthor.expiration.Date == DateTime.Today && userAuthor.accessToken == accessToken;

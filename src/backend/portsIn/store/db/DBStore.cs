@@ -270,25 +270,50 @@ public class DBStore : IStore {
     }
 
     private static readonly string languageGroupCreateQ = @"
+        INSERT INTO sv.""languageGroup""(code, name, ""sortingOrder"") 
+        VALUES (@code, @name, @sortingOrder);
     ";
     private static readonly string languageGroupUpdateQ = @"
+        UPDATE sv.""languageGroup"" SET code=@code, name=@name, ""sortingOrder""=@sortingOrder
+        WHERE id=@existingId;
     ";
     public async Task<int> languageGroupCU(LanguageGroupCUDTO dto) {
         return await createOrUpdate<LanguageGroupCUDTO>(languageGroupCreateQ, languageGroupUpdateQ, languageGroupParamAdder, dto);
     }
 
     private static readonly string languageCreateQ = @"
+        INSERT INTO sv.language(code, name, ""isDeleted"", ""languageGroupId"") VALUES (@code, @name, 0::bit, @lgId);
     ";
     private static readonly string languageUpdateQ = @"
+        UPDATE sv.language SET code=@code, name=@name, 
+                               ""isDeleted""=@isDeleted, ""languageGroupId""=@lgId 
+        WHERE id=@existingId;
     ";
     public async Task<int> languageCU(LanguageCUDTO dto) {
         return await createOrUpdate<LanguageCUDTO>(languageCreateQ, languageUpdateQ, languageParamAdder, dto);
+    }
+
+    private static readonly string taskGroupsForArrayLanguagesQ = @"
+        SELECT DISTINCT tg.id, tg.name, tg.code FROM sv.task t
+        JOIN sv.""taskLanguage"" tl ON tl.""taskId""=t.id
+        JOIN sv.""taskGroup"" tg ON tg.id=t.""taskGroupId""
+        WHERE tl.""languageId"" = ANY(@ls);
+    ";
+    private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        
+        await using (var cmd = new NpgsqlCommand(taskGroupsForArrayLanguagesQ, db.conn)) { 
+            cmd.Parameters.AddWithValue("ls", NpgsqlTypes.NpgsqlDbType.Array|NpgsqlTypes.NpgsqlDbType.Integer, langs);
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<TaskGroupDTO>(reader);
+            }
+        }
     }
 
     #endregion
 
     #region Users
     private static readonly string userAuthentGetQ = @"
+        SELECT id AS ""userId"", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration, ""accessToken""
+        FROM sv.user WHERE name = @name;
     ";
     public async Task<ReqResult<AuthenticateIntern>> userAuthentGet(string userName) {
         await using (var cmd = new NpgsqlCommand(userAuthentGetQ, db.conn)) { 
@@ -299,10 +324,12 @@ public class DBStore : IStore {
         }
     }
 
-    private static readonly string userAuthorGetQ = @"
+    private static readonly string userAuthorizGetQ = @"
+        SELECT ""accessToken"", expiration 
+        FROM sv.user WHERE id = @id;
     ";
-    public async Task<ReqResult<AuthorizeIntern>> userAuthorGet(int userId) {
-        await using (var cmd = new NpgsqlCommand(userAuthorGetQ, db.conn)) { 
+    public async Task<ReqResult<AuthorizeIntern>> userAuthorizGet(int userId) {
+        await using (var cmd = new NpgsqlCommand(userAuthorizGetQ, db.conn)) { 
             cmd.Parameters.AddWithValue("id", NpgsqlTypes.NpgsqlDbType.Integer, userId);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<AuthorizeIntern>(reader);
@@ -310,21 +337,13 @@ public class DBStore : IStore {
         }
     }
 
-    private static readonly string userAdminAuthentQ = @"
-    ";
-    public async Task<ReqResult<AuthenticateIntern>> userAdminAuthent(string accessToken) {
-        await using (var cmd = new NpgsqlCommand(userAdminAuthentQ, db.conn)) { 
-            cmd.Parameters.AddWithValue("accessToken", NpgsqlTypes.NpgsqlDbType.Integer, accessToken);
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<AuthenticateIntern>(reader);
-            }
-        }
-    }
 
-    private static readonly string userAdminAuthorQ = @"
+    private static readonly string userAdminAuthorizQ = @"
+        SELECT ""accessToken"", expiration 
+        FROM sv.user WHERE name = @name;
     ";
-    public async Task<ReqResult<AuthorizeIntern>> userAdminAuthor() {
-        await using (var cmd = new NpgsqlCommand(userAdminAuthorQ, db.conn)) { 
+    public async Task<ReqResult<AuthorizeIntern>> userAdminAuthoriz() {
+        await using (var cmd = new NpgsqlCommand(userAdminAuthorizQ, db.conn)) { 
             cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, AdminPasswordChecker.adminName);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<AuthorizeIntern>(reader);
@@ -333,6 +352,8 @@ public class DBStore : IStore {
     }
 
     private static readonly string userUpdateExpirationQ = @"
+        UPDATE sv.""user"" SET expiration=@newDate, ""accessToken"" = @newToken 
+        WHERE id = @id;
     ";
     public async Task<int> userUpdateExpiration(int userId, string newToken, DateTime newDate) {
         await using (var cmd = new NpgsqlCommand(userUpdateExpirationQ, db.conn)) { 
@@ -344,6 +365,10 @@ public class DBStore : IStore {
     }
 
     private static readonly string userRegisterQ = @"
+        INSERT INTO sv.""user""(name, ""dateJoined"", expiration, ""accessToken"", hash, salt)
+        VALUES (@name, @tsJoin, @dtExpiration, @accessToken, 
+                decode(@hash, 'base64'), decode(@salt, 'base64')) 
+        ON CONFLICT DO NOTHING RETURNING id;
     ";
     public async Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime dtExpiration) {
         await using (var cmd = new NpgsqlCommand(userRegisterQ, db.conn)) { 
@@ -359,6 +384,10 @@ public class DBStore : IStore {
     }
 
     private static readonly string commentsGetQ = @"
+        SELECT c.content, c.""tsUpload"", u.id AS ""userId"", u.name AS ""userName""
+		FROM sv.comment c
+		JOIN sv.user u ON u.id=c.""userId""
+		WHERE c.""snippetId""=@snId;
     ";
     public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
         await using (var cmd = new NpgsqlCommand(commentsGetQ, db.conn)) { 
@@ -370,6 +399,12 @@ public class DBStore : IStore {
     }
 
     private static readonly string statsForAdminQ = @"
+        SELECT 
+        	SUM(CASE WHEN s.status=3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount"",
+        	SUM(CASE WHEN s.status=3 AND tl.id IS NULL THEN 1 ELSE 0 END) AS ""alternativeCount"",
+        	SUM(CASE WHEN s.status=1 THEN 1 ELSE 0 END) AS ""proposalCount""
+        FROM sv.snippet s
+        LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;
     ";
     public async Task<ReqResult<StatsDTO>> statsForAdmin() {
         await using (var cmd = new NpgsqlCommand(statsForAdminQ, db.conn)) {             
@@ -380,6 +415,8 @@ public class DBStore : IStore {
     }
 
     private static readonly string userCountQ = @"
+        SELECT COUNT(*)
+        FROM sv.user WHERE ""isDeleted"" = 0::bit;
     ";
     public async Task<long> userCount() {
         await using (var cmd = new NpgsqlCommand(userCountQ, db.conn)) {
@@ -388,6 +425,22 @@ public class DBStore : IStore {
     }
 
     private static readonly string userVoteQ = @"
+        BEGIN;
+        WITH existingVote AS (
+            SELECT uv.""snippetId"" FROM sv.""userVote"" uv 
+            WHERE uv.""userId""=@userId AND uv.""taskLanguageId""=@tlId AND uv.""snippetId""<>@snId LIMIT 1
+        )
+        UPDATE sv.snippet SET score=score-1 WHERE id IN (SELECT ""snippetId"" FROM existingVote);
+        
+        INSERT INTO sv.""userVote""(""userId"", ""taskLanguageId"", ""snippetId"")
+        VALUES (@userId, @tlId, @snId) 
+        ON CONFLICT(""userId"", ""taskLanguageId"") 
+        DO UPDATE SET ""snippetId""=EXCLUDED.""snippetId"";
+
+        UPDATE sv.snippet 
+        SET score=score + 1 WHERE id=@snId;
+        
+        COMMIT;
     ";
     public async Task<int> userVote(int userId, int tlId, int snId) {
         await using (var cmd = new NpgsqlCommand(userVoteQ, db.conn)) { 
@@ -399,6 +452,13 @@ public class DBStore : IStore {
     }
 
     private static readonly string userProfileQ = @"
+        SELECT
+        	SUM(CASE WHEN s.status IN (1, 3) THEN 1 ELSE 0 END) AS ""proposalCount"",
+        	SUM(CASE WHEN s.status = 3 THEN 1 ELSE 0 END) AS ""approvedCount"",
+        	SUM(CASE WHEN s.status = 3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount""
+        FROM sv.snippet s
+        LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId"" = s.id
+        WHERE ""authorId"" = @userId;
     ";
     public async Task<ReqResult<ProfileDTO>> userProfile(int userId) {
         await using (var cmd = new NpgsqlCommand(userProfileQ, db.conn)) { 
@@ -410,6 +470,7 @@ public class DBStore : IStore {
     }
 
     private static readonly string userDataQ = @"
+        SELECT name, ""dateJoined"" AS ""tsJoined"" FROM sv.user WHERE id = @userId;
     ";
     public async Task<ReqResult<UserDTO>> userData(int userId) {
         await using (var cmd = new NpgsqlCommand(userDataQ, db.conn)) { 
@@ -421,7 +482,8 @@ public class DBStore : IStore {
     }
 
     private static readonly string commentCreateQ = @"
-
+        INSERT INTO sv.comment(""userId"", ""snippetId"", content, ""tsUpload"")
+        VALUES (@userId, @snId, @content, @ts);
     ";
     public async Task<int> commentCreate(int userId, int snId, string content, DateTime ts) {
         await using (var cmd = new NpgsqlCommand(commentCreateQ, db.conn)) { 
@@ -433,18 +495,17 @@ public class DBStore : IStore {
         }
     }
 
-    #endregion
-
-    private static readonly string taskGroupsForArrayLanguagesQ = @"
+    private static readonly string commentDeleteQ = @"
+        DELETE FROM sv.comment WHERE id=@commentId;
     ";
-    private async Task<ReqResult<TaskGroupDTO>> taskGroupsForArrayLanguages(int[] langs) {        
-        await using (var cmd = new NpgsqlCommand(taskGroupsForArrayLanguagesQ, db.conn)) { 
-            cmd.Parameters.AddWithValue("ls", NpgsqlTypes.NpgsqlDbType.Array|NpgsqlTypes.NpgsqlDbType.Integer, langs);
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<TaskGroupDTO>(reader);
-            }
+    public async Task<int> commentDelete(int commentId) {
+        await using (var cmd = new NpgsqlCommand(commentCreateQ, db.conn)) { 
+            cmd.Parameters.AddWithValue("commentId", NpgsqlTypes.NpgsqlDbType.Integer, commentId);
+            return await cmd.ExecuteNonQueryAsync();            
         }
     }
+
+    #endregion
 
     #region Utils
     private static ReqResult<T> readResultSet<T>(NpgsqlDataReader reader) where T : class, new() {
