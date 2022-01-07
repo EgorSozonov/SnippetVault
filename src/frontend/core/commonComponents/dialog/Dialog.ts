@@ -11,7 +11,6 @@ type Props = {
 }
 
 const Dialog: React.FunctionComponent<Props> = ({state, okHandler, cancelHandler, }: Props) => {
-    console.log("dialog " + state.isOpen)
     return html`
         <div class=${"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
             <div class="dialogContainer">

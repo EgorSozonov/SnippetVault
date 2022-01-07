@@ -7,7 +7,7 @@ import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
 import MainState from "../../mobX/MainState"
-import { Editability } from "../../types/Editability"
+import { Editability } from "../../commonComponents/editableList/utils/Editability"
 import { fetchFromClient } from "../../utils/Client"
 import IClient from "../../../ports/IClient"
 import AdminLogin from "./AdminLogin"
@@ -92,8 +92,8 @@ const Admin: FunctionComponent = observer(({}: any) => {
                     </div>
                     <${ListTaskGroups} values=${state.app.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"></EditableList>
                     <${ListLanguageGroups} values=${state.app.languageGroups} editabilities=${editabilitiesLanguageGroup} title="Language Groups"></EditableList>
-                    <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"></EditableList>                    
-                    <${NewProposal} />                    
+                    <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"></EditableList>
+                    <${NewProposal} />                 
                 `
             }
             

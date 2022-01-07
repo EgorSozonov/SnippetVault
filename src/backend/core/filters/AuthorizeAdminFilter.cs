@@ -23,10 +23,10 @@ public class AuthorizeAdminFilter : Attribute, IAsyncActionFilter    {
             if (accessTokens.Any()) {
                 string accessToken = accessTokens.First();
                 bool authorized = await authService.userAuthorizeAdmin(accessToken);
-                if (!authorized) context.Result = new UnauthorizedResult();                
+                if (!authorized) context.Result = new UnauthorizedResult();
             } else {
-                context.Result = new UnauthorizedResult();      
-            }            
+                context.Result = new UnauthorizedResult();
+            }
         } catch (Exception) { context.Result = new BadRequestResult() {}; }
         if (context.Result == null) await continuation();
     }

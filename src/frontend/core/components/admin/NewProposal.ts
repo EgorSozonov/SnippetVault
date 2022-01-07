@@ -25,6 +25,13 @@ const NewProposal: FunctionComponent = observer(() => {
         const userId = state.user.userId
         if (userId < 0 || accToken === "") return
         client.proposalDecline(confirmationDialog.id, {userId: userId, accessToken: accToken, })
+            .then((r) => {
+                console.log("response")
+                console.log(r)
+                if (r === "OK") {
+                    fetchFromClient(client.getProposals(), state.app.setProposals)
+                }
+            })
     }
 
     useEffect(() => {
@@ -33,9 +40,17 @@ const NewProposal: FunctionComponent = observer(() => {
 
     const approveHandler = (pId: number) => () => {
         const accToken = state.user.accessToken
-        const userId = state.user.userId        
+        const userId = state.user.userId
         if (userId < 0 || accToken === "") return
-        client.proposalApprove(pId, {userId: userId, accessToken: accToken, })
+        const headers = {userId: userId, accessToken: accToken, }
+        client.proposalApprove(pId, headers)
+            .then((r) => {
+                console.log("response")
+                console.log(r)
+                if (r === "OK") {
+                    fetchFromClient(client.getProposals(), state.app.setProposals)
+                }
+            })
     }
 
     const declineHandler = (pId: number) => () => {

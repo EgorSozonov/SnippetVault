@@ -3,7 +3,7 @@ import IHasName from "../../types/IHasName"
 import IStringKeyed from "../../types/IStringKeyed"
 import "./editableList.css"
 import { html } from "htm/react"
-import { Editability } from "../../types/Editability"
+import { Editability } from "./utils/Editability"
 import HoverSelectInput from "../hoverSelect/HoverSelectInput"
 import { inputFocusHandler } from "../../utils/ComponentUtils"
 
@@ -19,7 +19,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     const [openIdx, setOpenIdx] = useState(-1)
     const [isOpenNew, setOpenNew] = useState(false)
 
-    const rowClickHandler = (idx: number) => {
+    const rowClickHandler = (idx: number) => () => {
         if (idx === openIdx) {
             setOpenIdx(-1)
         } else {
@@ -55,7 +55,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
         })
     }
 
-    const editableInputs = (v: T, idxRow: number) => {
+    const editableInputs = (v: T) => {
         return html`${editabilities.filter(x => x.field in v).map((x: Editability<T>, idx: number) => {
             return html`
                 <li key=${idx} class="editableListEdit">
@@ -99,13 +99,13 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                     ${values.map((v: T, idx: number) => {
                         return html`
                             <li key=${idx} id=${"elem" + idx} class="editableListRow">
-                                <div onClick=${() => rowClickHandler(idx)} class=${(openIdx === idx ? "editableListRowActive" : "")}>
+                                <div onClick=${rowClickHandler(idx)} class=${(openIdx === idx ? "editableListRowActive" : "")}>
                                     <span class="editableListCell">${v.name}</span>
                                 </div>
                                 ${openIdx === idx && html`
                                     <form onSubmit=${editSaveHandler(idx)}>
                                         <ul>
-                                            ${editableInputs(v, idx)}
+                                            ${editableInputs(v)}
                                         </ul>
                                         <div className="editableListSaveButton">
                                             <input type="submit" value="Save" />

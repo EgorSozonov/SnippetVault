@@ -1,4 +1,4 @@
-import SelectChoice from "./SelectChoice"
+import SelectChoice from "../../../types/SelectChoice"
 
 export type Editability<T> = {
     field: keyof T,

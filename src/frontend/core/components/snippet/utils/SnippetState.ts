@@ -1,4 +1,4 @@
-import SelectChoice from "./SelectChoice"
+import SelectChoice from "../../../types/SelectChoice"
 
 type SnippetState = 
     | { type: "ChoicesLoaded", id: number, code: string, name: string, choices: SelectChoice[], }

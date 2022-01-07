@@ -16,6 +16,7 @@ public static class HttpUtils {
 
     public async static Task applyPostRequest(Task<int> postRequest, HttpResponse response) {
         var countRows = await postRequest;
+        response.ContentType = "text/plain";
         if (countRows > 0) {
             response.StatusCode = 200;
             await response.WriteAsync("OK");

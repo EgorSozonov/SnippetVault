@@ -64,7 +64,7 @@ class HttpClient implements IClient {
     }
 
     proposalDecline(snId: number, headers: SignInSuccessDTO): Promise<string> {
-        return this.makePostRequestNoPayload(`/snippet/decline/${snId}`, headers)
+        return this.makePostRequestNoPayload(`/snippet/decline/${snId}`, headers)        
     }
 
     snippetMarkPrimary(snId: number, headers: SignInSuccessDTO): Promise<string> {
@@ -135,7 +135,8 @@ class HttpClient implements IClient {
 
     private async makePostRequestNoPayload(url: string, headers: SignInSuccessDTO): Promise<string> {
         try {
-            const r = await this.client.post<string>(url)
+            const r = await this.client.post<string>(url, undefined, 
+                                                    { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, }, })
             if (r.data && r.data === "OK") {
                 return ""
             } else {
