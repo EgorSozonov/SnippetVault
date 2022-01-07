@@ -4,7 +4,7 @@ import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
 import { ProfileDTO, StatsDTO } from "../../core/types/dto/UserDTO"
-import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO } from "../../core/types/dto/AuxDTO"
+import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO, PostResponseDTO } from "../../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO } from "../../core/types/dto/SnippetDTO"
 
 
@@ -54,36 +54,36 @@ class HttpClient implements IClient {
         return this.makeGetRequest<StatsDTO[]>(`/admin/stats`)
     }
 
-    proposalCreate(proposal: string, langId: number, taskId: number, headers: SignInSuccessDTO): Promise<string> {
+    proposalCreate(proposal: string, langId: number, taskId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         const payload = {langId, taskId, content: proposal, }
         return this.makePostRequestForString<ProposalCreateDTO>(`/proposal/create`, payload, headers)
     }
 
-    proposalApprove(snId: number, headers: SignInSuccessDTO): Promise<string> {
+    proposalApprove(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.makePostRequestNoPayload(`/snippet/approve/${snId}`, headers)
     }
 
-    proposalDecline(snId: number, headers: SignInSuccessDTO): Promise<string> {
+    proposalDecline(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.makePostRequestNoPayload(`/snippet/decline/${snId}`, headers)        
     }
 
-    snippetMarkPrimary(snId: number, headers: SignInSuccessDTO): Promise<string> {
+    snippetMarkPrimary(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.makePostRequestNoPayload(`/snippet/markPrimary/${snId}`, headers)
     }
 
-    languageCU(headers: SignInSuccessDTO): Promise<string> {
+    languageCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.makePostRequestNoPayload(`/language/cu`, headers)
     }
 
-    languageGroupCU(headers: SignInSuccessDTO): Promise<string> {
+    languageGroupCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.makePostRequestNoPayload(`languageGroup/cu`, headers)
     }
 
-    taskCU(headers: SignInSuccessDTO): Promise<string> {
+    taskCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.makePostRequestNoPayload(`/task/cu`, headers)
     }
 
-    taskGroupCU(headers: SignInSuccessDTO): Promise<string> {
+    taskGroupCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.makePostRequestNoPayload(`/taskGroup/cu`, headers)
     }
 
@@ -118,32 +118,32 @@ class HttpClient implements IClient {
         }
     }
 
-    private async makePostRequestForString<T>(url: string, payload: T, headers: SignInSuccessDTO): Promise<string> {
+    private async makePostRequestForString<T>(url: string, payload: T, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         try {
-            const r = await this.client.post<string>(url, payload, 
+            const r = await this.client.post<PostResponseDTO>(url, payload, 
                 { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, }, }
             )
-            if (r.data && r.data === "OK") {
-                return ""
+            if (r.data && r.data.status === "OK") {
+                return r.data
             } else {
-                return "Error"
+                return {status: "Unknown error"}
             }
         } catch(e: any) {
-            return "Error"
+            return {status: e}
         }
     }
 
-    private async makePostRequestNoPayload(url: string, headers: SignInSuccessDTO): Promise<string> {
+    private async makePostRequestNoPayload(url: string, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         try {
-            const r = await this.client.post<string>(url, undefined, 
+            const r = await this.client.post<PostResponseDTO>(url, undefined, 
                                                     { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, }, })
-            if (r.data && r.data === "OK") {
-                return ""
+            if (r.data && r.data.status === "OK") {
+                return r.data
             } else {
-                return "Error"
+                return {status: "Unknown error"}
             }
         } catch(e: any) {
-            return "Error"
+            return {status: e}
         }
     }
 

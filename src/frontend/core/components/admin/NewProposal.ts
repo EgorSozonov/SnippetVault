@@ -26,9 +26,7 @@ const NewProposal: FunctionComponent = observer(() => {
         if (userId < 0 || accToken === "") return
         client.proposalDecline(confirmationDialog.id, {userId: userId, accessToken: accToken, })
             .then((r) => {
-                console.log("response")
-                console.log(r)
-                if (r === "OK") {
+                if (r.status === "OK") {
                     fetchFromClient(client.getProposals(), state.app.setProposals)
                 }
             })
@@ -45,9 +43,7 @@ const NewProposal: FunctionComponent = observer(() => {
         const headers = {userId: userId, accessToken: accToken, }
         client.proposalApprove(pId, headers)
             .then((r) => {
-                console.log("response")
-                console.log(r)
-                if (r === "OK") {
+                if (r.status === "OK") {
                     fetchFromClient(client.getProposals(), state.app.setProposals)
                 }
             })

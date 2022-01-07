@@ -29,3 +29,7 @@ export type LanguageGroupedDTO = {
     languageGroup: string,
     languageGroupOrder: number,
 }
+
+export type PostResponseDTO = {
+    status: string,
+}

@@ -7,6 +7,7 @@ const API_PREFIX = API_PREFIX1
 const axiosConfig: AxiosRequestConfig = {
     baseURL: BASE_URL + API_PREFIX,
     timeout: 10000,
+    //transformResponse: [],
     //headers: {'X-Custom-Header': 'foobar'},
 }
 

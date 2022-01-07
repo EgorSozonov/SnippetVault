@@ -65,4 +65,8 @@ public class CUDTO {
     public int? existingId {get; set;}
 }
 
+public class PostResponseDTO {
+    public string status {get; set;}
+}
+
 }
