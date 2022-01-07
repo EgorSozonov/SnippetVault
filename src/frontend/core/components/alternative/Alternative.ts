@@ -50,7 +50,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
             </div>
             <div class="alternativeItemHeader">
                 <span>
-                     Upload date: alternative.tsUpload
+                     Upload date: ${alternative.tsUpload}
                 </span>
                 <span>
                     Votes: ${alternative.score}
@@ -77,9 +77,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
             </div>
             ${isShowingComments === true &&
                 html`
-                <div class="alternativeItemComments">
-                    
-                    
+                <div class="alternativeItemComments">                                        
                     <div onClick=${flipReply}>
                         <span class="alternativeItemButton">A</span>Add a comment
                     </div>

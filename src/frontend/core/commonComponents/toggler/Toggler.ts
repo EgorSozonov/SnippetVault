@@ -7,13 +7,24 @@ type Props = {
     leftChoice: string,
     rightChoice: string,
     initChosen: boolean,
+    leftCallback: () => void,
+    rightCallback: () => void,
 }
 
-const Toggler: React.FunctionComponent<Props> = ({leftChoice, rightChoice, initChosen}) => {
+const Toggler: React.FunctionComponent<Props> = ({leftChoice, rightChoice, initChosen, leftCallback, rightCallback, }) => {
     const [currValue, setCurrValue] = useState(initChosen)
+    const changeHandler = () => {
+        if (currValue === true) {
+            setCurrValue(false)
+            leftCallback()
+        } else {
+            setCurrValue(true)
+            rightCallback()
+        }
+    }
 
     return html`
-        <div class="togglerContainer" onClick=${() => setCurrValue(!currValue)}>
+        <div class="togglerContainer" onClick=${changeHandler}>
             <span class=${"togglerLeftRect " + (currValue ? "togglerLeftRectInactive" : "togglerLeftRectActive")}></span>
             <span class=${"togglerChoice" + (currValue ? " inactiveChoice" : " activeChoiceLeft")}>
                 ${leftChoice}
@@ -29,6 +40,5 @@ const Toggler: React.FunctionComponent<Props> = ({leftChoice, rightChoice, initC
         </div>
     `
 }
-
 
 export default Toggler

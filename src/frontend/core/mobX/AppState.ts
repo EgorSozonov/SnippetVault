@@ -124,8 +124,8 @@ export default class AppState {
         }
 
         const sorted = newValue === "byDate"
-            ? this.alternatives.rows.sort((x, y) => x.tsUpload < y.tsUpload ? -1 : 1)
-            : this.alternatives.rows.sort((x, y) => x.score - y.score)
+            ? this.alternatives.rows.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1)
+            : this.alternatives.rows.sort((x, y) => y.score - x.score)
         this.alternatives.rows = sorted
     })
 

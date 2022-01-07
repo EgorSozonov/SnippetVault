@@ -1,12 +1,13 @@
 import "./Alternative.css"
 import { html } from "htm/react"
-import { FunctionComponent } from "react"
+import { FunctionComponent, useContext } from "react"
 import Toggler from "../../commonComponents/toggler/Toggler"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateFormat"
 import { AlternativeDTO } from "../../types/dto/SnippetDTO"
 import { LanguageDTO, TaskDTO } from "../../types/dto/AuxDTO"
-import TaskGroup from "../admin/TaskGroup"
+import MainState from "../../mobX/MainState"
+import { StoreContext } from "../../App"
 
 
 type Props = {
@@ -18,6 +19,7 @@ type Props = {
 
 const AlternativePrimary: FunctionComponent<Props> = observer(({
         primaryAlternative, lang, task, tlId, }: Props) => {
+    const state = useContext<MainState>(StoreContext)            
     return html`                 
         <div class="alternativeHeader">
             <div class="alternativeHeaderTitle">Alternatives</div>
@@ -40,7 +42,8 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({
                 </div>
                 <div class="alternativeHeaderMainRight">
                     <div>
-                        <${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false} />
+                        <${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false} 
+                                    leftCallback=${() => state.app.alternativesResort("byDate")} rightCallback=${() => state.app.alternativesResort("byScore")} />
                     </div>                    
                 </div>                
             </div>
