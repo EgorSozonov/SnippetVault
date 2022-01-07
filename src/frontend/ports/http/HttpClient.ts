@@ -42,10 +42,6 @@ class HttpClient implements IClient {
         return this.makeGetRequest<ProposalDTO[]>(`/proposals`)
     }
 
-    tasksGet(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
-        return this.makeGetRequest<TaskDTO[]>(`/tasks/${tgId}`)
-    }
-
     alternativesGet(tlId: number): Promise<EitherMsg<AlternativesDTO[]>> {
         return this.makeGetRequest<AlternativesDTO[]>(`/alternatives/${tlId}`)
     }

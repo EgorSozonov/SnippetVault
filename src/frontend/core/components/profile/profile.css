@@ -1,16 +1,47 @@
 .profileContainer {
-    background-color: (0, 0%, 18%);
+    background-color: hsl(0, 0%, 18%);
     display: block;
-    height: 100vh;
-    width: 100vw;
+
     margin: 0;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
     padding: 0;
     color: white;
+    border: solid 1px white;
+    border-radius: 0.3rem;
+}
+
+.profileContainer > div {
+    padding: 0.5rem;
+}
+
+.profileHeaderSubscript {
+    padding: 0;
 }
 
 .profileSignOut {
     cursor: pointer;
-    border: solid 1px white;
-    width: 300px;
+    background-color: white;
+    color: black;
     margin-top: 2rem;
+}
+
+.profileHeader {
+    border-bottom: solid 1px white;
+    padding-bottom: 0;
+}
+
+.profileHeader h2 {
+    text-decoration: underline;
+}
+
+.profileBackground {
+    background-color: hsl(0, 0%, 18%);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    justify-content: flex-start;
 }

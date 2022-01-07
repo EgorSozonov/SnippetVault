@@ -10,19 +10,23 @@ import { observer } from "mobx-react-lite"
 import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
 import { AlternativeDTO } from "../../types/dto/SnippetDTO";
+import { empty } from "../../utils/ComponentUtils";
 
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {
-    const { tlId, langId } = useParams<{ tlId: string, langId: string, }>()
-    if (!tlId || !langId) return (html`<div></div>`)
+    const { taskId, langId, tlId } = useParams<{ tlId: string, taskId: string, langId: string, }>()
+    if (!taskId || !langId || !tlId) return empty
 
-    const tlIdNum: number = parseInt(tlId) || -1
+    const taskIdNum: number = parseInt(taskId) || -1
     const langIdNum: number = parseInt(langId) || -1
-    if (tlIdNum < 0 || langIdNum < 0) return (html`<div></div>`)
+    const tlIdNum: number = parseInt(tlId) || -1    
+    
+    if (taskIdNum < 0 || langIdNum < 0 || tlIdNum < 0) return empty
+
     const state = useContext<MainState>(StoreContext)
     const client: IClient = state.app.client
     const lang = state.app.languages.find(x => x.id === langIdNum) || null
-        
+
     useEffect(() => {
         if (lang === null) {
             fetchFromClient(client.languagesReqGet(), state.app.languagesSet)
@@ -31,7 +35,8 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     }, [])
     
     const alternatives = state.app.alternatives.length > 0 ? state.app.alternatives[0] : null
-    if (alternatives === null) return (html`<div></div>`)
+    
+    if (alternatives === null) return empty
     const primaryAlternative = alternatives.primary
     const nonPrimaryAlternatives = alternatives.rows
         

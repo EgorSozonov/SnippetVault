@@ -28,32 +28,31 @@ const Profile: React.FunctionComponent = observer(() => {
     }, [userId])
 
     return html`
-        <div class="profileContainer">
-            ${profile !== null 
-                ? html`
-                    <div>
-                        <h3>${state.user.userName}</h3>
-                    </div>
-                    <div>
-                        <h4>User Profile</h4>
-                    </div>
-                    <div>Registration date:
-                    </div>
-                    <div>Total number of proposals: ${profile.proposalCount}
-                    </div>
-                    <div>Approved proposals: ${profile.approvedCount}
-                    </div>
-                    <div>Approved proposals selected as primary: ${profile.primaryCount}
-                    </div>
-                    <div onClick=${signOutHandler} class="profileSignOut">Sign out
-                    </div>                
-            `
-                : html `
-                    <${Login} />                    
-                `
-            }
+        <div class="profileBackground">
+            <div class="profileContainer">
+                ${profile !== null 
+                    ? html`
+                        <div class="profileHeader">
+                            <div>
+                                <h2>${state.user.userName}</h2>
+                            </div>
+                            <div class="profileHeaderSubscript">
+                                <h5>User Profile</h5>
+                            </div>
+                        </div>
+                        <div>Registration date: </div>
+                        <div>Total number of proposals: ${profile.proposalCount}</div>
+                        <div>Approved proposals: ${profile.approvedCount}</div>
+                        <div>Approved proposals selected as primary: ${profile.primaryCount}</div>
+                        <div onClick=${signOutHandler} class="profileSignOut">Sign out</div>                
+                    `
+                    : html `
+                        <${Login} />                    
+                    `
+                }
+            </div>
         </div>
     `
 })
 
-export default Profile 
+export default Profile

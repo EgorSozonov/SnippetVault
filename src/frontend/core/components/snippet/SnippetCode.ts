@@ -23,7 +23,7 @@ function SnippetCode({content, isRight, langId, tlId, } : Props) {
         </pre>
         `
     const alternativesLink = html`
-        <${NavLink} exact to=${`${PATHS["alternative"].urlPrefix}?tlId=${tlId}&langId=${langId}`}>
+        <${NavLink} exact to=${`${PATHS["alternative"].urlPrefix}/${langId}/${tlId}`}>
             <div title="Alternative versions" class="commentButton">
                 A
             </div>

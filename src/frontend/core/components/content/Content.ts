@@ -7,8 +7,9 @@ import { html } from "htm/react"
 import TaskGroup from "../admin/TaskGroup"
 import LangGroup from "../admin/LangGroup"
 import NewProposal from "../admin/NewProposal"
-import Alternative from "../alternative/AlternativePg"
+import AlternativePg from "../alternative/AlternativePg"
 import Profile from "../profile/Profile"
+import "./content.css"
 
 
 const Content: React.FunctionComponent = () => {
@@ -18,7 +19,7 @@ const Content: React.FunctionComponent = () => {
             <div class="browserRouter">
                 <${Routes}>
                     <${Route} exact="true" path=${`${PATHS["snippet"].url}`} element=${html`<${SnippetPg} />`} />                    
-                    <${Route} exact="true" path=${PATHS["alternative"].url} element=${html`<${Alternative} />`} />
+                    <${Route} exact="true" path=${PATHS["alternative"].url} element=${html`<${AlternativePg} />`} />
                     <${Route} exact="true" path=${PATHS["proposal"].url} element=${html`<${NewProposal} />`} />                         
                     <${Route} exact="true" path=${PATHS["taskGroup"].url} element=${html`<${TaskGroup} />`} /> 
                     <${Route} exact="true" path=${PATHS["languageGroup"].url} element=${html`<${LangGroup} />`} />

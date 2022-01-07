@@ -26,8 +26,8 @@ public class DataService : IDataService {
         return await st.proposalCreate(dto, authorId);
     }
 
-    public async Task<int> snippetApprove(int sn) {
-        return await st.snippetApprove(sn);
+    public async Task<int> snippetApprove(int sn) {        
+        return await st.snippetApprove(sn);        
     }
 
     public async Task<int> snippetDecline(int sn) {
@@ -37,7 +37,7 @@ public class DataService : IDataService {
     public async Task<int> snippetMarkPrimary(int tlId, int snId) {
         var snippet = await st.snippetGet(snId);
         if (snippet is Success<BareSnippetDTO> succ) {
-            if (succ.vals != null && succ.vals.Count ==  1) {
+            if (succ.vals != null && succ.vals.Count == 1) {
                 var existingSnip = succ.vals[0];
                 if (existingSnip.status == SnippetStatus.Approved && existingSnip.taskLanguageId == tlId) {
                     return await st.snippetMarkPrimary(tlId, snId);

@@ -1,6 +1,8 @@
 export type TaskDTO = {
     id: number,
     name: string,
+    description: string,
+    taskGroupName: string,
 }
 
 export type TaskGroupDTO = {

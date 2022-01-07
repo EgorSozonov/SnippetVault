@@ -2,8 +2,8 @@ import "./Alternative.css"
 import { html } from "htm/react"
 import { FunctionComponent } from "react"
 import { observer } from "mobx-react-lite"
-import CommentDTO from "../../types/dto/CommentDTO";
 import { fmtDt } from "../../utils/DateFormat";
+import { CommentDTO } from "../../types/dto/UserDTO";
 
 
 type Props = {

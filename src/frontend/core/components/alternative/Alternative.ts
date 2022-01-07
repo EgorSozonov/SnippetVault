@@ -1,12 +1,11 @@
 import "./Alternative.css"
 import { html } from "htm/react"
 import { FunctionComponent, useContext, useState } from "react"
-import { AlternativeDTO } from "../../types/dto/AlternativeDTO"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateFormat"
-import CommentDTO from "../../types/dto/CommentDTO"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
+import { AlternativeDTO } from "../../types/dto/SnippetDTO"
 
 
 type Props = {

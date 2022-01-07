@@ -37,10 +37,6 @@ class MockClient implements IClient {
         return this.wrapOK(mockData.proposals)
     }
 
-    tasksGet(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
-        return this.wrapOK(getMockTasks(tgId))
-    }
-
     alternativesGet(tlId: number): Promise<EitherMsg<AlternativesDTO[]>> {
         return this.wrapOK(getMockAlternatives(tlId))
     }

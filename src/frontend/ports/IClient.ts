@@ -13,7 +13,6 @@ type IClient = {
     taskGroupsGet: () => Promise<EitherMsg<TaskGroupDTO[]>>
     languageGroupsGet: () => Promise<EitherMsg<LanguageGroupDTO[]>>
     proposalsGet: () => Promise<EitherMsg<ProposalDTO[]>>
-    tasksGet: (tgId: number) => Promise<EitherMsg<TaskDTO[]>>
     alternativesGet: (tlId: number) => Promise<EitherMsg<AlternativesDTO[]>>
     adminStatsGet: () => Promise<EitherMsg<StatsDTO[]>>
     proposalCreate: (prop: string, languageId: number, taskId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>

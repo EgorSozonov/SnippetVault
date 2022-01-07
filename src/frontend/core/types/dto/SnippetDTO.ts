@@ -1,3 +1,5 @@
+import { TaskDTO } from "./AuxDTO"
+
 export type SnippetDTO = {
     leftCode: string,
     leftId: number,
@@ -27,6 +29,7 @@ export type ProposalCreateDTO = {
 
 export type AlternativesDTO = {
     primary: AlternativeDTO,
+    task: TaskDTO,
     rows: AlternativeDTO[],
 }
 

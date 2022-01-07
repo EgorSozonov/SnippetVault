@@ -1,16 +1,18 @@
 import "./Alternative.css"
 import { html } from "htm/react"
 import { FunctionComponent } from "react"
-import { AlternativeDTO } from "../../types/dto/AlternativeDTO"
 import Toggler from "../../commonComponents/toggler/Toggler"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateFormat"
-import LanguageDTO from "../../types/dto/LanguageDTO"
+import { AlternativeDTO } from "../../types/dto/SnippetDTO"
+import { LanguageDTO, TaskDTO } from "../../types/dto/AuxDTO"
+import TaskGroup from "../admin/TaskGroup"
 
 
 type Props = {
     primaryAlternative: AlternativeDTO | null,    
     lang: LanguageDTO | null,
+    task: TaskDTO | null,
 }
 
 const AlternativePrimary: FunctionComponent<Props> = observer(({
@@ -25,12 +27,11 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({
                     </div>
                 </div>
                 <div class="alternativeHeaderMainMid">
-                    <div>
-                        ${lang !== null && 
-                            html`Language: ${lang.name}`}
+                    <div> Language: 
+                        ${lang !== null && lang.name}
                     </div>
                     <div>
-                        Task: Walk a folder
+                        Task: ${task !== null && TaskGroup}
                     </div>
                 </div>
                 <div class="alternativeHeaderMainRight">

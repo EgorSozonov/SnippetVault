@@ -127,7 +127,16 @@ public class DBStore : IStore {
     }
 
     private static readonly string snippetApproveQ = @"
-        UPDATE sv.snippet SET status=3 WHERE id=@snId;
+        BEGIN;
+
+        UPDATE sv.""taskLanguage"" AS tl
+        SET ""primarySnippetId"" = @snId
+        FROM sv.snippet AS sn
+        WHERE sn.""taskLanguageId"" = tl.id AND sn.id = @snId AND tl.""primarySnippetId"" IS NULL;
+
+        UPDATE sv.snippet SET status = 3 WHERE id = @snId;
+
+        COMMIT;
     ";
     public async Task<int> snippetApprove(int sn) {
         await using (var cmd = new NpgsqlCommand(snippetApproveQ, db.conn)) { 
@@ -136,8 +145,9 @@ public class DBStore : IStore {
         }
     }
 
+
     private static readonly string snippetDeclineQ = @"
-        UPDATE sv.snippet SET status=2 WHERE id=@snId;
+        UPDATE sv.snippet SET status=2 WHERE id = @snId;
     ";
     public async Task<int> snippetDecline(int sn) {
         await using (var cmd = new NpgsqlCommand(snippetDeclineQ, db.conn)) { 
@@ -147,7 +157,7 @@ public class DBStore : IStore {
     }
 
     private static readonly string snippetMarkPrimaryQ = @"
-        UPDATE sv.""taskLanguage"" SET ""primarySnippetId""=@snId WHERE id=@tlId AND ""isDeleted""=0::bit;
+        UPDATE sv.""taskLanguage"" SET ""primarySnippetId"" = @snId WHERE id=@tlId AND ""isDeleted""=0::bit;
     ";
     public async Task<int> snippetMarkPrimary(int tlId, int snId) {
         await using (var cmd = new NpgsqlCommand(snippetMarkPrimaryQ, db.conn)) { 
