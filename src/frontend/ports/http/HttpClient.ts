@@ -72,22 +72,18 @@ class HttpClient implements IClient {
     }
 
     languageCU(headers: SignInSuccessDTO): Promise<string> {
-        // TODO 
         return this.makePostRequestNoPayload(`/language/cu`, headers)
     }
 
     languageGroupCU(headers: SignInSuccessDTO): Promise<string> {
-        // TODO 
         return this.makePostRequestNoPayload(`languageGroup/cu`, headers)
     }
 
     taskCU(headers: SignInSuccessDTO): Promise<string> {
-        // TODO 
         return this.makePostRequestNoPayload(`/task/cu`, headers)
     }
 
     taskGroupCU(headers: SignInSuccessDTO): Promise<string> {
-        // TODO 
         return this.makePostRequestNoPayload(`/taskGroup/cu`, headers)
     }
 
@@ -103,14 +99,15 @@ class HttpClient implements IClient {
         return this.makePostRequest("/user/signInAdmin", dto)
     }
 
-    userProfile(): Promise<EitherMsg<ProfileDTO[]>> {
-        return this.makeGetRequest("/user/profile")
+    userProfile(headers: SignInSuccessDTO): Promise<EitherMsg<ProfileDTO[]>> {
+        return this.makeGetRequest("/user/profile", headers)
     }
 
 
-    private async makeGetRequest<T>(url: string): Promise<EitherMsg<T>> {
+    private async makeGetRequest<T>(url: string, headers?: SignInSuccessDTO): Promise<EitherMsg<T>> {
         try {
-            const r = await this.client.get<T>(url)
+            const r = headers ? await this.client.get<T>(url, { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, },}) 
+                              : await this.client.get<T>(url);
             if (r.data) {
                 return { isOK: true, value: r.data, }
             } else {

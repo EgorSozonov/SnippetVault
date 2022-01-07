@@ -232,17 +232,17 @@ public class MainController : Controller {
     public async Task commentCreate([FromBody] CommentCUDTO dto) {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
         int.TryParse(mbUserId[0].ToString(), out int userId);
-        await applyPostRequest(api.commentCreate(dto, userId), HttpContext.Response);        
+        await applyPostRequest(api.commentCreate(dto, userId), HttpContext.Response);
     }
 
     [HttpGet]
     [Route("user/profile")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task userProfile() {        
+    public async Task userProfile() {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
         int.TryParse(mbUserId[0].ToString(), out int userId);
         var result = await api.userProfile(userId);
-        await sendQueryResult<ProfileDTO>(result, HttpContext.Response);        
+        await sendQueryResult<ProfileDTO>(result, HttpContext.Response);
     }
 
     #endregion

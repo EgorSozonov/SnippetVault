@@ -19,7 +19,7 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, 
     const userStatus = state.user.userStatus
     let [showInput, setShowInput] = useState(false)
 
-    const signedIn = (userStatus === "user" || userStatus === "admin") 
+    const signedIn = userStatus === "user"
     const saveProposalHandler = () => {
         const accToken = state.user.accessToken
         const userId = state.user.userId

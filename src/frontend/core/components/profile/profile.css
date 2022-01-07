@@ -1,0 +1,16 @@
+.profileContainer {
+    background-color: (0, 0%, 18%);
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+.profileSignOut {
+    cursor: pointer;
+    border: solid 1px white;
+    width: 300px;
+    margin-top: 2rem;
+}

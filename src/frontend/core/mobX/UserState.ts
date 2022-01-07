@@ -41,6 +41,7 @@ export default class UserState {
         this.accessToken = ""
         this.userName = ""
         this.userId = -1
+        this.profile = null
     })
 
     setProfile = action((newValue: ProfileDTO[]): void => {

@@ -23,7 +23,7 @@ type IClient = {
 
     userRegister: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
-    userProfile: (userId: number) => Promise<EitherMsg<ProfileDTO[]>>
+    userProfile: (headers: SignInSuccessDTO) => Promise<EitherMsg<ProfileDTO[]>>
     adminSignIn: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
 
 }

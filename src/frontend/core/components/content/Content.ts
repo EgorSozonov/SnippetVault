@@ -8,6 +8,7 @@ import TaskGroup from "../admin/TaskGroup"
 import LangGroup from "../admin/LangGroup"
 import NewProposal from "../admin/NewProposal"
 import Alternative from "../alternative/AlternativePg"
+import Profile from "../profile/Profile"
 
 
 const Content: React.FunctionComponent = () => {
@@ -22,6 +23,7 @@ const Content: React.FunctionComponent = () => {
                     <${Route} exact="true" path=${PATHS["taskGroup"].url} element=${html`<${TaskGroup} />`} /> 
                     <${Route} exact="true" path=${PATHS["languageGroup"].url} element=${html`<${LangGroup} />`} />
                     <${Route} exact="true" path=${PATHS["admin"].url} element=${html`<${Admin} />`} /> 
+                    <${Route} exact="true" path=${PATHS["profile"].url} element=${html`<${Profile} />`} /> 
                     <${Route} path="/" element=${html`<${SnippetPg} />`} />
                 <//>
             </div>

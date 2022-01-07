@@ -41,7 +41,7 @@ const Header: React.FunctionComponent = observer(() => {
                     html`
                         <div class="headerUsername headerRightmost choiceInput">
                             <div>${state.user.userName}</div>
-                            <${NavLink} exact to=${`${PATHS["profile"].urlPrefix}`}>
+                            <${NavLink} exact to=${`${PATHS["profile"].url}`}>
                                 <div class="headerProfileButton">
                                     Profile
                                 </div>
