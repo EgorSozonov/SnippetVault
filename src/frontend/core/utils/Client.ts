@@ -2,8 +2,6 @@ import EitherMsg from "../types/EitherMsg";
 
 export async function fetchFromClient<T>(response: Promise<EitherMsg<T>>, actionOK: (v: T) => void) {
     const result = await response
-    console.log("result")
-    console.log(result)
     if (result.isOK === true) {
         actionOK(result.value)
     } else {

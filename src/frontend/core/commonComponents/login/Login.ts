@@ -22,6 +22,7 @@ const Login: React.FunctionComponent = observer(() => {
         if (response.isOK === true) {
             const userData = response.value[0]
             state.user.signIn(userData.userId, userData.accessToken, uName)
+            localStorage.setItem("user", JSON.stringify({userId: userData.userId, accessToken: userData.accessToken, status: "admin", }))
         } else {
             console.log(response.errMsg)
         }

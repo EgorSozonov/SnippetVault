@@ -97,3 +97,22 @@
     font-size: 1.2rem;
     cursor: pointer;
 }
+
+.adminLoginForm {
+    display: block;
+    color: white;
+}
+
+.adminLoginLabel {
+    width: 200px;
+    text-align: left;
+}
+
+.adminLoginInput {
+    width: 200px;
+    margin-bottom: 0.5rem;
+}
+
+.adminLoginButtons {
+    margin-bottom: 0.5rem;
+}

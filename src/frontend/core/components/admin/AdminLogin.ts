@@ -20,33 +20,31 @@ const AdminLogin: FunctionComponent = observer(({}: any) => {
         const dto: SignInAdminDTO = {userName: uName, password1: pw1, password2: pw2, }
 
         const response = await state.app.client.adminSignIn(dto)
-        if (response.isOK === true) {
-            
+        if (response.isOK === true) {            
             const userData = response.value[0]
-            console.log("is OK")
-            console.log(userData)
             state.user.signInAdmin(userData.userId, userData.accessToken, uName)
+            localStorage.setItem("user", JSON.stringify({userId: userData.userId, accessToken: userData.accessToken, status: "admin", }))
         } else {
             console.log(response.errMsg)
         }
     }
 
     return html`
-        <div class="loginForm">
+        <div class="adminLoginForm">
             <div>
                 Log in as an administrator:
             </div>
             
-            <div class="loginFormLabel">Username</div>
+            <div class="adminLoginLabel">Username</div>
             <input class="loginFormInput" ref=${unameRef} type="text" />
                             
-            <div class="loginFormLabel">Password 1</div>
+            <div class="adminLoginLabel">Password 1</div>
             <input class="loginFormInput" type="password" ref=${pw1Ref} />
 
-            <div class="loginFormLabel">Password 2</div>
+            <div class="adminLoginLabel">Password 2</div>
             <input class="loginFormInput" type="password" ref=${pw2Ref} />
             
-            <div class="loginFormButtons">
+            <div class="adminLoginButtons">
                 <button onClick=${signInOrRegisterHandler}>Sign in</button>
             </div>
         </div>

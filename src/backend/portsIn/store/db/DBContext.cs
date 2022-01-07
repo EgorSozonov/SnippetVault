@@ -12,7 +12,6 @@ public class DBContext : IDBContext {
     }
 }
 
-
 public interface IDBContext {
     public NpgsqlConnection conn {get;}
 }

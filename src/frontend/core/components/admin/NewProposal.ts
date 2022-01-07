@@ -33,7 +33,7 @@ const NewProposal: FunctionComponent = observer(() => {
 
     const approveHandler = (pId: number) => () => {
         const accToken = state.user.accessToken
-        const userId = state.user.userId
+        const userId = state.user.userId        
         if (userId < 0 || accToken === "") return
         client.proposalApprove(pId, {userId: userId, accessToken: accToken, })
     }

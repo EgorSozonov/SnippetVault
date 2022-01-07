@@ -55,6 +55,15 @@ const Admin: FunctionComponent = observer(({}: any) => {
         fetchFromClient(client.getTaskGroups(), state.app.setTaskGroups)
         fetchFromClient(client.getLanguageGroups(), state.app.setLanguageGroups)
         fetchFromClient(client.getAdminStats(), state.app.setStats)
+        const fromLS = localStorage.getItem("user")        
+        if (fromLS && fromLS.length > 0 && fromLS !== "undefined") {
+            const userFromLS = JSON.parse(fromLS)
+            if (userFromLS.userId > -1 && userFromLS.status === "admin") {
+                state.user.userId = userFromLS.userId
+                state.user.accessToken = userFromLS.accessToken
+                state.user.userStatus = "admin"
+            }
+        }
     }, [])
 
     return html`

@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios"
-import createClient from "./Client"
+import createClient from "./HttpConfig"
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"

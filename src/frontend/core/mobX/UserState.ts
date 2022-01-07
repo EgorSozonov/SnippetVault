@@ -7,7 +7,7 @@ export default class UserState {
     public accessToken: string = ""
     public userName: string = ""
     public userId: number = -1
-    public userStatus: UserStatus = "admin" // TODO guest
+    public userStatus: UserStatus = "guest" // TODO guest
     public profile: ProfileDTO | null = null
 
     constructor() {
@@ -42,6 +42,7 @@ export default class UserState {
         this.userName = ""
         this.userId = -1
         this.profile = null
+        localStorage.removeItem("user")
     })
 
     setProfile = action((newValue: ProfileDTO[]): void => {
