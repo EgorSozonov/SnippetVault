@@ -14,43 +14,43 @@ class HttpClient implements IClient {
         this.client = createClient();
     }
 
-    getSnippets(taskGroup: number, lang1: number, lang2: number): Promise<EitherMsg<SnippetDTO[]>> {
+    snippetsGet(taskGroup: number, lang1: number, lang2: number): Promise<EitherMsg<SnippetDTO[]>> {
         return this.makeGetRequest<SnippetDTO[]>(`/snippets/${taskGroup}/${lang1}/${lang2}`)
     }
 
-    getSnippetsByCode(taskGroup: string, lang1: string, lang2: string): Promise<EitherMsg<SnippetDTO[]>> {
+    snippetsByCode(taskGroup: string, lang1: string, lang2: string): Promise<EitherMsg<SnippetDTO[]>> {
         return this.makeGetRequest<SnippetDTO[]>(`/snippets/byCode?taskGroup=${taskGroup}&lang1=${lang1}&lang2=${lang2}`)
     }
 
-    getLanguages(): Promise<EitherMsg<LanguageGroupedDTO[]>> {
+    languagesGet(): Promise<EitherMsg<LanguageGroupedDTO[]>> {
         return this.makeGetRequest<LanguageGroupedDTO[]>(`/languages/getGrouped`)
     }
 
-    getLanguagesReq(): Promise<EitherMsg<LanguageDTO[]>> {
+    languagesReqGet(): Promise<EitherMsg<LanguageDTO[]>> {
         return this.makeGetRequest<LanguageDTO[]>(`/languages/get`)
     }
 
-    getTaskGroups(): Promise<EitherMsg<TaskGroupDTO[]>> {
+    taskGroupsGet(): Promise<EitherMsg<TaskGroupDTO[]>> {
         return this.makeGetRequest<TaskGroupDTO[]>(`/taskGroups`)
     }
 
-    getLanguageGroups(): Promise<EitherMsg<LanguageGroupDTO[]>> {
+    languageGroupsGet(): Promise<EitherMsg<LanguageGroupDTO[]>> {
         return this.makeGetRequest<LanguageGroupDTO[]>(`/languageGroups`)
     }
 
-    getProposals(): Promise<EitherMsg<ProposalDTO[]>> {
+    proposalsGet(): Promise<EitherMsg<ProposalDTO[]>> {
         return this.makeGetRequest<ProposalDTO[]>(`/proposals`)
     }
 
-    getTasks(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
+    tasksGet(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
         return this.makeGetRequest<TaskDTO[]>(`/tasks/${tgId}`)
     }
 
-    getAlternatives(tlId: number): Promise<EitherMsg<AlternativesDTO[]>> {
+    alternativesGet(tlId: number): Promise<EitherMsg<AlternativesDTO[]>> {
         return this.makeGetRequest<AlternativesDTO[]>(`/alternatives/${tlId}`)
     }
 
-    getAdminStats(): Promise<EitherMsg<StatsDTO[]>> {
+    adminStatsGet(): Promise<EitherMsg<StatsDTO[]>> {
         return this.makeGetRequest<StatsDTO[]>(`/admin/stats`)
     }
 

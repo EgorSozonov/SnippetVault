@@ -30,21 +30,21 @@ const Header: React.FunctionComponent = observer(() => {
                     <div class="headerDropdownLabel"><label>Task group:</label></div>
                     ${state.app.tg.type === "ChoicesLoaded" && 
                         html`<${HoverSelect} currValue=${state.app.tg} choices=${state.app.tg.choices} uniqueName="TaskGroupChoice"
-                        selectCallback=${state.app.setTaskGroup}><//>`
+                        selectCallback=${state.app.taskGroupSet}><//>`
                     }                    
                 </div>
                 <div class="choiceInput">
                     <div class="headerDropdownLabel"><label>Language 1:</label></div>
                     ${state.app.l1.type === "ChoicesLoaded" && 
                         html`<${HoverSelect} currValue=${state.app.l1} choices=${state.app.l1.choices} uniqueName="Lang1Choice"
-                        selectCallback=${state.app.setLanguage1}><//>`
+                        selectCallback=${state.app.language1Set}><//>`
                     }
                 </div>
                 <div class="choiceInput">
                     <div class="headerDropdownLabel"><label>Language 2:</label></div>
                     ${state.app.l2.type === "ChoicesLoaded" && 
                         html`<${HoverSelect} currValue=${state.app.l2} choices=${state.app.l2.choices} uniqueName="Lang2Choice"
-                        selectCallback=${state.app.setLanguage2}><//>`
+                        selectCallback=${state.app.language2Set}><//>`
                     }                    
                 </div>
                 ${(state.user.userStatus === "user" && state.user.userName.length > 0) && 

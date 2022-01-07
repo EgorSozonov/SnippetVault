@@ -36,31 +36,31 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     // If all query params present and at least one of them doesn't match Redux, make a new request to server and update the Redux ids.
     // Otherwise, if all params are present in Redux, update the URL if it doesn't match.
     if (nonEmptyParams.length > 0) {
-        state.app.setCodesFromUrl(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
+        state.app.codesFromUrlSet(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
     }
 
     useEffect(() => {
         (async () => { 
             if (state.app.groupedLanguages.length > 0) return
-            const resultLangs: EitherMsg<LanguageGroupedDTO[]> = await client.getLanguages() 
+            const resultLangs: EitherMsg<LanguageGroupedDTO[]> = await client.languagesGet() 
                 if (resultLangs.isOK === true) {
-                state.app.setGroupedLanguages(groupLanguages(resultLangs.value))
+                state.app.groupedLanguagesSet(groupLanguages(resultLangs.value))
                 const langList = languageListOfGrouped(resultLangs.value)
-                state.app.setLanguageList(langList)
+                state.app.languageListSet(langList)
             } else {
                 console.log(resultLangs.errMsg)
             }
         })()               
 
         if (state.app.taskGroups.length < 1) {
-            fetchFromClient(client.getTaskGroups(), state.app.setTaskGroups)
+            fetchFromClient(client.taskGroupsGet(), state.app.taskGroupsSet)
         }
     }, [])
 
     useEffect( () => {
         if (isStateOK([tg, lang1, lang2])) {
             setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
-            fetchFromClient(client.getSnippetsByCode(tg.code, lang1.code, lang2.code), state.app.setSnippets)
+            fetchFromClient(client.snippetsByCode(tg.code, lang1.code, lang2.code), state.app.snippetsSet)
         }
     }, [lang1, lang2, tg])
 

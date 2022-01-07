@@ -22,19 +22,19 @@ const HoverSelect: React.FunctionComponent<Props> = observer(({choices, currValu
 
     const onSelect = (c: SelectChoice) => {
         selectCallback(c)
-        mainState.app.setOpenSelect("")
+        mainState.app.openSelectSet("")
     }
 
     const onClickHeader = () => {
         if (isOpen) {
-            mainState.app.setOpenSelect("")            
+            mainState.app.openSelectSet("")            
         } else {
-            mainState.app.setOpenSelect(uniqueName)
+            mainState.app.openSelectSet(uniqueName)
         }
     }
     return html`
-        <div class="hoverSelect" onMouseEnter=${() => mainState.app.setOpenSelect(uniqueName)}
-                onMouseLeave=${() => mainState.app.setOpenSelect("")}>            
+        <div class="hoverSelect" onMouseEnter=${() => mainState.app.openSelectSet(uniqueName)}
+                onMouseLeave=${() => mainState.app.openSelectSet("")}>            
             <span class="search" onClick=${onClickHeader}>
                 <span class="leftButton"></span>
                 <span class="rightLabel">${currValue.name}</span>

@@ -8,7 +8,7 @@ import CodesFromUrl from "../components/snippet/utils/CodesFromUrl"
 import SnippetState, { updateId, updateUrl, updateWithChoicesUrl, } from "../components/snippet/utils/SnippetState"
 import { LanguageDTO, LanguageGroupDTO, TaskGroupDTO } from "../types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO } from "../types/dto/SnippetDTO"
-import { ProfileDTO, StatsDTO } from "../types/dto/UserDTO"
+import { StatsDTO } from "../types/dto/UserDTO"
 
 
 export default class AppState {
@@ -19,7 +19,6 @@ export default class AppState {
     public language2: SelectChoice = {id: 0, name: ""}
     public codesFromUrl: CodesFromUrl = { tg: "", lang1: "", lang2: "", }
     public taskGroup: SelectChoice = {id: 0, name: ""}
-
 
     public l1: SnippetState = {type: "ChoicesAbsent", code: "", }
     public l2: SnippetState = {type: "ChoicesAbsent", code: "", }
@@ -43,35 +42,35 @@ export default class AppState {
         // this.client = new HttpClient(axios)
     }
 
-    setSnippets = action((newValue: SnippetDTO[]): void => {
+    snippetsSet = action((newValue: SnippetDTO[]): void => {
         this.snippets = observable.array(newValue)
     })  
 
-    setLanguage1 = action((newValue: SelectChoice): void => {
+    language1Set = action((newValue: SelectChoice): void => {
         this.l1 = updateId(this.l1, newValue.id)
     })
 
-    setLanguage2 = action((newValue: SelectChoice): void => {
+    language2Set = action((newValue: SelectChoice): void => {
         this.l2 = updateId(this.l2, newValue.id)
     })
 
-    setTaskGroup = action((newValue: SelectChoice): void => {
+    taskGroupSet = action((newValue: SelectChoice): void => {
         this.tg = updateId(this.tg, newValue.id)
     })
 
-    setLanguageList = action((newValue: SelectChoice[]): void => {
+    languageListSet = action((newValue: SelectChoice[]): void => {
         this.l1 = updateWithChoicesUrl(this.l1, newValue)
         this.l2 = updateWithChoicesUrl(this.l2, newValue)
     }) 
 
-    setTaskGroups = action((newValue: TaskGroupDTO[]): void => {
+    taskGroupsSet = action((newValue: TaskGroupDTO[]): void => {
         const newArr = newValue.map(x =>  {return {id: x.id, name: x.name, code: x.code, }})
         this.taskGroups = observable.array(newArr)
         this.tg = updateWithChoicesUrl(this.tg, newArr)
     })  
 
 
-    setCodesFromUrl = action((tgCode: string, l1Code: string, l2Code: string) => {
+    codesFromUrlSet = action((tgCode: string, l1Code: string, l2Code: string) => {
         if (tgCode.length > 0 && tgCode !== "undefined" && this.tg.code === "") {
             this.tg = updateUrl(this.tg, tgCode)
         }
@@ -83,31 +82,31 @@ export default class AppState {
         }
     })
 
-    setGroupedLanguages = action((newValue: SelectGroup[]): void => {
+    groupedLanguagesSet = action((newValue: SelectGroup[]): void => {
         this.groupedLanguages = observable.array(newValue)
     })
 
-    setLanguageGroups = action((newValue: LanguageGroupDTO[]): void => {
+    languageGroupsSet = action((newValue: LanguageGroupDTO[]): void => {
         this.languageGroups = observable.array(newValue)
     })
 
-    setProposals = action((newValue: ProposalDTO[]): void => {
+    proposalsSet = action((newValue: ProposalDTO[]): void => {
         this.proposals = observable.array(newValue)
     })   
 
-    setOpenSelect = action((newValue: string): void => {
+    openSelectSet = action((newValue: string): void => {
         this.openSelect = newValue
     })
 
-    setLanguages = action((newValue: LanguageDTO[]): void => {
+    languagesSet = action((newValue: LanguageDTO[]): void => {
         this.languages = observable.array(newValue)
     }) 
 
-    setAlternatives = action((newValue: AlternativesDTO[]): void => {
+    alternativesSet = action((newValue: AlternativesDTO[]): void => {
         this.alternatives = observable.array(newValue)
     })
 
-    setStats = action((newValue: StatsDTO[]): void => {
+    statsSet = action((newValue: StatsDTO[]): void => {
         this.stats = newValue.length === 1 ? newValue[0] : null
     })
 }

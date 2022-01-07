@@ -29,23 +29,23 @@ const HoverSelectInput: React.FunctionComponent<Props> = observer(({choices, ini
 
     const onSelect = (c: SelectChoice) => {
         setCurrValue(c)
-        mainState.app.setOpenSelect("")
+        mainState.app.openSelectSet("")
     }
 
     const onClickHeader = () => {
         if (isOpen) {
-            mainState.app.setOpenSelect("")            
+            mainState.app.openSelectSet("")            
         } else {
-            mainState.app.setOpenSelect(uniqueName)
+            mainState.app.openSelectSet(uniqueName)
         }
     }
 
     const onMouseEnterH = () => {
-        mainState.app.setOpenSelect(uniqueName)
+        mainState.app.openSelectSet(uniqueName)
     }
 
     return html`
-        <div key=${inputName} onMouseLeave=${() => mainState.app.setOpenSelect("")} class=${"hoverSelectInputContainer"}>
+        <div key=${inputName} onMouseLeave=${() => mainState.app.openSelectSet("")} class=${"hoverSelectInputContainer"}>
             <input type="text" name=${inputName} readOnly value=${currValue.name} class="hoverSelectSmall" 
                 onMouseEnter=${onMouseEnterH}
                 />       

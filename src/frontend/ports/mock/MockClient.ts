@@ -9,43 +9,43 @@ import { StatsDTO } from "../../core/types/dto/UserDTO"
 
 
 class MockClient implements IClient {
-    getSnippets(taskGroup: number, lang1: number, lang2: number): Promise<EitherMsg<SnippetDTO[]>> {
+    snippetsGet(taskGroup: number, lang1: number, lang2: number): Promise<EitherMsg<SnippetDTO[]>> {
         return this.wrapOK(getMockSnippets(taskGroup, lang1, lang2))
     }
 
-    getSnippetsByCode(taskGroup: string, lang1: string, lang2: string): Promise<EitherMsg<SnippetDTO[]>> {
+    snippetsByCode(taskGroup: string, lang1: string, lang2: string): Promise<EitherMsg<SnippetDTO[]>> {
         return this.wrapOK(getMockSnippetsByCode(taskGroup, lang1, lang2))
     }
 
-    getLanguages(): Promise<EitherMsg<LanguageGroupedDTO[]>> {
+    languagesGet(): Promise<EitherMsg<LanguageGroupedDTO[]>> {
         return this.wrapOK(mockData.languages)
     }
 
-    getLanguagesReq(): Promise<EitherMsg<LanguageDTO[]>> {
+    languagesReqGet(): Promise<EitherMsg<LanguageDTO[]>> {
         return this.wrapOK(mockData.languagesReq)
     }
 
-    getTaskGroups(): Promise<EitherMsg<TaskGroupDTO[]>> {
+    taskGroupsGet(): Promise<EitherMsg<TaskGroupDTO[]>> {
         return this.wrapOK(mockData.taskGroups)
     }
 
-    getLanguageGroups(): Promise<EitherMsg<LanguageGroupDTO[]>> {
+    languageGroupsGet(): Promise<EitherMsg<LanguageGroupDTO[]>> {
         return this.wrapOK(mockData.languageGroups)
     }
 
-    getProposals(): Promise<EitherMsg<ProposalDTO[]>> {
+    proposalsGet(): Promise<EitherMsg<ProposalDTO[]>> {
         return this.wrapOK(mockData.proposals)
     }
 
-    getTasks(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
+    tasksGet(tgId: number): Promise<EitherMsg<TaskDTO[]>> {
         return this.wrapOK(getMockTasks(tgId))
     }
 
-    getAlternatives(tlId: number): Promise<EitherMsg<AlternativesDTO[]>> {
+    alternativesGet(tlId: number): Promise<EitherMsg<AlternativesDTO[]>> {
         return this.wrapOK(getMockAlternatives(tlId))
     }
 
-    getAdminStats(): Promise<EitherMsg<StatsDTO[]>> {
+    adminStatsGet(): Promise<EitherMsg<StatsDTO[]>> {
         return this.wrapOK([])
     }
 

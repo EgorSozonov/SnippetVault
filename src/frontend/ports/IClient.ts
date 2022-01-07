@@ -6,16 +6,16 @@ import { ProfileDTO, StatsDTO } from "../core/types/dto/UserDTO"
 
 
 type IClient = {
-    getSnippets: (taskGroup: number, lang1: number, lang2: number) => Promise<EitherMsg<SnippetDTO[]>>
-    getSnippetsByCode: (taskGroup: string, lang1: string, lang2: string) => Promise<EitherMsg<SnippetDTO[]>>
-    getLanguages: () => Promise<EitherMsg<LanguageGroupedDTO[]>>
-    getLanguagesReq: () => Promise<EitherMsg<LanguageDTO[]>>
-    getTaskGroups: () => Promise<EitherMsg<TaskGroupDTO[]>>
-    getLanguageGroups: () => Promise<EitherMsg<LanguageGroupDTO[]>>
-    getProposals: () => Promise<EitherMsg<ProposalDTO[]>>
-    getTasks: (tgId: number) => Promise<EitherMsg<TaskDTO[]>>
-    getAlternatives: (tlId: number) => Promise<EitherMsg<AlternativesDTO[]>>
-    getAdminStats: () => Promise<EitherMsg<StatsDTO[]>>
+    snippetsGet: (taskGroup: number, lang1: number, lang2: number) => Promise<EitherMsg<SnippetDTO[]>>
+    snippetsByCode: (taskGroup: string, lang1: string, lang2: string) => Promise<EitherMsg<SnippetDTO[]>>
+    languagesGet: () => Promise<EitherMsg<LanguageGroupedDTO[]>>
+    languagesReqGet: () => Promise<EitherMsg<LanguageDTO[]>>
+    taskGroupsGet: () => Promise<EitherMsg<TaskGroupDTO[]>>
+    languageGroupsGet: () => Promise<EitherMsg<LanguageGroupDTO[]>>
+    proposalsGet: () => Promise<EitherMsg<ProposalDTO[]>>
+    tasksGet: (tgId: number) => Promise<EitherMsg<TaskDTO[]>>
+    alternativesGet: (tlId: number) => Promise<EitherMsg<AlternativesDTO[]>>
+    adminStatsGet: () => Promise<EitherMsg<StatsDTO[]>>
     proposalCreate: (prop: string, languageId: number, taskId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     proposalApprove: (snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     proposalDecline: (snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>

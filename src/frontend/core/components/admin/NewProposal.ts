@@ -27,13 +27,13 @@ const NewProposal: FunctionComponent = observer(() => {
         client.proposalDecline(confirmationDialog.id, {userId: userId, accessToken: accToken, })
             .then((r) => {
                 if (r.status === "OK") {
-                    fetchFromClient(client.getProposals(), state.app.setProposals)
+                    fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
                 }
             })
     }
 
     useEffect(() => {
-        fetchFromClient(client.getProposals(), state.app.setProposals)
+        fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
     }, [])
 
     const approveHandler = (pId: number) => () => {
@@ -44,7 +44,7 @@ const NewProposal: FunctionComponent = observer(() => {
         client.proposalApprove(pId, headers)
             .then((r) => {
                 if (r.status === "OK") {
-                    fetchFromClient(client.getProposals(), state.app.setProposals)
+                    fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
                 }
             })
     }

@@ -25,9 +25,9 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
         
     useEffect(() => {
         if (lang === null) {
-            fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
+            fetchFromClient(client.languagesReqGet(), state.app.languagesSet)
         }
-        fetchFromClient(client.getAlternatives(tlIdNum), state.app.setAlternatives)
+        fetchFromClient(client.alternativesGet(tlIdNum), state.app.alternativesSet)
     }, [])
     
     const alternatives = state.app.alternatives.length > 0 ? state.app.alternatives[0] : null

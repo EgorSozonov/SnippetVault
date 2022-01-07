@@ -51,10 +51,10 @@ const Admin: FunctionComponent = observer(({}: any) => {
 
     const client: IClient = state.app.client
     useEffect(() => {
-        fetchFromClient(client.getLanguagesReq(), state.app.setLanguages)
-        fetchFromClient(client.getTaskGroups(), state.app.setTaskGroups)
-        fetchFromClient(client.getLanguageGroups(), state.app.setLanguageGroups)
-        fetchFromClient(client.getAdminStats(), state.app.setStats)
+        fetchFromClient(client.languagesReqGet(), state.app.languagesSet)
+        fetchFromClient(client.taskGroupsGet(), state.app.taskGroupsSet)
+        fetchFromClient(client.languageGroupsGet(), state.app.languageGroupsSet)
+        fetchFromClient(client.adminStatsGet(), state.app.statsSet)
         const fromLS = localStorage.getItem("user")        
         if (fromLS && fromLS.length > 0 && fromLS !== "undefined") {
             const userFromLS = JSON.parse(fromLS)
