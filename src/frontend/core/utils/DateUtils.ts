@@ -25,3 +25,8 @@ export function dateOfTS(ts: Date): DateOnly {
     console.log(ts.getDay)
     return { year: ts.getFullYear(), month: ts.getMonth(), day: ts.getDay(), }
 }
+
+export function isSameDay(ts: Date, dt: DateOnly): boolean {
+    const dtOfTS = dateOfTS(ts)
+    return dtOfTS.year === dt.year && dtOfTS.month === dt.month && dtOfTS.day === dt.day
+}

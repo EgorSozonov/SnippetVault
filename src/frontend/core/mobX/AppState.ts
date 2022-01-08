@@ -108,10 +108,8 @@ export default class AppState {
             return
         }
         const alternativesNew = newValue[0]
-        console.log("sorting")
-        console.log(this.alternativesSort)
         const sorted = this.alternativesSort === "byDate"
-            ? alternativesNew.rows.sort((x, y) => x.tsUpload < y.tsUpload ? -1 : 1)
+            ? alternativesNew.rows.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1)
             : alternativesNew.rows.sort((x, y) => y.score - x.score)
 
         this.alternatives = {task: alternativesNew.task, primary: alternativesNew.primary, rows: sorted, }
@@ -124,7 +122,7 @@ export default class AppState {
         }
 
         const sorted = newValue === "byDate"
-            ? this.alternatives.rows.sort((x, y) => x.tsUpload < y.tsUpload ? -1 : 1)
+            ? this.alternatives.rows.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1)
             : this.alternatives.rows.sort((x, y) => y.score - x.score)
         this.alternatives.rows = sorted
     })

@@ -2,7 +2,7 @@ import { action, makeAutoObservable } from "mobx"
 import { SignInSuccessDTO } from "../types/dto/AuthDTO"
 import { ProfileDTO } from "../types/dto/UserDTO"
 import { UserAccount, UserStatus } from "../types/UserAccount"
-import { dateOfTS } from "../utils/DateUtils"
+import { dateOfTS, isSameDay } from "../utils/DateUtils"
 
 
 export default class UserState {
@@ -44,7 +44,8 @@ export default class UserState {
             const accFromLS: UserAccount = JSON.parse(fromLS)
             if (accFromLS.userId && accFromLS.userId > -1 
                   && accFromLS.accessToken && accFromLS.accessToken.length > 0
-                  && (accFromLS.status === "admin" || accFromLS.status === "user")) {
+                  && (accFromLS.status === "admin" || accFromLS.status === "user")
+                  && isSameDay(new Date(), accFromLS.expiration) === true) {
                 this.acc = accFromLS
             }
         }

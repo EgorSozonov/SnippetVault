@@ -69,6 +69,7 @@
 
 .alternativeHeaderMainFooter {
     padding: 1rem;
+    font-size: 0.8rem;
 }
 
 .alternativeHeaderMainFooter span {
@@ -103,6 +104,8 @@
     border-bottom-width: 0;
     color: white;
     width: 96vw;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .alternativeItemCode {
@@ -113,7 +116,7 @@
     padding-bottom: 1rem;    
     background-color: black;
     color: hsl(120, 100%, 62%);
-    border-radius: 0.4rem;
+    border-radius: 0.3rem;
     white-space: pre-line;
 }
 
@@ -185,8 +188,15 @@
     color: black;
     text-align: center;
     font-size: 0.6rem;
-    margin: 5px;
+    margin: 10px;
     padding: 3px;
+}
+
+.alternativeItemButton:hover {
+    margin: 3px;
+    padding: 10px;
+    color: green;
+    transition: all 0.3s ease;
 }
 
 .alternativeFooter {
