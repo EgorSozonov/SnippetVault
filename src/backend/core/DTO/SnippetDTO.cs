@@ -47,6 +47,7 @@ public class AlternativeDTO {
     public string code {get; set;}
     public int score {get; set;}
     public DateTime tsUpload {get; set;}
+    public int commentCount {get; set;}
     public bool voteFlag {get; set;}
 }
 

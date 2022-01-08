@@ -21,10 +21,10 @@ const NewProposal: FunctionComponent = observer(() => {
     const cancelDialog = () => setConfirmationDialog({...confirmationDialog, isOpen: false})
     const okDialog = () => {
         setConfirmationDialog({...confirmationDialog, isOpen: false})
-        const accToken = state.user.accessToken
-        const userId = state.user.userId
-        if (userId < 0 || accToken === "") return
-        client.proposalDecline(confirmationDialog.id, {userId: userId, accessToken: accToken, })
+        const headers = state.user.headersGet()
+        if (headers === null) return
+
+        client.proposalDecline(confirmationDialog.id, headers)
             .then((r) => {
                 if (r.status === "OK") {
                     fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
@@ -37,10 +37,9 @@ const NewProposal: FunctionComponent = observer(() => {
     }, [])
 
     const approveHandler = (pId: number) => () => {
-        const accToken = state.user.accessToken
-        const userId = state.user.userId
-        if (userId < 0 || accToken === "") return
-        const headers = {userId: userId, accessToken: accToken, }
+        const headers = state.user.headersGet()
+        if (headers === null) return
+
         client.proposalApprove(pId, headers)
             .then((r) => {
                 if (r.status === "OK") {
@@ -51,6 +50,10 @@ const NewProposal: FunctionComponent = observer(() => {
 
     const declineHandler = (pId: number) => () => {
         openDialog(pId)
+    }
+
+    const editHandler = (pId: number) => () => {
+        console.log("TODO edit proposal")
     }
     
     return html`
@@ -69,6 +72,9 @@ const NewProposal: FunctionComponent = observer(() => {
                             <div class="proposalHeaderRight" title="Accept">
                                 <div class="proposalHeaderButton" onClick=${declineHandler(proposal.proposalId)} title="Decline proposal">
                                     X
+                                </div>
+                                <div class="proposalHeaderButton" onClick=${editHandler(proposal.proposalId)} title="Edit proposal">
+                                    E
                                 </div>
                                 <div class="proposalHeaderButton" onClick=${approveHandler(proposal.proposalId)} title="Approve proposal">
                                     A

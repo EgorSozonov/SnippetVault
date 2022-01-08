@@ -168,16 +168,20 @@ public class DBStore : IStore {
     }
 
     private static readonly string alternativesForTLGetQ = @"
-        SELECT sn.id, sn.content AS code, sn.""tsUpload"", sn.score
+        SELECT sn.id, sn.content AS code, sn.""tsUpload"", sn.score, COUNT(c.id) AS ""commentCount""
         FROM sv.""taskLanguage"" tl
         JOIN sv.snippet sn ON sn.id=tl.""primarySnippetId""
+        LEFT JOIN sv.comment c ON c.""snippetId"" = sn.id
         WHERE tl.id=@tlId
+        GROUP BY sn.id, sn.content, sn.""tsUpload"", sn.score
 
         UNION ALL 
-
-        SELECT sn.id, sn.content, sn.""tsUpload"", sn.score
+        
+        SELECT sn.id, sn.content, sn.""tsUpload"", sn.score, COUNT(c.id) AS ""commentCount""
         FROM sv.snippet sn
-        WHERE sn.""taskLanguageId""=@tlId;
+        LEFT JOIN sv.comment c ON c.""snippetId"" = sn.id
+        WHERE sn.""taskLanguageId"" = @tlId
+        GROUP BY sn.id, sn.content, sn.""tsUpload"", sn.score;                
     ";
     public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId) {
         await using (var cmd = new NpgsqlCommand(alternativesForTLGetQ, db.conn)) { 
@@ -189,20 +193,24 @@ public class DBStore : IStore {
     }
 
     private static readonly string alternativesForUserGetQ = @"
-        SELECT sn.id, sn.content AS code, sn.""tsUpload"", sn.score, 
+        SELECT sn.id, sn.content AS code, sn.""tsUpload"", sn.score, COUNT(c.id) AS ""commentCount"",
                (CASE WHEN uv.""snippetId"" IS NULL THEN FALSE ELSE TRUE END) AS ""voteFlag""
         FROM sv.""taskLanguage"" tl
         JOIN sv.snippet sn ON sn.id=tl.""primarySnippetId""
         LEFT JOIN sv.""userVote"" uv ON uv.""userId"" = @userId AND uv.""snippetId""=sn.id
-        WHERE tl.id=@tlId
+        LEFT JOIN sv.comment c ON c.""snippetId"" = sn.id
+        WHERE tl.id = @tlId
+        GROUP BY sn.id, sn.content, sn.""tsUpload"", sn.score, ""voteFlag""
 
         UNION ALL 
 
-        SELECT sn.id, sn.content, sn.""tsUpload"", sn.score, 
+        SELECT sn.id, sn.content, sn.""tsUpload"", sn.score, COUNT(c.id) AS ""commentCount"",
                (CASE WHEN uv.""snippetId"" IS NULL THEN FALSE ELSE TRUE END) AS ""voteFlag""
         FROM sv.snippet sn
+        LEFT JOIN sv.comment c ON c.""snippetId"" = sn.id
         LEFT JOIN sv.""userVote"" uv ON uv.""userId"" = @userId AND uv.""snippetId"" = sn.id
-        WHERE sn.""taskLanguageId""=@tlId;
+        WHERE sn.""taskLanguageId""=@tlId
+        GROUP BY sn.id, sn.content, sn.""tsUpload"", sn.score, ""voteFlag"";
     ";
     public async Task<ReqResult<AlternativeDTO>> alternativesForUserGet(int taskLanguageId, int userId) {
         await using (var cmd = new NpgsqlCommand(alternativesForUserGetQ, db.conn)) { 
@@ -478,7 +486,7 @@ public class DBStore : IStore {
         BEGIN;
         WITH existingVote AS (
             SELECT uv.""snippetId"" FROM sv.""userVote"" uv 
-            WHERE uv.""userId""=@userId AND uv.""taskLanguageId""=@tlId AND uv.""snippetId""<>@snId LIMIT 1
+            WHERE uv.""userId""=@userId AND uv.""taskLanguageId""=@tlId LIMIT 1
         )
         UPDATE sv.snippet SET score=score-1 WHERE id IN (SELECT ""snippetId"" FROM existingVote);
         
