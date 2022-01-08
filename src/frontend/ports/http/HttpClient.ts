@@ -3,7 +3,7 @@ import createClient from "./HttpConfig"
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
-import { ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
+import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO, PostResponseDTO } from "../../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO } from "../../core/types/dto/SnippetDTO"
 
@@ -71,6 +71,10 @@ class HttpClient implements IClient {
         return this.makePostRequestNoPayload(`/snippet/markPrimary/${snId}`, headers)
     }
 
+    commentsGet(snId: number): Promise<EitherMsg<CommentDTO[]>> {
+        return this.makeGetRequest<CommentDTO[]>(`/comments/${snId}`)
+    }
+
     languageCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.makePostRequestNoPayload(`/language/cu`, headers)
     }
@@ -105,6 +109,10 @@ class HttpClient implements IClient {
 
     userProfile(headers: SignInSuccessDTO): Promise<EitherMsg<ProfileDTO[]>> {
         return this.makeGetRequest("/user/profile", headers)
+    }
+
+    userComment(dto: CommentCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        return this.makePostRequestForString("/user/vote", dto, headers)
     }
 
 

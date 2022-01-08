@@ -72,7 +72,10 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
             </div>            
             <div class="alternativeItemFooter">                
                 <span class="alternativeItemFooterComments" onClick=${flipComments}>
-                    <span class="alternativeItemButton">C</span> ${alternative.commentCount} comments
+                    <span class="alternativeItemButton" title="Comment">C</span> 
+                    ${alternative.commentCount > 0 && 
+                        (alternative.commentCount > 1 ? html`${alternative.commentCount} comments` : html`1 comment`)
+                    }
                 </span>    
             </div>
             ${isShowingComments === true &&

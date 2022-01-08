@@ -21,13 +21,13 @@
 .activeChoiceLeft {
     transition: all 0.8s ease;
     background-color: hsl(0, 0%, 31%);
-    color: black;
+    color: white;
 }
 
 .activeChoiceRight {
     transition: all 0.8s ease;
     background-color: hsl(0, 0%, 31%);
-    color: black;
+    color: white;
 }
 
 .toggleSwitch {

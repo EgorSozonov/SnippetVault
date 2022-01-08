@@ -2,7 +2,7 @@ import EitherMsg from "../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../core/types/dto/AuthDTO"
 import { LanguageDTO, LanguageGroupDTO, LanguageGroupedDTO, PostResponseDTO, TaskDTO, TaskGroupDTO } from "../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO } from "../core/types/dto/SnippetDTO"
-import { ProfileDTO, StatsDTO, VoteDTO } from "../core/types/dto/UserDTO"
+import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../core/types/dto/UserDTO"
 
 
 type IClient = {
@@ -20,6 +20,7 @@ type IClient = {
     proposalApprove: (snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     proposalDecline: (snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     snippetMarkPrimary: (snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
+    commentsGet: (snId: number) => Promise<EitherMsg<CommentDTO[]>>
 
     languageCU: (headers: SignInSuccessDTO) => Promise<PostResponseDTO> 
     languageGroupCU: (headers: SignInSuccessDTO) => Promise<PostResponseDTO> 
@@ -30,8 +31,8 @@ type IClient = {
     userVote: (dto: VoteDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     userProfile: (headers: SignInSuccessDTO) => Promise<EitherMsg<ProfileDTO[]>>
-    adminSignIn: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
-
+    adminSignIn: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>    
+    userComment: (dto: CommentCUDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
 }
 
 // actionOK: (v: SnippetDTO[]) => void, action: (m: string) => void)

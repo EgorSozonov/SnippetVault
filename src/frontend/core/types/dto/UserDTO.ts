@@ -5,6 +5,12 @@ export type CommentDTO = {
     tsUpload: Date,
 }
 
+export type CommentCUDTO = {
+    snId: number,
+    content: string,
+    existingId?: number,
+}
+
 export type ProfileDTO = {
     proposalCount: number,
     approvedCount: number,

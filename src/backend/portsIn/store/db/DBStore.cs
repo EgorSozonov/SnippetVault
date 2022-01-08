@@ -460,7 +460,7 @@ public class DBStore : IStore {
         SELECT 
         	SUM(CASE WHEN s.status=3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount"",
         	SUM(CASE WHEN s.status=3 AND tl.id IS NULL THEN 1 ELSE 0 END) AS ""alternativeCount"",
-        	SUM(CASE WHEN s.status=1 THEN 1 ELSE 0 END) AS ""proposalCount""
+        	SUM(CASE WHEN s.status != 1 THEN 1 ELSE 0 END) AS ""proposalCount""
         FROM sv.snippet s
         LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;
     ";
