@@ -40,8 +40,6 @@ export default class AppState {
 
     constructor() {
         makeAutoObservable(this)
-        // const axios = createClient()
-        // this.client = new HttpClient(axios)
     }
 
     snippetsSet = action((newValue: SnippetDTO[]): void => {
@@ -110,21 +108,23 @@ export default class AppState {
             return
         }
         const alternativesNew = newValue[0]
+        console.log("sorting")
+        console.log(this.alternativesSort)
         const sorted = this.alternativesSort === "byDate"
             ? alternativesNew.rows.sort((x, y) => x.tsUpload < y.tsUpload ? -1 : 1)
-            : alternativesNew.rows.sort((x, y) => x.score - y.score)
+            : alternativesNew.rows.sort((x, y) => y.score - x.score)
 
         this.alternatives = {task: alternativesNew.task, primary: alternativesNew.primary, rows: sorted, }
     })
 
     alternativesResort = action((newValue: AlternativesSort): void => {
-        if (this.alternatives === null) {
-            this.alternativesSort = newValue
+        this.alternativesSort = newValue
+        if (this.alternatives === null) {            
             return
         }
 
         const sorted = newValue === "byDate"
-            ? this.alternatives.rows.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1)
+            ? this.alternatives.rows.sort((x, y) => x.tsUpload < y.tsUpload ? -1 : 1)
             : this.alternatives.rows.sort((x, y) => y.score - x.score)
         this.alternatives.rows = sorted
     })

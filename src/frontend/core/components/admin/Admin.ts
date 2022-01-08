@@ -55,24 +55,16 @@ const Admin: FunctionComponent = observer(({}: any) => {
         fetchFromClient(client.taskGroupsGet(), state.app.taskGroupsSet)
         fetchFromClient(client.languageGroupsGet(), state.app.languageGroupsSet)
         fetchFromClient(client.adminStatsGet(), state.app.statsSet)
-        const fromLS = localStorage.getItem("user")        
-        if (fromLS && fromLS.length > 0 && fromLS !== "undefined") {
-            const userFromLS = JSON.parse(fromLS)
-            if (userFromLS.userId > -1 && userFromLS.status === "admin") {
-                state.user.userId = userFromLS.userId
-                state.user.accessToken = userFromLS.accessToken
-                state.user.userStatus = "admin"
-            }
-        }
+        state.user.trySignInFromLS()
     }, [])
 
     return html`
         <div class="adminContainer">
-            ${state.user.userStatus !== "admin"            
-            ? html`
-                    <${AdminLogin} />
-                `
-            : html`                    
+            ${state.user.isAdmin() === false
+                ? html`
+                        <${AdminLogin} />
+                    `
+                : html`                    
                     <div class="adminHeaderPanel">
                         <div>
                             ${state.app.stats !== null && 
@@ -95,8 +87,7 @@ const Admin: FunctionComponent = observer(({}: any) => {
                     <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"></EditableList>
                     <${NewProposal} />                 
                 `
-            }
-            
+            }            
         </div>
     `
 })

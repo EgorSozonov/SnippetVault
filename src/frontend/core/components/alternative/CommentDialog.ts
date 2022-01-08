@@ -2,7 +2,7 @@ import "./Alternative.css"
 import { html } from "htm/react"
 import { FunctionComponent } from "react"
 import { observer } from "mobx-react-lite"
-import { fmtDt } from "../../utils/DateFormat";
+import { fmtDt } from "../../utils/DateUtils";
 import { CommentDTO } from "../../types/dto/UserDTO";
 
 

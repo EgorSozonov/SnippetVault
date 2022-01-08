@@ -13,15 +13,7 @@ import PATHS from "../../params/Path"
 const Header: React.FunctionComponent = observer(() => {
     const state = useContext<MainState>(StoreContext)
     useEffect(() => {
-        const fromLS = localStorage.getItem("user")        
-        if (fromLS && fromLS.length > 0 && fromLS !== "undefined") {
-            const userFromLS = JSON.parse(fromLS)
-            if (userFromLS.userId > -1 && userFromLS.status === "user") {
-                state.user.userId = userFromLS.userId
-                state.user.accessToken = userFromLS.accessToken
-                state.user.userStatus = "user"
-            }
-        }
+        state.user.trySignInFromLS()
     }, [])
     return (html `
         <nav>
@@ -47,18 +39,16 @@ const Header: React.FunctionComponent = observer(() => {
                         selectCallback=${state.app.language2Set}><//>`
                     }                    
                 </div>
-                ${(state.user.userStatus === "user" && state.user.userName.length > 0) && 
-                    html`
-                        <div class="headerUsername headerRightmost choiceInput">
-                            <div>${state.user.userName}</div>
-                            <${NavLink} exact to=${`${PATHS["profile"].url}`}>
-                                <div class="headerProfileButton">
-                                    Profile
-                                </div>
-                            <//>                             
+                
+                <div class="headerUsername headerRightmost choiceInput">
+                    <div>${state.user.acc !== null && state.user.acc.name}</div>
+                    <${NavLink} exact to=${`${PATHS["profile"].url}`}>
+                        <div class="headerProfileButton">
+                            Profile
                         </div>
-                    `
-                }
+                    <//>                             
+                </div>
+                                    
             </div>
         </nav>
         `

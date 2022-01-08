@@ -16,17 +16,15 @@ type Props = {
 const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, taskId, } : Props) => {
     const state = useContext<MainState>(StoreContext)
     const inputRef = useRef<HTMLTextAreaElement>(null)
-    const userStatus = state.user.userStatus
+
     let [showInput, setShowInput] = useState(false)
 
-    const signedIn = userStatus === "user"
+    const signedIn = state.user.isUser()
     const saveProposalHandler = () => {
-        const accToken = state.user.accessToken
-        const userId = state.user.userId
-        if (userId < 0 || accToken === "") return
-
-        if (inputRef && inputRef.current && inputRef.current.value.length > 0) {
-            state.app.client.proposalCreate(inputRef.current.value, langId, taskId, {userId: userId, accessToken: accToken, })
+        const headers = state.user.headersGet()
+        
+        if (inputRef && inputRef.current && inputRef.current.value.length > 0 && headers !== null) {
+            state.app.client.proposalCreate(inputRef.current.value, langId, taskId, headers)
             inputRef.current.value = ""            
         }
     }

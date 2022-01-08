@@ -13,19 +13,19 @@ import Login from "../../commonComponents/login/Login"
 const Profile: React.FunctionComponent = observer(() => {
     const state = useContext<MainState>(StoreContext)
     const client: IClient = state.app.client
-    const userId = state.user.userId
+
     const profile = state.user.profile
     
     const signOutHandler = () => {
         state.user.signOut()
     }
 
-    useEffect(() => {
-        if (userId > -1) {
-            const headers: SignInSuccessDTO = {accessToken: state.user.accessToken, userId}
-            fetchFromClient(client.userProfile(headers), state.user.setProfile)
-        }
-    }, [userId])
+    useEffect(() => {        
+        const headers = state.user.headersGet()
+        if (headers === null) return
+        fetchFromClient(client.userProfile(headers), state.user.profileSet)
+        
+    }, [state.user.acc])
 
     return html`
         <div class="profileBackground">
@@ -34,7 +34,7 @@ const Profile: React.FunctionComponent = observer(() => {
                     ? html`
                         <div class="profileHeader">
                             <div>
-                                <h2>${state.user.userName}</h2>
+                                <h2>${state.user.acc !== null && state.user.acc.name}</h2>
                             </div>
                             <div class="profileHeaderSubscript">
                                 <h5>User Profile</h5>

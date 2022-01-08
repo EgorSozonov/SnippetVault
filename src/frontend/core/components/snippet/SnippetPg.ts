@@ -55,6 +55,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         if (state.app.taskGroups.length < 1) {
             fetchFromClient(client.taskGroupsGet(), state.app.taskGroupsSet)
         }
+        state.user.trySignInFromLS()
     }, [])
 
     useEffect( () => {

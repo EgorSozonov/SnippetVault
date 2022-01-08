@@ -2,12 +2,11 @@ import "./Alternative.css"
 import { html } from "htm/react"
 import { FunctionComponent, useContext, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { fmtDt } from "../../utils/DateFormat"
+import { fmtDt } from "../../utils/DateUtils"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import { AlternativeDTO } from "../../types/dto/SnippetDTO"
 import { VoteDTO } from "../../types/dto/UserDTO"
-import { SignInSuccessDTO } from "../../types/dto/AuthDTO"
 import { fetchFromClient } from "../../utils/Client"
 
 
@@ -29,9 +28,9 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
     }
 
     const voteHandler = (snId: number) => () => {
-        const headers: SignInSuccessDTO = {userId: state.user.userId, accessToken: state.user.accessToken, }
-        
-        if (headers.userId < 0) return
+        const headers = state.user.headersGet()        
+        if (headers === null) return
+
         const voteDTO: VoteDTO = {snId, tlId}
         state.app.client.userVote(voteDTO, headers)
             .then((r) => {
@@ -41,7 +40,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
             })
     }
 
-    const isLoggedIn = state.user.userStatus === "user"
+    const isSignedIn = state.user.isUser()
 
     return html`                 
         <div class="alternativeItem">
@@ -62,11 +61,12 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
                             </span>
                             
                         `
-                    : html`
+                    : (isSignedIn === true &&
+                        html`
                            <span class="alternativeFooterVote" onClick=${voteHandler(alternative.id)}>
                                 <span class="alternativeItemButton">V</span>Vote
                             </span>
-                        `
+                        `)
                 }
                 
             </div>            
@@ -81,10 +81,10 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
                     <div onClick=${flipReply}>
                         <span class="alternativeItemButton">A</span>Add a comment
                     </div>
-                    ${(isLoggedIn === false && isShowingInput) && html`
+                    ${(isSignedIn === false && isShowingInput) && html`
                         Please log in to post comments
                     `}
-                    ${(isLoggedIn === true && isShowingInput === true) && html`
+                    ${(isSignedIn === true && isShowingInput === true) && html`
                         <textarea></textarea>
                     `}
                     
