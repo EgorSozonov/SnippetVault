@@ -45,9 +45,16 @@ public class MainController : Controller {
         await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);        
     }
 
+    [HttpPost]
+    [Route("proposal/update")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
+    public async Task proposalUpdate([FromBody] ProposalUpdateDTO dto) {        
+        await applyPostRequest(api.proposalUpdate(dto), HttpContext.Response);        
+    }
+
 
     [HttpGet]
-    [Route("proposal/{snId:int}")]
+    [Route("snippet/{snId:int}")]
     public async Task proposalGet([FromRoute] int snId) {
         var result = await api.proposalGet(snId);
         await sendQueryResult<BareSnippetDTO>(result, HttpContext.Response);
@@ -226,9 +233,9 @@ public class MainController : Controller {
     [HttpPost]
     [Route("user/updatePwAdmin")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task userUpdatePwAdmin([FromBody] SignInAdminDTO dto) {
-        var result = await auth.userAuthenticateAdmin(dto);
-        await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
+    public async Task userUpdatePwAdmin([FromBody] UpdatePwAdminDTO dto) {
+        // var result = await auth.userUp(dto);
+        // await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
         // TODO
     }
 

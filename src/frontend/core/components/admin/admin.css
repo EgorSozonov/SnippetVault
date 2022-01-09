@@ -116,3 +116,38 @@
 .adminLoginButtons {
     margin-bottom: 0.5rem;
 }
+
+/* Proposal editing dialog */
+
+
+.adminProposalDialogButtons {
+    height: 50px;
+    width: 100%;
+    display: inline-flex;
+    cursor: pointer;
+}
+
+.adminProposalDialogButton {
+    height: 100%;
+    width: 50%;
+    margin: 0;
+    background-color: white;
+    color: black;
+    display: flex;
+    border: solid 1px black;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.adminProposalDialogTextareaContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.adminProposalDialogTextarea {
+    width: 90vw;
+    height: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;    
+}

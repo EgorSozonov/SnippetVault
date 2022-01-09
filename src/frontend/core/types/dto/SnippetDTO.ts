@@ -21,6 +21,12 @@ export type ProposalDTO = {
     tsUpload: Date,
 }
 
+export type BareSnippetDTO = {
+    taskLanguageId: number,
+    content: string,
+    score: number,
+}
+
 export type ProposalCreateDTO = {
     langId: number,
     taskId: number,

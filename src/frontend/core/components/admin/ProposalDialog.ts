@@ -1,15 +1,13 @@
-import "./Alternative.css"
+import "./admin.css"
 import { html } from "htm/react"
-import { FunctionComponent, useContext, useEffect, useRef, useState } from "react"
+import { FunctionComponent, useContext, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
-import { fmtDt } from "../../utils/DateUtils";
-import { CommentCUDTO, CommentDTO } from "../../types/dto/UserDTO";
 import DialogState from "../../commonComponents/dialog/DialogState";
 import MainState from "../../mobX/MainState";
 import { StoreContext } from "../../App";
 import DialogFullscreen from "../../commonComponents/dialog/DialogFullscreen";
-import { fetchFromClient } from "../../utils/Client";
-import Login from "../../commonComponents/login/Login";
+import { fetchFromClient } from "../../utils/Client"
+import { ProposalUpdateDTO } from "../../types/dto/SnippetDTO";
 
 
 type Props = {  
@@ -19,22 +17,17 @@ type Props = {
 
 const ProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {       
     const state = useContext<MainState>(StoreContext)
-
-    const [proposalDialog, setProposalDialog] = useState<DialogState>({id: 0, title: "", isOpen: false})
-    const openDialog = (id: number) => () => setProposalDialog({title: "Edit proposal", id: id, isOpen: true})
-    const closeDialog = () => {
-        state.app.commentsSet([])
-        setProposalDialog({...proposalDialog, isOpen: false})
-    }
-
+    const proposal = state.app.editProposal
+    
 
     useEffect(() => {
         if (dialogState.isOpen === false) return
 
-        fetchFromClient(state.app.client.commentsGet(dialogState.id), state.app.commentsSet)
-    }, [dialogState])
+        fetchFromClient(state.app.client.proposalGet(dialogState.id), state.app.editProposalSet)
+    }, [dialogState.isOpen])
 
     const inputRef = useRef<HTMLTextAreaElement>(null)
+    if (proposal !== null && inputRef !== null && inputRef.current !== null) inputRef.current.value = proposal.content
 
     const saveCommentHandler = () => {
         if (inputRef === null || !inputRef.current) return
@@ -43,48 +36,30 @@ const ProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeC
         const headers = state.user.headersGet()
         if (headers === null) return
 
-        const dto: CommentCUDTO = {snId: dialogState.id, content: text}
-        state.app.client.commentCreate(dto, headers)
+        const dto: ProposalUpdateDTO = {content: text, existingId: dialogState.id, }
+        state.app.client.proposalUpdate(dto, headers)
         closeCallback()
     }
 
-
     return html`
         <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>              
-            <ol>
-                ${state.app.comments.map((comm: CommentDTO, idx: number) => {
-                    return html`<li key=${idx} class="alternativeItemCommentsComment">
-                        <div>
-                            <span class="alternativeItemCommentsAuthor">
-                                [${fmtDt(comm.tsUpload)}] <span class="alternativeItemCommentsSmall">by</span> ${comm.author} 
-                            </span>
-                        </div>
-                        <div class="alternativeItemCommentsText">${comm.content}</div>
-                    </li>
-                    `
-                })}
-            </ol>
-            ${state.user.isUser() === true && 
+
+            ${state.user.isAdmin() === true && 
                 html`
                 <div>
-                    <div>Enter comment as ${state.user.acc!.name}:
-                    </div>
-                    <div class="alternativeDialogTextareaContainer">
-                        <textarea class="alternativeDialogTextarea" ref=${inputRef} />
+                    <div class="adminProposalDialogTextareaContainer">
+                        <textarea class="adminProposalDialogTextarea" ref=${inputRef} />
                     </div>
                 </div>
-                <div class="alternativeDialogButtons">
-                <div class="alternativeDialogButton" onClick=${closeCallback}>
+                <div class="adminProposalDialogButtons">
+                <div class="adminProposalDialogButton" onClick=${closeCallback}>
                     Cancel
                 </div>
-                <div class="alternativeDialogButton" onClick=${saveCommentHandler}>
+                <div class="adminProposalDialogButton" onClick=${saveCommentHandler}>
                     OK
                 </div>
             </div>
                 `
-            }
-            ${state.user.isUser() === false && 
-                html`<${Login} />`
             }
         <//>
     `

@@ -1,8 +1,9 @@
 namespace SnippetVault {
 using System;
 
-
-
+/// !!!
+/// All Datetime members in all DTOs must have names starting with "ts" for correct deserialization on the client.
+/// !!!
 
 public class ProposalDTO {
     public int proposalId {get; set;}
@@ -15,10 +16,7 @@ public class ProposalDTO {
 }
 
 public class BareSnippetDTO {
-    public int taskLanguageId {get; set;}
     public string content {get; set;}
-    public SnippetStatus status {get; set;}
-    public int score {get; set;} 
 }
 
 public class ProposalCreateDTO {

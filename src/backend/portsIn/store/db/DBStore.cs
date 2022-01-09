@@ -70,15 +70,15 @@ public class DBStore : IStore {
     }
 
     private static readonly string snippetGetQ = @"
-        SELECT s.""taskLanguageId"", s.content, s.status, s.score
+        SELECT ""taskLanguageId"", ""status"", content, score
 				FROM sv.snippet s 				
-				WHERE s.id=@snId;
+				WHERE id = @snId;
     ";
-    public async Task<ReqResult<BareSnippetDTO>> snippetGet(int snId) {
+    public async Task<ReqResult<SnippetIntern>> snippetGet(int snId) {
         await using (var cmd = new NpgsqlCommand(snippetGetQ, db.conn)) { 
             cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, snId);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<BareSnippetDTO>(reader);
+                return readResultSet<SnippetIntern>(reader);
             }
         }
     }
@@ -124,6 +124,17 @@ public class DBStore : IStore {
                 return await cmdProp.ExecuteNonQueryAsync();
             }                        
         }
+    }
+
+    private static readonly string proposalUpdateQ = @"
+        UPDATE sv.snippet SET content = @content WHERE id = @snId;
+    ";
+    public async Task<int> proposalUpdate(ProposalUpdateDTO dto) {
+        await using (var cmdProp = new NpgsqlCommand(proposalUpdateQ, db.conn)) {
+                cmdProp.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, dto.existingId);
+                cmdProp.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, dto.content);
+                return await cmdProp.ExecuteNonQueryAsync();
+        }        
     }
 
     private static readonly string snippetApproveQ = @"
@@ -438,6 +449,18 @@ public class DBStore : IStore {
             cmd.Parameters.AddWithValue("dtExpiration", NpgsqlTypes.NpgsqlDbType.Date, dtExpiration);
             var mbNewInt = cmd.ExecuteScalar();
             return mbNewInt != null ? (int)mbNewInt : 0;
+        }
+    }
+
+    private static readonly string userUpdatePwQ = @"
+        UPDATE sv.user SET hash = decode(@hash, 'base64'), salt = decode(@salt, 'base64') WHERE name = @name;
+    ";
+    public async Task<int> userUpdatePw(string userName, string newSalt, string newHash) {
+        await using (var cmd = new NpgsqlCommand(userUpdatePwQ, db.conn)) { 
+            cmd.Parameters.AddWithValue("userId", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
+            cmd.Parameters.AddWithValue("hash", NpgsqlTypes.NpgsqlDbType.Varchar, newHash);
+            cmd.Parameters.AddWithValue("salt", NpgsqlTypes.NpgsqlDbType.Varchar, newSalt);
+            return await cmd.ExecuteNonQueryAsync();            
         }
     }
 

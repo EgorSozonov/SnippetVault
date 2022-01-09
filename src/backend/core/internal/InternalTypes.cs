@@ -14,6 +14,13 @@ public class AuthorizeIntern {
     public DateTime expiration {get; set;}
 }
 
+public class SnippetIntern {
+    public int taskLanguageId {get; set;}
+    public string content {get; set;}
+    public int status {get; set;}
+    public int score {get; set;} 
+}
+
 public enum SnippetStatus {
     Proposal = 1,
     Declined = 2,

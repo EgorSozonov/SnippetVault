@@ -7,7 +7,7 @@ import MockClient from "../../ports/mock/MockClient"
 import CodesFromUrl from "../components/snippet/utils/CodesFromUrl"
 import SnippetState, { updateId, updateUrl, updateWithChoicesUrl, } from "../components/snippet/utils/SnippetState"
 import { LanguageDTO, LanguageGroupDTO, TaskGroupDTO } from "../types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO } from "../types/dto/SnippetDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO, BareSnippetDTO } from "../types/dto/SnippetDTO"
 import { CommentDTO, StatsDTO } from "../types/dto/UserDTO"
 import { AlternativesSort } from "../components/alternative/utils/Types"
 
@@ -40,7 +40,7 @@ export default class AppState {
     public alternativesSort: AlternativesSort = "byDate"
     public client: IClient = new HttpClient()
 
-    public editProposal: ProposalDTO | null = null
+    public editProposal: BareSnippetDTO | null = null
 
     constructor() {
         makeAutoObservable(this)
@@ -144,7 +144,9 @@ export default class AppState {
         this.comments = observable.array(newValue.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1))
     })
 
-    editProposalSet = action((newValue: ProposalDTO | null): void => {
-        this.editProposal = newValue
+    editProposalSet = action((newValue: BareSnippetDTO[]): void => {
+        if (!newValue || newValue.length !== 1) this.editProposal = null
+        
+        this.editProposal = newValue[0]
     })
 }

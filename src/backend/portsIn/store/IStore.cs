@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 public interface IStore {
     Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroupId, int lang1Id, int lang2Id);
     Task<ReqResult<SnippetDTO>> snippetsGetByCode(string taskGroupCode, string lang1Code, string lang2Code);
-    Task<ReqResult<BareSnippetDTO>> snippetGet(int snId);
+    Task<ReqResult<SnippetIntern>> snippetGet(int snId);
     Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
     Task<ReqResult<LanguageDTO>> languagesGet();
     Task<ReqResult<LanguageGroupDTO>> languageGroupsGet();
@@ -19,6 +19,7 @@ public interface IStore {
     Task<ReqResult<AlternativeDTO>> alternativesForUserGet(int taskLanguageId, int userId);
     Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
     Task<int> proposalCreate(ProposalCreateDTO dTO, int authorId);
+    Task<int> proposalUpdate(ProposalUpdateDTO dto);
 
     Task<int> snippetApprove(int sn);
     Task<int> snippetDecline(int sn);
@@ -36,6 +37,7 @@ public interface IStore {
     Task<ReqResult<AuthorizeIntern>> userAdminAuthoriz();
     Task<int> userUpdateExpiration(int userId, string newToken, DateTime newDate);
     Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime tsExpiration);
+    Task<int> userUpdatePw(string userName, string newSalt, string newHash);
     Task<int> userVote(int userId, int tlId, int snId);
     Task<ReqResult<ProfileDTO>> userProfile(int userId);
     Task<ReqResult<UserDTO>> userData(int userId);

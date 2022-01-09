@@ -5,7 +5,7 @@ import EitherMsg from "../../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO, PostResponseDTO } from "../../core/types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO } from "../../core/types/dto/SnippetDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO, BareSnippetDTO } from "../../core/types/dto/SnippetDTO"
 import ky from "ky"
 import { PORT } from "../../core/params/Url"
 
@@ -56,8 +56,8 @@ class HttpClient implements IClient {
         return this.makePostRequestForString<ProposalCreateDTO>(`/proposal/create`, payload, headers)
     }
 
-    proposalGet(snId: number): Promise<EitherMsg<ProposalDTO[]>> {
-        return this.makeGetRequest<ProposalDTO[]>(`/proposal/${snId}`)
+    proposalGet(snId: number): Promise<EitherMsg<BareSnippetDTO[]>> {
+        return this.makeGetRequest<BareSnippetDTO[]>(`/snippet/${snId}`)
     }
 
     proposalUpdate(dto: ProposalUpdateDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {

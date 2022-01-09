@@ -1,7 +1,7 @@
 import EitherMsg from "../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../core/types/dto/AuthDTO"
 import { LanguageDTO, LanguageGroupDTO, LanguageGroupedDTO, PostResponseDTO, TaskDTO, TaskGroupDTO } from "../core/types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalUpdateDTO } from "../core/types/dto/SnippetDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalUpdateDTO, BareSnippetDTO } from "../core/types/dto/SnippetDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../core/types/dto/UserDTO"
 
 
@@ -17,7 +17,7 @@ type IClient = {
     alternativesForUserGet: (tlId: number, userId: number) => Promise<EitherMsg<AlternativesDTO[]>>
     
     proposalCreate: (prop: string, languageId: number, taskId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
-    proposalGet: (snId: number) => Promise<EitherMsg<ProposalDTO[]>>
+    proposalGet: (snId: number) => Promise<EitherMsg<BareSnippetDTO[]>>
     proposalUpdate: (dto: ProposalUpdateDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     proposalApprove: (snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     proposalDecline: (snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
