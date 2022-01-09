@@ -18,7 +18,7 @@ public interface IStore {
     Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId);
     Task<ReqResult<AlternativeDTO>> alternativesForUserGet(int taskLanguageId, int userId);
     Task<ReqResult<CommentDTO>> commentsGet(int snippetId);
-    Task<int> proposalCreate(CreateProposalDTO dTO, int authorId);
+    Task<int> proposalCreate(ProposalCreateDTO dTO, int authorId);
 
     Task<int> snippetApprove(int sn);
     Task<int> snippetDecline(int sn);

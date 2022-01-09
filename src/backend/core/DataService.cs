@@ -22,7 +22,7 @@ public class DataService : IDataService {
 
     #region Snippets
 
-    public async Task<int> proposalCreate(CreateProposalDTO dto, int authorId) {
+    public async Task<int> proposalCreate(ProposalCreateDTO dto, int authorId) {
         return await st.proposalCreate(dto, authorId);
     }
 
@@ -54,6 +54,10 @@ public class DataService : IDataService {
 
     public async Task<ReqResult<ProposalDTO>> proposalsGet() {
         return await st.proposalsGet();
+    }
+
+    public async Task<ReqResult<BareSnippetDTO>> proposalGet(int snId) {
+        return await st.snippetGet(snId);
     }
 
     public async Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId, int? userId){
@@ -187,11 +191,12 @@ public class DataService : IDataService {
 public interface IDataService {
     Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2);
     Task<ReqResult<SnippetDTO>> snippetsGetByCode(string taskGroup, string lang1, string lang2);
-    Task<int> proposalCreate(CreateProposalDTO dto, int authorId);
+    Task<int> proposalCreate(ProposalCreateDTO dto, int authorId);
     Task<int> snippetApprove(int sn);
     Task<int> snippetDecline(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
     Task<ReqResult<ProposalDTO>> proposalsGet();
+    Task<ReqResult<BareSnippetDTO>> proposalGet(int snId);
     Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId, int? userId);
 
     Task<ReqResult<LanguageDTO>> languagesGet();

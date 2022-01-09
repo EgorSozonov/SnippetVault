@@ -27,6 +27,11 @@ export type ProposalCreateDTO = {
     content: string,
 }
 
+export type ProposalUpdateDTO = {
+    existingId: number
+    content: string
+}
+
 export type AlternativesDTO = {
     primary: AlternativeDTO,
     task: TaskDTO,

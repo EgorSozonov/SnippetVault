@@ -167,10 +167,11 @@
 }
 
 .alternativeItemCommentsAuthor {
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 0.2rem;
-    border-color: hsl(0, 0%, 58%);
+    border-bottom: solid 1px hsl(0, 0%, 58%);
+}
+
+.alternativeItemCommentsSmall {
+    font-size: 0.8rem;
 }
 
 .alternativeItemCommentsText {
@@ -204,4 +205,37 @@
     border-top-width: 1px;
     border-top-style: solid;
     width: calc(96vw + 2px);
+}
+
+.alternativeDialogButtons {
+    height: 50px;
+    width: 100%;
+    display: inline-flex;
+    cursor: pointer;
+}
+
+.alternativeDialogButton {
+    height: 100%;
+    width: 50%;
+    margin: 0;
+    background-color: white;
+    color: black;
+    display: flex;
+    border: solid 1px black;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.alternativeDialogTextareaContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.alternativeDialogTextarea {
+    width: 90vw;
+    height: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    
 }

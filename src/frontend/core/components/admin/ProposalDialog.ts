@@ -1,6 +1,6 @@
 import "./Alternative.css"
 import { html } from "htm/react"
-import { FunctionComponent, useContext, useEffect, useRef } from "react"
+import { FunctionComponent, useContext, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateUtils";
 import { CommentCUDTO, CommentDTO } from "../../types/dto/UserDTO";
@@ -17,8 +17,16 @@ type Props = {
     closeCallback: () => void,
 }
 
-const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {       
+const ProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {       
     const state = useContext<MainState>(StoreContext)
+
+    const [proposalDialog, setProposalDialog] = useState<DialogState>({id: 0, title: "", isOpen: false})
+    const openDialog = (id: number) => () => setProposalDialog({title: "Edit proposal", id: id, isOpen: true})
+    const closeDialog = () => {
+        state.app.commentsSet([])
+        setProposalDialog({...proposalDialog, isOpen: false})
+    }
+
 
     useEffect(() => {
         if (dialogState.isOpen === false) return
@@ -82,4 +90,4 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
     `
 })
 
-export default CommentDialog
+export default ProposalDialog

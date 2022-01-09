@@ -31,23 +31,11 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
 
     const [commentDialog, setCommentDialog] = useState<DialogState>({id: 0, title: "", isOpen: false})
     const openDialog = (id: number) => () => setCommentDialog({title: "Comments for snippet", id: id, isOpen: true})
-    const cancelDialog = () => {
+    const closeDialog = () => {
         state.app.commentsSet([])
         setCommentDialog({...commentDialog, isOpen: false})
     }
-    const okDialog = (content: string) => {
-        setCommentDialog({...commentDialog, isOpen: false})
-        const headers = state.user.headersGet()
-        if (headers === null) return
 
-        const dto: CommentCUDTO = { snId: commentDialog.id, content, }
-        client.userComment(dto, headers)
-            .then((r) => {
-                if (r.status === "OK") {
-                    fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
-                }
-            })
-    }
 
     useEffect(() => {
         state.user.trySignInFromLS()
@@ -67,16 +55,20 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     const primaryAlternative = alternatives.primary
     const nonPrimaryAlternatives = alternatives.rows
         
-    return html`                         
-        <div class="alternativeBody">
-            <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} />
-            ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
-                return html`<${Alternative} key=${idx} alternative=${alt} tlId=${tlIdNum} openDialog=${openDialog} />`
-            })}
-            <div class="alternativeFooter"></div>
-            <${CommentDialog} dialogState=${commentDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />
-        </div>        
-    `
+    return commentDialog.isOpen === false 
+        ? html`                         
+            <div class="alternativeBody">
+                <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} />
+                ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
+                    return html`<${Alternative} key=${idx} alternative=${alt} tlId=${tlIdNum} openDialog=${openDialog} />`
+                })}
+                <div class="alternativeFooter"></div>
+                
+            </div>        
+        `
+        : html`
+            <${CommentDialog} dialogState=${commentDialog} closeCallback=${closeDialog} />
+        `
 })
 
 export default AlternativePg

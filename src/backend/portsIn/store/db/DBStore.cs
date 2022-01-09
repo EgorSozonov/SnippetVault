@@ -111,7 +111,7 @@ public class DBStore : IStore {
         INSERT INTO sv.snippet(""taskLanguageId"", content, status, score, ""tsUpload"", ""authorId"")
         VALUES (@tlId, @content, 1, 0, @ts, @authorId);
     ";
-    public async Task<int> proposalCreate(CreateProposalDTO dto, int authorId) {
+    public async Task<int> proposalCreate(ProposalCreateDTO dto, int authorId) {
         await using (var cmdTL = new NpgsqlCommand(taskLanguageCreateQ, db.conn)) { 
             cmdTL.Parameters.AddWithValue("taskId", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskId);
             cmdTL.Parameters.AddWithValue("langId", NpgsqlTypes.NpgsqlDbType.Integer, dto.langId);

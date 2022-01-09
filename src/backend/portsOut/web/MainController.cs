@@ -39,10 +39,18 @@ public class MainController : Controller {
     [HttpPost]
     [Route("proposal/create")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task proposalCreate([FromBody] CreateProposalDTO dto) {
+    public async Task proposalCreate([FromBody] ProposalCreateDTO dto) {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
         int.TryParse(mbUserId[0].ToString(), out int userId);
         await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);        
+    }
+
+
+    [HttpGet]
+    [Route("proposal/{snId:int}")]
+    public async Task proposalGet([FromRoute] int snId) {
+        var result = await api.proposalGet(snId);
+        await sendQueryResult<BareSnippetDTO>(result, HttpContext.Response);
     }
 
     [HttpPost]
@@ -234,7 +242,7 @@ public class MainController : Controller {
     }
 
     [HttpPost]
-    [Route("user/commentCreate")]
+    [Route("comment/cu")]
     [ServiceFilter(typeof(AuthorizeFilter))]
     public async Task commentCreate([FromBody] CommentCUDTO dto) {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);

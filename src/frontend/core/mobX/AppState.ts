@@ -40,6 +40,8 @@ export default class AppState {
     public alternativesSort: AlternativesSort = "byDate"
     public client: IClient = new HttpClient()
 
+    public editProposal: ProposalDTO | null = null
+
     constructor() {
         makeAutoObservable(this)
     }
@@ -134,6 +136,15 @@ export default class AppState {
     })
 
     commentsSet = action((newValue: CommentDTO[]): void => {
-        this.comments = observable.array(newValue)
+        if (!newValue) {
+            this.comments = observable.array([])
+            return
+        }
+
+        this.comments = observable.array(newValue.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1))
+    })
+
+    editProposalSet = action((newValue: ProposalDTO | null): void => {
+        this.editProposal = newValue
     })
 }

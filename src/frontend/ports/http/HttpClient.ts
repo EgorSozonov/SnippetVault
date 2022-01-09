@@ -5,7 +5,7 @@ import EitherMsg from "../../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO, PostResponseDTO } from "../../core/types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO } from "../../core/types/dto/SnippetDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO } from "../../core/types/dto/SnippetDTO"
 import ky from "ky"
 import { PORT } from "../../core/params/Url"
 
@@ -51,13 +51,17 @@ class HttpClient implements IClient {
         return this.makeGetRequest<AlternativesDTO[]>(`/alternativesForUser/${tlId}/${userId}`)
     }
 
-    adminStatsGet(): Promise<EitherMsg<StatsDTO[]>> {
-        return this.makeGetRequest<StatsDTO[]>(`/admin/stats`)
+    proposalCreate(proposal: string, langId: number, taskId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        const payload: ProposalCreateDTO = {langId, taskId, content: proposal, }
+        return this.makePostRequestForString<ProposalCreateDTO>(`/proposal/create`, payload, headers)
     }
 
-    proposalCreate(proposal: string, langId: number, taskId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        const payload = {langId, taskId, content: proposal, }
-        return this.makePostRequestForString<ProposalCreateDTO>(`/proposal/create`, payload, headers)
+    proposalGet(snId: number): Promise<EitherMsg<ProposalDTO[]>> {
+        return this.makeGetRequest<ProposalDTO[]>(`/proposal/${snId}`)
+    }
+
+    proposalUpdate(dto: ProposalUpdateDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        return this.makePostRequestForString<ProposalUpdateDTO>(`/proposal/update`, dto, headers)
     }
 
     proposalApprove(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
@@ -73,13 +77,11 @@ class HttpClient implements IClient {
     }
 
     commentsGet(snId: number): Promise<EitherMsg<CommentDTO[]>> {
-
-
-        //const clientKy = ky.create({ prefixUrl: `http://localhost:${PORT}/api/v1` });
-        //return clientKy.get(`comments/${snId}`).json();
         return this.makeGetRequest<CommentDTO[]>(`/comments/${snId}`)
+    }
 
-
+    commentCreate(dto: CommentCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        return this.makePostRequestForString("/comment/cu", dto, headers)
     }
 
     languageCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
@@ -118,10 +120,9 @@ class HttpClient implements IClient {
         return this.makeGetRequest("/user/profile", headers)
     }
 
-    userComment(dto: CommentCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.makePostRequestForString("/user/vote", dto, headers)
+    adminStatsGet(): Promise<EitherMsg<StatsDTO[]>> {
+        return this.makeGetRequest<StatsDTO[]>(`/admin/stats`)
     }
-
 
     private async makeGetRequest<T>(url: string, headers?: SignInSuccessDTO): Promise<EitherMsg<T>> {
         try {

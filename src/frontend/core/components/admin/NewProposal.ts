@@ -87,6 +87,7 @@ const NewProposal: FunctionComponent = observer(() => {
             })}            
         </div>
         <${DialogConfirm} state=${confirmationDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />
+        <${ProposalDialog} dialogState=${proposalDialog} closeCallback=${closeProposalDialog} />
     `
 })
 

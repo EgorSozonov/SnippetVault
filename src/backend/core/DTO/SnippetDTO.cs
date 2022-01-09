@@ -2,11 +2,7 @@ namespace SnippetVault {
 using System;
 
 
-public class CreateProposalDTO {
-    public int langId { get; set; }
-    public int taskId { get; set; }
-    public string content { get; set; }
-}
+
 
 public class ProposalDTO {
     public int proposalId {get; set;}
@@ -23,6 +19,17 @@ public class BareSnippetDTO {
     public string content {get; set;}
     public SnippetStatus status {get; set;}
     public int score {get; set;} 
+}
+
+public class ProposalCreateDTO {
+    public int langId { get; set; }
+    public int taskId { get; set; }
+    public string content { get; set; }
+}
+
+public class ProposalUpdateDTO {
+    public int existingId { get; set; }
+    public string content { get; set; }
 }
 
 public class SnippetDTO {
