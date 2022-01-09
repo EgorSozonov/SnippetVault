@@ -13,19 +13,11 @@ import { fetchFromClient } from "../../utils/Client"
 type Props = {
     alternative: AlternativeDTO,
     tlId: number,
+    openDialog: (id: number) => () => void,
 }
 
-const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: Props) => {
-    const [isShowingComments, setIsShowingComments] = useState(false)
-    const [isShowingInput, setIsShowingInput] = useState(false)
+const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, openDialog, }: Props) => {
     const state = useContext<MainState>(StoreContext)
-    const flipComments = () => {
-        setIsShowingComments(!isShowingComments)
-    }
-
-    const flipReply = () => {
-        setIsShowingInput(!isShowingInput)
-    }
 
     const voteHandler = (snId: number) => () => {
         const headers = state.user.headersGet()        
@@ -49,7 +41,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
             </div>
             <div class="alternativeItemHeader">
                 <span>
-                     Upload date: ${alternative.tsUpload}
+                     Upload date: 
                 </span>
                 <span>
                     Votes: ${alternative.score}
@@ -70,30 +62,14 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, }: P
                 }
                 
             </div>            
-            <div class="alternativeItemFooter">                
-                <span class="alternativeItemFooterComments" onClick=${flipComments}>
+            <div class="alternativeItemFooter">
+                <span class="alternativeItemFooterComments" onClick=${openDialog(alternative.id)}>
                     <span class="alternativeItemButton" title="Comment">C</span> 
                     ${alternative.commentCount > 0 && 
                         (alternative.commentCount > 1 ? html`${alternative.commentCount} comments` : html`1 comment`)
                     }
                 </span>    
-            </div>
-            ${isShowingComments === true &&
-                html`
-                <div class="alternativeItemComments">                                        
-                    <div onClick=${flipReply}>
-                        <span class="alternativeItemButton">A</span>Add a comment
-                    </div>
-                    ${(isSignedIn === false && isShowingInput) && html`
-                        Please log in to post comments
-                    `}
-                    ${(isSignedIn === true && isShowingInput === true) && html`
-                        <textarea></textarea>
-                    `}
-                    
-                </div>
-                `
-            }
+            </div>            
         </div>        
     `
 })

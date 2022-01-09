@@ -20,9 +20,6 @@ export type DateOnly = {
 }
 
 export function dateOfTS(ts: Date): DateOnly {
-    console.log(ts.getFullYear())
-    console.log(ts.getMonth())
-    console.log(ts.getDay)
     return { year: ts.getFullYear(), month: ts.getMonth(), day: ts.getDay(), }
 }
 

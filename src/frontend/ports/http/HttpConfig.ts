@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { API_PREFIX1, BASE_URL } from '../../core/params/Url'
+import { deserializeJSON } from '../../core/utils/Client'
 
 
 const API_PREFIX = API_PREFIX1
@@ -7,7 +8,7 @@ const API_PREFIX = API_PREFIX1
 const axiosConfig: AxiosRequestConfig = {
     baseURL: BASE_URL + API_PREFIX,
     timeout: 10000,
-    //transformResponse: [],
+    transformResponse: [deserializeJSON],
     //headers: {'X-Custom-Header': 'foobar'},
 }
 

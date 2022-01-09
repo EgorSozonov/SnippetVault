@@ -442,10 +442,10 @@ public class DBStore : IStore {
     }
 
     private static readonly string commentsGetQ = @"
-        SELECT c.content, c.""tsUpload"", u.id AS ""userId"", u.name AS ""userName""
+        SELECT c.content, c.""tsUpload"", c.id, u.name AS author
 		FROM sv.comment c
 		JOIN sv.user u ON u.id=c.""userId""
-		WHERE c.""snippetId""=@snId;
+		WHERE c.""snippetId"" = @snId;
     ";
     public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
         await using (var cmd = new NpgsqlCommand(commentsGetQ, db.conn)) { 

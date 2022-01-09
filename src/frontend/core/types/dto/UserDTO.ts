@@ -1,7 +1,7 @@
 export type CommentDTO = {
-    authorId: number,
-    authorName: string,
-    text: string,
+    id: number,
+    author: string,
+    content: string,
     tsUpload: Date,
 }
 

@@ -6,7 +6,8 @@ import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dt
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO, PostResponseDTO } from "../../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO } from "../../core/types/dto/SnippetDTO"
-
+import ky from "ky"
+import { PORT } from "../../core/params/Url"
 
 class HttpClient implements IClient {
     private client: AxiosInstance
@@ -72,7 +73,13 @@ class HttpClient implements IClient {
     }
 
     commentsGet(snId: number): Promise<EitherMsg<CommentDTO[]>> {
+
+
+        //const clientKy = ky.create({ prefixUrl: `http://localhost:${PORT}/api/v1` });
+        //return clientKy.get(`comments/${snId}`).json();
         return this.makeGetRequest<CommentDTO[]>(`/comments/${snId}`)
+
+
     }
 
     languageCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {

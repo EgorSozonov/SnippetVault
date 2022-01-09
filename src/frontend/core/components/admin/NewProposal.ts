@@ -10,7 +10,7 @@ import { fmtDt } from "../../utils/DateUtils"
 import Dialog from "../../commonComponents/dialog/Dialog"
 import DialogState from "../../commonComponents/dialog/DialogState"
 import { ProposalDTO } from "../../types/dto/SnippetDTO"
-import DialogChildren from "../../commonComponents/dialog/DialogChildren"
+import DialogConfirm from "../../commonComponents/dialog/DialogConfirm"
 
 
 const NewProposal: FunctionComponent = observer(() => {
@@ -86,7 +86,7 @@ const NewProposal: FunctionComponent = observer(() => {
                     </div>`
             })}            
         </div>
-        <${DialogChildren} state=${confirmationDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />
+        <${DialogConfirm} state=${confirmationDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />
     `
 })
 

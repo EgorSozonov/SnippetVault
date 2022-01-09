@@ -6,12 +6,12 @@ import DialogState from "./DialogState"
 
 type Props = {
     state: DialogState,
-    okHandler: any,
-    cancelHandler: any,
+    okHandler: () => void,
+    cancelHandler: () => void,
     children: ReactNode,
 }
 
-const DialogChildren: React.FunctionComponent<Props> = ({state, okHandler, cancelHandler, children, }: Props) => {
+const DialogConfirm: React.FunctionComponent<Props> = ({state, okHandler, cancelHandler, children, }: Props) => {
     return html`
         <div class=${"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
             <div class="dialogContainer">
@@ -34,4 +34,4 @@ const DialogChildren: React.FunctionComponent<Props> = ({state, okHandler, cance
     `
 }
 
-export default DialogChildren
+export default DialogConfirm

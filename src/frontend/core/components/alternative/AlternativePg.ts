@@ -11,8 +11,9 @@ import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
 import { AlternativeDTO } from "../../types/dto/SnippetDTO";
 import { empty } from "../../utils/ComponentUtils";
-import DialogChildren from "../../commonComponents/dialog/DialogChildren";
 import DialogState from "../../commonComponents/dialog/DialogState";
+import { CommentCUDTO } from "../../types/dto/UserDTO";
+import CommentDialog from "./CommentDialog";
 
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {
@@ -29,14 +30,18 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     const lang = state.app.languages.find(x => x.id === langIdNum) || null
 
     const [commentDialog, setCommentDialog] = useState<DialogState>({id: 0, title: "", isOpen: false})
-    const openDialog = (id: number) => setCommentDialog({title: "Are you sure you want to decline this proposal?", id: id, isOpen: true})
-    const cancelDialog = () => setCommentDialog({...commentDialog, isOpen: false})
-    const okDialog = () => {
+    const openDialog = (id: number) => () => setCommentDialog({title: "Comments for snippet", id: id, isOpen: true})
+    const cancelDialog = () => {
+        state.app.commentsSet([])
+        setCommentDialog({...commentDialog, isOpen: false})
+    }
+    const okDialog = (content: string) => {
         setCommentDialog({...commentDialog, isOpen: false})
         const headers = state.user.headersGet()
         if (headers === null) return
 
-        client.userComment(commentDialog.id, headers)
+        const dto: CommentCUDTO = { snId: commentDialog.id, content, }
+        client.userComment(dto, headers)
             .then((r) => {
                 if (r.status === "OK") {
                     fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
@@ -64,12 +69,12 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
         
     return html`                         
         <div class="alternativeBody">
-            <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum}  key=${0} lang=${lang} />
+            <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} />
             ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
-                return html`<${Alternative} key=${idx} alternative=${alt} tlId=${tlIdNum} />`
+                return html`<${Alternative} key=${idx} alternative=${alt} tlId=${tlIdNum} openDialog=${openDialog} />`
             })}
             <div class="alternativeFooter"></div>
-            <${DialogChildren} state=${confirmationDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />
+            <${CommentDialog} dialogState=${commentDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />
         </div>        
     `
 })

@@ -8,7 +8,7 @@ import CodesFromUrl from "../components/snippet/utils/CodesFromUrl"
 import SnippetState, { updateId, updateUrl, updateWithChoicesUrl, } from "../components/snippet/utils/SnippetState"
 import { LanguageDTO, LanguageGroupDTO, TaskGroupDTO } from "../types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO } from "../types/dto/SnippetDTO"
-import { StatsDTO } from "../types/dto/UserDTO"
+import { CommentDTO, StatsDTO } from "../types/dto/UserDTO"
 import { AlternativesSort } from "../components/alternative/utils/Types"
 
 
@@ -33,6 +33,8 @@ export default class AppState {
     public proposals: IObservableArray<ProposalDTO> = observable.array([])
     
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
+
+    public comments: IObservableArray<CommentDTO> = observable.array([])
 
     public alternatives: AlternativesDTO | null = null
     public alternativesSort: AlternativesSort = "byDate"
@@ -129,5 +131,9 @@ export default class AppState {
 
     statsSet = action((newValue: StatsDTO[]): void => {
         this.stats = newValue.length === 1 ? newValue[0] : null
+    })
+
+    commentsSet = action((newValue: CommentDTO[]): void => {
+        this.comments = observable.array(newValue)
     })
 }

@@ -10,7 +10,7 @@ public class UserDTO {
 public class CommentDTO {
     public int id {get; set;}
     public string author {get; set;}
-    public DateTime ts {get; set;}
+    public DateTime tsUpload {get; set;}
     public string content {get; set;}
 }
 
