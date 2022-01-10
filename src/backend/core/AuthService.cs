@@ -111,6 +111,12 @@ public class AuthService : IAuthService {
         }
     }
 
+    public async Task<ReqResult<SignInSuccessDTO>> userUpdateAdminPw(UpdatePwAdminDTO dto) {
+    }
+
+    public async Task<ReqResult<SignInSuccessDTO>> userUpdatePw(UpdatePwDTO dto) {
+    }
+
     private string makeAccessToken() {
         var uuid1 = Guid.NewGuid().ToString();
         var uuid2 = Guid.NewGuid().ToString();
@@ -125,6 +131,8 @@ public interface IAuthService {
     Task<ReqResult<SignInSuccessDTO>> userAuthenticateAdmin(SignInAdminDTO dto);
     Task<bool> userAuthorize(int userId, string accessToken);
     Task<bool> userAuthorizeAdmin(string accessToken);
+    Task<ReqResult<SignInSuccessDTO>> userUpdatePw(UpdatePwDTO dto);
+    Task<ReqResult<SignInSuccessDTO>> userUpdateAdminPw(UpdatePwAdminDTO dto);
 }
 
 }
