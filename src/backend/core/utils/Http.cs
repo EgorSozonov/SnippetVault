@@ -1,5 +1,6 @@
 namespace SnippetVault {
-using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 
@@ -23,6 +24,10 @@ public static class HttpUtils {
             response.StatusCode = 500;
             await response.WriteAsJsonAsync(new PostResponseDTO() { status = "Error"});     
         }
+    }
+
+    public static ReqResult<T> wrapSuccess<T>(T val) {
+        return new Success<T>(new List<T>() {val});
     }
 }
 

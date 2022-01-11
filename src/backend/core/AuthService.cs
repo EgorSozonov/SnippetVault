@@ -112,9 +112,31 @@ public class AuthService : IAuthService {
     }
 
     public async Task<ReqResult<SignInSuccessDTO>> userUpdateAdminPw(UpdatePwAdminDTO dto) {
+        var authentResult = await userAuthenticateAdmin(dto.signIn);
+
+        if (authentResult is Success<SignInSuccessDTO> success) {
+            var response = success.vals[0];
+            string newSalt = "";
+            var newHash = AdminPasswordChecker.makeHash(dto.newPw, out newSalt);
+            var updateCount = await st.userUpdatePw(dto.signIn.userName, newSalt, newHash);
+            return HttpUtils.wrapSuccess(response);
+        } else {
+            return new Err<SignInSuccessDTO>("Authentication error");
+        }
     }
 
     public async Task<ReqResult<SignInSuccessDTO>> userUpdatePw(UpdatePwDTO dto) {
+        var authentResult = await userAuthenticate(dto.signIn);
+        
+        if (authentResult is Success<SignInSuccessDTO> success) {
+            var response = success.vals[0];
+            string newSalt = "";
+            var newHash = PasswordChecker.makeHash(dto.newPw, out newSalt);
+            var updateCount = await st.userUpdatePw(dto.signIn.userName, newSalt, newHash);
+            return HttpUtils.wrapSuccess(response);
+        } else {
+            return new Err<SignInSuccessDTO>("Authentication error");
+        }
     }
 
     private string makeAccessToken() {
