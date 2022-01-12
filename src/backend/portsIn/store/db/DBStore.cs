@@ -439,27 +439,31 @@ public class DBStore : IStore {
                 decode(@hash, 'base64'), decode(@salt, 'base64')) 
         ON CONFLICT DO NOTHING RETURNING id;
     ";
-    public async Task<int> userRegister(string userName, string hash, string salt, string accessToken, DateTime dtExpiration) {
+    public async Task<int> userRegister(UserNewIntern user) {
         await using (var cmd = new NpgsqlCommand(userRegisterQ, db.conn)) { 
-            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
-            cmd.Parameters.AddWithValue("salt", NpgsqlTypes.NpgsqlDbType.Varchar, salt);
-            cmd.Parameters.AddWithValue("hash", NpgsqlTypes.NpgsqlDbType.Varchar, hash);
-            cmd.Parameters.AddWithValue("accessToken", NpgsqlTypes.NpgsqlDbType.Varchar, accessToken);
+            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, user.userName);
+            cmd.Parameters.AddWithValue("salt", NpgsqlTypes.NpgsqlDbType.Varchar, user.salt);
+            cmd.Parameters.AddWithValue("hash", NpgsqlTypes.NpgsqlDbType.Varchar, user.hash);
+            cmd.Parameters.AddWithValue("accessToken", NpgsqlTypes.NpgsqlDbType.Varchar, user.accessToken);
             cmd.Parameters.AddWithValue("tsJoin", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now);
-            cmd.Parameters.AddWithValue("dtExpiration", NpgsqlTypes.NpgsqlDbType.Date, dtExpiration);
+            cmd.Parameters.AddWithValue("dtExpiration", NpgsqlTypes.NpgsqlDbType.Date, user.dtExpiration);
             var mbNewInt = cmd.ExecuteScalar();
             return mbNewInt != null ? (int)mbNewInt : 0;
         }
     }
 
-    private static readonly string userUpdatePwQ = @"
-        UPDATE sv.user SET hash = decode(@hash, 'base64'), salt = decode(@salt, 'base64') WHERE name = @name;
+    private static readonly string userUpdateQ = @"
+        UPDATE sv.user SET hash = decode(@hash, 'base64'), salt = decode(@salt, 'base64'), 
+                           expiration = @dtExpiration, ""accessToken"" = @accessToken
+        WHERE name = @name;
     ";
-    public async Task<int> userUpdatePw(string userName, string newSalt, string newHash) {
-        await using (var cmd = new NpgsqlCommand(userUpdatePwQ, db.conn)) { 
-            cmd.Parameters.AddWithValue("userId", NpgsqlTypes.NpgsqlDbType.Varchar, userName);
-            cmd.Parameters.AddWithValue("hash", NpgsqlTypes.NpgsqlDbType.Varchar, newHash);
-            cmd.Parameters.AddWithValue("salt", NpgsqlTypes.NpgsqlDbType.Varchar, newSalt);
+    public async Task<int> userUpdate(UserNewIntern user) {
+        await using (var cmd = new NpgsqlCommand(userUpdateQ, db.conn)) { 
+            cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, user.userName);
+            cmd.Parameters.AddWithValue("salt", NpgsqlTypes.NpgsqlDbType.Varchar, user.salt);
+            cmd.Parameters.AddWithValue("hash", NpgsqlTypes.NpgsqlDbType.Varchar, user.hash);
+            cmd.Parameters.AddWithValue("accessToken", NpgsqlTypes.NpgsqlDbType.Varchar, user.accessToken);
+            cmd.Parameters.AddWithValue("dtExpiration", NpgsqlTypes.NpgsqlDbType.Date, user.dtExpiration);          
             return await cmd.ExecuteNonQueryAsync();            
         }
     }

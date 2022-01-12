@@ -21,6 +21,14 @@ public class SnippetIntern {
     public int score {get; set;} 
 }
 
+public class UserNewIntern {
+    public string userName;
+    public string hash;
+    public string salt;
+    public string accessToken;
+    public DateOnly dtExpiration;
+}
+
 public enum SnippetStatus {
     Proposal = 1,
     Declined = 2,

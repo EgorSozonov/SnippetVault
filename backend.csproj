@@ -9,6 +9,6 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
-        <PackageReference Include="npgsql" Version="5.0.10" />
+        <PackageReference Include="npgsql" Version="6.0" />
     </ItemGroup>
 </Project>

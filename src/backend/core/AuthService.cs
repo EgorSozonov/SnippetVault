@@ -21,7 +21,11 @@ public class AuthService : IAuthService {
         var newHash = (dto.userName != AdminPasswordChecker.adminName) 
             ? PasswordChecker.makeHash(dto.password, out newSalt) : AdminPasswordChecker.makeHash(dto.password, out newSalt);
         var newAccessToken = makeAccessToken();
-        var newUserId = await st.userRegister(dto.userName, newHash, newSalt, newAccessToken, System.DateTime.Today);
+        var user = new UserNewIntern() {
+            userName = dto.userName, hash = newHash, salt = newSalt, accessToken = newAccessToken, 
+            dtExpiration = DateOnly.FromDateTime(DateTime.Today),
+        };
+        var newUserId = await st.userRegister(user);
         if (newUserId > 0) {
             var successList = new List<SignInSuccessDTO>() {new SignInSuccessDTO() {
                 accessToken = newAccessToken, userId = newUserId}
@@ -118,8 +122,13 @@ public class AuthService : IAuthService {
             var response = success.vals[0];
             string newSalt = "";
             var newHash = AdminPasswordChecker.makeHash(dto.newPw, out newSalt);
-            var updateCount = await st.userUpdatePw(dto.signIn.userName, newSalt, newHash);
-            return HttpUtils.wrapSuccess(response);
+            var newAccessToken = makeAccessToken();
+            var user = new UserNewIntern() {
+                userName = dto.signIn.userName, salt = newSalt,
+                hash = newHash, accessToken = newAccessToken, dtExpiration = DateOnly.FromDateTime(DateTime.Now), 
+            };
+            var updateCount = await st.userUpdate(user);
+            return HttpUtils.wrapSuccess(new SignInSuccessDTO() {accessToken = newAccessToken, userId = response.userId, });
         } else {
             return new Err<SignInSuccessDTO>("Authentication error");
         }
@@ -132,8 +141,13 @@ public class AuthService : IAuthService {
             var response = success.vals[0];
             string newSalt = "";
             var newHash = PasswordChecker.makeHash(dto.newPw, out newSalt);
-            var updateCount = await st.userUpdatePw(dto.signIn.userName, newSalt, newHash);
-            return HttpUtils.wrapSuccess(response);
+            var newAccessToken = makeAccessToken();
+            var user = new UserNewIntern() {
+                userName = dto.signIn.userName, salt = newSalt,
+                hash = newHash, accessToken = newAccessToken, dtExpiration = DateOnly.FromDateTime(DateTime.Now), 
+            };
+            var updateCount = await st.userUpdate(user);
+            return HttpUtils.wrapSuccess(new SignInSuccessDTO() {accessToken = newAccessToken, userId = response.userId, });
         } else {
             return new Err<SignInSuccessDTO>("Authentication error");
         }
