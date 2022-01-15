@@ -445,7 +445,7 @@ public class DBStore : IStore {
             cmd.Parameters.AddWithValue("salt", NpgsqlTypes.NpgsqlDbType.Varchar, user.salt);
             cmd.Parameters.AddWithValue("hash", NpgsqlTypes.NpgsqlDbType.Varchar, user.hash);
             cmd.Parameters.AddWithValue("accessToken", NpgsqlTypes.NpgsqlDbType.Varchar, user.accessToken);
-            cmd.Parameters.AddWithValue("tsJoin", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now);
+            cmd.Parameters.AddWithValue("tsJoin", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now.ToUniversalTime());
             cmd.Parameters.AddWithValue("dtExpiration", NpgsqlTypes.NpgsqlDbType.Date, user.dtExpiration);
             var mbNewInt = cmd.ExecuteScalar();
             return mbNewInt != null ? (int)mbNewInt : 0;

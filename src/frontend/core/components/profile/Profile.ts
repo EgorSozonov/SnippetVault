@@ -31,7 +31,7 @@ const Profile: React.FunctionComponent = observer(() => {
         setChangePwMode(false)
     }
 
-    const saveChangePwHandler = () => {
+    const saveChangePwHandler = async () => {
         const headers = state.user.headersGet()
         if (headers === null || state.user.acc === null) return
 
@@ -42,18 +42,32 @@ const Profile: React.FunctionComponent = observer(() => {
         const signInDTO: SignInDTO = {userName: state.user.acc?.name, password: oldPw, }
 
         const dto: ChangePwDTO = { newPw: newPw, signIn: signInDTO, }
-        state.user.changePw(dto, headers)
+        await state.user.changePw(dto, headers)
+        setChangePwMode(false)
     }
 
-    useEffect(() => {        
+    useEffect(() => {
+        //state.user.trySignInFromLS()
         const headers = state.user.headersGet()
         if (headers === null) return
-        fetchFromClient(client.userProfile(headers), state.user.profileSet)
-        
+        fetchFromClient(client.userProfile(headers), state.user.profileSet)        
     }, [state.user.acc])
 
     const oldPwRef = useRef<HTMLInputElement>(null)
     const newPwRef = useRef<HTMLInputElement>(null)
+
+    const changePwMenu = html`
+        <div>
+            <div>Old password:</div>
+            <div><input type="password" ref=${oldPwRef} /></div>
+            <div>New password:</div>
+            <div><input type="password" ref=${newPwRef} /></div>
+            <div class="profileButtons">
+                <div class="clickable" onClick=${closeChangePwHandler}>Cancel</div>
+                <div class="clickable" onClick=${saveChangePwHandler}>Save</div>
+            </div>
+        </div>
+    ` 
     return html`
         <div class="profileBackground">
             <div class="profileContainer">
@@ -76,16 +90,7 @@ const Profile: React.FunctionComponent = observer(() => {
                         <div onClick=${signOutHandler} class="profileSignOut">Sign out</div>                
                     `
                     : (changePwMode === true 
-                        ? html`
-                            <div>
-                                <div>Old password:</div>
-                                <div><input type="password" ref=${oldPwRef} /></div>
-                                <div>New password:</div>
-                                <div><input type="password" ref=${newPwRef} /></div>
-                                <div class="clickable" onClick=${closeChangePwHandler}>Cancel</div>
-                                <div class="clickable" onClick=${saveChangePwHandler}>Save</div>
-                            </div>
-                        ` 
+                        ? changePwMenu
                         : html `<${Login} />`)
                 }
             </div>

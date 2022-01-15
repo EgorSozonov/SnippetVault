@@ -40,6 +40,8 @@ export default class UserState {
 
         const expiration = dateOfTS(new Date())
         const account: UserAccount = {name: userName, expiration, accessToken, userId, status: "admin", }
+        console.log("signing in admin")
+        console.log(account)
         localStorage.setItem("account", JSON.stringify(account))
         this.acc = account
     })
