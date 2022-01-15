@@ -21,7 +21,6 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, task, closeCal
     
     const acc = state.user.acc
     const signedIn = state.user.isUser()
-    console.log("signedIn = " + signedIn)
     const saveProposalHandler = async () => {
         const headers = state.user.headersGet()
         if (headers === null) return

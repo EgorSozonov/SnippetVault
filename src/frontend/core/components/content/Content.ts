@@ -28,7 +28,7 @@ const Content: React.FunctionComponent = () => {
                     <${Route} path="/" element=${html`<${SnippetPg} />`} />
                 <//>
             </div>
-            <${ToastContainer} />
+            <${ToastContainer} autoClose=${2000} hideProgressBar />
         <//>
     `
 }
