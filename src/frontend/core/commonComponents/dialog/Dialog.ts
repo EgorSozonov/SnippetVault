@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ReactNode, useEffect } from "react"
 import { html } from "htm/react"
 import "./dialog.css"
 import DialogState from "./DialogState"
@@ -6,24 +6,39 @@ import DialogState from "./DialogState"
 
 type Props = {
     state: DialogState,
-    okHandler: any,
-    cancelHandler: any,
+    closeCallback: () => void,
+    children: ReactNode,
 }
 
-const Dialog: React.FunctionComponent<Props> = ({state, okHandler, cancelHandler, }: Props) => {
+const Dialog: React.FunctionComponent<Props> = ({state, closeCallback, children, }: Props) => {
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                closeCallback()
+            } else {
+                return
+            }
+        }
+
+        document.addEventListener("keydown", handleKeyDown)
+        
+        return function cleanup() {
+            document.removeEventListener("keydown", handleKeyDown)
+        }
+    }, [])
+    
     return html`
         <div class=${"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
             <div class="dialogContainer">
-                <div class="dialogBody">
-                    ${state.title}
+                <div class="dialogHeader">
+                    <span>
+                        <h4>${state.title}</h4>
+                    </span>
+                    <span class="dialogHeaderRight" onClick=${closeCallback}>[X]
+                    </span>
                 </div>
-                <div class="dialogButtons">
-                    <div class="dialogButton" onClick=${cancelHandler}>
-                        Cancel
-                    </div>
-                    <div class="dialogButton" onClick=${okHandler}>
-                        OK
-                    </div>
+                <div>
+                    ${children}
                 </div>
             </div>
         </div>

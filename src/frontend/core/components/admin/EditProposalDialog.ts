@@ -15,7 +15,7 @@ type Props = {
     closeCallback: () => void,
 }
 
-const ProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {       
+const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {       
     const state = useContext<MainState>(StoreContext)
     const proposal = state.app.editProposal
     
@@ -43,7 +43,6 @@ const ProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeC
 
     return html`
         <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>              
-
             ${state.user.isAdmin() === true && 
                 html`
                 <div>
@@ -65,4 +64,4 @@ const ProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeC
     `
 })
 
-export default ProposalDialog
+export default EditProposalDialog

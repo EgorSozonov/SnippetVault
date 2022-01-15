@@ -1,0 +1,50 @@
+
+/* Text input */
+.proposalInputContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: baseline;
+    padding-left: 0.5rem;
+}
+
+
+.proposalInputTextArea {
+    height: 4rem;
+    width: 100%;
+    max-width: 90%;
+    max-height: 4rem;
+    font-size: 1rem;
+    margin: 0.3rem;
+}
+
+.proposalInputButtons {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.proposalInputButton {
+    background-color: hsl(0, 0%, 18%);
+    border-radius: 0.3rem;
+    border: groove 1px white;
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+}
+
+
+.proposalInputLang {
+    color: hsl(120, 71%, 43%);
+}
+
+.proposalInputBlock {
+    margin-bottom: 1rem;
+}
+
+.proposalInputTask {
+    color: hsl(46, 84%, 39%);
+}
+

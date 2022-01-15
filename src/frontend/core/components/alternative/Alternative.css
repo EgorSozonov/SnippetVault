@@ -239,3 +239,13 @@
     margin-bottom: 1rem;
     
 }
+
+.clickable {
+    cursor: pointer;
+}
+
+.alternativeOpenProposal {
+    border: solid 1px white;
+    border-radius: 0.3rem;
+    padding: 0.2rem;
+}

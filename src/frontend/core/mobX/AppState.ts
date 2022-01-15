@@ -98,8 +98,11 @@ export default class AppState {
     })
 
     proposalsSet = action((newValue: ProposalDTO[]): void => {
-        this.proposals = observable.array([])
         this.proposals = observable.array(newValue)
+    })   
+
+    proposalsClear = action((newValue: ProposalDTO[]): void => {
+        this.proposals = observable.array([])
     })   
 
     openSelectSet = action((newValue: string): void => {

@@ -1,6 +1,6 @@
 import "./Alternative.css"
 import { html } from "htm/react"
-import { FunctionComponent, useContext } from "react"
+import { FunctionComponent, useContext, useRef, useState } from "react"
 import Toggler from "../../commonComponents/toggler/Toggler"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateUtils"
@@ -10,6 +10,9 @@ import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import { VoteDTO } from "../dto/UserDTO"
 import { fetchFromClient } from "../../utils/Client"
+import Dialog from "../../commonComponents/dialog/Dialog"
+import DialogState from "../../commonComponents/dialog/DialogState"
+import ProposalInput from "../proposalInput/ProposalInput"
 
 
 type Props = {
@@ -17,11 +20,9 @@ type Props = {
     lang: LanguageDTO | null,
     task: TaskDTO,
     tlId: number,
-    isSignedIn: boolean,
 }
 
-const AlternativePrimary: FunctionComponent<Props> = observer(({
-        primaryAlternative, lang, task, tlId, }: Props) => {
+const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternative, lang, task, tlId, }) => {
     const state = useContext<MainState>(StoreContext)
     const isSignedIn = state.user.isUser()
     const voteHandler = (snId: number) => () => {
@@ -36,6 +37,10 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({
                 }
             })
     }
+    const [proposalDialog, setProposalDialog] = useState<DialogState>({ isOpen: false, id: -1, title: "Post a proposal", })
+    const openProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: true })
+    const closeProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: false, })
+    const inputRef = useRef<HTMLTextAreaElement>(null)
     return html`                 
         <div class="alternativeHeader">
             <div class="alternativeHeaderTitle">Alternatives</div>
@@ -65,7 +70,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({
                 </div>          
             </div>
             <div class="alternativeHeaderMainFooter">
-                <span>Upload date: ${primaryAlternative !== null && html`tsUpload`}</span>
+                <span>Upload date: ${primaryAlternative !== null && fmtDt(primaryAlternative.tsUpload)}</span>
                 <span>Score: ${primaryAlternative !== null && primaryAlternative.score}</span>
                 ${primaryAlternative.voteFlag 
                     ? html`
@@ -81,9 +86,20 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({
                             </span>
                         `)
                 }
-            </div>         
+                <span class="clickable alternativeOpenProposal" onClick=${openProposalDialog}>
+                    Propose a new snippet
+                </span>
+
+            </div>
+            ${ lang !== null && html`
+                    <${Dialog} state=${proposalDialog} closeCallback=${closeProposalDialog}>
+                        <${ProposalInput} lang=${lang} task=${task} closeCallback=${closeProposalDialog} />
+                    <//>
+                `
+            }
         </div>        
     `
+    
 })
 
 export default AlternativePrimary

@@ -15,6 +15,8 @@ const DialogFullscreen: React.FunctionComponent<Props> = ({state, closeCallback,
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
                 closeCallback()
+            } else {
+                return
             }
         }
 
@@ -32,9 +34,7 @@ const DialogFullscreen: React.FunctionComponent<Props> = ({state, closeCallback,
             <div class="dialogFullscreenChildren">
                 ${children}
             </div>
-
-        </div>
-        
+        </div>        
     `
 }
 

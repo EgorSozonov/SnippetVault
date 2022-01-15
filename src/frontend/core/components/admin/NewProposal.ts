@@ -9,7 +9,7 @@ import IClient from "../../../ports/IClient"
 import DialogState from "../../commonComponents/dialog/DialogState"
 import { ProposalDTO } from "../dto/SnippetDTO"
 import DialogConfirm from "../../commonComponents/dialog/DialogConfirm"
-import ProposalDialog from "./ProposalDialog"
+import EditProposalDialog from "./EditProposalDialog"
 
 
 const NewProposal: FunctionComponent = observer(() => {
@@ -61,7 +61,7 @@ const NewProposal: FunctionComponent = observer(() => {
         openConfirmationDialog(pId)
     }
 
-    const proposals = state.app.proposals
+    const proposals = state.app.proposals.slice()
     
     return ((proposalDialog.isOpen === false)
         ?  html`
@@ -96,7 +96,7 @@ const NewProposal: FunctionComponent = observer(() => {
             <${DialogConfirm} state=${confirmationDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />            
         `
         : html`
-            <${ProposalDialog} dialogState=${proposalDialog} closeCallback=${closeProposalDialog} />
+            <${EditProposalDialog} dialogState=${proposalDialog} closeCallback=${closeProposalDialog} />
         `
     )
 })

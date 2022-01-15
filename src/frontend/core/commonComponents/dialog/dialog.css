@@ -10,7 +10,8 @@
 
 .dialogContainer {
     position: fixed;
-    background: white;
+    background-color: hsl(0, 0%, 18%);
+    color: white;
     width: 80vw;
     min-height: 60vh;
     height: auto;
@@ -19,6 +20,8 @@
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
+    border-radius: 0.3rem;
+    z-index: 10;
 }
 
 
@@ -30,14 +33,19 @@
     display: none;
 }
 
-.dialogBody {
-    display: block;
+.dialogHeader {
+    display: flex;
+    align-items: center;
     width: 100%;
-    flex: 100;
-    padding-top: 0.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-bottom: 1rem;
+    height: 2rem;
+    padding: 0.3rem;
+    z-index: 10;
+}
+
+.dialogHeaderRight {
+    margin-left: auto;
+    margin-right: 1rem;
+    cursor: pointer;
 }
 
 .dialogButtons {
@@ -74,8 +82,4 @@
 
 .dialogFullscreenChildren {
     flex: 10;
-}
-
-.dialogTitle {
-
 }
