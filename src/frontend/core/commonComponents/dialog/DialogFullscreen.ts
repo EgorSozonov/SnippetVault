@@ -12,7 +12,7 @@ type Props = {
 
 const DialogFullscreen: React.FunctionComponent<Props> = ({state, closeCallback, children, }: Props) => {
     useEffect(() => {
-        function handleKeyDown(e: KeyboardEvent) {
+        const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
                 closeCallback()
             }

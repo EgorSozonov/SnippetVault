@@ -5,7 +5,6 @@ using Npgsql;
 
 
 public class DBStore : IStore {
-    private NpgsqlConnection conn {get;}
     private readonly IDBContext db;
 
     public DBStore(IDBContext _db) {
@@ -119,7 +118,7 @@ public class DBStore : IStore {
             await using (var cmdProp = new NpgsqlCommand(proposalCreateQ, db.conn)) {
                 cmdProp.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, tlId);
                 cmdProp.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, dto.content);
-                cmdProp.Parameters.AddWithValue("ts", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now);
+                cmdProp.Parameters.AddWithValue("ts", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now.ToUniversalTime());
                 cmdProp.Parameters.AddWithValue("authorId", NpgsqlTypes.NpgsqlDbType.Integer, authorId);
                 return await cmdProp.ExecuteNonQueryAsync();
             }                        

@@ -19,6 +19,7 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, 
 
     let [showInput, setShowInput] = useState(false)
 
+    const acc = state.user.acc
     const signedIn = state.user.isUser()
     const saveProposalHandler = () => {
         const headers = state.user.headersGet()

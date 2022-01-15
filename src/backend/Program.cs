@@ -17,8 +17,6 @@ class Program {
     public static IWebHostBuilder CreateWebHostBuilder(string[] args) {
         return new WebHostBuilder()
             .UseEnvironment(Microsoft.Extensions.Hosting.Environments.Development)
-            
-            //.UseWebRoot("/wwwroot")
             .ConfigureAppConfiguration((hostingContext, config) => {
                 config.AddJsonFile("creds.json",
                     optional: false,

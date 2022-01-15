@@ -38,6 +38,7 @@ const NewProposal: FunctionComponent = observer(() => {
     }
     const closeProposalDialog = () => {
         setProposalDialog({...proposalDialog, isOpen: false})
+        fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
     }
 
     useEffect(() => {
@@ -59,6 +60,8 @@ const NewProposal: FunctionComponent = observer(() => {
     const declineHandler = (pId: number) => () => {
         openConfirmationDialog(pId)
     }
+
+    const proposals = state.app.proposals
     
     return ((proposalDialog.isOpen === false)
         ?  html`
@@ -66,7 +69,7 @@ const NewProposal: FunctionComponent = observer(() => {
                 <div class="newProposalsTitle">
                     <h3>New proposals</h3>
                 </div>
-                ${state.app.proposals.map((proposal: ProposalDTO, idx: number ) => {
+                ${proposals.map((proposal: ProposalDTO, idx: number ) => {
                     return html`
                         <div class="proposalContainer" key=${idx}>
                             <div class=${"proposalHeaderContainer"}>

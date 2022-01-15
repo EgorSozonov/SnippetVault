@@ -126,7 +126,7 @@ public class DataService : IDataService {
 
 
     public async Task<int> commentCreate(CommentCUDTO dto, int userId) {
-        return await st.commentCreate(userId, dto.snId, dto.content, System.DateTime.Now);
+        return await st.commentCreate(userId, dto.snId, dto.content, System.DateTime.Now.ToUniversalTime());
     }
 
     #endregion
