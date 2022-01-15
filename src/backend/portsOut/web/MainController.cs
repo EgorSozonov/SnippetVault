@@ -216,9 +216,9 @@ public class MainController : Controller {
     }
 
     [HttpPost]
-    [Route("user/updatePw")]
+    [Route("user/changePw")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task userUpdatePw([FromBody] UpdatePwDTO dto) {
+    public async Task userChangePw([FromBody] ChangePwDTO dto) {
         var result = await auth.userUpdatePw(dto);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
     }
@@ -231,9 +231,9 @@ public class MainController : Controller {
     }
 
     [HttpPost]
-    [Route("user/updatePwAdmin")]
+    [Route("user/changePwAdmin")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task userUpdateAdminPw([FromBody] UpdatePwAdminDTO dto) {
+    public async Task userChangeAdminPw([FromBody] ChangePwAdminDTO dto) {
         var result = await auth.userUpdateAdminPw(dto);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
         // var result = await auth.userUp(dto);

@@ -1,8 +1,8 @@
 import EitherMsg from "../core/types/EitherMsg"
-import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../core/types/dto/AuthDTO"
-import { LanguageDTO, LanguageGroupDTO, LanguageGroupedDTO, PostResponseDTO, TaskDTO, TaskGroupDTO } from "../core/types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalUpdateDTO, BareSnippetDTO } from "../core/types/dto/SnippetDTO"
-import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../core/types/dto/UserDTO"
+import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO as ChangePwAdminDTO, ChangePwDTO as ChangePwDTO } from "../core/components/dto/AuthDTO"
+import { LanguageDTO, LanguageGroupDTO, LanguageGroupedDTO, PostResponseDTO, TaskDTO, TaskGroupDTO } from "../core/components/dto/AuxDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalUpdateDTO, BareSnippetDTO } from "../core/components/dto/SnippetDTO"
+import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../core/components/dto/UserDTO"
 
 
 type IClient = {
@@ -33,8 +33,10 @@ type IClient = {
     userRegister: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     userVote: (dto: VoteDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
+    userSignInAdmin: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     userProfile: (headers: SignInSuccessDTO) => Promise<EitherMsg<ProfileDTO[]>>
-    adminSignIn: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>    
+    userChangePw: (dto: ChangePwDTO, headers: SignInSuccessDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
+    userChangeAdminPw: (dto: ChangePwAdminDTO, headers: SignInSuccessDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     
     adminStatsGet: () => Promise<EitherMsg<StatsDTO[]>>
 }

@@ -115,7 +115,7 @@ public class AuthService : IAuthService {
         }
     }
 
-    public async Task<ReqResult<SignInSuccessDTO>> userUpdateAdminPw(UpdatePwAdminDTO dto) {
+    public async Task<ReqResult<SignInSuccessDTO>> userUpdateAdminPw(ChangePwAdminDTO dto) {
         var authentResult = await userAuthenticateAdmin(dto.signIn);
 
         if (authentResult is Success<SignInSuccessDTO> success) {
@@ -134,7 +134,7 @@ public class AuthService : IAuthService {
         }
     }
 
-    public async Task<ReqResult<SignInSuccessDTO>> userUpdatePw(UpdatePwDTO dto) {
+    public async Task<ReqResult<SignInSuccessDTO>> userUpdatePw(ChangePwDTO dto) {
         var authentResult = await userAuthenticate(dto.signIn);
         
         if (authentResult is Success<SignInSuccessDTO> success) {
@@ -167,8 +167,8 @@ public interface IAuthService {
     Task<ReqResult<SignInSuccessDTO>> userAuthenticateAdmin(SignInAdminDTO dto);
     Task<bool> userAuthorize(int userId, string accessToken);
     Task<bool> userAuthorizeAdmin(string accessToken);
-    Task<ReqResult<SignInSuccessDTO>> userUpdatePw(UpdatePwDTO dto);
-    Task<ReqResult<SignInSuccessDTO>> userUpdateAdminPw(UpdatePwAdminDTO dto);
+    Task<ReqResult<SignInSuccessDTO>> userUpdatePw(ChangePwDTO dto);
+    Task<ReqResult<SignInSuccessDTO>> userUpdateAdminPw(ChangePwAdminDTO dto);
 }
 
 }

@@ -1,13 +1,17 @@
 namespace SnippetVault {
-using System;
-    
+ 
+
+public class SignInSuccessDTO {
+    public int userId {get; set; }
+    public string accessToken {get; set; }
+}
 
 public class SignInDTO {
     public string userName {get; set;}
     public string password {get; set;}
 }
 
-public class UpdatePwDTO {
+public class ChangePwDTO {
     public SignInDTO signIn {get; set;}
     public string newPw {get; set;}
 }
@@ -18,14 +22,9 @@ public class SignInAdminDTO {
     public string password2 {get; set; }
 }
 
-public class UpdatePwAdminDTO {
+public class ChangePwAdminDTO {
     public SignInAdminDTO signIn {get; set;}
     public string newPw {get; set;}
-}
-
-public class SignInSuccessDTO {
-    public int userId {get; set; }
-    public string accessToken {get; set; }
 }
 
 }

@@ -6,7 +6,7 @@ import EditableList from "../../commonComponents/editableList/EditableList"
 import { Editability } from "../../commonComponents/editableList/utils/Editability"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
-import { LanguageGroupDTO } from "../../types/dto/AuxDTO"
+import { LanguageGroupDTO } from "../dto/AuxDTO"
 
 
 const ListLGs = (props: any) => EditableList<LanguageGroupDTO>(props)

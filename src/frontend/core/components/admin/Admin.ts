@@ -11,7 +11,7 @@ import { Editability } from "../../commonComponents/editableList/utils/Editabili
 import { fetchFromClient } from "../../utils/Client"
 import IClient from "../../../ports/IClient"
 import AdminLogin from "./AdminLogin"
-import { LanguageGroupDTO, LanguageDTO, TaskGroupDTO } from "../../types/dto/AuxDTO"
+import { LanguageGroupDTO, LanguageDTO, TaskGroupDTO } from "../dto/AuxDTO"
 
 
 const ListTaskGroups = (props: any) => EditableList<TaskGroupDTO>(props)

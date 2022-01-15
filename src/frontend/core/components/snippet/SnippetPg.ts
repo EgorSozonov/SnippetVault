@@ -14,8 +14,8 @@ import { groupLanguages, languageListOfGrouped, } from "../../utils/languageGrou
 import { checkNonempty } from "../../utils/StringUtils"
 import { idOf, isStateOK, stringOf } from "./utils/SnippetState"
 import EitherMsg from "../../types/EitherMsg"
-import { LanguageGroupedDTO } from "../../types/dto/AuxDTO"
-import { SnippetDTO } from "../../types/dto/SnippetDTO"
+import { LanguageGroupedDTO } from "../dto/AuxDTO"
+import { SnippetDTO } from "../dto/SnippetDTO"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {

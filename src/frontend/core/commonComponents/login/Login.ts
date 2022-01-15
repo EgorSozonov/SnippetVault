@@ -5,27 +5,20 @@ import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import {observer} from "mobx-react-lite"
 import SelectChoice from "../../types/SelectChoice"
-import { SignInDTO } from "../../types/dto/AuthDTO"
+import { SignInDTO } from "../../components/dto/AuthDTO"
 
 
 const Login: React.FunctionComponent = observer(() => {    
     const state = useContext<MainState>(StoreContext)
     const unameRef = useRef<HTMLInputElement>(null)
     const pwRef = useRef<HTMLInputElement>(null)
-    const signInOrRegisterHandler = (isRegistering: boolean) => async () => {
+    const signInOrRegisterHandler = (mode: "signIn" | "register") => async () => {
         if (!unameRef.current || !pwRef.current) return
         const uName: string = unameRef.current.value
         const pw: string = pwRef.current.value
         const dto: SignInDTO = {userName: uName, password: pw, }
 
-        const response = isRegistering === true ? await state.app.client.userRegister(dto) : await state.app.client.userSignIn(dto)
-        if (response.isOK === true) {
-            const userData = response.value[0]
-            state.user.signIn(userData.userId, userData.accessToken, uName)
-            localStorage.setItem("user", JSON.stringify({userId: userData.userId, accessToken: userData.accessToken, status: "admin", }))
-        } else {
-            console.log(response.errMsg)
-        }
+        state.user.signInOrRegister(dto, mode)        
     }
 
     return html`
@@ -41,8 +34,8 @@ const Login: React.FunctionComponent = observer(() => {
             <input class="loginFormInput" type="password" ref=${pwRef} />
             
             <div class="loginFormButtons">
-                <button onClick=${signInOrRegisterHandler(false)}>Sign in</button>
-                <button onClick=${signInOrRegisterHandler(true)}>Register</button>
+                <button onClick=${signInOrRegisterHandler("signIn")}>Sign in</button>
+                <button onClick=${signInOrRegisterHandler("register")}>Register</button>
             </div>
         </div>
     `

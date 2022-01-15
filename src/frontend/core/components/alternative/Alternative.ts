@@ -5,8 +5,8 @@ import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateUtils"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
-import { AlternativeDTO } from "../../types/dto/SnippetDTO"
-import { VoteDTO } from "../../types/dto/UserDTO"
+import { AlternativeDTO } from "../dto/SnippetDTO"
+import { VoteDTO } from "../dto/UserDTO"
 import { fetchFromClient } from "../../utils/Client"
 
 

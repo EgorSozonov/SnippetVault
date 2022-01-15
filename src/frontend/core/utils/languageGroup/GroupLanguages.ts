@@ -1,4 +1,4 @@
-import LanguageGroupedDTO from "../../types/dto/LanguageGroupedDTO"
+import LanguageGroupedDTO from "../../components/dto/LanguageGroupedDTO"
 import SelectGroup from "../../types/SelectGroup"
 import EitherMsg from "../../types/EitherMsg"
 import SelectChoice from "../../types/SelectChoice"

@@ -8,7 +8,7 @@ export type SignInDTO = {
     password: string,
 }
 
-export type UpdatePwDTO = {
+export type ChangePwDTO = {
     signIn: SignInDTO
     newPw: string
 }
@@ -19,7 +19,7 @@ export type SignInAdminDTO = {
     password2: string,
 }
 
-export type UpdatePwAdminDTO = {    
+export type ChangePwAdminDTO = {    
     signIn: SignInAdminDTO
     newPw: string
 }

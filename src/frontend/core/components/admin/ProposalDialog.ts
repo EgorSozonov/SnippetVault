@@ -7,7 +7,7 @@ import MainState from "../../mobX/MainState";
 import { StoreContext } from "../../App";
 import DialogFullscreen from "../../commonComponents/dialog/DialogFullscreen";
 import { fetchFromClient } from "../../utils/Client"
-import { ProposalUpdateDTO } from "../../types/dto/SnippetDTO";
+import { ProposalUpdateDTO } from "../dto/SnippetDTO";
 
 
 type Props = {  

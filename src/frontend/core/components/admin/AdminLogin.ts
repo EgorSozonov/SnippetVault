@@ -3,7 +3,7 @@ import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
 import MainState from "../../mobX/MainState"
-import { SignInAdminDTO } from "../../types/dto/AuthDTO"
+import { SignInAdminDTO } from "../dto/AuthDTO"
 
 
 const AdminLogin: FunctionComponent = observer(({}: any) => {
@@ -19,7 +19,7 @@ const AdminLogin: FunctionComponent = observer(({}: any) => {
         const pw2: string = pw2Ref.current.value
         const dto: SignInAdminDTO = {userName: uName, password1: pw1, password2: pw2, }
 
-        const response = await state.app.client.adminSignIn(dto)
+        const response = await state.app.client.userSignInAdmin(dto)
         console.log(response)
         if (response.isOK === true) {            
             const userData = response.value[0]

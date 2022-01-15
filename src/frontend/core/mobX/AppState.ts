@@ -6,9 +6,9 @@ import HttpClient from "../../ports/http/HttpClient"
 import MockClient from "../../ports/mock/MockClient"
 import CodesFromUrl from "../components/snippet/utils/CodesFromUrl"
 import SnippetState, { updateId, updateUrl, updateWithChoicesUrl, } from "../components/snippet/utils/SnippetState"
-import { LanguageDTO, LanguageGroupDTO, TaskGroupDTO } from "../types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO, BareSnippetDTO } from "../types/dto/SnippetDTO"
-import { CommentDTO, StatsDTO } from "../types/dto/UserDTO"
+import { LanguageDTO, LanguageGroupDTO, TaskGroupDTO } from "../components/dto/AuxDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO, BareSnippetDTO } from "../components/dto/SnippetDTO"
+import { CommentDTO, StatsDTO } from "../components/dto/UserDTO"
 import { AlternativesSort } from "../components/alternative/utils/Types"
 
 
@@ -38,11 +38,14 @@ export default class AppState {
 
     public alternatives: AlternativesDTO | null = null
     public alternativesSort: AlternativesSort = "byDate"
-    public client: IClient = new HttpClient()
+    
 
     public editProposal: BareSnippetDTO | null = null
 
-    constructor() {
+    public client: IClient
+
+    constructor(client: IClient) {
+        this.client = client
         makeAutoObservable(this)
     }
 

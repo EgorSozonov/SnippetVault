@@ -3,7 +3,7 @@ import { html } from "htm/react"
 import { FunctionComponent, useContext, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateUtils";
-import { CommentCUDTO, CommentDTO } from "../../types/dto/UserDTO";
+import { CommentCUDTO, CommentDTO } from "../dto/UserDTO";
 import DialogState from "../../commonComponents/dialog/DialogState";
 import MainState from "../../mobX/MainState";
 import { StoreContext } from "../../App";

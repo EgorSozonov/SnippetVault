@@ -5,10 +5,11 @@ import IClient from "../../../ports/IClient"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import { fetchFromClient } from "../../utils/Client"
-import { SignInSuccessDTO } from "../../types/dto/AuthDTO"
+import { SignInDTO, ChangePwDTO } from "../dto/AuthDTO"
 import { observer } from "mobx-react-lite"
 import Login from "../../commonComponents/login/Login"
 import { fmtDt } from "../../utils/DateUtils"
+import { STATUS_CODES } from "http"
 
 
 const Profile: React.FunctionComponent = observer(() => {
@@ -28,6 +29,20 @@ const Profile: React.FunctionComponent = observer(() => {
 
     const closeChangePwHandler = () => {
         setChangePwMode(false)
+    }
+
+    const saveChangePwHandler = () => {
+        const headers = state.user.headersGet()
+        if (headers === null || state.user.acc === null) return
+
+        if (!oldPwRef.current || !newPwRef.current) return
+        const oldPw: string = oldPwRef.current.value
+        const newPw: string = newPwRef.current.value
+
+        const signInDTO: SignInDTO = {userName: state.user.acc?.name, password: oldPw, }
+
+        const dto: ChangePwDTO = { newPw: newPw, signIn: signInDTO, }
+        state.user.changePw(dto, headers)
     }
 
     useEffect(() => {        
@@ -68,6 +83,7 @@ const Profile: React.FunctionComponent = observer(() => {
                                 <div>New password:</div>
                                 <div><input type="password" ref=${newPwRef} /></div>
                                 <div class="clickable" onClick=${closeChangePwHandler}>Cancel</div>
+                                <div class="clickable" onClick=${saveChangePwHandler}>Save</div>
                             </div>
                         ` 
                         : html `<${Login} />`)
