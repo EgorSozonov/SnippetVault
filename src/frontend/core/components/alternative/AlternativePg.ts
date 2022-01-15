@@ -11,7 +11,7 @@ import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
 import { AlternativeDTO } from "../dto/SnippetDTO";
 import { empty } from "../../utils/ComponentUtils";
-import DialogState from "../../commonComponents/dialog/DialogState";
+import DialogState, { BigDialogState } from "../../commonComponents/dialog/DialogState";
 import { CommentCUDTO } from "../dto/UserDTO";
 import CommentDialog from "./CommentDialog";
 
@@ -29,8 +29,10 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     const client: IClient = state.app.client
     const lang = state.app.languages.find(x => x.id === langIdNum) || null
 
-    const [commentDialog, setCommentDialog] = useState<DialogState>({id: 0, title: "", isOpen: false})
-    const openDialog = (id: number) => () => setCommentDialog({title: "Comments for snippet", id: id, isOpen: true})
+    const [commentDialog, setCommentDialog] = useState<BigDialogState>({id: -1, id2: -1, title: "", text: "", isOpen: false})
+    const openDialog = (id: number, tlId: number, text: string) => () => setCommentDialog({
+        title: "Comments for snippet", text, id: id, id2: tlId, isOpen: true,
+    })
     const closeDialog = () => {
         state.app.commentsSet([])
         setCommentDialog({...commentDialog, isOpen: false})
@@ -58,7 +60,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     return commentDialog.isOpen === false 
         ? html`                         
             <div class="alternativeBody">
-                <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} />
+                <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} openDialog=${openDialog} />
                 ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
                     return html`<${Alternative} key=${idx} alternative=${alt} tlId=${tlIdNum} openDialog=${openDialog} />`
                 })}

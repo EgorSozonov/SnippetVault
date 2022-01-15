@@ -18,9 +18,10 @@ type Props = {
 const ProposalInput: FunctionComponent<Props> = observer(({ lang, task, closeCallback, } : Props) => {
     const state = useContext<MainState>(StoreContext)
     const inputRef = useRef<HTMLTextAreaElement>(null)
-
+    
     const acc = state.user.acc
     const signedIn = state.user.isUser()
+    console.log("signedIn = " + signedIn)
     const saveProposalHandler = async () => {
         const headers = state.user.headersGet()
         if (headers === null) return

@@ -4,7 +4,7 @@ import { FunctionComponent, useContext, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateUtils";
 import { CommentCUDTO, CommentDTO } from "../dto/UserDTO";
-import DialogState from "../../commonComponents/dialog/DialogState";
+import { BigDialogState } from "../../commonComponents/dialog/DialogState";
 import MainState from "../../mobX/MainState";
 import { StoreContext } from "../../App";
 import DialogFullscreen from "../../commonComponents/dialog/DialogFullscreen";
@@ -13,7 +13,7 @@ import Login from "../../commonComponents/login/Login";
 
 
 type Props = {  
-    dialogState: DialogState,
+    dialogState: BigDialogState,
     closeCallback: () => void,
 }
 
@@ -37,12 +37,19 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
 
         const dto: CommentCUDTO = {snId: dialogState.id, content: text}
         state.app.client.commentCreate(dto, headers)
+            .then((r) => {
+                if (r && r.status === "OK") {
+                    fetchFromClient(state.app.client.alternativesForUserGet(dialogState.id2, headers.userId), state.app.alternativesSet)
+                }
+            })
         closeCallback()
     }
 
 
     return html`
-        <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>              
+        <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>
+            <div>${dialogState.text}
+            </div>
             <ol>
                 ${state.app.comments.map((comm: CommentDTO, idx: number) => {
                     return html`<li key=${idx} class="alternativeItemCommentsComment">
