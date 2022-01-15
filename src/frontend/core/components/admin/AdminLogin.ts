@@ -19,14 +19,7 @@ const AdminLogin: FunctionComponent = observer(({}: any) => {
         const pw2: string = pw2Ref.current.value
         const dto: SignInAdminDTO = {userName: uName, password1: pw1, password2: pw2, }
 
-        const response = await state.app.client.userSignInAdmin(dto)
-        console.log(response)
-        if (response.isOK === true) {            
-            const userData = response.value[0]
-            state.user.signInAdmin(userData.userId, userData.accessToken, uName)
-        } else {
-            console.log(response.errMsg)
-        }
+        state.user.signInAdmin(dto)
     }
 
     return html`

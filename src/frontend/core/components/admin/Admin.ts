@@ -13,6 +13,7 @@ import IClient from "../../../ports/IClient"
 import AdminLogin from "./AdminLogin"
 import { LanguageGroupDTO, LanguageDTO, TaskGroupDTO } from "../dto/AuxDTO"
 import { empty } from "../../utils/ComponentUtils"
+import AdminChangePw from "./AdminChangePw"
 
 
 const ListTaskGroups = (props: any) => EditableList<TaskGroupDTO>(props)
@@ -49,6 +50,7 @@ const Admin: FunctionComponent = observer(({}: any) => {
             choices: state.app.languageGroups.map(x => {return {id: x.id, name: x.name}}),
         },
     ]
+    console.log("admin")
 
     const client: IClient = state.app.client
     useEffect(() => {
@@ -57,15 +59,9 @@ const Admin: FunctionComponent = observer(({}: any) => {
         fetchFromClient(client.languageGroupsGet(), state.app.languageGroupsSet)
         fetchFromClient(client.adminStatsGet(), state.app.statsSet)
         state.user.trySignInFromLS()
-    }, [])
+    }, [state.user.acc])
 
     const [changeAdminPwMode, setChangeAdminPwMode] = useState(false)
-
-    const oldPw1Ref = useRef<HTMLInputElement>(null)
-    const oldPw2Ref = useRef<HTMLInputElement>(null)
-    const newPw1Ref = useRef<HTMLInputElement>(null)
-    const newPw2Ref = useRef<HTMLInputElement>(null)
-
     const changeAdminPwHandler = () => {
         setChangeAdminPwMode(true)
     }
@@ -73,27 +69,6 @@ const Admin: FunctionComponent = observer(({}: any) => {
     const closeChangeAdminPwHandler = () => {
         setChangeAdminPwMode(false)
     }
-
-    const saveChangeAdminPwHandler = () => {
-        setChangeAdminPwMode(false)
-    }
-
-    const changePwMenu = html`
-        <div class="adminChangePw">
-            <div>Old password 1:</div>
-            <div><input type="password" ref=${oldPw1Ref} /></div>
-            <div>Old password 2:</div>
-            <div><input type="password" ref=${oldPw2Ref} /></div>
-            <div>New password 1:</div>
-            <div><input type="password" ref=${newPw1Ref} /></div>
-            <div>New password 2:</div>
-            <div><input type="password" ref=${newPw2Ref} /></div>
-            <div class="profileButtons">
-                <div class="clickable" onClick=${closeChangeAdminPwHandler}>Cancel</div>
-                <div class="clickable" onClick=${saveChangeAdminPwHandler}>Save</div>
-            </div>
-        </div>
-    ` 
 
     return html`
         <div class="adminContainer">
@@ -126,7 +101,7 @@ const Admin: FunctionComponent = observer(({}: any) => {
                         <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"></EditableList>
                         <${NewProposal} />                 
                         ` 
-                    : changePwMenu
+                    : html`<${AdminChangePw} closeChangeAdminPwHandler=${closeChangeAdminPwHandler} />`
                     )
             }      
         </div>

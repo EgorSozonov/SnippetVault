@@ -20,6 +20,6 @@ export type SignInAdminDTO = {
 }
 
 export type ChangePwAdminDTO = {    
-    signIn: SignInAdminDTO
-    newPw: string
+    signIn: SignInAdminDTO,
+    newPw: string,
 }

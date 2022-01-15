@@ -47,12 +47,13 @@ const Profile: React.FunctionComponent = observer(() => {
     }
 
     useEffect(() => {
-        //state.user.trySignInFromLS()
+        state.user.trySignInFromLS()
         const headers = state.user.headersGet()
         if (headers === null) return
         fetchFromClient(client.userProfile(headers), state.user.profileSet)        
     }, [state.user.acc])
 
+    const isUser = state.user.isUser()
     const oldPwRef = useRef<HTMLInputElement>(null)
     const newPwRef = useRef<HTMLInputElement>(null)
 
@@ -71,7 +72,7 @@ const Profile: React.FunctionComponent = observer(() => {
     return html`
         <div class="profileBackground">
             <div class="profileContainer">
-                ${(profile !== null && changePwMode === false)
+                ${(profile !== null && isUser === true && changePwMode === false)
                     ? html`
                         <div class="profileHeader">
                             <div>
