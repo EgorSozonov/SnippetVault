@@ -10,7 +10,7 @@ import NewProposal from "../admin/NewProposal"
 import AlternativePg from "../alternative/AlternativePg"
 import Profile from "../profile/Profile"
 import "./content.css"
-
+import { ToastContainer } from "react-toastify"
 
 const Content: React.FunctionComponent = () => {
     
@@ -28,6 +28,7 @@ const Content: React.FunctionComponent = () => {
                     <${Route} path="/" element=${html`<${SnippetPg} />`} />
                 <//>
             </div>
+            <${ToastContainer} />
         <//>
     `
 }

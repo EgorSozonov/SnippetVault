@@ -62,8 +62,7 @@ export default class UserState {
         const account: UserAccount = {
             name: userName, expiration, accessToken: successDTO.accessToken, userId: successDTO.userId, status, 
         }
-        console.log("setting acc")
-        console.log(account)
+
         localStorage.setItem("account", JSON.stringify(account))
         this.acc = account
     })
@@ -75,8 +74,6 @@ export default class UserState {
 
     trySignInFromLS = action(() => {
         const fromLS = localStorage.getItem("account")
-        console.log("try from LS")
-        console.log(fromLS)
         if (fromLS && fromLS.length > 0 && fromLS !== "undefined") {
             const accFromLS: UserAccount = JSON.parse(fromLS)
             if (accFromLS.userId && accFromLS.userId > -1 
