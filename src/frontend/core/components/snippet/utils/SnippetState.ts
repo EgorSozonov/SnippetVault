@@ -19,7 +19,7 @@ export function updateCode(oldState: SnippetState, newCode: string): SnippetStat
 }
 
 // ChoicesLoaded -> ChoicesLoaded
-export function updateId(oldState: SnippetState, newId: number): SnippetState {
+export function updateId(oldState: SnippetState, newId: number): SnippetState {   
     if (oldState.type !== "ChoicesLoaded" || oldState.id === newId) return oldState
     
     const tryFindNewValue = oldState.choices.find(x => x.id === newId)
@@ -29,6 +29,8 @@ export function updateId(oldState: SnippetState, newId: number): SnippetState {
 
 // ChoicesLoaded -> ChoicesLoaded
 export function updateUrl(oldState: SnippetState, newCode: string): SnippetState {
+    console.log("updateUrl")
+    console.log(oldState)
     return (oldState.type === "ChoicesLoaded") 
                 ? updateCode(oldState, newCode)
                 : updateWithoutChoices(oldState, newCode)
@@ -44,10 +46,15 @@ export function updateWithoutChoices(oldState: SnippetState, newCode: string) : 
 // ChoicesAbsent -> ChoicesLoaded
 export function updateWithChoicesUrl(oldState: SnippetState, newChoices: SelectChoice[]) : SnippetState {
     if (oldState.type !== "ChoicesAbsent") return oldState
-    const tryFindNewValue = newChoices.find(x => x.code === oldState.code)
-    if (!tryFindNewValue || !tryFindNewValue.code) return oldState
 
-    return {...oldState, type: "ChoicesLoaded", id: tryFindNewValue.id, name: tryFindNewValue.name, choices: newChoices, }
+    const tryFindNewValue = newChoices.find(x => x.code === oldState.code)
+    
+    if (tryFindNewValue && tryFindNewValue.code) {
+        return { type: "ChoicesLoaded", id: tryFindNewValue.id,  code: oldState.code, name: tryFindNewValue.name, choices: newChoices, }
+    } else {
+        const startValue = newChoices[0]
+        return { type: "ChoicesLoaded", id: startValue.id,  code: startValue.code ?? "", name: startValue.name, choices: newChoices, }
+    }    
 }
 
 export function isStateOK(st: SnippetState[]): boolean {

@@ -89,7 +89,7 @@ ON CONFLICT (id) DO UPDATE SET code='MATH', name='Math & arithmetic', "isDeleted
 
 INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
 OVERRIDING SYSTEM VALUE	VALUES (3, 'STRINGS', 'Strings', 0::bit)
-ON CONFLICT (id) DO UPDATE SET code='Strings', name='Strings', "isDeleted" = 0::bit;
+ON CONFLICT (id) DO UPDATE SET code='STRINGS', name='Strings', "isDeleted" = 0::bit;
 
 INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
 OVERRIDING SYSTEM VALUE	VALUES (4, 'IO', 'Basic input & output', 0::bit)

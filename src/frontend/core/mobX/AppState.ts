@@ -5,7 +5,7 @@ import SelectGroup from "../types/SelectGroup"
 import HttpClient from "../../ports/http/HttpClient"
 import MockClient from "../../ports/mock/MockClient"
 import CodesFromUrl from "../components/snippet/utils/CodesFromUrl"
-import SnippetState, { updateId, updateUrl, updateWithChoicesUrl, } from "../components/snippet/utils/SnippetState"
+import SnippetState, { updateId, updateUrl, updateWithChoicesUrl as updateWithNewlyReceivedChoices, } from "../components/snippet/utils/SnippetState"
 import { LanguageDTO, LanguageGroupDTO, TaskGroupDTO } from "../components/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO, BareSnippetDTO } from "../components/dto/SnippetDTO"
 import { CommentDTO, StatsDTO } from "../components/dto/UserDTO"
@@ -66,14 +66,15 @@ export default class AppState {
     })
 
     languageListSet = action((newValue: SelectChoice[]): void => {
-        this.l1 = updateWithChoicesUrl(this.l1, newValue)
-        this.l2 = updateWithChoicesUrl(this.l2, newValue)
+        this.l1 = updateWithNewlyReceivedChoices(this.l1, newValue)
+        this.l2 = updateWithNewlyReceivedChoices(this.l2, newValue)
     }) 
 
     taskGroupsSet = action((newValue: TaskGroupDTO[]): void => {
         const newArr = newValue.map(x =>  {return {id: x.id, name: x.name, code: x.code, }})
+
         this.taskGroups = observable.array(newArr)
-        this.tg = updateWithChoicesUrl(this.tg, newArr)
+        this.tg = updateWithNewlyReceivedChoices(this.tg, newArr)
     })  
 
 
