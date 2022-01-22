@@ -39,8 +39,8 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
     }
     const [proposalDialog, setProposalDialog] = useState<DialogState>({ isOpen: false, id: -1, title: "Post a proposal", })
     const openProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: true })
-    const closeProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: false, })
-    const inputRef = useRef<HTMLTextAreaElement>(null)
+    const closeProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: false, })    
+    
     return html`                 
         <div class="alternativeHeader">
             <div class="alternativeHeaderTitle">Alternatives</div>
@@ -86,9 +86,10 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
                             </span>
                         `)
                 }
-                <span class="clickable alternativeOpenProposal" onClick=${openProposalDialog}>
+                ${(lang !== null && isSignedIn === true) && html`<span class="clickable alternativeOpenProposal" onClick=${openProposalDialog}>
                     Propose a new snippet
-                </span>
+                </span>`
+                }
 
             </div>
             ${ lang !== null && html`

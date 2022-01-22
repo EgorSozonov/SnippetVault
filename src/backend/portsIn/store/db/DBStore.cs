@@ -316,10 +316,11 @@ public class DBStore : IStore {
         SELECT t.id, tg.name AS ""taskGroupName"", t.name, t.description FROM sv.""taskLanguage"" tl
         JOIN sv.task t ON t.id=tl.""taskId""
         JOIN sv.""taskGroup"" tg ON tg.id=t.""taskGroupId""
-        WHERE tl.id = 30;
+        WHERE tl.id = @tlId;
     ";
-    public async Task<ReqResult<TaskDTO>> taskForTLGet(int taskLanguageId) {
+    public async Task<ReqResult<TaskDTO>> taskForTLGet(int tlId) {
         await using (var cmd = new NpgsqlCommand(taskForTLGetQ, db.conn)) { 
+            cmd.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, tlId);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<TaskDTO>(reader);
             }
