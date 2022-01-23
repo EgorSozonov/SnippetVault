@@ -47,10 +47,6 @@
     border-top-left-radius: 10px;
 }
 
-.headerUsername {
-    
-}
-
 .headerProfileButton {
     cursor: pointer;
     
@@ -215,7 +211,7 @@ select {
 }
 
 .evenRow {
-    background-color: hsl(0, 0%, 25%);
+    background-color: hsl(0, 0%, 20%);
 }
 
 .leftSide {

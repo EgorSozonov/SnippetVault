@@ -21,6 +21,7 @@ import ProposalInput from "../proposalInput/ProposalInput"
 import DialogState from "../../commonComponents/dialog/DialogState"
 import { CurrentLanguage } from "./types/CurrentLanguage"
 import Login from "../../commonComponents/login/Login"
+import { empty } from "../../utils/ComponentUtils"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -30,7 +31,6 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const lang2 = state.app.l2
     const tg = state.app.tg
 
-    console.log("render")
 
     const client: IClient = state.app.client
 
@@ -54,7 +54,6 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const isSignedIn = state.user.isUser()
 
     useEffect(() => {
-        console.log("useEffect 0");
         (async () => { 
             if (state.app.groupedLanguages.length > 0) return
             const resultLangs: EitherMsg<LanguageGroupedDTO[]> = await client.languagesGet() 
@@ -74,14 +73,13 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     }, [])
 
     useEffect( () => {
-        console.log("useEffect")
         if (isStateOK([tg, lang1, lang2])) {
             setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
             fetchFromClient(client.snippetsByCode(tg.code, lang1.code, lang2.code), state.app.snippetsSet)
         }
     }, [lang1, lang2, tg])
 
-    const proposalHandler = (snippet: SnippetDTO, isRight: boolean) => {
+    const proposalHandler = (snippet: SnippetDTO, isRight: boolean) => () => {
         if (isRight === true && lang2.type === "ChoicesLoaded") {
             setCurrLanguage({ lang: {id: lang2.id, name: lang2.name, }, tlId: snippet.rightTlId})
         } else if (isRight === false && lang1.type === "ChoicesLoaded") {
@@ -107,8 +105,10 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                                 ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false} langId=${idOf(lang1)} tlId=${snippet.leftTlId}><//>`
                                 : (isSignedIn === true 
                                     ? html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, false)}>Create proposal</div>`
-                                    : html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Sign in to create proposal</div>`
-                                )}
+                                    : html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, false)}>Sign in to create proposal</div>`
+                                )
+
+                            }
                         </div>
                         <div class=${"taskContainer" + evenClass}>
                             ${snippet.taskName}
@@ -119,18 +119,21 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                                 : (isSignedIn === true 
                                     ? html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Create proposal</div>`
                                     : html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Sign in to create proposal</div>`
-                                )}
+                                )
+                            }
+
                         </div>
                     </div>`
             })}
             <div class="snippetFooter"> </div>
-            ${currLanguage !== null && html`
+            ${currLanguage !== null && 
+                html`
                     <${Dialog} state=${proposalDialog} closeCallback=${closeProposalDialog}>
                         ${isSignedIn === true 
                             ? html `<${ProposalInput} lang=${currLanguage.lang} taskOrTl=${{ type: "tlId", payload: currLanguage.tlId, }} 
                                         closeCallback=${closeProposalDialog} />`
                             : html`<${Login} />`
-                        }                        
+                        }                  
                     <//>
                 `
             }

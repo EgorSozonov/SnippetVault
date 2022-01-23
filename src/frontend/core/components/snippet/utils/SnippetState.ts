@@ -56,7 +56,7 @@ export function updateWithChoicesUrl(oldState: SnippetState, newChoices: SelectC
 }
 
 export function isStateOK(st: SnippetState[]): boolean {
-    const f = !st.some(x => x.code === ""|| x.code === "undefined")
+    const f = !st.some(x => x.code === "" || x.code === "undefined")
     return f
 }
 

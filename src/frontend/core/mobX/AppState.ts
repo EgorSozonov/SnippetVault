@@ -16,11 +16,6 @@ export default class AppState {
     public openSelect = ""
     public snippets: IObservableArray<SnippetDTO> = observable.array([])
 
-    public language1: SelectChoice = {id: 0, name: ""}    
-    public language2: SelectChoice = {id: 0, name: ""}
-    public codesFromUrl: CodesFromUrl = { tg: "", lang1: "", lang2: "", }
-    public taskGroup: SelectChoice = {id: 0, name: ""}
-
     public l1: SnippetState = {type: "ChoicesAbsent", code: "", }
     public l2: SnippetState = {type: "ChoicesAbsent", code: "", }
     public tg: SnippetState = {type: "ChoicesAbsent", code: "", }
@@ -39,7 +34,6 @@ export default class AppState {
     public alternatives: AlternativesDTO | null = null
     public alternativesSort: AlternativesSort = "byDate"
     
-
     public editProposal: BareSnippetDTO | null = null
 
     public client: IClient

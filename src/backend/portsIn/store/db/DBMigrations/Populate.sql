@@ -63,15 +63,11 @@ OVERRIDING SYSTEM VALUE	VALUES (11, 'Kotl', 'Kotlin', 0::bit, 1)
 ON CONFLICT (id) DO UPDATE SET code='Kotl', name='Kotlin', "isDeleted" = 0::bit, "languageGroupId" = 1;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "languageGroupId")
-OVERRIDING SYSTEM VALUE	VALUES (12, 'Swif', 'Swift', 0::bit, 1)
-ON CONFLICT (id) DO UPDATE SET code='Swif', name='Swift', "isDeleted" = 0::bit, "languageGroupId" = 1;
-
-INSERT INTO sv.language(id, code, name, "isDeleted", "languageGroupId")
-OVERRIDING SYSTEM VALUE	VALUES (13, 'Hask', 'Haskell', 0::bit, 1)
+OVERRIDING SYSTEM VALUE	VALUES (12, 'Hask', 'Haskell', 0::bit, 1)
 ON CONFLICT (id) DO UPDATE SET code='Hask', name='Haskell', "isDeleted" = 0::bit, "languageGroupId" = 1;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "languageGroupId")
-OVERRIDING SYSTEM VALUE	VALUES (14, 'Lua', 'Lua', 0::bit, 2)
+OVERRIDING SYSTEM VALUE	VALUES (13, 'Lua', 'Lua', 0::bit, 2)
 ON CONFLICT (id) DO UPDATE SET code='Lua', name='Lua', "isDeleted" = 0::bit, "languageGroupId" = 2;
 
 
