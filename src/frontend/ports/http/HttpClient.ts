@@ -95,6 +95,10 @@ class HttpClient implements IClient {
         return this.postRequestNoPayload(`/task/cu`, headers)
     }
 
+    taskFromTL(tlId: number): Promise<EitherMsg<TaskDTO[]>> {
+        return this.getRequest(`/task/${tlId}`)
+    }
+
     taskGroupCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.postRequestNoPayload(`/taskGroup/cu`, headers)
     }

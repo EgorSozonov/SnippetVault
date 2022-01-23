@@ -29,8 +29,6 @@ export function updateId(oldState: SnippetState, newId: number): SnippetState {
 
 // ChoicesLoaded -> ChoicesLoaded
 export function updateUrl(oldState: SnippetState, newCode: string): SnippetState {
-    console.log("updateUrl")
-    console.log(oldState)
     return (oldState.type === "ChoicesLoaded") 
                 ? updateCode(oldState, newCode)
                 : updateWithoutChoices(oldState, newCode)

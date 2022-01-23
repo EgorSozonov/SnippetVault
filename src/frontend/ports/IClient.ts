@@ -28,6 +28,7 @@ type IClient = {
     languageCU: (headers: SignInSuccessDTO) => Promise<PostResponseDTO> 
     languageGroupCU: (headers: SignInSuccessDTO) => Promise<PostResponseDTO> 
     taskCU: (headers: SignInSuccessDTO) => Promise<PostResponseDTO> 
+    taskFromTL: (tlId: number) => Promise<EitherMsg<TaskDTO[]>>
     taskGroupCU: (headers: SignInSuccessDTO) => Promise<PostResponseDTO> 
 
     userRegister: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>

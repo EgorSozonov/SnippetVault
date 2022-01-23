@@ -134,10 +134,17 @@ public class MainController : Controller {
         await sendQueryResult<TaskGroupDTO>(result, HttpContext.Response);
     }
 
+    // [HttpGet]
+    // [Route("tasks/{tgId:int}")]
+    // public async Task task([FromRoute] int tgId) {
+    //     var result = await api.tasksFromGroupGet(tgId);
+    //     await sendQueryResult<TaskDTO>(result, HttpContext.Response);
+    // }
+
     [HttpGet]
-    [Route("task/{tgId:int}")]
-    public async Task task([FromRoute] int tgId) {
-        var result = await api.tasksFromGroupGet(tgId);
+    [Route("task/{tlId:int}")]
+    public async Task taskFromTL([FromRoute] int tlId) {
+        var result = await api.taskFromTLGet(tlId);
         await sendQueryResult<TaskDTO>(result, HttpContext.Response);
     }
 

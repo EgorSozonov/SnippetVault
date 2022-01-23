@@ -4,11 +4,11 @@ import "./snippet.css"
 import SnippetCode from "./SnippetCode"
 import { html } from "htm/react"
 import { StoreContext } from "../../App"
-import { FunctionComponent, useContext, useEffect,} from "react"
+import { FunctionComponent, useContext, useEffect, useState,} from "react"
 import { useSearchParams } from "react-router-dom"
 import MainState from "../../mobX/MainState"
 import { observer } from "mobx-react-lite"
-import { fetchFromClient, fetchFromClientTransform } from "../../utils/Client"
+import { fetchFromClient } from "../../utils/Client"
 import IClient from "../../../ports/IClient"
 import { groupLanguages, languageListOfGrouped, } from "../../utils/languageGroup/GroupLanguages"
 import { checkNonempty } from "../../utils/StringUtils"
@@ -16,6 +16,11 @@ import { idOf, isStateOK, stringOf } from "./utils/SnippetState"
 import EitherMsg from "../../types/EitherMsg"
 import { LanguageGroupedDTO } from "../dto/AuxDTO"
 import { SnippetDTO } from "../dto/SnippetDTO"
+import Dialog from "../../commonComponents/dialog/Dialog"
+import ProposalInput from "../proposalInput/ProposalInput"
+import DialogState from "../../commonComponents/dialog/DialogState"
+import { CurrentLanguage } from "./types/CurrentLanguage"
+import Login from "../../commonComponents/login/Login"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -25,7 +30,14 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const lang2 = state.app.l2
     const tg = state.app.tg
 
+    console.log("render")
+
     const client: IClient = state.app.client
+
+    const [currLanguage, setCurrLanguage] = useState<CurrentLanguage | null>(null)
+    const [proposalDialog, setProposalDialog] = useState<DialogState>({ isOpen: false, id: -1, title: "Post a proposal", })
+    const openProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: true })
+    const closeProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: false, })
 
     const [searchParams, setSearchParams] = useSearchParams();   
     const lang1Code = searchParams.get("lang1")
@@ -39,11 +51,14 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         state.app.codesFromUrlSet(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
     }
 
+    const isSignedIn = state.user.isUser()
+
     useEffect(() => {
+        console.log("useEffect 0");
         (async () => { 
             if (state.app.groupedLanguages.length > 0) return
             const resultLangs: EitherMsg<LanguageGroupedDTO[]> = await client.languagesGet() 
-                if (resultLangs.isOK === true) {
+            if (resultLangs.isOK === true) {
                 state.app.groupedLanguagesSet(groupLanguages(resultLangs.value))
                 const langList = languageListOfGrouped(resultLangs.value)
                 state.app.languageListSet(langList)
@@ -59,12 +74,21 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     }, [])
 
     useEffect( () => {
+        console.log("useEffect")
         if (isStateOK([tg, lang1, lang2])) {
             setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
             fetchFromClient(client.snippetsByCode(tg.code, lang1.code, lang2.code), state.app.snippetsSet)
         }
     }, [lang1, lang2, tg])
 
+    const proposalHandler = (snippet: SnippetDTO, isRight: boolean) => {
+        if (isRight === true && lang2.type === "ChoicesLoaded") {
+            setCurrLanguage({ lang: {id: lang2.id, name: lang2.name, }, tlId: snippet.rightTlId})
+        } else if (isRight === false && lang1.type === "ChoicesLoaded") {
+            setCurrLanguage({ lang: {id: lang1.id, name: lang1.name, }, tlId: snippet.leftTlId})
+        }
+        openProposalDialog()
+    }
 
     return html`<div class="snippetsBody">
         <${Header} />
@@ -81,7 +105,10 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         <div class=${"snippetContent leftSide" + evenClass}>
                             ${snippet.leftCode.length > 0 
                                 ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false} langId=${idOf(lang1)} tlId=${snippet.leftTlId}><//>`
-                                : html`<${TextInput} taskId=${snippet.taskId} langId=${idOf(lang1)}  numberProposals="4"><//>`}
+                                : (isSignedIn === true 
+                                    ? html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, false)}>Create proposal</div>`
+                                    : html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Sign in to create proposal</div>`
+                                )}
                         </div>
                         <div class=${"taskContainer" + evenClass}>
                             ${snippet.taskName}
@@ -89,11 +116,24 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         <div class=${"snippetContent rightSide" + evenClass}>
                             ${snippet.rightCode.length > 0 
                                 ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true} langId=${idOf(lang2)} tlId=${snippet.rightTlId}><//>`
-                                : html`<${TextInput} taskId=${snippet.taskId} langId=${idOf(lang2)} numberProposals="4"><//>`}
+                                : (isSignedIn === true 
+                                    ? html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Create proposal</div>`
+                                    : html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Sign in to create proposal</div>`
+                                )}
                         </div>
                     </div>`
             })}
             <div class="snippetFooter"> </div>
+            ${currLanguage !== null && html`
+                    <${Dialog} state=${proposalDialog} closeCallback=${closeProposalDialog}>
+                        ${isSignedIn === true 
+                            ? html `<${ProposalInput} lang=${currLanguage.lang} taskOrTl=${{ type: "tlId", payload: currLanguage.tlId, }} 
+                                        closeCallback=${closeProposalDialog} />`
+                            : html`<${Login} />`
+                        }                        
+                    <//>
+                `
+            }
         </main>
     </div>
     `
