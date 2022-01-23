@@ -222,6 +222,13 @@ select {
     border-color: hsl(46, 84%, 39%);
 }
 
+.snippetProposalButtonContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .snippetProposalButton {
     padding: 0.2rem;
     border-radius: 0.3rem;

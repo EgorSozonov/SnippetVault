@@ -6,8 +6,12 @@ using Microsoft.AspNetCore.Http;
 
 public static class HttpUtils {
     public async static Task sendQueryResult<T>(ReqResult<T> result, HttpResponse response) {
+        await sendQueryResult(result, response, 500);
+    }
+
+    public async static Task sendQueryResult<T>(ReqResult<T> result, HttpResponse response, int responseCode) {
         if (result is Err<T> err) {
-            response.StatusCode = 500;
+            response.StatusCode = responseCode;
             await response.WriteAsJsonAsync(new PostResponseDTO() { status = err.err});
         } else if (result is Success<T> succ) {
             response.StatusCode = 200;

@@ -14,11 +14,11 @@ import SelectChoice from "../../types/SelectChoice"
 
 type Props = {
     lang: SelectChoice,
-    taskOrTL: {type: "task", payload: TaskDTO, } | {type: "tlId", payload: number, },
+    taskOrId: {type: "task", payload: TaskDTO, } | {type: "taskId", payload: number, },
     closeCallback: () => void,
 }
 
-const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrTL, closeCallback, } : Props) => {
+const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, closeCallback, } : Props) => {
     const state = useContext<MainState>(StoreContext)
     const inputRef = useRef<HTMLTextAreaElement>(null)
     const [taskFromBackend, setTaskFromBackend] = useState<TaskDTO | null>(null)
@@ -27,16 +27,16 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrTL, clos
 
     useEffect(() => {
         (async () => {
-            if (taskOrTL.type === "tlId") {
-                const response = await state.client.taskFromTL(taskOrTL.payload)
+            if (taskOrId.type === "taskId") {
+                const response = await state.client.taskGet(taskOrId.payload)
                 if (response.isOK === true && response.value && response.value.length === 1) {
                     setTaskFromBackend(response.value[0])
                 }
             }
         })()
-    }, [])
+    }, [taskOrId])
 
-    const mbTask = taskOrTL.type === "task" ? taskOrTL.payload : taskFromBackend
+    const mbTask = taskOrId.type === "task" ? taskOrId.payload : taskFromBackend
     const saveProposalHandler = async () => {
         const headers = state.user.headersGet()
         if (headers === null || mbTask === null) return
@@ -64,7 +64,7 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrTL, clos
     
     return html`
         <div class="proposalInputContainer">
-            ${((acc !== null && signedIn === true)
+            ${((state.user.acc !== null && signedIn === true)
                 ? html`
                     <div class="proposalInputBlock">Propose a <span class="proposalInputLang">${lang !== null && lang.name}</span> solution for <span class="proposalInputTask">${mbTask.name}</span>
                     </div>
@@ -80,12 +80,10 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrTL, clos
                 : html `
                     <${Login} />
                     <div class="proposalInputButton" onClick=${closeCallback}>Cancel</div>
-                ` )
-            }
-            
+                `)
+            }            
         </div>
-    ` 
-      
+    `       
 })
 
 export default ProposalInput

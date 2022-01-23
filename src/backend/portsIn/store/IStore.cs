@@ -25,6 +25,7 @@ public interface IStore {
     Task<int> snippetDecline(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
     Task<int> taskGroupCU(TaskGroupCUDTO dto);
+    Task<ReqResult<TaskDTO>> taskGet(int taskId);
     Task<ReqResult<TaskDTO>> taskForTLGet(int taskLanguageId);
     Task<int> taskCU(TaskCUDTO dto);
     Task<int> languageGroupCU(LanguageGroupCUDTO dto);

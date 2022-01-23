@@ -2,6 +2,6 @@ import SelectChoice from "../../../types/SelectChoice";
 
 
 export type CurrentLanguage = {
-    tlId: number,
+    taskId: number,
     lang: SelectChoice,
 }

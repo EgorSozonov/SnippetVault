@@ -31,7 +31,7 @@ public class MainController : Controller {
 
     [HttpGet]
     [Route("snippets/byCode")]
-    public async Task snippetsByCode([FromQuery] string lang1, [FromQuery] string lang2, [FromQuery] string taskGroup) { 
+    public async Task snippetsByCode([FromQuery] string taskGroup, [FromQuery] string lang1, [FromQuery] string lang2) { 
         var result = await api.snippetsGetByCode(taskGroup, lang1, lang2);
         await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
     }
@@ -134,17 +134,10 @@ public class MainController : Controller {
         await sendQueryResult<TaskGroupDTO>(result, HttpContext.Response);
     }
 
-    // [HttpGet]
-    // [Route("tasks/{tgId:int}")]
-    // public async Task task([FromRoute] int tgId) {
-    //     var result = await api.tasksFromGroupGet(tgId);
-    //     await sendQueryResult<TaskDTO>(result, HttpContext.Response);
-    // }
-
     [HttpGet]
-    [Route("task/{tlId:int}")]
-    public async Task taskFromTL([FromRoute] int tlId) {
-        var result = await api.taskFromTLGet(tlId);
+    [Route("task/{tgId:int}")]
+    public async Task task([FromRoute] int tgId) {
+        var result = await api.taskGet(tgId);
         await sendQueryResult<TaskDTO>(result, HttpContext.Response);
     }
 
@@ -219,7 +212,7 @@ public class MainController : Controller {
     [Route("user/signIn")]
     public async Task userSignIn([FromBody] SignInDTO dto) {
         var result = await auth.userAuthenticate(dto);
-        await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
+        await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response, 401);
     }
 
     [HttpPost]
@@ -234,7 +227,7 @@ public class MainController : Controller {
     [Route("user/signInAdmin")]
     public async Task userSignInAdmin([FromBody] SignInAdminDTO dto) {
         var result = await auth.userAuthenticateAdmin(dto);
-        await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
+        await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response, 401);
     }
 
     [HttpPost]

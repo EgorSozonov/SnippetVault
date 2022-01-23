@@ -41,7 +41,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
     const openProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: true })
     const closeProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: false, })
 
-    const taskOrTL = {type: "task", payload: task, }    
+    const taskOrId = {type: "task", payload: task, }    
     
     return html`                 
         <div class="alternativeHeader">
@@ -96,7 +96,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
             </div>
             ${ lang !== null && html`
                     <${Dialog} state=${proposalDialog} closeCallback=${closeProposalDialog}>
-                        <${ProposalInput} lang=${{id: lang.id, name: lang.name, }} taskOrTl=${taskOrTL} closeCallback=${closeProposalDialog} />
+                        <${ProposalInput} lang=${{id: lang.id, name: lang.name, }} taskOrId=${taskOrId} closeCallback=${closeProposalDialog} />
                     <//>
                 `
             }

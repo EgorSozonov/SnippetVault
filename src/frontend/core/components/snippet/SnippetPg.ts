@@ -1,5 +1,4 @@
 import Header from "./Header"
-import TextInput from "./TextInput"
 import "./snippet.css"
 import SnippetCode from "./SnippetCode"
 import { html } from "htm/react"
@@ -21,7 +20,6 @@ import ProposalInput from "../proposalInput/ProposalInput"
 import DialogState from "../../commonComponents/dialog/DialogState"
 import { CurrentLanguage } from "./types/CurrentLanguage"
 import Login from "../../commonComponents/login/Login"
-import { empty } from "../../utils/ComponentUtils"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -30,7 +28,6 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const lang1 = state.app.l1
     const lang2 = state.app.l2
     const tg = state.app.tg
-
 
     const client: IClient = state.app.client
 
@@ -81,9 +78,9 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
 
     const proposalHandler = (snippet: SnippetDTO, isRight: boolean) => () => {
         if (isRight === true && lang2.type === "ChoicesLoaded") {
-            setCurrLanguage({ lang: {id: lang2.id, name: lang2.name, }, tlId: snippet.rightTlId})
+            setCurrLanguage({ lang: {id: lang2.id, name: lang2.name, }, taskId: snippet.taskId, })
         } else if (isRight === false && lang1.type === "ChoicesLoaded") {
-            setCurrLanguage({ lang: {id: lang1.id, name: lang1.name, }, tlId: snippet.leftTlId})
+            setCurrLanguage({ lang: {id: lang1.id, name: lang1.name, }, taskId: snippet.taskId, })
         }
         openProposalDialog()
     }
@@ -103,11 +100,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         <div class=${"snippetContent leftSide" + evenClass}>
                             ${snippet.leftCode.length > 0 
                                 ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false} langId=${idOf(lang1)} tlId=${snippet.leftTlId}><//>`
-                                : (isSignedIn === true 
-                                    ? html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, false)}>Create proposal</div>`
-                                    : html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, false)}>Sign in to create proposal</div>`
-                                )
-
+                                : html`<div class="snippetProposalButtonContainer"><div class="snippetProposalButton" onClick=${proposalHandler(snippet, false)}>Create proposal</div></div>`
                             }
                         </div>
                         <div class=${"taskContainer" + evenClass}>
@@ -116,12 +109,8 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         <div class=${"snippetContent rightSide" + evenClass}>
                             ${snippet.rightCode.length > 0 
                                 ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true} langId=${idOf(lang2)} tlId=${snippet.rightTlId}><//>`
-                                : (isSignedIn === true 
-                                    ? html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Create proposal</div>`
-                                    : html`<div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Sign in to create proposal</div>`
-                                )
+                                : html`<div class="snippetProposalButtonContainer"><div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Create proposal</div></div>`                                
                             }
-
                         </div>
                     </div>`
             })}
@@ -129,11 +118,8 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
             ${currLanguage !== null && 
                 html`
                     <${Dialog} state=${proposalDialog} closeCallback=${closeProposalDialog}>
-                        ${isSignedIn === true 
-                            ? html `<${ProposalInput} lang=${currLanguage.lang} taskOrTl=${{ type: "tlId", payload: currLanguage.tlId, }} 
-                                        closeCallback=${closeProposalDialog} />`
-                            : html`<${Login} />`
-                        }                  
+                        <${ProposalInput} lang=${currLanguage.lang} taskOrId=${{ type: "taskId", payload: currLanguage.taskId, }} 
+                                        closeCallback=${closeProposalDialog} />
                     <//>
                 `
             }

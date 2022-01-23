@@ -15,6 +15,7 @@ const Header: React.FunctionComponent = observer(() => {
     useEffect(() => {
         state.user.trySignInFromLS()
     }, [])
+    
     return (html `
         <nav>
             <div class="headerContainer">

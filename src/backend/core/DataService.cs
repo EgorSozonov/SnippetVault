@@ -167,8 +167,8 @@ public class DataService : IDataService {
         return await st.taskGroupsGet();
     }
 
-    public async Task<ReqResult<TaskDTO>> taskFromTLGet(int tlId) {
-        return await st.taskForTLGet(tlId);
+    public async Task<ReqResult<TaskDTO>> taskGet(int taskId) {
+        return await st.taskGet(taskId);
     }
 
     public async Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup) {
@@ -223,7 +223,7 @@ public interface IDataService {
     Task<ReqResult<StatsDTO>> statsForAdmin();
 
     Task<ReqResult<TaskGroupDTO>> taskGroupsGet();
-    Task<ReqResult<TaskDTO>> taskFromTLGet(int tlId);
+    Task<ReqResult<TaskDTO>> taskGet(int tlId);
     Task<int> taskGroupCU(TaskGroupCUDTO dto);
     Task<int> taskCU(TaskCUDTO dto);
     Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup);
