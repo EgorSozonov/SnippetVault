@@ -50,7 +50,6 @@ const Admin: FunctionComponent = observer(({}: any) => {
             choices: state.app.languageGroups.map(x => {return {id: x.id, name: x.name}}),
         },
     ]
-    console.log("admin")
 
     const client: IClient = state.app.client
     useEffect(() => {

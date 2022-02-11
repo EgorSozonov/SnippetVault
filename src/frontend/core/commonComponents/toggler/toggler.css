@@ -35,20 +35,20 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 2;
+
     background-color: hsl(0, 0%, 31%);
 }
-    
+
 .toggleSwitch.on {
     justify-content: flex-start;
     transition: all 0.8s ease;
 }
-    
+
 .toggleSwitch.off {
     justify-content: flex-end;
     transition: all 0.8s ease;
 }
-    
+
 .toggleSwitch div {
     width: 5px;
     height: 5px;

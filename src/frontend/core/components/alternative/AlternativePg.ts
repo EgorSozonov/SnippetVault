@@ -11,8 +11,7 @@ import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
 import { AlternativeDTO } from "../dto/SnippetDTO";
 import { empty } from "../../utils/ComponentUtils";
-import DialogState, { BigDialogState } from "../../commonComponents/dialog/DialogState";
-import { CommentCUDTO } from "../dto/UserDTO";
+import { BigDialogState } from "../../commonComponents/dialog/DialogState";
 import CommentDialog from "./CommentDialog";
 
 
@@ -21,8 +20,8 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     if (!langId || !tlId) return empty
 
     const langIdNum: number = parseInt(langId) || -1
-    const tlIdNum: number = parseInt(tlId) || -1    
-    
+    const tlIdNum: number = parseInt(tlId) || -1
+
     if (langIdNum < 0 || tlIdNum < 0) return empty
 
     const state = useContext<MainState>(StoreContext)
@@ -48,25 +47,26 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
             fetchFromClient(client.alternativesForUserGet(tlIdNum, state.user.acc.userId), state.app.alternativesSet)
         } else {
             fetchFromClient(client.alternativesGet(tlIdNum), state.app.alternativesSet)
-        }        
+        }
     }, [])
-    
+
     const alternatives = state.app.alternatives
-    
+
     if (alternatives === null) return empty
     const primaryAlternative = alternatives.primary
     const nonPrimaryAlternatives = alternatives.rows
-        
-    return commentDialog.isOpen === false 
-        ? html`                         
+
+    return commentDialog.isOpen === false
+        ? html`
+            <div class="alternativeMargin" />
             <div class="alternativeBody">
+                <div class="alternativeHeaderTopLine" />
                 <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} openDialog=${openDialog} />
                 ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
                     return html`<${Alternative} key=${idx} alternative=${alt} tlId=${tlIdNum} openDialog=${openDialog} />`
                 })}
-                <div class="alternativeFooter"></div>
-                
-            </div>        
+
+            </div>
         `
         : html`
             <${CommentDialog} dialogState=${commentDialog} closeCallback=${closeDialog} />

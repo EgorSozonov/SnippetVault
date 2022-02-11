@@ -16,7 +16,7 @@ import ProposalInput from "../proposalInput/ProposalInput"
 
 
 type Props = {
-    primaryAlternative: AlternativeDTO,    
+    primaryAlternative: AlternativeDTO,
     lang: LanguageDTO | null,
     task: TaskDTO,
     tlId: number,
@@ -26,7 +26,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
     const state = useContext<MainState>(StoreContext)
     const isSignedIn = state.user.isUser()
     const voteHandler = (snId: number) => () => {
-        const headers = state.user.headersGet()        
+        const headers = state.user.headersGet()
         if (headers === null) return
 
         const voteDTO: VoteDTO = {snId, tlId}
@@ -41,45 +41,46 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
     const openProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: true })
     const closeProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: false, })
 
-    const taskOrId = {type: "task", payload: task, }    
-    
-    return html`                 
+    const taskOrId = {type: "task", payload: task, }
+
+    return html`
         <div class="alternativeHeader">
+
             <div class="alternativeHeaderTitle">Alternatives</div>
             <div class="alternativeHeaderMain">
-
-                <div class="alternativeHeaderMainMid">
-                    <div> Language: 
-                        ${lang !== null && lang.name}
+                <div class="alternativeHeaderMainLeft">
+                    <div class="alternativeHeaderGridLeft"> Language:
                     </div>
-                    <div>
-                        Task: ${task.taskGroupName} / ${task.name}
+                    <div class="alternativeHeaderGridRight"> ${lang !== null && lang.name}
                     </div>
-                    <div>
-                        Description: ${task.description}
+                    <div class="alternativeHeaderGridLeft">
+                        Task:
+                    </div>
+                    <div class="alternativeHeaderGridRight">
+                        ${task.taskGroupName} / ${task.name}
+                    </div>
+                    <div class="alternativeHeaderGridLeft">
+                        Description:
+                    </div>
+                    <div class="alternativeHeaderGridRight">
+                        ${task.description}
                     </div>
                 </div>
                 <div class="alternativeHeaderMainRight">
-                    <div>
-                        <${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false} 
-                                    leftCallback=${() => state.app.alternativesResort("byDate")} rightCallback=${() => state.app.alternativesResort("byScore")} />
-                    </div>                    
-                </div>
-                <div class="alternativeHeaderMainLeft">
-                    <div class="alternativeHeaderMainLeftCode">
+                    <div class="alternativeHeaderMainRightCode">
                         ${primaryAlternative !== null && primaryAlternative.code}
                     </div>
-                </div>          
+                </div>
             </div>
             <div class="alternativeHeaderMainFooter">
                 <span>Upload date: ${primaryAlternative !== null && fmtDt(primaryAlternative.tsUpload)}</span>
                 <span>Score: ${primaryAlternative !== null && primaryAlternative.score}</span>
-                ${primaryAlternative.voteFlag 
+                ${primaryAlternative.voteFlag
                     ? html`
                             <span class="alternativeFooterVoted">
                                 Voted!
                             </span>
-                            
+
                         `
                     : (isSignedIn === true &&
                         html`
@@ -92,7 +93,10 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
                     Propose a new snippet
                 </span>`
                 }
-
+                <span>
+                    <${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false}
+                                leftCallback=${() => state.app.alternativesResort("byDate")} rightCallback=${() => state.app.alternativesResort("byScore")} />
+                </span>
             </div>
             ${ lang !== null && html`
                     <${Dialog} state=${proposalDialog} closeCallback=${closeProposalDialog}>
@@ -100,9 +104,9 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
                     <//>
                 `
             }
-        </div>        
+        </div>
     `
-    
+
 })
 
 export default AlternativePrimary

@@ -1,24 +1,31 @@
 .alternativeBody {
     background-color: hsl(0, 0%, 18%);
-    padding-top: 20px;
-    padding-left: 2vw;
-    padding-right: 2vw;
+    margin-left: 0.5vw;
+    margin-right: 1.5vw;
     display: flex;
     flex-direction: column;
     color: white;
-    overflow-y: scroll;
+    overflow-y: auto;
+    border: 1px solid white;
+}
+
+.alternativeMargin {
+    height: 0.5rem;
+    background-color: hsl(0, 0%, 18%);
 }
 
 .alternativeHeader {
     display: block;
     min-height: 6rem;
-    width: 96vw;
-    border-style: solid;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
-    border-width: 1px;
-    border-bottom-width: 0;
+    width: 100%;
     position: sticky;
+}
+
+.alternativeHeaderTopLine {
+    border-right: 8px solid white;
+    background-color: hsl(0, 0%, 28%);
+    height: 8px;
+    width: calc(100% - 8px);
 }
 
 .alternativeHeaderTitle {
@@ -29,22 +36,50 @@
 
 .alternativeHeaderMain {
     display: flex;
-    justify-content: center;
-    align-items: center;    
-}
-
-.alternativeHeaderMainLeft {
-    width: 60vw;
-    text-align: center;    
-    border-color: hsl(120, 71%, 43%);
+    justify-content: flex-start;
+    align-items: top;
     height: 100%;
 }
 
-.alternativeHeaderMainLeftCode {
+.alternativeHeaderMainLeft {
+    padding-left: 0.5rem;
+    width: 30%;
+    border-color: hsl(120, 71%, 43%);
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: auto;
+    column-gap: 0.5rem;
+}
+
+.alternativeHeaderGridLeft {
+    text-align: right;
+}
+
+.alternativeHeaderGridRight {
+    text-align: left;
+}
+
+.alternativeHeaderMainMid {
+    width: 25%;
+    margin-left: 1%;
+}
+
+.alternativeHeaderMainRight {
+    text-align: center;
+    display: flex;
+    flex: 10;
+    flex-direction: column;
+    justify-content: center;
+    color: hsl(60, 100%, 59%);
+    font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
+}
+
+.alternativeHeaderMainRightCode {
     font-family: Monospace, Arial, sans-serif;
     color: hsl(120, 100%, 62%);
     background-color: black;
-    border-radius: 0.4rem;
+    border-radius: 0.3rem;
     padding: 1rem;
     margin-right: 1rem;
     text-align: left;
@@ -52,27 +87,12 @@
     overflow-y: auto;
 }
 
-.alternativeHeaderMainMid {
-    width: 20vw;
-}
-
-.alternativeHeaderMainRight {
-    width: 10vw;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: hsl(60, 100%, 59%);
-    font-size: 1.2rem;
-    font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
-}
-
 .alternativeHeaderMainFooter {
     padding: 1rem;
     font-size: 0.8rem;
 }
 
-.alternativeHeaderMainFooter span {
+.alternativeHeaderMainFooter > span {
     margin-right: 1rem;
 }
 
@@ -92,20 +112,17 @@
 .alternativeButtons {
     height: 100%;
     display: flex;
-    
+
     flex-direction: column;
     justify-content: space-around;
 }
 
 .alternativeItem {
-    border-style: solid;
-    border-color: white;
-    border-width: 1px;
-    border-bottom-width: 0;
     color: white;
-    width: 96vw;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
 }
 
 .alternativeItemCode {
@@ -113,7 +130,7 @@
     margin-left: 1rem;
     margin-bottom: 10px;
     padding: 5px;
-    padding-bottom: 1rem;    
+    padding-bottom: 1rem;
     background-color: black;
     color: hsl(120, 100%, 62%);
     border-radius: 0.3rem;
@@ -158,9 +175,9 @@
     color: hsl(120, 90%, 65%);
 }
 
-.alternativeItemComments {    
+.alternativeItemComments {
     margin-top: 0.5rem;
-    padding: 0.5rem;    
+    padding: 0.5rem;
 }
 
 
@@ -168,7 +185,7 @@
     font-size: 0.9rem;
 }
 
-.alternativeItemCommentsComment {    
+.alternativeItemCommentsComment {
     margin-bottom: 10px;
 }
 
@@ -202,19 +219,13 @@
     transition: all 0.3s ease;
 }
 
-.alternativeFooter {
-    height: 2rem;
-    border-top-width: 1px;
-    border-top-style: solid;
-    width: calc(96vw + 2px);
-}
 
 .alternativeDialogButtons {
     height: 50px;
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;    
+    justify-content: space-evenly;
 }
 
 .alternativeDialogButton {
@@ -223,7 +234,7 @@
     border-radius: 0.3rem;
     background-color: white;
     color: black;
-    display: flex;    
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -240,7 +251,7 @@
     height: 100%;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    
+
 }
 
 .clickable {

@@ -12,6 +12,7 @@ type Props<T extends IStringKeyed & IHasName> = {
     values: T[],
     title: string,
     editabilities: Editability<T>[],
+    cuCallback: (newValue: T) => void,
 }
 
 const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabilities, }: Props<T>) => {
@@ -30,6 +31,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     const newSaveHandler = (e: any) => {        
         e.preventDefault()
         const formData = new FormData(e.target)
+        
         for (var [key, value] of formData.entries()) { 
             console.log(key);
             console.log(value);
@@ -44,7 +46,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     const editSaveHandler = (idx: number) => (e: any) => {
         e.preventDefault()        
         const newValue = {...values[idx]}
-
+        console.log("saving after edit")
         editabilities.forEach(ed => {
             if (ed.fieldType === "choice") {
                 const newChoiceInd: number = ed.choices!!.findIndex(x => x.name === e.target[ed.field].value)
@@ -53,6 +55,8 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                 newValue[ed.field] = e.target[ed.field].value
             }            
         })
+        console.log(newValue)
+        console.log("newValue")
     }
 
     const editableInputs = (v: T) => {
