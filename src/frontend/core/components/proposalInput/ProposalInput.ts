@@ -43,15 +43,15 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
 
         const task: TaskDTO = mbTask
 
-        if (inputRef && inputRef.current && inputRef.current.value.length > 0) {            
+        if (inputRef && inputRef.current && inputRef.current.value.length > 0) {
             const response = await state.app.client.proposalCreate(inputRef.current.value, lang.id, task.id, headers)
-            
+
             if (response.status === "OK") {
                 toast.success("Proposal saved", { autoClose: 2000 })
             } else {
                 toast.error("Error: " + response.status, { autoClose: 7000 })
             }
-            inputRef.current.value = ""            
+            inputRef.current.value = ""
         }
         closeCallback()
     }
@@ -61,7 +61,7 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
         closeCallback()
     }
     if (mbTask === null) return empty
-    
+
     return html`
         <div class="proposalInputContainer">
             ${((state.user.acc !== null && signedIn === true)
@@ -69,21 +69,20 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
                     <div class="proposalInputBlock">Propose a <span class="proposalInputLang">${lang !== null && lang.name}</span> solution for <span class="proposalInputTask">${mbTask.name}</span>
                     </div>
                     <div class="proposalInputBlock">Task description: ${mbTask.description}</div>
-                    <div class="proposalInputBlock">
-                        <textarea class="proposalInputTextArea" ref=${inputRef}></textarea>                        
+                    <div class="proposalInputBlockText">
+                        <textarea class="proposalInputTextArea" ref=${inputRef}></textarea>
                     </div>
                     <div class="proposalInputButtons">
-                        <div class="proposalInputButton" onClick=${saveProposalHandler}>Save</div>
                         <div class="proposalInputButton" onClick=${closeHandler}>Cancel</div>
+                        <div class="proposalInputButton" onClick=${saveProposalHandler}>Save</div>
                     </div>
                 `
                 : html `
-                    <${Login} />
-                    <div class="proposalInputButton" onClick=${closeCallback}>Cancel</div>
+                    <${Login} closeCallback=${closeCallback} />
                 `)
-            }            
+            }
         </div>
-    `       
+    `
 })
 
 export default ProposalInput
