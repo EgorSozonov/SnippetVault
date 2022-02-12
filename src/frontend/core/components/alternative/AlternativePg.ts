@@ -13,7 +13,9 @@ import { AlternativeDTO } from "../dto/SnippetDTO";
 import { empty } from "../../utils/ComponentUtils";
 import { BigDialogState } from "../../commonComponents/dialog/DialogState";
 import CommentDialog from "./CommentDialog";
-import {ReactComponent as KeyButton} from "../../commonComponents/login/Key.svg";
+import KeyButton from "../../commonComponents/login/KeyButton";
+import UserButton from "../../commonComponents/login/UserButton";
+
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {
     const { langId, tlId } = useParams<{ tlId: string, langId: string, }>()
@@ -60,8 +62,9 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
         ? html`
             <div class="alternativeMargin" />
             <div class="alternativeBody">
-                <div class="alternativeHeaderTitle"><span>Alternatives</span>
-                    <img src=${KeyButton} alt="React Logo" />
+                <div class="alternativeHeaderTitle">
+                    <span>Alternatives</span>
+                    ${state.user.acc === null ? html`<${KeyButton} />` : html`<${UserButton} />` }
                 </div>
                 <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} openDialog=${openDialog} />
                 ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {

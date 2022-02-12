@@ -1,6 +1,4 @@
 .alternativeBody {
-
-
     margin-left: 0.5vw;
     margin-right: 1.5vw;
     display: flex;
@@ -23,15 +21,26 @@
 }
 
 .alternativeHeaderTitle {
-
     background-color: hsl(0, 0%, 28%);
-
+    color: white;
     text-align: center;
     font-size: 1.5rem;
     width: 100%;
     border-bottom: 1px solid white;
+    display: flex;
 }
 
+.alternativeHeaderTitle > span {
+    margin-left: 1rem;
+}
+
+.alternativeHeaderTitle svg {
+    cursor: pointer;
+    stroke: white;
+    fill: transparent;
+    margin-right: 1rem;
+    margin-left: auto;
+}
 
 .alternativeHeaderMain {
     display: flex;

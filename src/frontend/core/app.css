@@ -17,3 +17,7 @@ code {
     background-color: hsl(0, 0%, 18%);
     scrollbar-width: thin;
 }
+
+.rightMost {
+    margin-left: auto;
+}

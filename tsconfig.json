@@ -20,6 +20,7 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
+        "typeRoots": ["./src/frontend/core/@types", "./node_modules/@types"],
     },
     "ts-node": {
         "compilerOptions": {
@@ -27,8 +28,8 @@
         }
     },
     "include": [
-        "src/**/*.ts", 
-        "webpack.backend.ts", 
+        "src/**/*.ts",
+        "webpack.backend.ts",
         "webpack.frontend.ts",
         "webpack.d.ts"
     ]
