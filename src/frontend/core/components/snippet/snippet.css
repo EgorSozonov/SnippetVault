@@ -39,18 +39,11 @@
     color: white;
 }
 
-.headerRightmost {
-    border-top-right-radius: 10px;
-}
-
-.headerLeftmost {
-    border-top-left-radius: 10px;
-}
-
 .headerProfileButton {
     cursor: pointer;
-    
+
 }
+
 /* ------------- */
 /* Snippets body */
 /* ------------- */
@@ -133,7 +126,7 @@
     align-items: center;
     justify-content: center;
     border-bottom-style: solid;
-    border-bottom-width: 1px;    
+    border-bottom-width: 1px;
     border-color: hsl(0, 0%, 43%);
 }
 
@@ -144,8 +137,8 @@
     flex-direction: column;
     justify-content: center;
     color: hsl(120, 100%, 62%);
+    background-color: hsl(0, 0%, 28%);
     border-style: solid;
-    border-top-left-radius: 12px;
     border-width: 1px;
     border-color: hsl(120, 71%, 43%);
     font-size: 1.2rem;
@@ -159,8 +152,8 @@
     flex-direction: column;
     justify-content: center;
     color: hsl(60, 100%, 59%);
+    background-color: hsl(0, 0%, 28%);
     border-style: solid;
-    border-top-right-radius: 12px;
     border-width: 1px;
     border-color: hsl(46, 84%, 39%);
     font-size: 1.2rem;
@@ -191,7 +184,7 @@
     padding: 3px;
 }
 
-.snippetFooter { 
+.snippetFooter {
     margin-bottom: 20px;
     background-color: hsl(0, 0%, 18%);
 }
@@ -224,6 +217,7 @@ select {
 
 .snippetProposalButtonContainer {
     display: flex;
+    height: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;

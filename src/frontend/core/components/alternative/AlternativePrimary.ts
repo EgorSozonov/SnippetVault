@@ -45,8 +45,6 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
 
     return html`
         <div class="alternativeHeader">
-
-            <div class="alternativeHeaderTitle">Alternatives</div>
             <div class="alternativeHeaderMain">
                 <div class="alternativeHeaderMainLeft">
                     <div class="alternativeHeaderGridLeft"> Language:

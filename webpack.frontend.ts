@@ -40,7 +40,7 @@ const webpackFrontend = (args: any): Configuration => {
 		resolve: {
 			extensions: [".ts", ".js", ".html", ".json"],
 		},
-        
+
 		module: {
 			rules: [
 				{
@@ -61,7 +61,6 @@ const webpackFrontend = (args: any): Configuration => {
                     test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
                     type: 'asset/inline',
                 },
-				// app main .less file
 				{
 					test: /app\.less$/i,
 					use: [

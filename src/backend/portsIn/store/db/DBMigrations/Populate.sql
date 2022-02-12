@@ -2,15 +2,15 @@
 ---------------------------
 -- Language groups
 ---------------------------
-INSERT INTO sv."languageGroup"(id, code, name, "sortingOrder")	
+INSERT INTO sv."languageGroup"(id, code, name, "sortingOrder")
 OVERRIDING SYSTEM VALUE	VALUES (1, 'UNIVERSAL', 'General-purpose languages', 1)
 ON CONFLICT (id) DO UPDATE SET code='UNIVERSAL', name='General-purpose languages', "sortingOrder" = 1;
 
-INSERT INTO sv."languageGroup"(id, code, name, "sortingOrder")	
+INSERT INTO sv."languageGroup"(id, code, name, "sortingOrder")
 OVERRIDING SYSTEM VALUE	VALUES (2, 'SCRIPTING', 'Scripting languages', 1)
 ON CONFLICT (id) DO UPDATE SET code='SCRIPTING', name='Scripting languages', "sortingOrder" = 2;
 
-INSERT INTO sv."languageGroup"(id, code, name, "sortingOrder")	
+INSERT INTO sv."languageGroup"(id, code, name, "sortingOrder")
 OVERRIDING SYSTEM VALUE	VALUES (3, 'QUERY', 'Data query languages', 1)
 ON CONFLICT (id) DO UPDATE SET code='QUERY', name='Data query languages', "sortingOrder" = 3;
 
@@ -50,16 +50,13 @@ INSERT INTO sv.language(id, code, name, "isDeleted", "languageGroupId")
 OVERRIDING SYSTEM VALUE	VALUES (8, 'SQL3', 'PostgreSQL', 0::bit, 3)
 ON CONFLICT (id) DO UPDATE SET code='SQL3', name='PostgreSQL', "isDeleted" = 0::bit, "languageGroupId" = 3;
 
-INSERT INTO sv.language(id, code, name, "isDeleted", "languageGroupId")
-OVERRIDING SYSTEM VALUE	VALUES (9, 'Dart', 'Dart', 0::bit, 1)
-ON CONFLICT (id) DO UPDATE SET code='Dart', name='Dart', "isDeleted" = 0::bit, "languageGroupId" = 1;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "languageGroupId")
-OVERRIDING SYSTEM VALUE	VALUES (10, 'Kotl', 'Kotlin', 0::bit, 1)
+OVERRIDING SYSTEM VALUE	VALUES (9, 'Kotl', 'Kotlin', 0::bit, 1)
 ON CONFLICT (id) DO UPDATE SET code='Kotl', name='Kotlin', "isDeleted" = 0::bit, "languageGroupId" = 1;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "languageGroupId")
-OVERRIDING SYSTEM VALUE	VALUES (11, 'Lua', 'Lua', 0::bit, 2)
+OVERRIDING SYSTEM VALUE	VALUES (10, 'Lua', 'Lua', 0::bit, 2)
 ON CONFLICT (id) DO UPDATE SET code='Lua', name='Lua', "isDeleted" = 0::bit, "languageGroupId" = 2;
 
 
@@ -121,7 +118,7 @@ ON CONFLICT (id) DO UPDATE SET name = 'If-else expression', description = 'A con
 
 INSERT INTO sv.task(id, name, description, "taskGroupId")
 OVERRIDING SYSTEM VALUE	VALUES (5, 'Square root', 'Calculation of a square root respectively for a floating-point number', 2)
-ON CONFLICT (id) DO UPDATE 
+ON CONFLICT (id) DO UPDATE
 SET name = 'Square root', description = 'Calculation of a square root respectively for an integer and for a floating-point number', "taskGroupId" = 2;
 
 INSERT INTO sv.task(id, name, description, "taskGroupId")
@@ -161,7 +158,7 @@ ON CONFLICT (id) DO UPDATE SET name='Read char', description = 'Read a single ch
 
 INSERT INTO sv.task(id, name, description, "taskGroupId")
 OVERRIDING SYSTEM VALUE	VALUES (14, 'Read text file line by line', 'Read a text file line-by-line without loading the complete file into memory', 4)
-ON CONFLICT (id) DO UPDATE 
+ON CONFLICT (id) DO UPDATE
 SET name = 'Read text file line by line', description = 'Read a text file line-by-line without loading the complete file into memory', "taskGroupId" = 4;
 
 INSERT INTO sv.task(id, name, description, "taskGroupId")
