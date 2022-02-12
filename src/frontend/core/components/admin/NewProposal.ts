@@ -62,7 +62,7 @@ const NewProposal: FunctionComponent = observer(() => {
     }
 
     const proposals = state.app.proposals.slice()
-    
+
     return ((proposalDialog.isOpen === false)
         ?  html`
             <div class="newProposals">
@@ -89,11 +89,11 @@ const NewProposal: FunctionComponent = observer(() => {
                                     </div>
                                 </div>
                             </div>
-                            <div class=${"proposalBody"}>${proposal.proposalCode}</div>
+                            <pre class=${"proposalBody"}>${proposal.proposalCode}</div>
                         </div>`
-                })}       
+                })}
             </div>
-            <${DialogConfirm} state=${confirmationDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />            
+            <${DialogConfirm} state=${confirmationDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />
         `
         : html`
             <${EditProposalDialog} dialogState=${proposalDialog} closeCallback=${closeProposalDialog} />

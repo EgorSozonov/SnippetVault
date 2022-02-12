@@ -21,12 +21,12 @@ const Dialog: React.FunctionComponent<Props> = ({state, closeCallback, children,
         }
 
         document.addEventListener("keydown", handleKeyDown)
-        
+
         return function cleanup() {
             document.removeEventListener("keydown", handleKeyDown)
         }
     }, [])
-    
+
     return html`
         <div class=${"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
             <div class="dialogContainer">
@@ -37,9 +37,9 @@ const Dialog: React.FunctionComponent<Props> = ({state, closeCallback, children,
                     <span class="dialogHeaderRight" onClick=${closeCallback}>[X]
                     </span>
                 </div>
-                <div>
-                    ${children}
-                </div>
+
+                ${children}
+
             </div>
         </div>
     `

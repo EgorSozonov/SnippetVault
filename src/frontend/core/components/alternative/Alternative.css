@@ -34,12 +34,15 @@
     margin-left: 1rem;
 }
 
+.alternativeHeaderTitle > a {
+    margin-right: 1rem;
+    margin-left: auto;
+}
+
 .alternativeHeaderTitle svg {
     cursor: pointer;
     stroke: white;
     fill: transparent;
-    margin-right: 1rem;
-    margin-left: auto;
 }
 
 .alternativeHeaderMain {

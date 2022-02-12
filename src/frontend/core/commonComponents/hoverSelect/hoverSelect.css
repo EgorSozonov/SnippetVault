@@ -40,11 +40,16 @@
     z-index: 99;
 }
 
+.searchCompact {
+    stroke: white;
+    fill: transparent;
+}
+
 .hoverSelectMenu {
     position: absolute;
     opacity: 0;
     pointer-events: none;
-    transform: translateY(20px);       
+    transform: translateY(20px);
 }
 
 .hoverSelectMenuActive {
@@ -159,7 +164,7 @@
     position: absolute;
     opacity: 0;
     pointer-events: none;
-    transform: translateY(-10px);       
+    transform: translateY(-10px);
 }
 
 .hoverSelectInputMenuActive {

@@ -1,9 +1,5 @@
 .proposalInputContainer {
     height: 60vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: baseline;
     padding-left: 0.5rem;
 }
 

@@ -15,6 +15,8 @@ import { BigDialogState } from "../../commonComponents/dialog/DialogState";
 import CommentDialog from "./CommentDialog";
 import KeyButton from "../../commonComponents/login/KeyButton";
 import UserButton from "../../commonComponents/login/UserButton";
+import { NavLink } from "react-router-dom";
+import PATHS from "../../params/Path";
 
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {
@@ -38,7 +40,6 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
         state.app.commentsSet([])
         setCommentDialog({...commentDialog, isOpen: false})
     }
-
 
     useEffect(() => {
         state.user.trySignInFromLS()
@@ -64,7 +65,8 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
             <div class="alternativeBody">
                 <div class="alternativeHeaderTitle">
                     <span>Alternatives</span>
-                    ${state.user.acc === null ? html`<${KeyButton} />` : html`<${UserButton} />` }
+                    ${state.user.acc === null ? html`<${NavLink} exact to=${PATHS["profile"].url}}><${KeyButton} /><//>`
+                                              : html`<${NavLink} exact to=${PATHS["profile"].url}><${UserButton} /><//>` }
                 </div>
                 <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} openDialog=${openDialog} />
                 ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
