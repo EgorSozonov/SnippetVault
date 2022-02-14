@@ -31,10 +31,6 @@ public class LanguageGroupedDTO {
     public int languageGroupOrder {get; set;}
 }
 
-public class LanguageGroupDTO {
-    public int id {get; set;}
-    public string name {get; set;}
-}
 
 public class TaskCUDTO : CUDTO {
     public int tgId {get; set;}
