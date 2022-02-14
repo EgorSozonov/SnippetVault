@@ -25,6 +25,8 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
     const acc = state.user.acc
     const signedIn = state.user.isUser()
 
+    const [isLibOpen, setIsLibOpen] = useState(false)
+
     useEffect(() => {
         (async () => {
             if (taskOrId.type === "taskId") {
@@ -58,13 +60,14 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
 
     const closeHandler = () => {
         if (inputRef !== null && inputRef.current !== null) inputRef.current.value = ""
+        setIsLibOpen(false)
         closeCallback()
     }
     if (mbTask === null) return empty
 
     return html`
         <div class="proposalInputContainer">
-            ${((state.user.acc !== null && signedIn === true)
+            ${((acc !== null && signedIn === true)
                 ? html`
                     <div class="proposalInputBlock">Propose a <span class="proposalInputLang">${lang !== null && lang.name}</span> solution for <span class="proposalInputTask">${mbTask.name}</span>
                     </div>
@@ -72,6 +75,25 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
                     <div class="proposalInputBlockText">
                         <textarea class="proposalInputTextArea" ref=${inputRef}></textarea>
                     </div>
+                    ${isLibOpen === true
+                        ? html`
+                            <div class="proposalInputBlockLib">
+                                <p>Specify necessary libraries for this snippet:
+                                    <span onClick=${() => setIsLibOpen(false)} class="proposalInputLibTurnOff" title="Cancel specifying libraries">
+                                        x
+                                    </span>
+                                </p>
+                                <textarea class="proposalInputTextArea" ref=${inputRef}></textarea>
+
+                            </div>
+                        `
+                        : html`
+                            <div onClick=${() => setIsLibOpen(true)} class="proposalInputLibTurnOn">
+                                Optional: specify necessary libraries
+                            </div>
+                        `
+                    }
+
                     <div class="proposalInputButtons">
                         <div class="proposalInputButton" onClick=${closeHandler}>Cancel</div>
                         <div class="proposalInputButton" onClick=${saveProposalHandler}>Save</div>

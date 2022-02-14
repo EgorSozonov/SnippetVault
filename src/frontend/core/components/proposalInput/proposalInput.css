@@ -1,6 +1,9 @@
 .proposalInputContainer {
-    height: 60vh;
+    height: 75vh;
     padding-left: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 
@@ -19,7 +22,7 @@
     height: 100%;
     width: 90%;
     font-size: 1rem;
-    margin: 0.3rem;
+    margin-top: 0.3rem;
 }
 
 .proposalInputButtons {
@@ -48,4 +51,36 @@
 
 .proposalInputTask {
     color: hsl(46, 84%, 39%);
+}
+
+.proposalInputBlockLib {
+    flex: 5;
+    overflow: auto;
+    width: 100%;
+    position: relative;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.proposalInputBlockLib > textarea {
+    width: 90%;
+    max-height: 3rem;
+
+}
+
+.proposalInputLibTurnOn {
+    border: 1px solid white;
+    border-radius: 0.3rem;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+.proposalInputLibTurnOff {
+    border: 1px solid white;
+    border-radius: 0.3rem;
+    background-color: black;
+    margin-left: 1.0rem;
+    color: white;
+    cursor: pointer;
 }

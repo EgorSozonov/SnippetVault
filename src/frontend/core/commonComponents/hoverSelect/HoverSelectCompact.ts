@@ -37,8 +37,8 @@ const HoverSelectCompact: React.FunctionComponent<Props> = observer(({choices, c
             <span class="searchCompact" onClick=${onClickHeader}>
                 <svg width="30" height="30" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="15" cy="15" r="14" fill="transparent" stroke-width="1" />
-                    <path d="M 8 13 L 15 22 L 22 13" />
-                    <path d="M 11 11 L 15 16 L 19 11" />
+                    <path d="M 8 13 L 15 22 L 22 13" stroke="hsl(0, 0%, 80%)" />
+                    <path d="M 11 11 L 15 16 L 19 11" stroke="hsl(0, 0%, 70%)" />
                 </svg>
             </span>
 
