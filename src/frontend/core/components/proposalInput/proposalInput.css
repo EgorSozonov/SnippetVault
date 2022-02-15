@@ -21,6 +21,7 @@
 .proposalInputTextArea {
     height: 100%;
     width: 90%;
+    max-width: 90%;
     font-size: 1rem;
     margin-top: 0.3rem;
 }
@@ -48,13 +49,11 @@
     color: hsl(120, 71%, 43%);
 }
 
-
 .proposalInputTask {
     color: hsl(46, 84%, 39%);
 }
 
 .proposalInputBlockLib {
-    flex: 5;
     overflow: auto;
     width: 100%;
     position: relative;
@@ -64,8 +63,9 @@
 
 .proposalInputBlockLib > textarea {
     width: 90%;
+    height: 3rem;
     max-height: 3rem;
-
+    max-width: 90%;
 }
 
 .proposalInputLibTurnOn {

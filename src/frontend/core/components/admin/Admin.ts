@@ -11,13 +11,12 @@ import { Editability } from "../../commonComponents/editableList/utils/Editabili
 import { fetchFromClient } from "../../utils/Client"
 import IClient from "../../../ports/IClient"
 import AdminLogin from "./AdminLogin"
-import { LanguageGroupDTO, LanguageDTO, TaskGroupDTO } from "../../types/dto/AuxDTO"
+import { LanguageDTO, TaskGroupDTO } from "../../types/dto/AuxDTO"
 import { empty } from "../../utils/ComponentUtils"
 import AdminChangePw from "./AdminChangePw"
 
 
 const ListTaskGroups = (props: any) => EditableList<TaskGroupDTO>(props)
-const ListLanguageGroups = (props: any) => EditableList<LanguageGroupDTO>(props)
 const ListLanguages = (props: any) => EditableList<LanguageDTO>(props)
 
 const editabilityTaskGroup: Editability<TaskGroupDTO>[] = [
@@ -29,33 +28,26 @@ const editabilityTaskGroup: Editability<TaskGroupDTO>[] = [
 
 const Admin: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
-    const editabilitiesLanguageGroup: Editability<LanguageGroupDTO>[] = [
-        {
-            field: "name",
-            fieldType: "string",
-        },
-        {
-            field: "order",
-            fieldType: "int",
-        },
-    ]
+
     const editabilityLanguage: Editability<LanguageDTO>[] = [
         {
             field: "name",
             fieldType: "string",
         },
         {
-            field: "lgName",
-            fieldType: "choice",
-            choices: state.app.languageGroups.map(x => {return {id: x.id, name: x.name}}),
+            field: "code",
+            fieldType: "string",
+        },
+        {
+            field: "sortingOrder",
+            fieldType: "int",
         },
     ]
 
     const client: IClient = state.app.client
     useEffect(() => {
-        fetchFromClient(client.languagesReqGet(), state.app.languagesSet)
+        fetchFromClient(client.languagesGet(), state.app.languagesSet)
         fetchFromClient(client.taskGroupsGet(), state.app.taskGroupsSet)
-        fetchFromClient(client.languageGroupsGet(), state.app.languageGroupsSet)
         fetchFromClient(client.adminStatsGet(), state.app.statsSet)
         state.user.trySignInFromLS()
     }, [state.user.acc])
@@ -95,10 +87,9 @@ const Admin: FunctionComponent = observer(({}: any) => {
                             <div class="adminHeaderButton" onClick=${state.user.signOut}>(sign out)</div>
                             <div class="adminHeaderButton" onClick=${changeAdminPwHandler}>Change password</div>
                         </div>
-                        <${ListTaskGroups} values=${state.app.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"></EditableList>
-                        <${ListLanguageGroups} values=${state.app.languageGroups} editabilities=${editabilitiesLanguageGroup} title="Language Groups"></EditableList>
-                        <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"></EditableList>
                         <${NewProposal} />
+                        <${ListTaskGroups} values=${state.app.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"></EditableList>
+                        <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"></EditableList>
                         `
                     : html`<${AdminChangePw} closeChangeAdminPwHandler=${closeChangeAdminPwHandler} />`
                     )
