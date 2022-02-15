@@ -37,6 +37,10 @@ type IClient = {
     userChangePw: (dto: ChangePwDTO, headers: SignInSuccessDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     userChangeAdminPw: (dto: ChangePwAdminDTO, headers: SignInSuccessDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
 
+    // Admin
+    tasksAll: () => Promise<EitherMsg<TaskCUDTO[]>>
+    taskGroupsAll: () => Promise<EitherMsg<TaskGroupCUDTO[]>>
+    languagesAll: () => Promise<EitherMsg<LanguageCUDTO[]>>
     adminStatsGet: () => Promise<EitherMsg<StatsDTO[]>>
 }
 

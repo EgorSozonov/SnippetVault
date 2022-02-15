@@ -120,13 +120,6 @@ public class MainController : Controller {
     }
 
     [HttpGet]
-    [Route("task/{tgId:int}")]
-    public async Task task([FromRoute] int tgId) {
-        var result = await api.taskGet(tgId);
-        await sendQueryResult<TaskDTO>(result, HttpContext.Response);
-    }
-
-    [HttpGet]
     [Route("taskGroupsForLanguage/{langId:int}")]
     public async Task taskGroupsForLanguage([FromRoute] int langId) {
         var result = await api.taskGroupsForLangGet(langId);
@@ -138,34 +131,6 @@ public class MainController : Controller {
     public async Task taskGroupsForLanguages([FromRoute] int langId1, [FromRoute] int langId2) {
         var result = await api.taskGroupsForLangsGet(langId1, langId2);
         await sendQueryResult<TaskGroupDTO>(result, HttpContext.Response);
-    }
-
-    [HttpGet]
-    [Route("admin/stats")]
-    public async Task statsForAdmin() {
-        var result = await api.statsForAdmin();
-        await sendQueryResult<StatsDTO>(result, HttpContext.Response);
-    }
-
-    [HttpPost]
-    [Route("language/cu")]
-    [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task languageCreateUpdate([FromBody] LanguageCUDTO dto) {
-        await applyPostRequest(api.languageCU(dto), HttpContext.Response);
-    }
-
-    [HttpPost]
-    [Route("task/cu")]
-    [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task taskCreateUpdate([FromBody] TaskCUDTO dto) {
-        await applyPostRequest(api.taskCU(dto), HttpContext.Response);
-    }
-
-    [HttpPost]
-    [Route("taskGroup/cu")]
-    [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task taskGroupCreateUpdate([FromBody] TaskGroupCUDTO dto) {
-        await applyPostRequest(api.taskGroupCU(dto), HttpContext.Response);
     }
 
     #endregion
@@ -244,6 +209,57 @@ public class MainController : Controller {
         await sendQueryResult<ProfileDTO>(result, HttpContext.Response);
     }
 
+    #endregion
+
+    #region Admin
+    [HttpGet]
+    [Route("task/all")]
+    public async Task tasksAll() {
+        var result = await api.tasksAll();
+        await sendQueryResult<TaskCUDTO>(result, HttpContext.Response);
+    }
+
+    [HttpPost]
+    [Route("task/cu")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
+    public async Task taskCreateUpdate([FromBody] TaskCUDTO dto) {
+        await applyPostRequest(api.taskCU(dto), HttpContext.Response);
+    }
+
+    [HttpGet]
+    [Route("taskGroup/all")]
+    public async Task taskGroupsAll() {
+        var result = await api.taskGroupsAll();
+        await sendQueryResult<TaskGroupCUDTO>(result, HttpContext.Response);
+    }
+
+    [HttpGet]
+    [Route("language/all")]
+    public async Task languagesAll() {
+        var result = await api.languagesAll();
+        await sendQueryResult<LanguageCUDTO>(result, HttpContext.Response);
+    }
+
+    [HttpPost]
+    [Route("language/cu")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
+    public async Task languageCreateUpdate([FromBody] LanguageCUDTO dto) {
+        await applyPostRequest(api.languageCU(dto), HttpContext.Response);
+    }
+
+    [HttpPost]
+    [Route("taskGroup/cu")]
+    [ServiceFilter(typeof(AuthorizeAdminFilter))]
+    public async Task taskGroupCreateUpdate([FromBody] TaskGroupCUDTO dto) {
+        await applyPostRequest(api.taskGroupCU(dto), HttpContext.Response);
+    }
+
+    [HttpGet]
+    [Route("admin/stats")]
+    public async Task statsForAdmin() {
+        var result = await api.statsForAdmin();
+        await sendQueryResult<StatsDTO>(result, HttpContext.Response);
+    }
     #endregion
 
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {

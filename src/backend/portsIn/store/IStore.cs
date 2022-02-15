@@ -25,6 +25,10 @@ public interface IStore {
     Task<int> taskGroupCU(TaskGroupCUDTO dto);
     Task<ReqResult<TaskDTO>> taskGet(int taskId);
     Task<ReqResult<TaskDTO>> taskForTLGet(int taskLanguageId);
+
+    Task<ReqResult<TaskCUDTO>> tasksAll();
+    Task<ReqResult<TaskGroupCUDTO>> taskGroupsAll();
+    Task<ReqResult<LanguageCUDTO>> languagesAll();
     Task<int> taskCU(TaskCUDTO dto);
     Task<int> languageCU(LanguageCUDTO dto);
     Task<ReqResult<StatsDTO>> statsForAdmin();

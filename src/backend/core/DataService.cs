@@ -105,6 +105,33 @@ public class DataService : IDataService {
 
     #endregion
 
+    #region TaskLanguage
+    public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId) {
+        return await st.taskGroupsForLangGet(langId);
+    }
+
+    public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2) {
+        return await st.taskGroupsForLangsGet(lang1, lang2);
+    }
+
+    public async Task<ReqResult<LanguageDTO>> languagesGet() {
+        return await st.languagesGet();
+    }
+
+    public async Task<ReqResult<TaskGroupDTO>> taskGroupsGet() {
+        return await st.taskGroupsGet();
+    }
+
+    public async Task<ReqResult<TaskDTO>> taskGet(int taskId) {
+        return await st.taskGet(taskId);
+    }
+
+    public async Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup) {
+        return await st.tasksFromGroupGet(taskGroup);
+    }
+
+    #endregion
+
     #region User
 
     public async Task<ReqResult<CommentDTO>> commentsGet(int snippetId) {
@@ -124,7 +151,6 @@ public class DataService : IDataService {
         return profileIncomplete;
     }
 
-
     public async Task<int> commentCreate(CommentCUDTO dto, int userId) {
         return await st.commentCreate(userId, dto.snId, dto.content, System.DateTime.Now.ToUniversalTime());
     }
@@ -132,33 +158,16 @@ public class DataService : IDataService {
     #endregion
 
     #region Admin
-    public async Task<ReqResult<LanguageDTO>> languagesGet() {
-        return await st.languagesGet();
+    public async Task<ReqResult<TaskCUDTO>> tasksAll() {
+        return await st.tasksAll();
     }
 
-    public async Task<int> languageCU(LanguageCUDTO dto) {
-        if (string.IsNullOrEmpty(dto.name) || string.IsNullOrEmpty(dto.code)) return -1;
-        return await st.languageCU(dto);
+    public async Task<ReqResult<TaskGroupCUDTO>> taskGroupsAll() {
+        return await st.taskGroupsAll();
     }
 
-    public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangGet(int langId) {
-        return await st.taskGroupsForLangGet(langId);
-    }
-
-    public async Task<ReqResult<TaskGroupDTO>> taskGroupsForLangsGet(int lang1, int lang2) {
-        return await st.taskGroupsForLangsGet(lang1, lang2);
-    }
-
-    public async Task<ReqResult<TaskGroupDTO>> taskGroupsGet() {
-        return await st.taskGroupsGet();
-    }
-
-    public async Task<ReqResult<TaskDTO>> taskGet(int taskId) {
-        return await st.taskGet(taskId);
-    }
-
-    public async Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup) {
-        return await st.tasksFromGroupGet(taskGroup);
+    public async Task<ReqResult<LanguageCUDTO>> languagesAll() {
+        return await st.languagesAll();
     }
 
     public async Task<int> taskGroupCU(TaskGroupCUDTO dto) {
@@ -171,6 +180,11 @@ public class DataService : IDataService {
         return await st.taskCU(dto);
     }
 
+    public async Task<int> languageCU(LanguageCUDTO dto) {
+        if (string.IsNullOrEmpty(dto.name) || string.IsNullOrEmpty(dto.code)) return -1;
+        return await st.languageCU(dto);
+    }
+
     public async Task<ReqResult<StatsDTO>> statsForAdmin() {
         var result = await st.statsForAdmin();
         var userCount = await st.userCount();
@@ -181,11 +195,6 @@ public class DataService : IDataService {
     }
 
     #endregion
-
-
-    public string homePageGet() {
-        return staticFiles.indexHtmlGet();
-    }
 }
 
 public interface IDataService {
@@ -207,6 +216,10 @@ public interface IDataService {
 
     Task<ReqResult<TaskGroupDTO>> taskGroupsGet();
     Task<ReqResult<TaskDTO>> taskGet(int tlId);
+
+    Task<ReqResult<TaskCUDTO>> tasksAll();
+    Task<ReqResult<TaskGroupCUDTO>> taskGroupsAll();
+    Task<ReqResult<LanguageCUDTO>> languagesAll();
     Task<int> taskGroupCU(TaskGroupCUDTO dto);
     Task<int> taskCU(TaskCUDTO dto);
     Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup);
@@ -217,7 +230,6 @@ public interface IDataService {
     Task<ReqResult<ProfileDTO>> userProfile(int userId);
     Task<int> commentCreate(CommentCUDTO dto, int userId);
 
-    string homePageGet();
 }
 
 }

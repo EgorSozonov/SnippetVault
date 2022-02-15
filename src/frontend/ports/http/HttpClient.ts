@@ -119,6 +119,19 @@ class HttpClient implements IClient {
         return this.postRequestWithResult("/user/changeAdminPw", dto, headers)
     }
 
+    // Admin
+
+    tasksAll(): Promise<EitherMsg<TaskCUDTO[]>> {
+        return this.getRequest<TaskCUDTO[]>(`/task/all`)
+    }
+
+    taskGroupsAll(): Promise<EitherMsg<TaskGroupCUDTO[]>> {
+        return this.getRequest<TaskGroupCUDTO[]>(`/taskGroup/all`)
+    }
+
+    languagesAll(): Promise<EitherMsg<LanguageCUDTO[]>> {
+        return this.getRequest<LanguageCUDTO[]>(`/language/all`)
+    }
 
     adminStatsGet(): Promise<EitherMsg<StatsDTO[]>> {
         return this.getRequest<StatsDTO[]>(`/admin/stats`)

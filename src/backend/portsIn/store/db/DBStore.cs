@@ -322,6 +322,11 @@ public class DBStore : IStore {
         }
     }
 
+
+    Task<ReqResult<TaskCUDTO>> tasksAll();
+    Task<ReqResult<TaskGroupCUDTO>> taskGroupsAll();
+    Task<ReqResult<LanguageCUDTO>> languagesAll();
+
     private static readonly string taskCreateQ = @"
         INSERT INTO sv.task(name, ""taskGroupId"", description) VALUES (@name, @tgId, @description);
     "; // TODO check for isDeleted
