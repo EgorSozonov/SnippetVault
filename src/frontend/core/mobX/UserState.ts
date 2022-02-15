@@ -1,8 +1,8 @@
 import { notEqual } from "assert"
 import { action, makeAutoObservable } from "mobx"
 import IClient from "../../ports/IClient"
-import { ChangePwAdminDTO, ChangePwDTO, SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../components/dto/AuthDTO"
-import { ProfileDTO } from "../components/dto/UserDTO"
+import { ChangePwAdminDTO, ChangePwDTO, SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
+import { ProfileDTO } from "../types/dto/UserDTO"
 import EitherMsg from "../types/EitherMsg"
 import { UserAccount, UserStatus } from "../types/UserAccount"
 import { dateOfTS, isSameDay } from "../utils/DateUtils"
@@ -60,7 +60,7 @@ export default class UserState {
         const successDTO = response.value[0]
         const expiration = dateOfTS(new Date())
         const account: UserAccount = {
-            name: userName, expiration, accessToken: successDTO.accessToken, userId: successDTO.userId, status, 
+            name: userName, expiration, accessToken: successDTO.accessToken, userId: successDTO.userId, status,
         }
 
         localStorage.setItem("account", JSON.stringify(account))
@@ -76,11 +76,11 @@ export default class UserState {
         const fromLS = localStorage.getItem("account")
         if (fromLS && fromLS.length > 0 && fromLS !== "undefined") {
             const accFromLS: UserAccount = JSON.parse(fromLS)
-            if (accFromLS.userId && accFromLS.userId > -1 
+            if (accFromLS.userId && accFromLS.userId > -1
                   && accFromLS.accessToken && accFromLS.accessToken.length > 0
                   && (accFromLS.status === "admin" || accFromLS.status === "user")
                   && isSameDay(new Date(), accFromLS.expiration) === true
-                  && this.accountsEq(this.acc, accFromLS) === false) {                      
+                  && this.accountsEq(this.acc, accFromLS) === false) {
                 this.acc = accFromLS
             }
         }

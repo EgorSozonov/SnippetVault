@@ -2,10 +2,10 @@
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
 import {mockData, getMockTasks, getMockAlternatives, getMockSnippets, getMockSnippetsByCode} from "./MockData"
-import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/components/dto/AuthDTO"
-import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO } from "../../core/components/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO } from "../../core/components/dto/SnippetDTO"
-import { StatsDTO } from "../../core/components/dto/UserDTO"
+import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
+import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO } from "../../core/types/dto/AuxDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO } from "../../core/types/dto/SnippetDTO"
+import { StatsDTO } from "../../core/types/dto/UserDTO"
 
 
 class MockClient implements IClient {
@@ -64,7 +64,7 @@ class MockClient implements IClient {
     userRegister(dto: SignInDTO) {
         return this.wrapOK([{userId: 0, accessToken: "", }])
     }
-    
+
     userSignIn(dto: SignInDTO) {
         return this.wrapOK([{userId: 0, accessToken: "", }])
     }
@@ -76,7 +76,7 @@ class MockClient implements IClient {
     userProfile() {
         return this.wrapOK([mockData.userProfile])
     }
-    
+
     private wrapOK<T>(val: T): Promise<EitherMsg<T>> {
         return new Promise((resolve) => resolve({isOK: true, value: val}))
     }

@@ -7,18 +7,18 @@ import MainState from "../../mobX/MainState";
 import { StoreContext } from "../../App";
 import DialogFullscreen from "../../commonComponents/dialog/DialogFullscreen";
 import { fetchFromClient } from "../../utils/Client"
-import { ProposalUpdateDTO } from "../dto/SnippetDTO";
+import { ProposalUpdateDTO } from "../../types/dto/SnippetDTO";
 
 
-type Props = {  
+type Props = {
     dialogState: DialogState,
     closeCallback: () => void,
 }
 
-const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {       
+const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {
     const state = useContext<MainState>(StoreContext)
     const proposal = state.app.editProposal
-    
+
 
     useEffect(() => {
         if (dialogState.isOpen === false) return
@@ -42,8 +42,8 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
     }
 
     return html`
-        <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>              
-            ${state.user.isAdmin() === true && 
+        <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>
+            ${state.user.isAdmin() === true &&
                 html`
                 <div>
                     <div class="adminProposalDialogTextareaContainer">

@@ -30,8 +30,8 @@ public class DataService : IDataService {
         return await st.proposalUpdate(dto);
     }
 
-    public async Task<int> snippetApprove(int sn) {        
-        return await st.snippetApprove(sn);        
+    public async Task<int> snippetApprove(int sn) {
+        return await st.snippetApprove(sn);
     }
 
     public async Task<int> snippetDecline(int sn) {
@@ -53,8 +53,8 @@ public class DataService : IDataService {
             }
         } else {
             return -1;
-        }        
-    }    
+        }
+    }
 
     public async Task<ReqResult<ProposalDTO>> proposalsGet() {
         return await st.proposalsGet();
@@ -72,7 +72,7 @@ public class DataService : IDataService {
     public async Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId, int? userId){
         var allAlternatives = userId == null ? await st.alternativesForTLGet(taskLanguageId) : await st.alternativesForUserGet(taskLanguageId, (int)userId);
         var mbTask = await st.taskForTLGet(taskLanguageId);
-        
+
         if (allAlternatives is Success<AlternativeDTO> succ && mbTask is Success<TaskDTO> task) {
             var uniques = new HashSet<int>();
             AlternativeDTO primary = null;
@@ -100,7 +100,7 @@ public class DataService : IDataService {
             }
         } else {
             return new Err<AlternativesDTO>("Error: no alternatives found");
-        }        
+        }
     }
 
     #endregion
@@ -131,23 +131,9 @@ public class DataService : IDataService {
 
     #endregion
 
-    #region Admin   
-
-    public async Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped() {
-        return await st.languagesGetGrouped();
-    }
-
+    #region Admin
     public async Task<ReqResult<LanguageDTO>> languagesGet() {
         return await st.languagesGet();
-    }
-
-    public async Task<int> languageGroupCU(LanguageGroupCUDTO dto) {
-        if (string.IsNullOrEmpty(dto.name) || string.IsNullOrEmpty(dto.code)) return -1;
-        return await st.languageGroupCU(dto);            
-    }
-
-    public async Task<ReqResult<LanguageGroupDTO>> languageGroupsGet() {
-        return await st.languageGroupsGet();
     }
 
     public async Task<int> languageCU(LanguageCUDTO dto) {
@@ -185,7 +171,7 @@ public class DataService : IDataService {
         return await st.taskCU(dto);
     }
 
-    public async Task<ReqResult<StatsDTO>> statsForAdmin() {        
+    public async Task<ReqResult<StatsDTO>> statsForAdmin() {
         var result = await st.statsForAdmin();
         var userCount = await st.userCount();
         if (result is Success<StatsDTO> stats) {
@@ -216,9 +202,6 @@ public interface IDataService {
     Task<ReqResult<AlternativesDTO>> alternativesForTLGet(int taskLanguageId, int? userId);
 
     Task<ReqResult<LanguageDTO>> languagesGet();
-    Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
-    Task<int> languageGroupCU(LanguageGroupCUDTO dto);
-    Task<ReqResult<LanguageGroupDTO>> languageGroupsGet();
     Task<int> languageCU(LanguageCUDTO dto);
     Task<ReqResult<StatsDTO>> statsForAdmin();
 

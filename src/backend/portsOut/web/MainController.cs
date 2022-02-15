@@ -24,14 +24,14 @@ public class MainController : Controller {
 
     [HttpGet]
     [Route("snippets/{taskGroup:int}/{lang1:int}/{lang2:int}")]
-    public async Task snippets([FromRoute] int taskGroup, [FromRoute] int lang1, [FromRoute] int lang2) { 
+    public async Task snippets([FromRoute] int taskGroup, [FromRoute] int lang1, [FromRoute] int lang2) {
         var result = await api.snippetsGet(taskGroup, lang1, lang2);
         await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
     [Route("snippets/byCode")]
-    public async Task snippetsByCode([FromQuery] string taskGroup, [FromQuery] string lang1, [FromQuery] string lang2) { 
+    public async Task snippetsByCode([FromQuery] string taskGroup, [FromQuery] string lang1, [FromQuery] string lang2) {
         var result = await api.snippetsGetByCode(taskGroup, lang1, lang2);
         await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
     }
@@ -42,14 +42,14 @@ public class MainController : Controller {
     public async Task proposalCreate([FromBody] ProposalCreateDTO dto) {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
         int.TryParse(mbUserId[0].ToString(), out int userId);
-        await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);        
+        await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);
     }
 
     [HttpPost]
     [Route("proposal/update")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task proposalUpdate([FromBody] ProposalUpdateDTO dto) {        
-        await applyPostRequest(api.proposalUpdate(dto), HttpContext.Response);        
+    public async Task proposalUpdate([FromBody] ProposalUpdateDTO dto) {
+        await applyPostRequest(api.proposalUpdate(dto), HttpContext.Response);
     }
 
 
@@ -64,21 +64,21 @@ public class MainController : Controller {
     [Route("snippet/approve/{snId:int}")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task snippetApprove([FromRoute] int snId) {
-        await applyPostRequest(api.snippetApprove(snId), HttpContext.Response);        
+        await applyPostRequest(api.snippetApprove(snId), HttpContext.Response);
     }
 
     [HttpPost]
     [Route("snippet/decline/{snId:int}")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task snippetDecline([FromRoute] int snId) {
-        await applyPostRequest(api.snippetDecline(snId), HttpContext.Response);        
+        await applyPostRequest(api.snippetDecline(snId), HttpContext.Response);
     }
 
     [HttpPost]
     [Route("snippet/markPrimary/{tlId:int}/{snId:int}")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task snippetMarkPrimary([FromRoute] int tlId, [FromRoute] int snId) {
-        await applyPostRequest(api.snippetMarkPrimary(tlId, snId), HttpContext.Response);        
+        await applyPostRequest(api.snippetMarkPrimary(tlId, snId), HttpContext.Response);
     }
 
     [HttpGet]
@@ -105,26 +105,11 @@ public class MainController : Controller {
     #endregion
 
     #region TasksLanguages
-
-    [HttpGet]
-    [Route("languages/getGrouped")]
-    public async Task languagesGrouped() {
-        var result = await api.languagesGetGrouped();
-        await sendQueryResult<LanguageGroupedDTO>(result, HttpContext.Response);
-    }
-
     [HttpGet]
     [Route("languages/get")]
     public async Task languages() {
         var result = await api.languagesGet();
         await sendQueryResult<LanguageDTO>(result, HttpContext.Response);
-    }
-
-    [HttpGet]
-    [Route("languageGroups")]
-    public async Task languageGroups() {
-        var result = await api.languageGroupsGet();
-        await sendQueryResult<LanguageGroupDTO>(result, HttpContext.Response);
     }
 
     [HttpGet]
@@ -165,29 +150,22 @@ public class MainController : Controller {
     [HttpPost]
     [Route("language/cu")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task languageCreateUpdate([FromBody] LanguageCUDTO dto) {        
-        await applyPostRequest(api.languageCU(dto), HttpContext.Response);        
-    }
-
-    [HttpPost]
-    [Route("languageGroup/cu")]
-    [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task languageGroupCreateUpdate([FromBody] LanguageGroupCUDTO dto) {                
-        await applyPostRequest(api.languageGroupCU(dto), HttpContext.Response);        
+    public async Task languageCreateUpdate([FromBody] LanguageCUDTO dto) {
+        await applyPostRequest(api.languageCU(dto), HttpContext.Response);
     }
 
     [HttpPost]
     [Route("task/cu")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task taskCreateUpdate([FromBody] TaskCUDTO dto) {
-        await applyPostRequest(api.taskCU(dto), HttpContext.Response);        
+        await applyPostRequest(api.taskCU(dto), HttpContext.Response);
     }
 
     [HttpPost]
     [Route("taskGroup/cu")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task taskGroupCreateUpdate([FromBody] TaskGroupCUDTO dto) {
-        await applyPostRequest(api.taskGroupCU(dto), HttpContext.Response);        
+        await applyPostRequest(api.taskGroupCU(dto), HttpContext.Response);
     }
 
     #endregion
@@ -241,7 +219,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("user/vote")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task userVote([FromBody] VoteDTO dto) {        
+    public async Task userVote([FromBody] VoteDTO dto) {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
         int.TryParse(mbUserId[0].ToString(), out int userId);
         await applyPostRequest(api.userVote(dto, userId), HttpContext.Response);
@@ -269,7 +247,7 @@ public class MainController : Controller {
     #endregion
 
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {
-        try {                    
+        try {
             string[] columnNames = new string[reader.FieldCount];
             for (int i = 0; i < reader.FieldCount; ++i) {
                 columnNames[i] = reader.GetName(i);
@@ -291,7 +269,7 @@ public class MainController : Controller {
             Console.WriteLine(e.Message);
             await response.WriteAsync("Exception");
             return;
-        }  
+        }
     }
 
 }

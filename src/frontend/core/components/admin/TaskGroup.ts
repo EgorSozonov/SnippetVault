@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom"
 import PATHS from "../../params/Path"
 import { html } from "htm/react"
 import { Editability } from "../../commonComponents/editableList/utils/Editability"
-import { TaskGroupDTO } from "../dto/AuxDTO"
+import { TaskGroupDTO } from "../../types/dto/AuxDTO"
 
 
 const editabilityName: Editability<TaskGroupDTO>[] = [

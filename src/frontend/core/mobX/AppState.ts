@@ -6,10 +6,11 @@ import HttpClient from "../../ports/http/HttpClient"
 import MockClient from "../../ports/mock/MockClient"
 import CodesFromUrl from "../components/snippet/utils/CodesFromUrl"
 import SnippetState, { updateId, updateUrl, updateWithChoicesUrl as updateWithNewlyReceivedChoices, } from "../components/snippet/utils/SnippetState"
-import { LanguageDTO, LanguageGroupDTO, TaskGroupDTO } from "../components/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO, BareSnippetDTO } from "../components/dto/SnippetDTO"
-import { CommentDTO, StatsDTO } from "../components/dto/UserDTO"
+import { LanguageDTO, TaskGroupDTO } from "../types/dto/AuxDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO, BareSnippetDTO } from "../types/dto/SnippetDTO"
+import { CommentDTO, StatsDTO } from "../types/dto/UserDTO"
 import { AlternativesSort } from "../components/alternative/utils/Types"
+import { sortLanguages } from "../utils/languageGroup/GroupLanguages"
 
 
 export default class AppState {
@@ -22,18 +23,16 @@ export default class AppState {
     public stats: StatsDTO | null = null
 
     public languages: IObservableArray<LanguageDTO> = observable.array([])
-    public groupedLanguages: IObservableArray<SelectGroup> = observable.array([])
-    public languageGroups: IObservableArray<LanguageGroupDTO> = observable.array([])
 
     public proposals: IObservableArray<ProposalDTO> = observable.array([])
-    
+
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
 
     public comments: IObservableArray<CommentDTO> = observable.array([])
 
     public alternatives: AlternativesDTO | null = null
     public alternativesSort: AlternativesSort = "byDate"
-    
+
     public editProposal: BareSnippetDTO | null = null
 
     public client: IClient
@@ -45,7 +44,7 @@ export default class AppState {
 
     snippetsSet = action((newValue: SnippetDTO[]): void => {
         this.snippets = observable.array(newValue)
-    })  
+    })
 
     language1Set = action((newValue: SelectChoice): void => {
         this.l1 = updateId(this.l1, newValue.id)
@@ -62,14 +61,14 @@ export default class AppState {
     languageListSet = action((newValue: SelectChoice[]): void => {
         this.l1 = updateWithNewlyReceivedChoices(this.l1, newValue)
         this.l2 = updateWithNewlyReceivedChoices(this.l2, newValue)
-    }) 
+    })
 
     taskGroupsSet = action((newValue: TaskGroupDTO[]): void => {
         const newArr = newValue.map(x =>  {return {id: x.id, name: x.name, code: x.code, }})
 
         this.taskGroups = observable.array(newArr)
         this.tg = updateWithNewlyReceivedChoices(this.tg, newArr)
-    })  
+    })
 
 
     codesFromUrlSet = action((tgCode: string, l1Code: string, l2Code: string) => {
@@ -79,26 +78,18 @@ export default class AppState {
         if (l1Code.length > 0 && l1Code !== "undefined" && this.l1.code === "") {
             this.l1 = updateUrl(this.l1, l1Code)
         }
-        if (l2Code.length > 0 && l2Code !== "undefined" && this.l2.code === "") {  
+        if (l2Code.length > 0 && l2Code !== "undefined" && this.l2.code === "") {
             this.l2 = updateUrl(this.l2, l2Code)
         }
     })
 
-    groupedLanguagesSet = action((newValue: SelectGroup[]): void => {
-        this.groupedLanguages = observable.array(newValue)
-    })
-
-    languageGroupsSet = action((newValue: LanguageGroupDTO[]): void => {
-        this.languageGroups = observable.array(newValue)
-    })
-
     proposalsSet = action((newValue: ProposalDTO[]): void => {
         this.proposals = observable.array(newValue)
-    })   
+    })
 
     proposalsClear = action((newValue: ProposalDTO[]): void => {
         this.proposals = observable.array([])
-    })   
+    })
 
     openSelectSet = action((newValue: string): void => {
         this.openSelect = newValue
@@ -106,7 +97,7 @@ export default class AppState {
 
     languagesSet = action((newValue: LanguageDTO[]): void => {
         this.languages = observable.array(newValue)
-    }) 
+    })
 
     alternativesSet = action((newValue: AlternativesDTO[]): void => {
         if (!newValue || newValue === null || newValue.length !== 1) {
@@ -123,7 +114,7 @@ export default class AppState {
 
     alternativesResort = action((newValue: AlternativesSort): void => {
         this.alternativesSort = newValue
-        if (this.alternatives === null) {            
+        if (this.alternatives === null) {
             return
         }
 
@@ -148,7 +139,7 @@ export default class AppState {
 
     editProposalSet = action((newValue: BareSnippetDTO[]): void => {
         if (!newValue || newValue.length !== 1) this.editProposal = null
-        
+
         this.editProposal = newValue[0]
     })
 }

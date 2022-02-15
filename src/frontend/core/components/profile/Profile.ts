@@ -5,7 +5,7 @@ import IClient from "../../../ports/IClient"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import { fetchFromClient } from "../../utils/Client"
-import { SignInDTO, ChangePwDTO } from "../dto/AuthDTO"
+import { SignInDTO, ChangePwDTO } from "../../types/dto/AuthDTO"
 import { observer } from "mobx-react-lite"
 import Login from "../../commonComponents/login/Login"
 import { fmtDt } from "../../utils/DateUtils"
@@ -18,7 +18,7 @@ const Profile: React.FunctionComponent = observer(() => {
     const [changePwMode, setChangePwMode] = useState(false)
 
     const profile = state.user.profile
-    
+
     const signOutHandler = () => {
         state.user.signOut()
     }
@@ -50,7 +50,7 @@ const Profile: React.FunctionComponent = observer(() => {
         state.user.trySignInFromLS()
         const headers = state.user.headersGet()
         if (headers === null) return
-        fetchFromClient(client.userProfile(headers), state.user.profileSet)        
+        fetchFromClient(client.userProfile(headers), state.user.profileSet)
     }, [state.user.acc])
 
     const isUser = state.user.isUser()
@@ -68,7 +68,7 @@ const Profile: React.FunctionComponent = observer(() => {
                 <div class="clickable" onClick=${saveChangePwHandler}>Save</div>
             </div>
         </div>
-    ` 
+    `
     return html`
         <div class="profileBackground">
             <div class="profileContainer">
@@ -88,9 +88,9 @@ const Profile: React.FunctionComponent = observer(() => {
                         <div>Total number of proposals: ${profile.proposalCount}</div>
                         <div>Approved proposals: ${profile.approvedCount}</div>
                         <div>Approved proposals selected as primary: ${profile.primaryCount}</div>
-                        <div onClick=${signOutHandler} class="profileSignOut">Sign out</div>                
+                        <div onClick=${signOutHandler} class="profileSignOut">Sign out</div>
                     `
-                    : (changePwMode === true 
+                    : (changePwMode === true
                         ? changePwMenu
                         : html `<${Login} />`)
                 }

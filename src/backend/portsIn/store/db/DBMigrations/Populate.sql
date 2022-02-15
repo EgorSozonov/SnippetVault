@@ -19,8 +19,8 @@ OVERRIDING SYSTEM VALUE	VALUES (4, 'Pyth', 'Python', 0::bit, 2)
 ON CONFLICT (id) DO UPDATE SET code='Pyth', name='Python', "isDeleted" = 0::bit, "sortingOrder" = 2;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (5, 'TySc', 'Typescript', 0::bit, 2)
-ON CONFLICT (id) DO UPDATE SET code='TySc', name='Typescript', "isDeleted" = 0::bit, "sortingOrder" = 2;
+OVERRIDING SYSTEM VALUE	VALUES (5, 'TS', 'Typescript', 0::bit, 2)
+ON CONFLICT (id) DO UPDATE SET code='TS', name='Typescript', "isDeleted" = 0::bit, "sortingOrder" = 2;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
 OVERRIDING SYSTEM VALUE	VALUES (6, 'SQL1', 'MySQL', 0::bit, 3)

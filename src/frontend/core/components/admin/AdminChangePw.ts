@@ -3,7 +3,7 @@ import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
 import MainState from "../../mobX/MainState"
-import { ChangePwAdminDTO, SignInAdminDTO } from "../dto/AuthDTO"
+import { ChangePwAdminDTO, SignInAdminDTO } from "../../types/dto/AuthDTO"
 
 type Props = {
     closeChangeAdminPwHandler: () => void,
@@ -49,7 +49,7 @@ const AdminLogin: FunctionComponent<Props> = observer(({closeChangeAdminPwHandle
                 <div class="clickable" onClick=${saveChangeAdminPwHandler}>Save</div>
             </div>
         </div>
-    ` 
+    `
 })
 
 export default AdminLogin

@@ -4,7 +4,7 @@ import { html } from "htm/react"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import {observer} from "mobx-react-lite"
-import { SignInDTO } from "../../components/dto/AuthDTO"
+import { SignInDTO } from "../../types/dto/AuthDTO"
 
 
 type Props = {

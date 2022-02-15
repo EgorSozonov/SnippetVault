@@ -9,7 +9,7 @@ import { fetchFromClient } from "../../utils/Client"
 import { observer } from "mobx-react-lite"
 import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
-import { AlternativeDTO } from "../dto/SnippetDTO";
+import { AlternativeDTO } from "../../types/dto/SnippetDTO";
 import { empty } from "../../utils/ComponentUtils";
 import { BigDialogState } from "../../commonComponents/dialog/DialogState";
 import CommentDialog from "./CommentDialog";

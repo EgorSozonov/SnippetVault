@@ -11,7 +11,7 @@ import { Editability } from "../../commonComponents/editableList/utils/Editabili
 import { fetchFromClient } from "../../utils/Client"
 import IClient from "../../../ports/IClient"
 import AdminLogin from "./AdminLogin"
-import { LanguageGroupDTO, LanguageDTO, TaskGroupDTO } from "../dto/AuxDTO"
+import { LanguageGroupDTO, LanguageDTO, TaskGroupDTO } from "../../types/dto/AuxDTO"
 import { empty } from "../../utils/ComponentUtils"
 import AdminChangePw from "./AdminChangePw"
 
@@ -75,11 +75,11 @@ const Admin: FunctionComponent = observer(({}: any) => {
                 ? html`
                         <${AdminLogin} />
                     `
-                : (changeAdminPwMode === false 
-                    ? html`                    
+                : (changeAdminPwMode === false
+                    ? html`
                         <div class="adminHeaderPanel">
                             <div>
-                                ${state.app.stats !== null && 
+                                ${state.app.stats !== null &&
                                     html`
                                         <div>Total proposals: ${state.app.stats.proposalCount}</div>
                                         <div>Of those proposals, approved primary snippets: ${state.app.stats.primaryCount}</div>
@@ -98,11 +98,11 @@ const Admin: FunctionComponent = observer(({}: any) => {
                         <${ListTaskGroups} values=${state.app.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"></EditableList>
                         <${ListLanguageGroups} values=${state.app.languageGroups} editabilities=${editabilitiesLanguageGroup} title="Language Groups"></EditableList>
                         <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"></EditableList>
-                        <${NewProposal} />                 
-                        ` 
+                        <${NewProposal} />
+                        `
                     : html`<${AdminChangePw} closeChangeAdminPwHandler=${closeChangeAdminPwHandler} />`
                     )
-            }      
+            }
         </div>
     `
 })

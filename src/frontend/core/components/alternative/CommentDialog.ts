@@ -3,7 +3,7 @@ import { html } from "htm/react"
 import { FunctionComponent, useContext, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateUtils";
-import { CommentCUDTO, CommentDTO } from "../dto/UserDTO";
+import { CommentCUDTO, CommentDTO } from "../../types/dto/UserDTO";
 import { BigDialogState } from "../../commonComponents/dialog/DialogState";
 import MainState from "../../mobX/MainState";
 import { StoreContext } from "../../App";
@@ -12,12 +12,12 @@ import { fetchFromClient } from "../../utils/Client";
 import Login from "../../commonComponents/login/Login";
 
 
-type Props = {  
+type Props = {
     dialogState: BigDialogState,
     closeCallback: () => void,
 }
 
-const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {       
+const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {
     const state = useContext<MainState>(StoreContext)
 
     useEffect(() => {
@@ -62,7 +62,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
                     `
                 })}
             </ol>
-            ${state.user.isUser() === true && 
+            ${state.user.isUser() === true &&
                 html`
                     <div>
                         <div>Enter comment as <span class="alternativeDialogUsername">${state.user.acc!.name}</span>:
@@ -81,7 +81,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
                     </div>
                 `
             }
-            ${state.user.isUser() === false && 
+            ${state.user.isUser() === false &&
                 html`<${Login} />`
             }
         <//>

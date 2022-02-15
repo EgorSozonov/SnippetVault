@@ -7,9 +7,7 @@ public interface IStore {
     Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroupId, int lang1Id, int lang2Id);
     Task<ReqResult<SnippetDTO>> snippetsGetByCode(string taskGroupCode, string lang1Code, string lang2Code);
     Task<ReqResult<SnippetIntern>> snippetGet(int snId);
-    Task<ReqResult<LanguageGroupedDTO>> languagesGetGrouped();
     Task<ReqResult<LanguageDTO>> languagesGet();
-    Task<ReqResult<LanguageGroupDTO>> languageGroupsGet();
     Task<ReqResult<TaskGroupDTO>> taskGroupsGet();
     Task<ReqResult<ProposalDTO>> proposalsGet();
     Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup);
@@ -28,7 +26,6 @@ public interface IStore {
     Task<ReqResult<TaskDTO>> taskGet(int taskId);
     Task<ReqResult<TaskDTO>> taskForTLGet(int taskLanguageId);
     Task<int> taskCU(TaskCUDTO dto);
-    Task<int> languageGroupCU(LanguageGroupCUDTO dto);
     Task<int> languageCU(LanguageCUDTO dto);
     Task<ReqResult<StatsDTO>> statsForAdmin();
     Task<long> userCount();

@@ -13,23 +13,9 @@ export type TaskGroupDTO = {
 
 export type LanguageDTO = {
     id: number,
-    name: string,
-    lgId: number,
-    lgName: string,
-}
-
-export type LanguageGroupDTO = {
-    id: number,
-    name: string,
-    order: number,
-}
-
-export type LanguageGroupedDTO = {
-    id: number,
-    name: string,
     code: string,
-    languageGroup: string,
-    languageGroupOrder: number,
+    name: string,
+    sortingOrder: number,
 }
 
 export type PostResponseDTO = {

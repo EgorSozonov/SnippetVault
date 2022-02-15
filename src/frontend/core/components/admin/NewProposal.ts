@@ -7,7 +7,7 @@ import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import IClient from "../../../ports/IClient"
 import DialogState from "../../commonComponents/dialog/DialogState"
-import { ProposalDTO } from "../dto/SnippetDTO"
+import { ProposalDTO } from "../../types/dto/SnippetDTO"
 import DialogConfirm from "../../commonComponents/dialog/DialogConfirm"
 import EditProposalDialog from "./EditProposalDialog"
 

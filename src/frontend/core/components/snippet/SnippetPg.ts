@@ -1,4 +1,3 @@
-import Header from "./Header"
 import "./snippet.css"
 import SnippetCode from "./SnippetCode"
 import { html } from "htm/react"
@@ -9,12 +8,10 @@ import MainState from "../../mobX/MainState"
 import { observer } from "mobx-react-lite"
 import { fetchFromClient } from "../../utils/Client"
 import IClient from "../../../ports/IClient"
-import { groupLanguages, languageListOfGrouped, } from "../../utils/languageGroup/GroupLanguages"
 import { checkNonempty } from "../../utils/StringUtils"
 import { idOf, isStateOK, stringOf } from "./utils/SnippetState"
 import EitherMsg from "../../types/EitherMsg"
-import { LanguageGroupedDTO } from "../dto/AuxDTO"
-import { SnippetDTO } from "../dto/SnippetDTO"
+import { SnippetDTO } from "../../types/dto/SnippetDTO"
 import Dialog from "../../commonComponents/dialog/Dialog"
 import ProposalInput from "../proposalInput/ProposalInput"
 import DialogState from "../../commonComponents/dialog/DialogState"
@@ -23,6 +20,8 @@ import PATHS from "../../params/Path"
 import KeyButton from "../../commonComponents/login/KeyButton"
 import UserButton from "../../commonComponents/login/UserButton"
 import HoverSelectCompact from "../../commonComponents/hoverSelect/HoverSelectCompact"
+import { LanguageDTO } from "../../types/dto/AuxDTO"
+import { sortLanguages } from "../../utils/languageGroup/GroupLanguages"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -55,12 +54,11 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
 
     useEffect(() => {
         (async () => {
-            if (state.app.groupedLanguages.length > 0) return
-            const resultLangs: EitherMsg<LanguageGroupedDTO[]> = await client.languagesGet()
+            const resultLangs: EitherMsg<LanguageDTO[]> = await client.languagesGet()
             if (resultLangs.isOK === true) {
-                state.app.groupedLanguagesSet(groupLanguages(resultLangs.value))
-                const langList = languageListOfGrouped(resultLangs.value)
+                const langList = sortLanguages(resultLangs.value)
                 state.app.languageListSet(langList)
+                state.app.languagesSet(resultLangs.value)
             } else {
                 console.log(resultLangs.errMsg)
             }

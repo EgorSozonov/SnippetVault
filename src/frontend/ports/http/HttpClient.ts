@@ -2,10 +2,10 @@ import { AxiosInstance } from "axios"
 import createClient from "./HttpConfig"
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
-import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO, ChangePwDTO } from "../../core/components/dto/AuthDTO"
-import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/components/dto/UserDTO"
-import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO, PostResponseDTO } from "../../core/components/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO, BareSnippetDTO } from "../../core/components/dto/SnippetDTO"
+import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO, ChangePwDTO } from "../../core/types/dto/AuthDTO"
+import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
+import { LanguageDTO, TaskGroupDTO,  TaskDTO, PostResponseDTO } from "../../core/types/dto/AuxDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO, BareSnippetDTO } from "../../core/types/dto/SnippetDTO"
 
 
 class HttpClient implements IClient {
@@ -22,20 +22,12 @@ class HttpClient implements IClient {
         return this.getRequest<SnippetDTO[]>(`/snippets/byCode?taskGroup=${taskGroup}&lang1=${lang1}&lang2=${lang2}`)
     }
 
-    languagesGet(): Promise<EitherMsg<LanguageGroupedDTO[]>> {
-        return this.getRequest<LanguageGroupedDTO[]>(`/languages/getGrouped`)
-    }
-
-    languagesReqGet(): Promise<EitherMsg<LanguageDTO[]>> {
+    languagesGet(): Promise<EitherMsg<LanguageDTO[]>> {
         return this.getRequest<LanguageDTO[]>(`/languages/get`)
     }
 
     taskGroupsGet(): Promise<EitherMsg<TaskGroupDTO[]>> {
         return this.getRequest<TaskGroupDTO[]>(`/taskGroups`)
-    }
-
-    languageGroupsGet(): Promise<EitherMsg<LanguageGroupDTO[]>> {
-        return this.getRequest<LanguageGroupDTO[]>(`/languageGroups`)
     }
 
     proposalsGet(): Promise<EitherMsg<ProposalDTO[]>> {
@@ -68,7 +60,7 @@ class HttpClient implements IClient {
     }
 
     proposalDecline(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/snippet/decline/${snId}`, headers)        
+        return this.postRequestNoPayload(`/snippet/decline/${snId}`, headers)
     }
 
     snippetMarkPrimary(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
@@ -85,10 +77,6 @@ class HttpClient implements IClient {
 
     languageCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.postRequestNoPayload(`/language/cu`, headers)
-    }
-
-    languageGroupCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`languageGroup/cu`, headers)
     }
 
     taskCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
@@ -110,7 +98,7 @@ class HttpClient implements IClient {
     userVote(dto: VoteDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         return this.postRequest("/user/vote", dto, headers)
     }
-    
+
     userSignIn(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
         return this.postRequestNoHeaders("/user/signIn", dto)
     }
@@ -138,10 +126,10 @@ class HttpClient implements IClient {
 
     private async getRequest<T>(url: string, headers?: SignInSuccessDTO): Promise<EitherMsg<T>> {
         try {
-            const r = headers 
+            const r = headers
                 ? await this.client.get<T>(
                     url, { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, },
-                  }) 
+                  })
                 : await this.client.get<T>(url);
             if (r.data) {
                 return { isOK: true, value: r.data, }
@@ -155,7 +143,7 @@ class HttpClient implements IClient {
 
     private async postRequest<T>(url: string, payload: T, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         try {
-            const r = await this.client.post<PostResponseDTO>(url, payload, 
+            const r = await this.client.post<PostResponseDTO>(url, payload,
                 { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, }, }
             )
             if (r.data && r.data.status === "OK") {
@@ -170,7 +158,7 @@ class HttpClient implements IClient {
 
     private async postRequestNoPayload(url: string, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         try {
-            const r = await this.client.post<PostResponseDTO>(url, undefined, 
+            const r = await this.client.post<PostResponseDTO>(url, undefined,
                                                     { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, }, })
             if (r.data && r.data.status === "OK") {
                 return r.data
@@ -185,9 +173,9 @@ class HttpClient implements IClient {
     private async postRequestWithResult<T, U>(url: string, payload: T, headers: SignInSuccessDTO): Promise<EitherMsg<U>> {
         try {
             const r = await this.client.post<U>(
-                url, payload, { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, }, 
+                url, payload, { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, },
             })
-            return {isOK: true, value: r.data, }            
+            return {isOK: true, value: r.data, }
         } catch(e: any) {
             return {isOK: false, errMsg: e, }
         }
@@ -196,7 +184,7 @@ class HttpClient implements IClient {
     private async postRequestNoHeaders<T, U>(url: string, payload: T): Promise<EitherMsg<U>> {
         try {
             const r = await this.client.post<U>(url, payload)
-            return {isOK: true, value: r.data, }            
+            return {isOK: true, value: r.data, }
         } catch(e: any) {
             return {isOK: false, errMsg: e, }
         }

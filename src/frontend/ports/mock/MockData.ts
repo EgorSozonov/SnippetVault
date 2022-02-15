@@ -1,10 +1,10 @@
-import { TaskDTO } from "../../core/components/dto/AuxDTO"
-import { SnippetDTO, AlternativeDTO, AlternativesDTO } from "../../core/components/dto/SnippetDTO"
+import { TaskDTO } from "../../core/types/dto/AuxDTO"
+import { SnippetDTO, AlternativeDTO, AlternativesDTO } from "../../core/types/dto/SnippetDTO"
 
 
 export const mockData = {
     snippets: [
-            {    
+            {
                 leftCode: "str.Reverse();",
                 leftId: 1,
                 leftTlId: 1,
@@ -13,8 +13,8 @@ export const mockData = {
                 rightCode: "str.reverse();",
                 rightId: 6,
                 rightTlId: 2,
-            },            
-            {    
+            },
+            {
                 leftCode: "int ind = str.IndexOf(otherStr);",
                 leftId: 1,
                 leftTlId: 3,
@@ -24,7 +24,7 @@ export const mockData = {
                 rightId: 6,
                 rightTlId: 4,
             },
-            {    
+            {
                 leftCode: `string[] files = Directory.GetFiles(thePath, "*", SearchOption.TopDirectoryOnly);`,
                 leftId: 1,
                 leftTlId: 5,
@@ -35,7 +35,7 @@ export const mockData = {
 }`,
                 rightId: 6,
                 rightTlId: 6,
-            },            
+            },
         ],
     languages: [
             {id: 1, name: "C#", code: "CS", languageGroup: "Universal", languageGroupOrder: 1, },
@@ -60,9 +60,9 @@ export const mockData = {
     ],
 
     languageGroups: [
-        {id: 1, name: "Universal", order: 1, }, 
-        {id: 2, name: "Scripting", order: 2, }, 
-        {id: 3, name: "Data querying", order: 3, }, 
+        {id: 1, name: "Universal", order: 1, },
+        {id: 2, name: "Scripting", order: 2, },
+        {id: 3, name: "Data querying", order: 3, },
     ],
 
     taskGroups: [
@@ -109,49 +109,49 @@ export const mockData = {
             author: "Joe",
             languageName: "Java",
             tsUpload: new Date(2021, 11, 22),
-        },                
+        },
     ],
 
-    primaryAlternative: {id: 5, code: "differentFoo(blahBlach[4]);", score: 10,                          
+    primaryAlternative: {id: 5, code: "differentFoo(blahBlach[4]);", score: 10,
             tsUpload: new Date(2021, 12, 2), },
-        
+
     alternatives: [
-        {tlId: 1, value: {id: 5, code: "differentFoo(blahBlach[4]);", score: 10,                          
+        {tlId: 1, value: {id: 5, code: "differentFoo(blahBlach[4]);", score: 10,
             tsUpload: new Date(2021, 12, 2), },
         },
-        {tlId: 1, value: {id: 6, code: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {id: 6, code: "aHighScoreAlternative(blahBlach[4]);", score: 22,
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {tlId: 1, value: {id: 7, code: "differentFoo(blahBlach[4]);", score: 10, 
+        {tlId: 1, value: {id: 7, code: "differentFoo(blahBlach[4]);", score: 10,
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },
-        {tlId: 1, value: {id: 8, code: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {id: 8, code: "aHighScoreAlternative(blahBlach[4]);", score: 22,
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {tlId: 1, value: {id: 9, code: "differentFoo(blahBlach[4]);", score: 10, 
+        {tlId: 1, value: {id: 9, code: "differentFoo(blahBlach[4]);", score: 10,
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },
-        {tlId: 1, value: {id: 10, code: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {id: 10, code: "aHighScoreAlternative(blahBlach[4]);", score: 22,
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {tlId: 1, value: {id: 11, code: "differentFoo(blahBlach[4]);", score: 10, 
+        {tlId: 1, value: {id: 11, code: "differentFoo(blahBlach[4]);", score: 10,
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
         },
-        {tlId: 1, value: {id: 12, code: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {id: 12, code: "aHighScoreAlternative(blahBlach[4]);", score: 22,
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {tlId: 1, value: {id: 13, code: "aHighScoreAlternative(blahBlach[4]);", score: 22, 
+        {tlId: 1, value: {id: 13, code: "aHighScoreAlternative(blahBlach[4]);", score: 22,
             isPrimary: false, comments: [], tsUpload: new Date(2021, 11, 15), },
         },
-        {tlId: 1, value: {id: 14, code: `foo(blahBlach[4]);\nsfs\nsdf\nsdgsd;`, score: 15, 
+        {tlId: 1, value: {id: 14, code: `foo(blahBlach[4]);\nsfs\nsdf\nsdgsd;`, score: 15,
             isPrimary: true, comments: [], tsUpload: new Date(2021, 11, 5), },
         },
-        {tlId: 6, value: {id: 15, code: "foo(blahBlach[4]);", score: 10, 
+        {tlId: 6, value: {id: 15, code: "foo(blahBlach[4]);", score: 10,
             isPrimary: true, comments: [], tsUpload: new Date(2021, 12, 1), },
-        },    
-        {tlId: 6, value: {id: 16, code: "javaAlternative(blahBlach[6]);", score: 5, 
+        },
+        {tlId: 6, value: {id: 16, code: "javaAlternative(blahBlach[6]);", score: 5,
             isPrimary: false, comments: [], tsUpload: new Date(2021, 12, 2), },
-        },            
+        },
     ],
     userProfile: { proposalCount: 10, approvedCount: 4, primaryCount: 1, tsJoined: new Date()},
 }
