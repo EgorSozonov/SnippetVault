@@ -1,7 +1,7 @@
 import "./profile.css"
 import { html } from "htm/react"
 import { useContext, useEffect, useRef, useState } from "react"
-import MainState from "../../mobX/MainState"
+import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
 import { SignInDTO, ChangePwDTO } from "../../types/dto/AuthDTO"
 import { observer } from "mobx-react-lite"

@@ -23,7 +23,7 @@ public class DBStore : IStore {
 		LEFT JOIN sv.language l2 ON l2.id=tl2.""languageId""
 		LEFT JOIN sv.snippet sn1 ON sn1.id=tl1.""primarySnippetId""
 		LEFT JOIN sv.snippet sn2 ON sn2.id=tl2.""primarySnippetId""
-		WHERE t.""taskGroupId""=@tgId;";
+		WHERE t.""taskGroupId""=@tgId AND t.""isDeleted""=0::bit;";
     public async Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2) {
         await using (var cmd = new NpgsqlCommand(snippetsQ, db.conn)) {
             cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
@@ -56,7 +56,8 @@ public class DBStore : IStore {
         LEFT JOIN taskLangs1 tl1 ON tl1.""taskId""=t.id
         LEFT JOIN taskLangs2 tl2 ON tl2.""taskId""=t.id
         LEFT JOIN sv.snippet sn1 ON sn1.id=tl1.""primarySnippetId""
-        LEFT JOIN sv.snippet sn2 ON sn2.id=tl2.""primarySnippetId"";";
+        LEFT JOIN sv.snippet sn2 ON sn2.id=tl2.""primarySnippetId""
+        WHERE t.""isDeleted""=0::bit;";
     public async Task<ReqResult<SnippetDTO>> snippetsGetByCode(string taskGroup, string lang1, string lang2) {
         await using (var cmd = new NpgsqlCommand(snippetsGetByCodeQ, db.conn)) {
             cmd.Parameters.AddWithValue("l1Code", NpgsqlTypes.NpgsqlDbType.Varchar, lang1);
@@ -70,8 +71,8 @@ public class DBStore : IStore {
 
     private static readonly string snippetGetQ = @"
         SELECT ""taskLanguageId"", ""status"", content, score
-				FROM sv.snippet s
-				WHERE id = @snId;
+		FROM sv.snippet s
+		WHERE id = @snId;
     ";
     public async Task<ReqResult<SnippetIntern>> snippetGet(int snId) {
         await using (var cmd = new NpgsqlCommand(snippetGetQ, db.conn)) {
@@ -90,7 +91,7 @@ public class DBStore : IStore {
 		JOIN sv.task task ON task.id=tl.""taskId""
 		JOIN sv.language lang ON lang.id=tl.""languageId""
         JOIN sv.user u ON u.id=sn.""authorId""
-		WHERE sn.status=1;
+		WHERE sn.status=1 AND tl.""isDeleted""=0::bit AND t.""isDeleted""=0::bit;
     ";
     public async Task<ReqResult<ProposalDTO>> proposalsGet() {
         await using (var cmd = new NpgsqlCommand(proposalsGetQ, db.conn)) {
@@ -190,7 +191,7 @@ public class DBStore : IStore {
         SELECT sn.id, sn.content, sn.""tsUpload"", sn.score, COUNT(c.id) AS ""commentCount""
         FROM sv.snippet sn
         LEFT JOIN sv.comment c ON c.""snippetId"" = sn.id
-        WHERE sn.""taskLanguageId"" = @tlId
+        WHERE sn.""taskLanguageId"" = @tlId AND sn.status = 3
         GROUP BY sn.id, sn.content, sn.""tsUpload"", sn.score;
     ";
     public async Task<ReqResult<AlternativeDTO>> alternativesForTLGet(int taskLanguageId) {
@@ -219,7 +220,7 @@ public class DBStore : IStore {
         FROM sv.snippet sn
         LEFT JOIN sv.comment c ON c.""snippetId"" = sn.id
         LEFT JOIN sv.""userVote"" uv ON uv.""userId"" = @userId AND uv.""snippetId"" = sn.id
-        WHERE sn.""taskLanguageId""=@tlId
+        WHERE sn.""taskLanguageId""=@tlId AND sn.status = 3
         GROUP BY sn.id, sn.content, sn.""tsUpload"", sn.score, ""voteFlag"";
     ";
     public async Task<ReqResult<AlternativeDTO>> alternativesForUserGet(int taskLanguageId, int userId) {
@@ -237,7 +238,8 @@ public class DBStore : IStore {
 
     private static readonly string languagesGetQ = @"
         SELECT l.id, l.name, l.""sortingOrder"", l.code
-        FROM sv.language l;
+        FROM sv.language l
+        WHERE l.""isDeleted"" = 0::bit;
     ";
     public async Task<ReqResult<LanguageDTO>> languagesGet() {
         await using (var cmd = new NpgsqlCommand(languagesGetQ, db.conn)) {
@@ -248,7 +250,8 @@ public class DBStore : IStore {
     }
 
     private static readonly string taskGroupsGetQ = @"
-        SELECT id, name, code FROM sv.""taskGroup"" WHERE ""isDeleted""=0::bit;
+        SELECT id, name, code FROM sv.""taskGroup""
+        WHERE ""isDeleted""=0::bit;
     ";
     public async Task<ReqResult<TaskGroupDTO>> taskGroupsGet() {
         await using (var cmd = new NpgsqlCommand(taskGroupsGetQ, db.conn)) {
@@ -259,7 +262,8 @@ public class DBStore : IStore {
     }
 
     private static readonly string tasksFromGroupGetQ = @"
-        SELECT id, name, description FROM sv.""task"" WHERE ""taskGroupId""=@tgId;
+        SELECT id, name, description FROM sv.""task""
+        WHERE ""taskGroupId""=@tgId AND ""isDeleted""=0::bit;
     ";
     public async Task<ReqResult<TaskDTO>> tasksFromGroupGet(int taskGroup) {
         await using (var cmd = new NpgsqlCommand(tasksFromGroupGetQ, db.conn)) {
@@ -282,7 +286,8 @@ public class DBStore : IStore {
         INSERT INTO sv.""taskGroup""(name, code, ""isDeleted"") VALUES (@name, @code, 0::bit);
     ";
     private static readonly string taskGroupUpdateQ = @"
-        UPDATE sv.""taskGroup"" SET name=@name, ""isDeleted""=@isDeleted WHERE id=@existingId;
+        UPDATE sv.""taskGroup"" SET name=@name, ""isDeleted"" = @isDeleted
+        WHERE id=@existingId;
     ";
     public async Task<int> taskGroupCU(TaskGroupCUDTO dto) {
         return await createOrUpdate<TaskGroupCUDTO>(taskGroupCreateQ, taskGroupUpdateQ, taskGroupParamAdder, dto);
@@ -306,7 +311,7 @@ public class DBStore : IStore {
         SELECT t.id, tg.name AS ""taskGroupName"", t.name, t.description FROM sv.""taskLanguage"" tl
         JOIN sv.task t ON t.id=tl.""taskId""
         JOIN sv.""taskGroup"" tg ON tg.id=t.""taskGroupId""
-        WHERE tl.id = @tlId;
+        WHERE tl.id = @tlId AND t.""isDeleted"" = 0::bit;
     ";
     public async Task<ReqResult<TaskDTO>> taskForTLGet(int tlId) {
         await using (var cmd = new NpgsqlCommand(taskForTLGetQ, db.conn)) {

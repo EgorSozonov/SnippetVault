@@ -2,7 +2,7 @@ import "./snippet.css"
 import { html } from "htm/react"
 import { FunctionComponent, useContext, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import MainState from "../../mobX/MainState"
+import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
 import Login from "../../commonComponents/login/Login"
 
@@ -23,17 +23,17 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, 
     const signedIn = state.user.isUser()
     const saveProposalHandler = () => {
         const headers = state.user.headersGet()
-        
+
         if (inputRef && inputRef.current && inputRef.current.value.length > 0 && headers !== null) {
             state.app.client.proposalCreate(inputRef.current.value, langId, taskId, headers)
-            inputRef.current.value = ""            
+            inputRef.current.value = ""
         }
     }
 
     return html`
         <div class="snippetTextInput">
             ${showInput === true &&
-            (signedIn 
+            (signedIn
                 ? html`
                     <p>Propose a snippet:</p>
                     <p><textarea class="snippetTextArea" ref=${inputRef}></textarea></p>
@@ -48,10 +48,10 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, 
 
             ${showInput === false &&
                 html`<div class="snippetPlusButton" onClick=${() => setShowInput(true)}><span>+</span></div>`
-            }            
+            }
         </div>
-    ` 
-      
+    `
+
 })
 
 export default TextInput

@@ -6,11 +6,10 @@ export type Editability<T> = {
     fieldType: EditableField,
 }
 
-export type EditableField = 
+export type EditableField =
     | "string"
     | "choice"
     | "int"
     | "float"
     | "date"
-
-
+    | "bool"

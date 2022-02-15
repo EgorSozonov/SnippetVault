@@ -3,7 +3,7 @@ import { html } from "htm/react"
 import { FunctionComponent, useContext, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import DialogState from "../../commonComponents/dialog/DialogState";
-import MainState from "../../mobX/MainState";
+import MainState from "../../mobX/AllState";
 import { StoreContext } from "../../App";
 import DialogFullscreen from "../../commonComponents/dialog/DialogFullscreen";
 import { ProposalUpdateDTO } from "../../types/dto/SnippetDTO";

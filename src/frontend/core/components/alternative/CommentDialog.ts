@@ -5,7 +5,7 @@ import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateUtils";
 import { CommentCUDTO, CommentDTO } from "../../types/dto/UserDTO";
 import { BigDialogState } from "../../commonComponents/dialog/DialogState";
-import MainState from "../../mobX/MainState";
+import MainState from "../../mobX/AllState";
 import { StoreContext } from "../../App";
 import DialogFullscreen from "../../commonComponents/dialog/DialogFullscreen";
 import Login from "../../commonComponents/login/Login";

@@ -5,6 +5,14 @@ export type TaskDTO = {
     taskGroupName: string,
 }
 
+export type TaskCUDTO = {
+    existingId?: number,
+    name: string,
+    description: string,
+    taskGroupName: string,
+    isDeleted: boolean,
+}
+
 export type TaskGroupDTO = {
     id: number,
     name: string,
@@ -16,6 +24,21 @@ export type LanguageDTO = {
     code: string,
     name: string,
     sortingOrder: number,
+}
+
+export type TaskGroupCUDTO = {
+    existingId?: number,
+    name: string,
+    code: string,
+    isDeleted: boolean,
+}
+
+export type LanguageCUDTO = {
+    existingId?: number,
+    code: string,
+    name: string,
+    sortingOrder: number,
+    isDeleted: boolean,
 }
 
 export type PostResponseDTO = {

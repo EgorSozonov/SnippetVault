@@ -2,7 +2,7 @@ import { FunctionComponent, useContext, useEffect, useRef } from "react"
 import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
-import MainState from "../../mobX/MainState"
+import MainState from "../../mobX/AllState"
 import { SignInAdminDTO } from "../../types/dto/AuthDTO"
 
 

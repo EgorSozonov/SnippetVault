@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import "./hoverSelect.css"
 import { html } from 'htm/react'
-import MainState from "../../mobX/MainState"
+import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
 import {observer} from 'mobx-react-lite'
 import SelectChoice from "../../types/SelectChoice"
@@ -35,7 +35,7 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
 
     const onClickHeader = () => {
         if (isOpen) {
-            mainState.app.openSelectSet("")            
+            mainState.app.openSelectSet("")
         } else {
             mainState.app.openSelectSet(uniqueName)
         }
@@ -52,14 +52,14 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
 
     return html`
         <div class="hoverSelect" onMouseEnter=${() => mainState.app.openSelectSet(uniqueName)}
-                onMouseLeave=${() => mainState.app.openSelectSet("")}>            
+                onMouseLeave=${() => mainState.app.openSelectSet("")}>
             <span class="search" onClick=${onClickHeader}>
                 <span class="leftButton"></span>
                 <span class="rightLabel">${currValue.name}</span>
             </span>
-            
+
             <div class=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
-                <div class=${"groupName" + (groupSelectMode === true ? " groupNameSelectMode": "")} 
+                <div class=${"groupName" + (groupSelectMode === true ? " groupNameSelectMode": "")}
                     onClick=${onClickGroup}>[${selectedGroup.name}]</div>
                 ${groupSelectMode === true &&
                     html`<ul class="list">

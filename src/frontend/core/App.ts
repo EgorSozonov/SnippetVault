@@ -1,7 +1,7 @@
 import './app.css'
 import Content from './components/content/Content'
 import { html } from 'htm/react'
-import MainState from './mobX/MainState'
+import MainState from './mobX/AllState'
 import {createContext, FunctionComponent,} from "react"
 import { render } from "react-dom"
 
@@ -13,7 +13,7 @@ export const StoreProvider: FunctionComponent<{children: any}> = ({ children, })
 }
 
 const App: FunctionComponent = () => {
-    return html`       
+    return html`
             <${Content} />
     `
 }
@@ -25,7 +25,7 @@ if (root) {
             <${StoreProvider}>
                 <${Content} />
             <//>
-        `,    
+        `,
         root
     )
 }

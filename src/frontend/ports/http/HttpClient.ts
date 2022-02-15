@@ -4,7 +4,7 @@ import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO, ChangePwDTO } from "../../core/types/dto/AuthDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
-import { LanguageDTO, TaskGroupDTO,  TaskDTO, PostResponseDTO } from "../../core/types/dto/AuxDTO"
+import { LanguageDTO, TaskGroupDTO,  TaskDTO, PostResponseDTO, LanguageCUDTO, TaskCUDTO, TaskGroupCUDTO } from "../../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO, BareSnippetDTO } from "../../core/types/dto/SnippetDTO"
 
 
@@ -75,20 +75,20 @@ class HttpClient implements IClient {
         return this.postRequest("/comment/cu", dto, headers)
     }
 
-    languageCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/language/cu`, headers)
+    languageCU(dto: LanguageCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        return this.postRequest(`/language/cu`, dto, headers)
     }
 
-    taskCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/task/cu`, headers)
+    taskCU(dto: TaskCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        return this.postRequest(`/task/cu`, dto, headers)
     }
 
     taskGet(taskId: number): Promise<EitherMsg<TaskDTO[]>> {
         return this.getRequest(`/task/${taskId}`)
     }
 
-    taskGroupCU(headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/taskGroup/cu`, headers)
+    taskGroupCU(dto: TaskGroupCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        return this.postRequest(`/taskGroup/cu`, dto, headers)
     }
 
     userRegister(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {

@@ -2,7 +2,7 @@ import "./Alternative.css"
 import { html } from "htm/react"
 import { useParams } from "react-router";
 import { FunctionComponent, useContext, useEffect, useState } from "react"
-import MainState from "../../mobX/MainState"
+import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
 import IClient from "../../../ports/IClient"
 import { observer } from "mobx-react-lite"

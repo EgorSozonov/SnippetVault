@@ -15,7 +15,7 @@ type Props<T extends IStringKeyed & IHasName> = {
     cuCallback: (newValue: T) => void,
 }
 
-const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabilities, }: Props<T>) => {
+const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabilities, cuCallback, }: Props<T>) => {
     if (!values || values.length < 1) return html`<div></div>`
     const [openIdx, setOpenIdx] = useState(-1)
     const [isOpenNew, setOpenNew] = useState(false)
@@ -54,8 +54,8 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                 newValue[ed.field] = e.target[ed.field].value
             }
         })
-        console.log(newValue)
-        console.log("newValue")
+
+        cuCallback(newValue)
     }
 
     const editableInputs = (v: T) => {
@@ -69,8 +69,10 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                         ${x.fieldType === "choice"
                             ? html`<${HoverSelectInput} inputName=${x.field} choices=${x.choices} initValue=${v[x.field]}
                                         uniqueName=${"unique" + x.field + idx} />`
-                            : html`<input type="text" name=${x.field} defaultValue=${v[x.field]}
-                                onFocus=${inputFocusHandler} />`
+                            : (x.fieldType === "bool"
+                                ? html`<div><span class="svCheckbox" />${x.field}</div>`
+                                : html`<input type="text" name=${x.field} defaultValue=${v[x.field]}
+                                onFocus=${inputFocusHandler} />`)
                 }
                     </span>
                 </li>`

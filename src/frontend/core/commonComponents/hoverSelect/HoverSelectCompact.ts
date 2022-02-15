@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import "./hoverSelect.css"
 import { html } from 'htm/react'
-import MainState from "../../mobX/MainState"
+import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
 import {observer} from 'mobx-react-lite'
 import SelectChoice from "../../types/SelectChoice"

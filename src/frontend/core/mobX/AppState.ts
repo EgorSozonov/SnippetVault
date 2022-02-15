@@ -2,8 +2,8 @@ import { action, IObservableArray, makeAutoObservable, observable } from "mobx"
 import SelectChoice from "../types/SelectChoice"
 import IClient from "../../ports/IClient"
 import SnippetState, { updateId, updateUrl, updateWithChoicesUrl as updateWithNewlyReceivedChoices, } from "../components/snippet/utils/SnippetState"
-import { LanguageDTO, TaskGroupDTO } from "../types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO, BareSnippetDTO } from "../types/dto/SnippetDTO"
+import { LanguageDTO, TaskGroupDTO, } from "../types/dto/AuxDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, } from "../types/dto/SnippetDTO"
 import { CommentCUDTO, CommentDTO, StatsDTO, VoteDTO } from "../types/dto/UserDTO"
 import { AlternativesSort } from "../components/alternative/utils/Types"
 import { sortLanguages } from "../utils/languageGroup/GroupLanguages"
@@ -32,8 +32,6 @@ export default class AppState {
     public alternatives: AlternativesDTO | null = null
     public alternativesSort: AlternativesSort = "byDate"
 
-    public editProposal: BareSnippetDTO | null = null
-
     public client: IClient
 
     constructor(client: IClient) {
@@ -47,36 +45,6 @@ export default class AppState {
 
     snippetsGetByCode = action(async (tgCode: string, l1Code: string, l2Code: string) => {
         await fetchFromClient(this.client.snippetsByCode(tgCode, l1Code, l2Code), this.snippetsSet)
-    })
-
-    proposalsGet = action(async () => {
-        await fetchFromClient(this.client.proposalsGet(), this.proposalsSet)
-    })
-
-    proposalsSet = action((newValue: ProposalDTO[]): void => {
-        this.proposals = observable.array(newValue)
-    })
-
-    proposalApprove = action((pId: number, headers: SignInSuccessDTO) => {
-        this.client.proposalApprove(pId, headers)
-            .then((r) => {
-                if (r.status === "OK") {
-                    fetchFromClient(this.client.proposalsGet(), this.proposalsSet)
-                }
-            })
-    })
-
-    proposalGet = action(async (snId: number) => {
-        await fetchFromClient(this.client.proposalGet(snId), this.editProposalSet)
-    })
-
-    proposalDecline = action((pId: number, headers: SignInSuccessDTO) => {
-        this.client.proposalDecline(pId, headers)
-        .then((r) => {
-                if (r.status === "OK") {
-                    fetchFromClient(this.client.proposalsGet(), this.proposalsSet)
-                }
-            })
     })
 
     languagesGet = action(async () => {
@@ -171,10 +139,6 @@ export default class AppState {
         this.alternatives.rows = sorted
     })
 
-    statsSet = action((newValue: StatsDTO[]): void => {
-        this.stats = newValue.length === 1 ? newValue[0] : null
-    })
-
     commentsGet = action(async (snId: number) => {
         await fetchFromClient(this.client.commentsGet(snId), this.commentsSet)
     })
@@ -195,16 +159,6 @@ export default class AppState {
                     this.alternativesGetUser(id2, headers.userId)
                 }
             })
-    })
-
-    editProposalSet = action((newValue: BareSnippetDTO[]): void => {
-        if (!newValue || newValue.length !== 1) this.editProposal = null
-
-        this.editProposal = newValue[0]
-    })
-
-    adminStatsGet = action(async () => {
-        await fetchFromClient(this.client.adminStatsGet(), this.statsSet)
     })
 
     userVote = action((voteDto: VoteDTO, headers: SignInSuccessDTO) => {
