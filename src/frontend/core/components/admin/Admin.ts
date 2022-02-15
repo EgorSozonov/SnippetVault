@@ -71,14 +71,10 @@ const Admin: FunctionComponent = observer(({}: any) => {
         state.admin.taskGroupCU(newValue, headers)
     }
     const cuLanguageCallback = async (newValue: LanguageCUDTO) => {
-        console.log("callback")
-        console.log(newValue)
         const headers = state.user.headersGet()
         if (headers === null) return
         state.admin.languageCU(newValue, headers)
     }
-
-
 
     useEffect(() => {
         state.admin.tasksGet()

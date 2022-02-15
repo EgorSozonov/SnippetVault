@@ -21,7 +21,7 @@ const NewProposal: FunctionComponent = observer(() => {
         const headers = state.user.headersGet()
         if (headers === null) return
 
-        state.app.proposalDecline(confirmationDialog.id, headers)
+        state.admin.proposalDecline(confirmationDialog.id, headers)
     }
 
     const [proposalDialog, setProposalDialog] = useState<DialogState>({id: 0, title: "", isOpen: false})
@@ -30,18 +30,18 @@ const NewProposal: FunctionComponent = observer(() => {
     }
     const closeProposalDialog = () => {
         setProposalDialog({...proposalDialog, isOpen: false})
-        state.app.proposalsGet()
+        state.admin.proposalsGet()
     }
 
     useEffect(() => {
-        state.app.proposalsGet()
+        state.admin.proposalsGet()
     }, [])
 
     const approveHandler = (pId: number) => () => {
         const headers = state.user.headersGet()
         if (headers === null) return
 
-        state.app.proposalApprove(pId, headers)
+        state.admin.proposalApprove(pId, headers)
     }
 
     const declineHandler = (pId: number) => () => {

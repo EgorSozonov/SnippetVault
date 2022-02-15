@@ -159,7 +159,8 @@ public class DataService : IDataService {
 
     #region Admin
     public async Task<ReqResult<TaskCUDTO>> tasksAll() {
-        return await st.tasksAll();
+        var res = await st.tasksAll();
+        return res;
     }
 
     public async Task<ReqResult<TaskGroupCUDTO>> taskGroupsAll() {

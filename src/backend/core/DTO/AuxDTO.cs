@@ -29,7 +29,6 @@ public class TaskCUDTO : CUDTO {
 }
 
 public class TaskGroupCUDTO : CUDTO {
-    public bool isDeleted {get; set;}
     public string code {get; set;}
     public string name {get; set;}
 }
@@ -38,11 +37,11 @@ public class LanguageCUDTO : CUDTO {
     public string name { get; set; }
     public string code { get; set; }
     public int sortingOrder { get; set; }
-    public bool isDeleted { get; set; }
 }
 
 public class CUDTO {
-    public int? existingId {get; set;}
+    public int existingId {get; set;}
+    public bool isDeleted {get; set;}
 }
 
 public class PostResponseDTO {

@@ -54,7 +54,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                 newValue[ed.field] = e.target[ed.field].value
             }
         })
-
+        newValue.existingId = -1
         cuCallback(newValue)
     }
 

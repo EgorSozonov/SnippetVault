@@ -14,7 +14,7 @@ public class AuthorizeFilter : Attribute, IAsyncActionFilter    {
     }
 
     public void OnActionExecuted(ActionExecutedContext context)    {
-        
+
     }
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate continuation) {
@@ -31,8 +31,8 @@ public class AuthorizeFilter : Attribute, IAsyncActionFilter    {
                 if (!authorized) context.Result = new UnauthorizedResult();
             } else {
                 context.Result = new UnauthorizedResult();
-            }            
-        } catch (Exception e) {
+            }
+        } catch (Exception) {
             context.Result = new BadRequestResult() {};
         }
         if (context.Result == null) await continuation();

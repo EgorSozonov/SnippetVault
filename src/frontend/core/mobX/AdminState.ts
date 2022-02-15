@@ -82,8 +82,32 @@ export default class AdminState {
         this.client.taskCU(newValue, headers)
     })
 
+    taskGroupsGet = action(async () => {
+        await fetchFromClient(this.client.taskGroupsAll(), this.taskGroupsSet)
+    })
+
+    taskGroupsSet = action((newValue: TaskGroupCUDTO[]): void => {
+        if (!newValue) {
+            this.tasks = observable.array([])
+            return
+        }
+        this.taskGroups = observable.array(newValue)
+    })
+
     taskGroupCU = action((newValue: TaskGroupCUDTO, headers: SignInSuccessDTO) => {
         this.client.taskGroupCU(newValue, headers)
+    })
+
+    languagesGet = action(async () => {
+        await fetchFromClient(this.client.languagesAll(), this.languagesSet)
+    })
+
+    languagesSet = action((newValue: LanguageCUDTO[]): void => {
+        if (!newValue) {
+            this.tasks = observable.array([])
+            return
+        }
+        this.languages = observable.array(newValue)
     })
 
     languageCU = action((newValue: LanguageCUDTO, headers: SignInSuccessDTO) => {

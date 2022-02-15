@@ -1,5 +1,5 @@
-interface IHasName {
-    name: string,
+interface IHasExistingId {
+    existingId: number,
 }
 
-export default IHasName
+export default IHasExistingId
