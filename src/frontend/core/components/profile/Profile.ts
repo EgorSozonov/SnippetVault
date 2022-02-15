@@ -1,20 +1,16 @@
 import "./profile.css"
 import { html } from "htm/react"
 import { useContext, useEffect, useRef, useState } from "react"
-import IClient from "../../../ports/IClient"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
-import { fetchFromClient } from "../../utils/Client"
 import { SignInDTO, ChangePwDTO } from "../../types/dto/AuthDTO"
 import { observer } from "mobx-react-lite"
 import Login from "../../commonComponents/login/Login"
 import { fmtDt } from "../../utils/DateUtils"
-import { STATUS_CODES } from "http"
 
 
 const Profile: React.FunctionComponent = observer(() => {
     const state = useContext<MainState>(StoreContext)
-    const client: IClient = state.app.client
     const [changePwMode, setChangePwMode] = useState(false)
 
     const profile = state.user.profile
@@ -50,7 +46,7 @@ const Profile: React.FunctionComponent = observer(() => {
         state.user.trySignInFromLS()
         const headers = state.user.headersGet()
         if (headers === null) return
-        fetchFromClient(client.userProfile(headers), state.user.profileSet)
+        state.user.profileGet(headers)
     }, [state.user.acc])
 
     const isUser = state.user.isUser()

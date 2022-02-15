@@ -8,11 +8,9 @@ import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
 import MainState from "../../mobX/MainState"
 import { Editability } from "../../commonComponents/editableList/utils/Editability"
-import { fetchFromClient } from "../../utils/Client"
 import IClient from "../../../ports/IClient"
 import AdminLogin from "./AdminLogin"
 import { LanguageDTO, TaskGroupDTO } from "../../types/dto/AuxDTO"
-import { empty } from "../../utils/ComponentUtils"
 import AdminChangePw from "./AdminChangePw"
 
 
@@ -25,30 +23,43 @@ const editabilityTaskGroup: Editability<TaskGroupDTO>[] = [
         fieldType: "string",
     }
 ]
+const editabilityLanguage: Editability<LanguageDTO>[] = [
+    {
+        field: "name",
+        fieldType: "string",
+    },
+    {
+        field: "code",
+        fieldType: "string",
+    },
+    {
+        field: "sortingOrder",
+        fieldType: "int",
+    },
+]
 
 const Admin: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
 
-    const editabilityLanguage: Editability<LanguageDTO>[] = [
-        {
-            field: "name",
-            fieldType: "string",
-        },
-        {
-            field: "code",
-            fieldType: "string",
-        },
-        {
-            field: "sortingOrder",
-            fieldType: "int",
-        },
-    ]
 
-    const client: IClient = state.app.client
+    const cuLanguageCallback = async (newValue: LanguageDTO) => {
+        const response = await state.app.languageCU(newValue)
+        if (response.isOK) {
+            state.app.languagesGet()
+        }
+    }
+
+    const cuTaskGroupCallback = async (newValue: TaskGroupDTO) => {
+        const response = await state.app.taskGroupCU(newValue)
+        if (response.isOK) {
+            state.app.taskGroupsGet()
+        }
+    }
+
     useEffect(() => {
-        fetchFromClient(client.languagesGet(), state.app.languagesSet)
-        fetchFromClient(client.taskGroupsGet(), state.app.taskGroupsSet)
-        fetchFromClient(client.adminStatsGet(), state.app.statsSet)
+        state.app.languagesGet()
+        state.app.taskGroupsGet()
+        state.app.adminStatsGet()
         state.user.trySignInFromLS()
     }, [state.user.acc])
 
@@ -60,6 +71,8 @@ const Admin: FunctionComponent = observer(({}: any) => {
     const closeChangeAdminPwHandler = () => {
         setChangeAdminPwMode(false)
     }
+
+
 
     return html`
         <div class="adminContainer">
@@ -88,8 +101,10 @@ const Admin: FunctionComponent = observer(({}: any) => {
                             <div class="adminHeaderButton" onClick=${changeAdminPwHandler}>Change password</div>
                         </div>
                         <${NewProposal} />
-                        <${ListTaskGroups} values=${state.app.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"></EditableList>
-                        <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"></EditableList>
+                        <${ListTaskGroups} values=${state.app.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"
+                            cuCallback=${cuTaskGroupCallback} />
+                        <${ListLanguages} values=${state.app.languages} editabilities=${editabilityLanguage} title="Languages"
+                            cuCallback=${cuLanguageCallback} />
                         `
                     : html`<${AdminChangePw} closeChangeAdminPwHandler=${closeChangeAdminPwHandler} />`
                     )

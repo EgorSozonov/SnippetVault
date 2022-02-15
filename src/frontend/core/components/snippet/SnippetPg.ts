@@ -6,11 +6,8 @@ import { FunctionComponent, useContext, useEffect, useState,} from "react"
 import { NavLink, useSearchParams } from "react-router-dom"
 import MainState from "../../mobX/MainState"
 import { observer } from "mobx-react-lite"
-import { fetchFromClient } from "../../utils/Client"
-import IClient from "../../../ports/IClient"
 import { checkNonempty } from "../../utils/StringUtils"
 import { idOf, isStateOK, stringOf } from "./utils/SnippetState"
-import EitherMsg from "../../types/EitherMsg"
 import { SnippetDTO } from "../../types/dto/SnippetDTO"
 import Dialog from "../../commonComponents/dialog/Dialog"
 import ProposalInput from "../proposalInput/ProposalInput"
@@ -20,8 +17,6 @@ import PATHS from "../../params/Path"
 import KeyButton from "../../commonComponents/login/KeyButton"
 import UserButton from "../../commonComponents/login/UserButton"
 import HoverSelectCompact from "../../commonComponents/hoverSelect/HoverSelectCompact"
-import { LanguageDTO } from "../../types/dto/AuxDTO"
-import { sortLanguages } from "../../utils/languageGroup/GroupLanguages"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -30,8 +25,6 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const lang1 = state.app.l1
     const lang2 = state.app.l2
     const tg = state.app.tg
-
-    const client: IClient = state.app.client
 
     const [currLanguage, setCurrLanguage] = useState<CurrentLanguage | null>(null)
     const [proposalDialog, setProposalDialog] = useState<DialogState>({ isOpen: false, id: -1, title: "Post a proposal", })
@@ -53,27 +46,15 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const isSignedIn = state.user.isUser()
 
     useEffect(() => {
-        (async () => {
-            const resultLangs: EitherMsg<LanguageDTO[]> = await client.languagesGet()
-            if (resultLangs.isOK === true) {
-                const langList = sortLanguages(resultLangs.value)
-                state.app.languageListSet(langList)
-                state.app.languagesSet(resultLangs.value)
-            } else {
-                console.log(resultLangs.errMsg)
-            }
-        })()
-
-        if (state.app.taskGroups.length < 1) {
-            fetchFromClient(client.taskGroupsGet(), state.app.taskGroupsSet)
-        }
+        state.app.languagesGet()
+        state.app.taskGroupsGet()
         state.user.trySignInFromLS()
     }, [])
 
     useEffect( () => {
         if (isStateOK([tg, lang1, lang2])) {
             setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
-            fetchFromClient(client.snippetsByCode(tg.code, lang1.code, lang2.code), state.app.snippetsSet)
+            state.app.snippetsGetByCode(tg.code, lang1.code, lang2.code)
         }
     }, [lang1, lang2, tg])
 
@@ -108,7 +89,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         selectCallback=${state.app.language2Set}><//>`
                     }
                     <${NavLink} exact to=${PATHS["profile"].url}>
-                        ${state.user.acc === null ? html`<${KeyButton} />` : html`<${UserButton} />` }
+                        ${isSignedIn === true ? html`<${UserButton} />` : html`<${KeyButton} />` }
                     <//>
                 </div>
             </div>

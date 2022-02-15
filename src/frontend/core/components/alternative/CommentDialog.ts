@@ -8,7 +8,6 @@ import { BigDialogState } from "../../commonComponents/dialog/DialogState";
 import MainState from "../../mobX/MainState";
 import { StoreContext } from "../../App";
 import DialogFullscreen from "../../commonComponents/dialog/DialogFullscreen";
-import { fetchFromClient } from "../../utils/Client";
 import Login from "../../commonComponents/login/Login";
 
 
@@ -23,7 +22,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
     useEffect(() => {
         if (dialogState.isOpen === false) return
 
-        fetchFromClient(state.app.client.commentsGet(dialogState.id), state.app.commentsSet)
+        state.app.commentsGet(dialogState.id)
     }, [dialogState])
 
     const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -36,15 +35,10 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
         if (headers === null) return
 
         const dto: CommentCUDTO = {snId: dialogState.id, content: text}
-        state.app.client.commentCreate(dto, headers)
-            .then((r) => {
-                if (r && r.status === "OK") {
-                    fetchFromClient(state.app.client.alternativesForUserGet(dialogState.id2, headers.userId), state.app.alternativesSet)
-                }
-            })
+
+        state.app.commentCreate(dto, headers, dialogState.id2)
         closeCallback()
     }
-
 
     return html`
         <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>

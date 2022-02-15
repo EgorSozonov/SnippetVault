@@ -1,11 +1,9 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react"
 import "./admin.css"
 import { html } from "htm/react"
-import { fetchFromClient } from "../../utils/Client"
 import { observer } from "mobx-react-lite"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
-import IClient from "../../../ports/IClient"
 import DialogState from "../../commonComponents/dialog/DialogState"
 import { ProposalDTO } from "../../types/dto/SnippetDTO"
 import DialogConfirm from "../../commonComponents/dialog/DialogConfirm"
@@ -14,7 +12,6 @@ import EditProposalDialog from "./EditProposalDialog"
 
 const NewProposal: FunctionComponent = observer(() => {
     const state = useContext<MainState>(StoreContext)
-    const client: IClient = state.app.client
 
     const [confirmationDialog, setConfirmationDialog] = useState<DialogState>({id: 0, title: "", isOpen: false})
     const openConfirmationDialog = (id: number) => setConfirmationDialog({title: "Are you sure you want to decline this proposal?", id: id, isOpen: true})
@@ -24,12 +21,7 @@ const NewProposal: FunctionComponent = observer(() => {
         const headers = state.user.headersGet()
         if (headers === null) return
 
-        client.proposalDecline(confirmationDialog.id, headers)
-            .then((r) => {
-                if (r.status === "OK") {
-                    fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
-                }
-            })
+        state.app.proposalDecline(confirmationDialog.id, headers)
     }
 
     const [proposalDialog, setProposalDialog] = useState<DialogState>({id: 0, title: "", isOpen: false})
@@ -38,23 +30,18 @@ const NewProposal: FunctionComponent = observer(() => {
     }
     const closeProposalDialog = () => {
         setProposalDialog({...proposalDialog, isOpen: false})
-        fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
+        state.app.proposalsGet()
     }
 
     useEffect(() => {
-        fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
+        state.app.proposalsGet()
     }, [])
 
     const approveHandler = (pId: number) => () => {
         const headers = state.user.headersGet()
         if (headers === null) return
 
-        client.proposalApprove(pId, headers)
-            .then((r) => {
-                if (r.status === "OK") {
-                    fetchFromClient(client.proposalsGet(), state.app.proposalsSet)
-                }
-            })
+        state.app.proposalApprove(pId, headers)
     }
 
     const declineHandler = (pId: number) => () => {

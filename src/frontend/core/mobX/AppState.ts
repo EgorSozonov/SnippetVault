@@ -1,16 +1,15 @@
 import { action, IObservableArray, makeAutoObservable, observable } from "mobx"
 import SelectChoice from "../types/SelectChoice"
 import IClient from "../../ports/IClient"
-import SelectGroup from "../types/SelectGroup"
-import HttpClient from "../../ports/http/HttpClient"
-import MockClient from "../../ports/mock/MockClient"
-import CodesFromUrl from "../components/snippet/utils/CodesFromUrl"
 import SnippetState, { updateId, updateUrl, updateWithChoicesUrl as updateWithNewlyReceivedChoices, } from "../components/snippet/utils/SnippetState"
 import { LanguageDTO, TaskGroupDTO } from "../types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, AlternativeDTO, BareSnippetDTO } from "../types/dto/SnippetDTO"
-import { CommentDTO, StatsDTO } from "../types/dto/UserDTO"
+import { CommentCUDTO, CommentDTO, StatsDTO, VoteDTO } from "../types/dto/UserDTO"
 import { AlternativesSort } from "../components/alternative/utils/Types"
 import { sortLanguages } from "../utils/languageGroup/GroupLanguages"
+import EitherMsg from "../types/EitherMsg"
+import { fetchFromClient } from "./Utils"
+import { SignInSuccessDTO } from "../types/dto/AuthDTO"
 
 
 export default class AppState {
@@ -46,6 +45,51 @@ export default class AppState {
         this.snippets = observable.array(newValue)
     })
 
+    snippetsGetByCode = action(async (tgCode: string, l1Code: string, l2Code: string) => {
+        await fetchFromClient(this.client.snippetsByCode(tgCode, l1Code, l2Code), this.snippetsSet)
+    })
+
+    proposalsGet = action(async () => {
+        await fetchFromClient(this.client.proposalsGet(), this.proposalsSet)
+    })
+
+    proposalsSet = action((newValue: ProposalDTO[]): void => {
+        this.proposals = observable.array(newValue)
+    })
+
+    proposalApprove = action((pId: number, headers: SignInSuccessDTO) => {
+        this.client.proposalApprove(pId, headers)
+            .then((r) => {
+                if (r.status === "OK") {
+                    fetchFromClient(this.client.proposalsGet(), this.proposalsSet)
+                }
+            })
+    })
+
+    proposalGet = action(async (snId: number) => {
+        await fetchFromClient(this.client.proposalGet(snId), this.editProposalSet)
+    })
+
+    proposalDecline = action((pId: number, headers: SignInSuccessDTO) => {
+        this.client.proposalDecline(pId, headers)
+        .then((r) => {
+                if (r.status === "OK") {
+                    fetchFromClient(this.client.proposalsGet(), this.proposalsSet)
+                }
+            })
+    })
+
+    languagesGet = action(async () => {
+        const resultLangs: EitherMsg<LanguageDTO[]> = await this.client.languagesGet()
+        if (resultLangs.isOK === true) {
+            const langList = sortLanguages(resultLangs.value)
+            this.languageListSet(langList)
+            this.languagesSet(resultLangs.value)
+        } else {
+            console.log(resultLangs.errMsg)
+        }
+    })
+
     language1Set = action((newValue: SelectChoice): void => {
         this.l1 = updateId(this.l1, newValue.id)
     })
@@ -54,13 +98,21 @@ export default class AppState {
         this.l2 = updateId(this.l2, newValue.id)
     })
 
+    languageListSet = action((newValue: SelectChoice[]): void => {
+        this.l1 = updateWithNewlyReceivedChoices(this.l1, newValue)
+        this.l2 = updateWithNewlyReceivedChoices(this.l2, newValue)
+    })
+
+    languagesSet = action((newValue: LanguageDTO[]): void => {
+        this.languages = observable.array(newValue)
+    })
+
     taskGroupSet = action((newValue: SelectChoice): void => {
         this.tg = updateId(this.tg, newValue.id)
     })
 
-    languageListSet = action((newValue: SelectChoice[]): void => {
-        this.l1 = updateWithNewlyReceivedChoices(this.l1, newValue)
-        this.l2 = updateWithNewlyReceivedChoices(this.l2, newValue)
+    taskGroupsGet = action(async () => {
+        await fetchFromClient(this.client.taskGroupsGet(), this.taskGroupsSet)
     })
 
     taskGroupsSet = action((newValue: TaskGroupDTO[]): void => {
@@ -69,7 +121,6 @@ export default class AppState {
         this.taskGroups = observable.array(newArr)
         this.tg = updateWithNewlyReceivedChoices(this.tg, newArr)
     })
-
 
     codesFromUrlSet = action((tgCode: string, l1Code: string, l2Code: string) => {
         if (tgCode.length > 0 && tgCode !== "undefined" && this.tg.code === "") {
@@ -83,20 +134,8 @@ export default class AppState {
         }
     })
 
-    proposalsSet = action((newValue: ProposalDTO[]): void => {
-        this.proposals = observable.array(newValue)
-    })
-
-    proposalsClear = action((newValue: ProposalDTO[]): void => {
-        this.proposals = observable.array([])
-    })
-
     openSelectSet = action((newValue: string): void => {
         this.openSelect = newValue
-    })
-
-    languagesSet = action((newValue: LanguageDTO[]): void => {
-        this.languages = observable.array(newValue)
     })
 
     alternativesSet = action((newValue: AlternativesDTO[]): void => {
@@ -110,6 +149,14 @@ export default class AppState {
             : alternativesNew.rows.sort((x, y) => y.score - x.score)
 
         this.alternatives = {task: alternativesNew.task, primary: alternativesNew.primary, rows: sorted, }
+    })
+
+    alternativesGet = action(async (tlIdNum: number) => {
+        await fetchFromClient(this.client.alternativesGet(tlIdNum), this.alternativesSet)
+    })
+
+    alternativesGetUser = action(async (tlIdNum: number, userId: number) => {
+        await fetchFromClient(this.client.alternativesForUserGet(tlIdNum, userId), this.alternativesSet)
     })
 
     alternativesResort = action((newValue: AlternativesSort): void => {
@@ -128,6 +175,10 @@ export default class AppState {
         this.stats = newValue.length === 1 ? newValue[0] : null
     })
 
+    commentsGet = action(async (snId: number) => {
+        await fetchFromClient(this.client.commentsGet(snId), this.commentsSet)
+    })
+
     commentsSet = action((newValue: CommentDTO[]): void => {
         if (!newValue) {
             this.comments = observable.array([])
@@ -137,9 +188,32 @@ export default class AppState {
         this.comments = observable.array(newValue.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1))
     })
 
+    commentCreate = action((dto: CommentCUDTO, headers: SignInSuccessDTO, id2: number) => {
+        this.client.commentCreate(dto, headers)
+            .then((r) => {
+                if (r && r.status === "OK") {
+                    this.alternativesGetUser(id2, headers.userId)
+                }
+            })
+    })
+
     editProposalSet = action((newValue: BareSnippetDTO[]): void => {
         if (!newValue || newValue.length !== 1) this.editProposal = null
 
         this.editProposal = newValue[0]
     })
+
+    adminStatsGet = action(async () => {
+        await fetchFromClient(this.client.adminStatsGet(), this.statsSet)
+    })
+
+    userVote = action((voteDto: VoteDTO, headers: SignInSuccessDTO) => {
+        this.client.userVote(voteDto, headers)
+            .then((r) => {
+                if (r && r.status === "OK") {
+                    fetchFromClient(this.client.alternativesForUserGet(voteDto.tlId, headers.userId), this.alternativesSet)
+                }
+            })
+    })
+
 }

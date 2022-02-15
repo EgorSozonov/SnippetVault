@@ -6,7 +6,6 @@ import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import { AlternativeDTO } from "../../types/dto/SnippetDTO"
 import { VoteDTO } from "../../types/dto/UserDTO"
-import { fetchFromClient } from "../../utils/Client"
 import { fmtDt } from "../../utils/DateUtils"
 
 
@@ -24,12 +23,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
         if (headers === null) return
 
         const voteDTO: VoteDTO = {snId, tlId}
-        state.app.client.userVote(voteDTO, headers)
-            .then((r) => {
-                if (r && r.status === "OK") {
-                    fetchFromClient(state.app.client.alternativesForUserGet(tlId, headers.userId), state.app.alternativesSet)
-                }
-            })
+        state.app.userVote(voteDTO, headers)
     }
 
     const isSignedIn = state.user.isUser()

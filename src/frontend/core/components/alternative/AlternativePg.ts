@@ -5,7 +5,6 @@ import { FunctionComponent, useContext, useEffect, useState } from "react"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import IClient from "../../../ports/IClient"
-import { fetchFromClient } from "../../utils/Client"
 import { observer } from "mobx-react-lite"
 import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
@@ -29,7 +28,6 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     if (langIdNum < 0 || tlIdNum < 0) return empty
 
     const state = useContext<MainState>(StoreContext)
-    const client: IClient = state.app.client
     const lang = state.app.languages.find(x => x.id === langIdNum) || null
 
     const [commentDialog, setCommentDialog] = useState<BigDialogState>({id: -1, id2: -1, title: "", text: "", isOpen: false})
@@ -44,12 +42,12 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     useEffect(() => {
         state.user.trySignInFromLS()
         if (lang === null) {
-            fetchFromClient(client.languagesReqGet(), state.app.languagesSet)
+            state.app.languagesGet()
         }
         if (state.user.acc !== null) {
-            fetchFromClient(client.alternativesForUserGet(tlIdNum, state.user.acc.userId), state.app.alternativesSet)
+            state.app.alternativesGetUser(tlIdNum, state.user.acc.userId)
         } else {
-            fetchFromClient(client.alternativesGet(tlIdNum), state.app.alternativesSet)
+            state.app.alternativesGet(tlIdNum)
         }
     }, [])
 

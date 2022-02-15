@@ -6,7 +6,6 @@ import DialogState from "../../commonComponents/dialog/DialogState";
 import MainState from "../../mobX/MainState";
 import { StoreContext } from "../../App";
 import DialogFullscreen from "../../commonComponents/dialog/DialogFullscreen";
-import { fetchFromClient } from "../../utils/Client"
 import { ProposalUpdateDTO } from "../../types/dto/SnippetDTO";
 
 
@@ -23,7 +22,7 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
     useEffect(() => {
         if (dialogState.isOpen === false) return
 
-        fetchFromClient(state.app.client.proposalGet(dialogState.id), state.app.editProposalSet)
+        state.app.proposalsGet(dialogState.id)
     }, [dialogState.isOpen])
 
     const inputRef = useRef<HTMLTextAreaElement>(null)

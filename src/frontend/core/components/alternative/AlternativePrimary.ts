@@ -9,7 +9,6 @@ import { LanguageDTO, TaskDTO } from "../../types/dto/AuxDTO"
 import MainState from "../../mobX/MainState"
 import { StoreContext } from "../../App"
 import { VoteDTO } from "../../types/dto/UserDTO"
-import { fetchFromClient } from "../../utils/Client"
 import Dialog from "../../commonComponents/dialog/Dialog"
 import DialogState from "../../commonComponents/dialog/DialogState"
 import ProposalInput from "../proposalInput/ProposalInput"
@@ -30,12 +29,8 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
         if (headers === null) return
 
         const voteDTO: VoteDTO = {snId, tlId}
-        state.app.client.userVote(voteDTO, headers)
-            .then((r) => {
-                if (r && r.status === "OK") {
-                    fetchFromClient(state.app.client.alternativesForUserGet(tlId, headers.userId), state.app.alternativesSet)
-                }
-            })
+        state.app.userVote(voteDTO, headers)
+
     }
     const [proposalDialog, setProposalDialog] = useState<DialogState>({ isOpen: false, id: -1, title: "Post a proposal", })
     const openProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: true })

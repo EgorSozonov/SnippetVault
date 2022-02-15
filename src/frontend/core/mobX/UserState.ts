@@ -6,6 +6,7 @@ import { ProfileDTO } from "../types/dto/UserDTO"
 import EitherMsg from "../types/EitherMsg"
 import { UserAccount, UserStatus } from "../types/UserAccount"
 import { dateOfTS, isSameDay } from "../utils/DateUtils"
+import { fetchFromClient } from "./Utils"
 
 
 export default class UserState {
@@ -94,6 +95,11 @@ export default class UserState {
 
     accountSet = action((newValue: UserAccount): void => {
         this.acc = newValue
+    })
+
+
+    profileGet = action(async (headers: SignInSuccessDTO) => {
+        await fetchFromClient(this.client.userProfile(headers), this.profileSet)
     })
 
     profileSet = action((newValue: ProfileDTO[]): void => {
