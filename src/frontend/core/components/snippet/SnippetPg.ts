@@ -70,24 +70,31 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     return html`<div class="snippetsBody">
         <main class="snippetsContainer">
             <div class="snippetsHeader">
-                <div class="snippetLeftHeader">${stringOf(lang1)}
-                    ${state.snip.l1.type === "ChoicesLoaded" &&
-                        html`<${HoverSelectCompact} currValue=${state.snip.l1} choices=${state.snip.l1.choices} uniqueName="Lang1Choice"
-                        selectCallback=${state.snip.language1Set}><//>`
-                    }
+                <div class="snippetLeftHeader">
+                    <div>
+                        ${stringOf(lang1)}
+                        ${state.snip.l1.type === "ChoicesLoaded" &&
+                            html`<${HoverSelectCompact} currValue=${state.snip.l1} choices=${state.snip.l1.choices} uniqueName="Lang1Choice"
+                            selectCallback=${state.snip.language1Set}><//>`
+                        }
+                    </div>
                 </div>
                 <div class="taskForHeader">${stringOf(tg)}
-                    ${state.snip.tg.type === "ChoicesLoaded" &&
-                        html`<${HoverSelectCompact} currValue=${state.snip.tg} choices=${state.snip.tg.choices} uniqueName="TaskGroupChoice"
-                        selectCallback=${state.snip.taskGroupSet}><//>`
-                    }
+                    <div>
+                        ${state.snip.tg.type === "ChoicesLoaded" &&
+                            html`<${HoverSelectCompact} currValue=${state.snip.tg} choices=${state.snip.tg.choices} uniqueName="TaskGroupChoice"
+                            selectCallback=${state.snip.taskGroupSet}><//>`
+                        }
+                    </div>
                 </div>
                 <div class="snippetRightHeader">
-                    <span>${stringOf(lang2)}</span>
-                    ${state.snip.l2.type === "ChoicesLoaded" &&
-                        html`<${HoverSelectCompact} currValue=${state.snip.l2} choices=${state.snip.l2.choices} uniqueName="Lang2Choice"
-                        selectCallback=${state.snip.language2Set}><//>`
-                    }
+                    <div>
+                        <span>${stringOf(lang2)}</span>
+                        ${state.snip.l2.type === "ChoicesLoaded" &&
+                            html`<${HoverSelectCompact} currValue=${state.snip.l2} choices=${state.snip.l2.choices} uniqueName="Lang2Choice"
+                            selectCallback=${state.snip.language2Set}><//>`
+                        }
+                    </div>
                     <${NavLink} exact to=${PATHS["profile"].url}>
                         ${isSignedIn === true ? html`<${UserButton} />` : html`<${KeyButton} />` }
                     <//>

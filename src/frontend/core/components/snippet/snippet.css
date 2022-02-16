@@ -155,10 +155,11 @@
 
 .snippetRightHeader {
     width: 41vw;
+    position: relative;
     text-align: center;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     color: hsl(60, 100%, 59%);
     background-color: hsl(0, 0%, 28%);
     border-style: solid;
@@ -166,10 +167,13 @@
     border-color: hsl(46, 84%, 39%);
     font-size: 1.2rem;
     font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
+
 }
 
-.snippetRightHeader a {
-    margin-left: auto;
+.snippetRightHeader > a {
+    position: absolute;
+    right: 10px;
+    top: 20%;
     stroke: white;
     fill: transparent;
 }

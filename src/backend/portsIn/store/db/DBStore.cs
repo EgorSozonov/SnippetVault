@@ -108,8 +108,8 @@ public class DBStore : IStore {
         RETURNING id;
     ";
     private static readonly string proposalCreateQ = @"
-        INSERT INTO sv.snippet(""taskLanguageId"", content, status, score, ""tsUpload"", ""authorId"")
-        VALUES (@tlId, @content, 1, 0, @ts, @authorId);
+        INSERT INTO sv.snippet(""taskLanguageId"", content, status, score, libraries, ""tsUpload"", ""authorId"")
+        VALUES (@tlId, @content, 1, 0, @libraries, @ts, @authorId);
     ";
     public async Task<int> proposalCreate(ProposalCreateDTO dto, int authorId) {
         await using (var cmdTL = new NpgsqlCommand(taskLanguageCreateQ, db.conn)) {
@@ -119,6 +119,7 @@ public class DBStore : IStore {
             await using (var cmdProp = new NpgsqlCommand(proposalCreateQ, db.conn)) {
                 cmdProp.Parameters.AddWithValue("tlId", NpgsqlTypes.NpgsqlDbType.Integer, tlId);
                 cmdProp.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, dto.content);
+                cmdProp.Parameters.AddWithValue("libraries", NpgsqlTypes.NpgsqlDbType.Varchar, dto.libraries != null ? dto.libraries : DBNull.Value);
                 cmdProp.Parameters.AddWithValue("ts", NpgsqlTypes.NpgsqlDbType.TimestampTz, DateTime.Now.ToUniversalTime());
                 cmdProp.Parameters.AddWithValue("authorId", NpgsqlTypes.NpgsqlDbType.Integer, authorId);
                 return await cmdProp.ExecuteNonQueryAsync();
@@ -404,6 +405,22 @@ public class DBStore : IStore {
         }
     }
 
+    private static readonly string statsForAdminQ = @"
+        SELECT
+        	SUM(CASE WHEN s.status=3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount"",
+        	SUM(CASE WHEN s.status=3 AND tl.id IS NULL THEN 1 ELSE 0 END) AS ""alternativeCount"",
+        	SUM(CASE WHEN s.status != 1 THEN 1 ELSE 0 END) AS ""proposalCount""
+        FROM sv.snippet s
+        LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;
+    ";
+    public async Task<ReqResult<StatsDTO>> statsForAdmin() {
+        await using (var cmd = new NpgsqlCommand(statsForAdminQ, db.conn)) {
+            await using (var reader = await cmd.ExecuteReaderAsync()) {
+                return readResultSet<StatsDTO>(reader);
+            }
+        }
+    }
+
     #endregion
 
     #region Users
@@ -506,22 +523,6 @@ public class DBStore : IStore {
             cmd.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, snippetId);
             await using (var reader = await cmd.ExecuteReaderAsync()) {
                 return readResultSet<CommentDTO>(reader);
-            }
-        }
-    }
-
-    private static readonly string statsForAdminQ = @"
-        SELECT
-        	SUM(CASE WHEN s.status=3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS ""primaryCount"",
-        	SUM(CASE WHEN s.status=3 AND tl.id IS NULL THEN 1 ELSE 0 END) AS ""alternativeCount"",
-        	SUM(CASE WHEN s.status != 1 THEN 1 ELSE 0 END) AS ""proposalCount""
-        FROM sv.snippet s
-        LEFT JOIN sv.""taskLanguage"" tl ON tl.""primarySnippetId""=s.id;
-    ";
-    public async Task<ReqResult<StatsDTO>> statsForAdmin() {
-        await using (var cmd = new NpgsqlCommand(statsForAdminQ, db.conn)) {
-            await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<StatsDTO>(reader);
             }
         }
     }

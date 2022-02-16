@@ -58,7 +58,11 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
             } else {
                 toast.error("Error: " + response.status, { autoClose: 7000 })
             }
+
             inputRef.current.value = ""
+            if (inputLibRef && inputLibRef.current) {
+                inputLibRef.current.value = ""
+            }
         }
         closeCallback()
     }
