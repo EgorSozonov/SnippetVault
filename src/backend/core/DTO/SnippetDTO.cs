@@ -36,11 +36,13 @@ public class SnippetDTO {
     public int leftId {get; set;}
     public string leftCode {get; set;}
     public int leftTlId {get; set;}
+    public string leftLibraries {get; set;}
     public int taskId {get; set;}
     public string taskName {get; set;}
     public int rightId {get; set;}
     public string rightCode {get; set;}
     public int rightTlId {get; set;}
+    public string rightLibraries {get; set;}
 }
 
 public class AlternativesDTO {

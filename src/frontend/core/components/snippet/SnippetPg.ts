@@ -103,7 +103,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                     <div class="snippetRow" key=${idx}>
                         <div class=${"snippetContent leftSide" + evenClass}>
                             ${snippet.leftCode.length > 0
-                                ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false} langId=${idOf(lang1)} tlId=${snippet.leftTlId}><//>`
+                                ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false} langId=${idOf(lang1)} libraries=${snippet.leftLibraries} tlId=${snippet.leftTlId}><//>`
                                 : html`<div class="snippetProposalButtonContainer"><div class="snippetProposalButton" onClick=${proposalHandler(snippet, false)}>Create proposal</div></div>`
                             }
                         </div>
@@ -112,7 +112,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         </div>
                         <div class=${"snippetContent rightSide" + evenClass}>
                             ${snippet.rightCode.length > 0
-                                ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true} langId=${idOf(lang2)} tlId=${snippet.rightTlId}><//>`
+                                ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true} langId=${idOf(lang2)} libraries=${snippet.rightLibraries} tlId=${snippet.rightTlId}><//>`
                                 : html`<div class="snippetProposalButtonContainer"><div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Create proposal</div></div>`
                             }
                         </div>

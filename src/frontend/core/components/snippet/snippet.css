@@ -101,6 +101,13 @@
     margin: 5px;
     font-family: monospace;
     white-space: pre-wrap;
+    background-color: black;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+}
+
+.snippetCodeLibraries {
+    display: block;
 }
 
 .taskContainer {
