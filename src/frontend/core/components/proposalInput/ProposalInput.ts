@@ -10,6 +10,7 @@ import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { empty } from "../../utils/ComponentUtils"
 import SelectChoice from "../../types/SelectChoice"
+import { ProposalCreateDTO } from "../../types/dto/SnippetDTO"
 
 
 type Props = {
@@ -21,6 +22,7 @@ type Props = {
 const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, closeCallback, } : Props) => {
     const state = useContext<MainState>(StoreContext)
     const inputRef = useRef<HTMLTextAreaElement>(null)
+    const inputLibRef = useRef<HTMLTextAreaElement>(null)
     const [taskFromBackend, setTaskFromBackend] = useState<TaskDTO | null>(null)
     const acc = state.user.acc
     const signedIn = state.user.isUser()
@@ -46,8 +48,9 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
         const task: TaskDTO = mbTask
 
         if (inputRef && inputRef.current && inputRef.current.value.length > 0) {
-            const response = await state.app.client.proposalCreate(inputRef.current.value, lang.id, task.id, headers)
-
+            const libraries = inputLibRef.current && inputLibRef.current.value ? inputLibRef.current.value : undefined
+            const createDTO: ProposalCreateDTO = { content: inputRef.current.value, langId: lang.id, taskId: task.id, libraries, }
+            const response = await state.snip.proposalCreate(createDTO, headers)
             if (response.status === "OK") {
                 toast.success("Proposal saved", { autoClose: 2000 })
             } else {
@@ -83,7 +86,7 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
                                         x
                                     </span>
                                 </p>
-                                <textarea class="proposalInputTextArea" ref=${inputRef}></textarea>
+                                <textarea class="proposalInputTextArea" ref=${inputLibRef}></textarea>
 
                             </div>
                         `

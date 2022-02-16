@@ -23,7 +23,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
         if (headers === null) return
 
         const voteDTO: VoteDTO = {snId, tlId}
-        state.app.userVote(voteDTO, headers)
+        state.snip.userVote(voteDTO, headers)
     }
 
     const isSignedIn = state.user.isUser()

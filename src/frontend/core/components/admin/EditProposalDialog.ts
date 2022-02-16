@@ -36,7 +36,7 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
         if (headers === null) return
 
         const dto: ProposalUpdateDTO = {content: text, existingId: dialogState.id, }
-        state.app.client.proposalUpdate(dto, headers)
+        state.snip.client.proposalUpdate(dto, headers)
         closeCallback()
     }
 

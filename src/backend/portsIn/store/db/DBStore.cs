@@ -13,9 +13,9 @@ public class DBStore : IStore {
 
     #region Snippets
     private static readonly string snippetsQ = @"
-        SELECT sn1.id as ""leftId"", sn1.content as ""leftCode"", tl1.id AS ""leftTlId"",
+        SELECT sn1.id as ""leftId"", sn1.content as ""leftCode"", tl1.id AS ""leftTlId"", sn1.libraries as ""leftLibraries"",
                t.id AS ""taskId"", t.name AS ""taskName"",
-		       sn2.id AS ""rightId"", sn2.content AS ""rightCode"", tl2.id AS ""rightTlId""
+		       sn2.id AS ""rightId"", sn2.content AS ""rightCode"", tl2.id AS ""rightTlId"", sn2.libraries as ""rightLibraries""
 		FROM sv.""task"" AS t
 		LEFT JOIN sv.""taskLanguage"" tl1 ON tl1.""taskId""=t.id AND tl1.""languageId""=@l1
 		LEFT JOIN sv.""taskLanguage"" tl2 ON tl2.""taskId""=t.id AND tl2.""languageId""=@l2
@@ -48,9 +48,9 @@ public class DBStore : IStore {
         	JOIN sv.language l ON l.id=tl.""languageId""
         	WHERE code=@l2Code
         )
-        SELECT sn1.id as ""leftId"", sn1.content as ""leftCode"", tl1.id AS ""leftTlId"",
+        SELECT sn1.id as ""leftId"", sn1.content as ""leftCode"", tl1.id AS ""leftTlId"", sn1.libraries as ""leftLibraries"",
         	   t.id AS ""taskId"", t.name AS ""taskName"",
-        	   sn2.id AS ""rightId"", sn2.content AS ""rightCode"", tl2.id AS ""rightTlId""
+        	   sn2.id AS ""rightId"", sn2.content AS ""rightCode"", tl2.id AS ""rightTlId"", sn2.libraries as ""rightLibraries""
         FROM sv.""task"" AS t
         JOIN sv.""taskGroup"" tg ON tg.id=t.""taskGroupId"" AND tg.code=@tgCode
         LEFT JOIN taskLangs1 tl1 ON tl1.""taskId""=t.id
@@ -85,7 +85,7 @@ public class DBStore : IStore {
 
     private static readonly string proposalsGetQ = @"
         SELECT lang.name AS ""languageName"", task.name AS ""taskName"",
-			   sn.id AS ""proposalId"", sn.content AS ""proposalCode"", sn.""tsUpload"", u.name AS author, u.id AS ""authorId""
+			   sn.id AS ""proposalId"", sn.content, sn.""tsUpload"", u.name AS author, u.id AS ""authorId""
 		FROM sv.snippet sn
 		JOIN sv.""taskLanguage"" tl ON tl.id=sn.""taskLanguageId""
 		JOIN sv.task task ON task.id=tl.""taskId""
@@ -179,7 +179,7 @@ public class DBStore : IStore {
     }
 
     private static readonly string alternativesForTLGetQ = @"
-        SELECT sn.id, sn.content AS code, sn.""tsUpload"", sn.score, COUNT(c.id) AS ""commentCount""
+        SELECT sn.id, sn.content AS content, sn.""tsUpload"", sn.score, COUNT(c.id) AS ""commentCount""
         FROM sv.""taskLanguage"" tl
         JOIN sv.snippet sn ON sn.id=tl.""primarySnippetId""
         LEFT JOIN sv.comment c ON c.""snippetId"" = sn.id
@@ -204,7 +204,7 @@ public class DBStore : IStore {
     }
 
     private static readonly string alternativesForUserGetQ = @"
-        SELECT sn.id, sn.content AS code, sn.""tsUpload"", sn.score, COUNT(c.id) AS ""commentCount"",
+        SELECT sn.id, sn.content, sn.""tsUpload"", sn.score, COUNT(c.id) AS ""commentCount"",
                (CASE WHEN uv.""snippetId"" IS NULL THEN FALSE ELSE TRUE END) AS ""voteFlag""
         FROM sv.""taskLanguage"" tl
         JOIN sv.snippet sn ON sn.id=tl.""primarySnippetId""

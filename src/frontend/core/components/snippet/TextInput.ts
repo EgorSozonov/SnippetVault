@@ -25,7 +25,7 @@ const TextInput: FunctionComponent<Props> = observer(({numberProposals, langId, 
         const headers = state.user.headersGet()
 
         if (inputRef && inputRef.current && inputRef.current.value.length > 0 && headers !== null) {
-            state.app.client.proposalCreate(inputRef.current.value, langId, taskId, headers)
+            state.snip.client.proposalCreate(inputRef.current.value, langId, taskId, headers)
             inputRef.current.value = ""
         }
     }

@@ -17,7 +17,7 @@ type Props = {
 
 const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups, currValue, uniqueName, selectCallback, }) => {
     const mainState = useContext<MainState>(StoreContext)
-    const currentlyOpen = mainState.app.openSelect
+    const currentlyOpen = mainState.snip.openSelect
     const isOpen = currentlyOpen === uniqueName
     const [selectedGroup, setSelectedGroup] = useState<SelectGroup>(choiceGroups.length > 0 ? choiceGroups[0] : {id: -1, name: "", choices: [], })
 
@@ -30,14 +30,14 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
     const [groupSelectMode, setGroupSelectMode] = useState(false)
     const onSelect = (c: SelectChoice) => {
         selectCallback(c)
-        mainState.app.openSelectSet("")
+        mainState.snip.openSelectSet("")
     }
 
     const onClickHeader = () => {
         if (isOpen) {
-            mainState.app.openSelectSet("")
+            mainState.snip.openSelectSet("")
         } else {
-            mainState.app.openSelectSet(uniqueName)
+            mainState.snip.openSelectSet(uniqueName)
         }
     }
 
@@ -51,8 +51,8 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
     }
 
     return html`
-        <div class="hoverSelect" onMouseEnter=${() => mainState.app.openSelectSet(uniqueName)}
-                onMouseLeave=${() => mainState.app.openSelectSet("")}>
+        <div class="hoverSelect" onMouseEnter=${() => mainState.snip.openSelectSet(uniqueName)}
+                onMouseLeave=${() => mainState.snip.openSelectSet("")}>
             <span class="search" onClick=${onClickHeader}>
                 <span class="leftButton"></span>
                 <span class="rightLabel">${currValue.name}</span>

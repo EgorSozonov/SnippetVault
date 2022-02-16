@@ -29,7 +29,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
         if (headers === null) return
 
         const voteDTO: VoteDTO = {snId, tlId}
-        state.app.userVote(voteDTO, headers)
+        state.snip.userVote(voteDTO, headers)
 
     }
     const [proposalDialog, setProposalDialog] = useState<DialogState>({ isOpen: false, id: -1, title: "Post a proposal", })
@@ -88,7 +88,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
                 }
                 <span>
                     <${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false}
-                                leftCallback=${() => state.app.alternativesResort("byDate")} rightCallback=${() => state.app.alternativesResort("byScore")} />
+                                leftCallback=${() => state.snip.alternativesResort("byDate")} rightCallback=${() => state.snip.alternativesResort("byScore")} />
                 </span>
             </div>
             ${ lang !== null && html`

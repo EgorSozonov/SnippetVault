@@ -28,30 +28,30 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     if (langIdNum < 0 || tlIdNum < 0) return empty
 
     const state = useContext<MainState>(StoreContext)
-    const lang = state.app.languages.find(x => x.id === langIdNum) || null
+    const lang = state.snip.languages.find(x => x.id === langIdNum) || null
 
     const [commentDialog, setCommentDialog] = useState<BigDialogState>({id: -1, id2: -1, title: "", text: "", isOpen: false})
     const openDialog = (id: number, tlId: number, text: string) => () => setCommentDialog({
         title: "Comments for snippet", text, id: id, id2: tlId, isOpen: true,
     })
     const closeDialog = () => {
-        state.app.commentsSet([])
+        state.snip.commentsSet([])
         setCommentDialog({...commentDialog, isOpen: false})
     }
 
     useEffect(() => {
         state.user.trySignInFromLS()
         if (lang === null) {
-            state.app.languagesGet()
+            state.snip.languagesGet()
         }
         if (state.user.acc !== null) {
-            state.app.alternativesGetUser(tlIdNum, state.user.acc.userId)
+            state.snip.alternativesGetUser(tlIdNum, state.user.acc.userId)
         } else {
-            state.app.alternativesGet(tlIdNum)
+            state.snip.alternativesGet(tlIdNum)
         }
     }, [])
 
-    const alternatives = state.app.alternatives
+    const alternatives = state.snip.alternatives
 
     if (alternatives === null) return empty
     const primaryAlternative = alternatives.primary

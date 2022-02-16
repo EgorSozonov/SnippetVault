@@ -3,7 +3,7 @@ import SelectChoice from "../types/SelectChoice"
 import IClient from "../../ports/IClient"
 import SnippetState, { updateId, updateUrl, updateWithChoicesUrl as updateWithNewlyReceivedChoices, } from "../components/snippet/utils/SnippetState"
 import { LanguageDTO, TaskGroupDTO, } from "../types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, } from "../types/dto/SnippetDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, } from "../types/dto/SnippetDTO"
 import { CommentCUDTO, CommentDTO, StatsDTO, VoteDTO } from "../types/dto/UserDTO"
 import { AlternativesSort } from "../components/alternative/utils/Types"
 import { sortLanguages } from "../utils/languageGroup/GroupLanguages"
@@ -12,7 +12,7 @@ import { fetchFromClient } from "./Utils"
 import { SignInSuccessDTO } from "../types/dto/AuthDTO"
 
 
-export default class AppState {
+export default class SnipState {
     public openSelect = ""
     public snippets: IObservableArray<SnippetDTO> = observable.array([])
 
@@ -88,6 +88,10 @@ export default class AppState {
 
         this.taskGroups = observable.array(newArr)
         this.tg = updateWithNewlyReceivedChoices(this.tg, newArr)
+    })
+
+    proposalCreate = action(async (dto: ProposalCreateDTO, headers: SignInSuccessDTO) => {
+        return await this.client.proposalCreate(dto, headers)
     })
 
     codesFromUrlSet = action((tgCode: string, l1Code: string, l2Code: string) => {

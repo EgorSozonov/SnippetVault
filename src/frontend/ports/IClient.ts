@@ -1,7 +1,7 @@
 import EitherMsg from "../core/types/EitherMsg"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO as ChangePwAdminDTO, ChangePwDTO as ChangePwDTO } from "../core/types/dto/AuthDTO"
 import { LanguageCUDTO, LanguageDTO, PostResponseDTO, TaskCUDTO, TaskDTO, TaskGroupCUDTO, TaskGroupDTO } from "../core/types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalUpdateDTO, BareSnippetDTO } from "../core/types/dto/SnippetDTO"
+import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalUpdateDTO, BareSnippetDTO, ProposalCreateDTO } from "../core/types/dto/SnippetDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../core/types/dto/UserDTO"
 
 
@@ -14,7 +14,7 @@ type IClient = {
     alternativesGet: (tlId: number) => Promise<EitherMsg<AlternativesDTO[]>>
     alternativesForUserGet: (tlId: number, userId: number) => Promise<EitherMsg<AlternativesDTO[]>>
 
-    proposalCreate: (prop: string, languageId: number, taskId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
+    proposalCreate: (dto: ProposalCreateDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     proposalGet: (snId: number) => Promise<EitherMsg<BareSnippetDTO[]>>
     proposalsGet: () => Promise<EitherMsg<ProposalDTO[]>>
     proposalUpdate: (dto: ProposalUpdateDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>

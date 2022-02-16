@@ -42,9 +42,8 @@ class HttpClient implements IClient {
         return this.getRequest<AlternativesDTO[]>(`/alternativesForUser/${tlId}/${userId}`)
     }
 
-    proposalCreate(proposal: string, langId: number, taskId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        const payload: ProposalCreateDTO = {langId, taskId, content: proposal, }
-        return this.postRequest<ProposalCreateDTO>(`/proposal/create`, payload, headers)
+    proposalCreate(dto: ProposalCreateDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        return this.postRequest<ProposalCreateDTO>(`/proposal/create`, dto, headers)
     }
 
     proposalGet(snId: number): Promise<EitherMsg<BareSnippetDTO[]>> {

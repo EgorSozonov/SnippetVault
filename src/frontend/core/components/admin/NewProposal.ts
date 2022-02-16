@@ -48,7 +48,7 @@ const NewProposal: FunctionComponent = observer(() => {
         openConfirmationDialog(pId)
     }
 
-    const proposals = state.app.proposals.slice()
+    const proposals = state.snip.proposals.slice()
 
     return ((proposalDialog.isOpen === false)
         ?  html`

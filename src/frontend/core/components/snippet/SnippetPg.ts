@@ -21,10 +21,10 @@ import HoverSelectCompact from "../../commonComponents/hoverSelect/HoverSelectCo
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
-    const snippets = state.app.snippets
-    const lang1 = state.app.l1
-    const lang2 = state.app.l2
-    const tg = state.app.tg
+    const snippets = state.snip.snippets
+    const lang1 = state.snip.l1
+    const lang2 = state.snip.l2
+    const tg = state.snip.tg
 
     const [currLanguage, setCurrLanguage] = useState<CurrentLanguage | null>(null)
     const [proposalDialog, setProposalDialog] = useState<DialogState>({ isOpen: false, id: -1, title: "Post a proposal", })
@@ -40,21 +40,21 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     // If all query params present and at least one of them doesn't match Redux, make a new request to server and update the Redux ids.
     // Otherwise, if all params are present in Redux, update the URL if it doesn't match.
     if (nonEmptyParams.length > 0) {
-        state.app.codesFromUrlSet(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
+        state.snip.codesFromUrlSet(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
     }
 
     const isSignedIn = state.user.isUser()
 
     useEffect(() => {
-        state.app.languagesGet()
-        state.app.taskGroupsGet()
+        state.snip.languagesGet()
+        state.snip.taskGroupsGet()
         state.user.trySignInFromLS()
     }, [])
 
     useEffect( () => {
         if (isStateOK([tg, lang1, lang2])) {
             setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
-            state.app.snippetsGetByCode(tg.code, lang1.code, lang2.code)
+            state.snip.snippetsGetByCode(tg.code, lang1.code, lang2.code)
         }
     }, [lang1, lang2, tg])
 
@@ -71,22 +71,22 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         <main class="snippetsContainer">
             <div class="snippetsHeader">
                 <div class="snippetLeftHeader">${stringOf(lang1)}
-                    ${state.app.l1.type === "ChoicesLoaded" &&
-                        html`<${HoverSelectCompact} currValue=${state.app.l1} choices=${state.app.l1.choices} uniqueName="Lang1Choice"
-                        selectCallback=${state.app.language1Set}><//>`
+                    ${state.snip.l1.type === "ChoicesLoaded" &&
+                        html`<${HoverSelectCompact} currValue=${state.snip.l1} choices=${state.snip.l1.choices} uniqueName="Lang1Choice"
+                        selectCallback=${state.snip.language1Set}><//>`
                     }
                 </div>
                 <div class="taskForHeader">${stringOf(tg)}
-                    ${state.app.tg.type === "ChoicesLoaded" &&
-                        html`<${HoverSelectCompact} currValue=${state.app.tg} choices=${state.app.tg.choices} uniqueName="TaskGroupChoice"
-                        selectCallback=${state.app.taskGroupSet}><//>`
+                    ${state.snip.tg.type === "ChoicesLoaded" &&
+                        html`<${HoverSelectCompact} currValue=${state.snip.tg} choices=${state.snip.tg.choices} uniqueName="TaskGroupChoice"
+                        selectCallback=${state.snip.taskGroupSet}><//>`
                     }
                 </div>
                 <div class="snippetRightHeader">
                     <span>${stringOf(lang2)}</span>
-                    ${state.app.l2.type === "ChoicesLoaded" &&
-                        html`<${HoverSelectCompact} currValue=${state.app.l2} choices=${state.app.l2.choices} uniqueName="Lang2Choice"
-                        selectCallback=${state.app.language2Set}><//>`
+                    ${state.snip.l2.type === "ChoicesLoaded" &&
+                        html`<${HoverSelectCompact} currValue=${state.snip.l2} choices=${state.snip.l2.choices} uniqueName="Lang2Choice"
+                        selectCallback=${state.snip.language2Set}><//>`
                     }
                     <${NavLink} exact to=${PATHS["profile"].url}>
                         ${isSignedIn === true ? html`<${UserButton} />` : html`<${KeyButton} />` }

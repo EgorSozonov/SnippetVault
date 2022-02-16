@@ -19,7 +19,7 @@ type Props = {
  */
 const HoverSelectInput: React.FunctionComponent<Props> = observer(({choices, initValue, uniqueName, inputName, }) => {
     const mainState = useContext<MainState>(StoreContext)
-    const currentlyOpen = mainState.app.openSelect
+    const currentlyOpen = mainState.snip.openSelect
     const isOpen = currentlyOpen === uniqueName
     const [currValue, setCurrValue] = useState<SelectChoice>(initValue)
 
@@ -29,23 +29,23 @@ const HoverSelectInput: React.FunctionComponent<Props> = observer(({choices, ini
 
     const onSelect = (c: SelectChoice) => {
         setCurrValue(c)
-        mainState.app.openSelectSet("")
+        mainState.snip.openSelectSet("")
     }
 
     const onClickHeader = () => {
         if (isOpen) {
-            mainState.app.openSelectSet("")
+            mainState.snip.openSelectSet("")
         } else {
-            mainState.app.openSelectSet(uniqueName)
+            mainState.snip.openSelectSet(uniqueName)
         }
     }
 
     const onMouseEnterH = () => {
-        mainState.app.openSelectSet(uniqueName)
+        mainState.snip.openSelectSet(uniqueName)
     }
 
     return html`
-        <div key=${inputName} onMouseLeave=${() => mainState.app.openSelectSet("")} class=${"hoverSelectInputContainer"}>
+        <div key=${inputName} onMouseLeave=${() => mainState.snip.openSelectSet("")} class=${"hoverSelectInputContainer"}>
             <input type="text" name=${inputName} readOnly value=${currValue.name} class="hoverSelectSmall"
                 onMouseEnter=${onMouseEnterH}
                 />
