@@ -17,8 +17,6 @@ const ListTasks = (props: any) => EditableList<TaskCUDTO>(props)
 const ListTaskGroups = (props: any) => EditableList<TaskGroupCUDTO>(props)
 const ListLanguages = (props: any) => EditableList<LanguageCUDTO>(props)
 
-
-
 const editabilityTaskGroup: Editability<TaskGroupCUDTO>[] = [
     {
         field: "name",

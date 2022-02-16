@@ -6,6 +6,7 @@ import { html } from "htm/react"
 import { Editability } from "./utils/Editability"
 import HoverSelectInput from "../hoverSelect/HoverSelectInput"
 import { inputFocusHandler } from "../../utils/ComponentUtils"
+import { getFieldsFromForm } from "./utils/Utils"
 
 
 type Props<T extends IStringKeyed & IHasName> = {
@@ -29,15 +30,12 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     }
 
     const newSaveHandler = (e: any) => {
+        if (!values || values.length < 1) return
         e.preventDefault()
         const formData = new FormData(e.target)
-        const newValue = {} as any
-        for (var [key, value] of formData.entries()) {
-            console.log(key);
-            console.log(value);
-            // TODO
-        }
+        const newValue = getFieldsFromForm(formData, editabilities, values[0])
         newValue.existingId = -1
+        cuCallback(newValue)
     }
 
     const newHandler = () => {
@@ -45,21 +43,11 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     }
 
     const editSaveHandler = (idx: number) => (e: any) => {
+        if (!values || values.length <= idx) return
+
         e.preventDefault()
         const formData = new FormData(e.target)
-
-        const newValue = {...values[idx]}
-        editabilities.forEach(ed => {
-            if (ed.fieldType === "choice") {
-                const newChoiceInd: number = ed.choices!!.findIndex(x => x.name === formData.get(ed.field.toString()))
-                newValue[ed.field] = ed.choices!![newChoiceInd] as any
-            } else if (ed.fieldType === "bool") {
-                newValue[ed.field] = formData.has(ed.field.toString()) as any
-            } else {
-                newValue[ed.field] = formData.get(ed.field.toString()) as any
-            }
-        })
-
+        const newValue = getFieldsFromForm(formData, editabilities, values[idx])
         cuCallback(newValue)
     }
 
