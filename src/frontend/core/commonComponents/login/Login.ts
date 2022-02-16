@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react"
+import { useContext, useRef, } from "react"
 import "./Login.css"
 import { html } from "htm/react"
 import MainState from "../../mobX/AllState"
@@ -13,6 +13,7 @@ type Props = {
 
 const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
     const state = useContext<MainState>(StoreContext)
+
     const unameRef = useRef<HTMLInputElement>(null)
     const pwRef = useRef<HTMLInputElement>(null)
     const signInOrRegisterHandler = (mode: "signIn" | "register") => async () => {
@@ -27,7 +28,7 @@ const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
     return html`
         <div class="loginForm">
             <div>
-                Log in to provide code proposals:
+                Log in:
             </div>
 
             <div class="loginFormLabel">Username</div>

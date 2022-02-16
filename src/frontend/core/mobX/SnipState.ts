@@ -3,7 +3,7 @@ import SelectChoice from "../types/SelectChoice"
 import IClient from "../../ports/IClient"
 import SnippetState, { updateId, updateUrl, updateWithChoicesUrl as updateWithNewlyReceivedChoices, } from "../components/snippet/utils/SnippetState"
 import { LanguageDTO, TaskGroupDTO, } from "../types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, } from "../types/dto/SnippetDTO"
+import { SnippetDTO, AlternativesDTO, ProposalCreateDTO, } from "../types/dto/SnippetDTO"
 import { CommentCUDTO, CommentDTO, StatsDTO, VoteDTO } from "../types/dto/UserDTO"
 import { AlternativesSort } from "../components/alternative/utils/Types"
 import { sortLanguages } from "../utils/languageGroup/GroupLanguages"
@@ -22,8 +22,6 @@ export default class SnipState {
     public stats: StatsDTO | null = null
 
     public languages: IObservableArray<LanguageDTO> = observable.array([])
-
-    public proposals: IObservableArray<ProposalDTO> = observable.array([])
 
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
 
@@ -121,6 +119,10 @@ export default class SnipState {
             : alternativesNew.rows.sort((x, y) => y.score - x.score)
 
         this.alternatives = {task: alternativesNew.task, primary: alternativesNew.primary, rows: sorted, }
+    })
+
+    taskGet = action(async (id: number) => {
+        return await this.client.taskGet(id)
     })
 
     alternativesGet = action(async (tlIdNum: number) => {

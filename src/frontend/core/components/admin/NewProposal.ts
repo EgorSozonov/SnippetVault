@@ -48,7 +48,7 @@ const NewProposal: FunctionComponent = observer(() => {
         openConfirmationDialog(pId)
     }
 
-    const proposals = state.snip.proposals.slice()
+    const proposals = state.admin.proposals.slice()
 
     return ((proposalDialog.isOpen === false)
         ?  html`
@@ -76,7 +76,7 @@ const NewProposal: FunctionComponent = observer(() => {
                                     </div>
                                 </div>
                             </div>
-                            <pre class=${"proposalBody"}>${proposal.proposalCode}</div>
+                            <pre class=${"proposalBody"}>${proposal.content}</div>
                         </div>`
                 })}
             </div>

@@ -2,7 +2,7 @@ import { FunctionComponent, useContext, useEffect, useRef, useState } from "reac
 import { NavLink } from "react-router-dom"
 import EditableList from "../../commonComponents/editableList/EditableList"
 import PATHS from "../../params/Path"
-import NewProposal from "./NewProposal"
+import NewProposals from "./NewProposal"
 import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
@@ -95,6 +95,7 @@ const Admin: FunctionComponent = observer(({}: any) => {
         state.admin.tasksGet()
         state.admin.taskGroupsGet()
         state.admin.languagesGet()
+        state.admin.proposalsGet()
 
         state.admin.statsGet()
         state.user.trySignInFromLS()
@@ -135,7 +136,7 @@ const Admin: FunctionComponent = observer(({}: any) => {
                             <div class="adminHeaderButton" onClick=${state.user.signOut}>(sign out)</div>
                             <div class="adminHeaderButton" onClick=${changeAdminPwHandler}>Change password</div>
                         </div>
-                        <${NewProposal} />
+                        <${NewProposals} />
                         <${ListTasks} values=${state.admin.tasks} editabilities=${editabilityTask} title="Tasks"
                             cuCallback=${cuTaskCallback} />
                         <${ListTaskGroups} values=${state.admin.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"

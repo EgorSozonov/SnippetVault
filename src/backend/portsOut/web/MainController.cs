@@ -105,6 +105,14 @@ public class MainController : Controller {
     #endregion
 
     #region TasksLanguages
+
+    [HttpGet]
+    [Route("task/{taskId:int}")]
+    public async Task task(int taskId) {
+        var result = await api.taskGet(taskId);
+        await sendQueryResult<TaskDTO>(result, HttpContext.Response);
+    }
+
     [HttpGet]
     [Route("languages/get")]
     public async Task languages() {

@@ -18,15 +18,21 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
     const state = useContext<MainState>(StoreContext)
     const proposal = state.admin.editProposal
 
-
     useEffect(() => {
         if (dialogState.isOpen === false) return
 
-        state.admin.proposalsGet()
+        state.admin.proposalGet(dialogState.id)
     }, [dialogState.isOpen])
 
     const inputRef = useRef<HTMLTextAreaElement>(null)
-    if (proposal !== null && inputRef !== null && inputRef.current !== null) inputRef.current.value = proposal.content
+    const inputLibRef = useRef<HTMLTextAreaElement>(null)
+    if (proposal !== null && inputRef !== null && inputRef.current !== null) {
+        inputRef.current.value = proposal.content
+
+        if (proposal.libraries && inputLibRef !== null && inputLibRef.current !== null) {
+            inputLibRef.current.value = proposal.libraries
+        }
+    }
 
     const saveCommentHandler = () => {
         if (inputRef === null || !inputRef.current) return
@@ -36,19 +42,27 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
         if (headers === null) return
 
         const dto: ProposalUpdateDTO = {content: text, existingId: dialogState.id, }
-        state.snip.client.proposalUpdate(dto, headers)
+        state.admin.proposalUpdate(dto, headers)
         closeCallback()
     }
 
     return html`
         <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>
-            ${state.user.isAdmin() === true &&
+            ${(state.user.isAdmin() === true && proposal !== null) &&
                 html`
                 <div>
                     <div class="adminProposalDialogTextareaContainer">
                         <textarea class="adminProposalDialogTextarea" ref=${inputRef} />
                     </div>
                 </div>
+                ${proposal.libraries &&
+                    html`<div>
+                        Libraries
+                        <div class="adminProposalDialogTextareaContainer">
+                            <textarea class="adminProposalDialogTextarea" ref=${inputLibRef} />
+                        </div>
+                    </div>
+                `}
                 <div class="adminProposalDialogButtons">
                 <div class="adminProposalDialogButton" onClick=${closeCallback}>
                     Cancel

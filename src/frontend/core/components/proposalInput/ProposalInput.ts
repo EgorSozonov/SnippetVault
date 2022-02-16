@@ -28,17 +28,19 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
     const signedIn = state.user.isUser()
 
     const [isLibOpen, setIsLibOpen] = useState(false)
+    const needData = acc !== null && signedIn === true
 
     useEffect(() => {
+        if (needData === false) return
         (async () => {
             if (taskOrId.type === "taskId") {
-                const response = await state.client.taskGet(taskOrId.payload)
+                const response = await state.snip.taskGet(taskOrId.payload)
                 if (response.isOK === true && response.value && response.value.length === 1) {
                     setTaskFromBackend(response.value[0])
                 }
             }
         })()
-    }, [taskOrId])
+    }, [taskOrId, needData])
 
     const mbTask = taskOrId.type === "task" ? taskOrId.payload : taskFromBackend
     const saveProposalHandler = async () => {
@@ -66,11 +68,10 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
         setIsLibOpen(false)
         closeCallback()
     }
-    if (mbTask === null) return empty
-
+    if (needData === true && mbTask === null) return empty
     return html`
         <div class="proposalInputContainer">
-            ${((acc !== null && signedIn === true)
+            ${((mbTask !== null)
                 ? html`
                     <div class="proposalInputBlock">Propose a <span class="proposalInputLang">${lang !== null && lang.name}</span> solution for <span class="proposalInputTask">${mbTask.name}</span>
                     </div>

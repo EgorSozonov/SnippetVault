@@ -2,7 +2,7 @@ import { action, IObservableArray, makeAutoObservable, observable } from "mobx"
 import SelectChoice from "../types/SelectChoice"
 import IClient from "../../ports/IClient"
 import { LanguageCUDTO, LanguageDTO, TaskCUDTO, TaskGroupCUDTO, TaskGroupDTO } from "../types/dto/AuxDTO"
-import { SnippetDTO, ProposalDTO, BareSnippetDTO } from "../types/dto/SnippetDTO"
+import { SnippetDTO, ProposalDTO, BareSnippetDTO, ProposalUpdateDTO } from "../types/dto/SnippetDTO"
 import { StatsDTO } from "../types/dto/UserDTO"
 import { fetchFromClient } from "./Utils"
 import { SignInSuccessDTO } from "../types/dto/AuthDTO"
@@ -46,6 +46,10 @@ export default class AdminState {
         if (!newValue || newValue.length !== 1) this.editProposal = null
 
         this.editProposal = newValue[0]
+    })
+
+    proposalUpdate = action(async (newValue: ProposalUpdateDTO, headers: SignInSuccessDTO) => {
+        await this.client.proposalUpdate(newValue, headers)
     })
 
     proposalApprove = action((pId: number, headers: SignInSuccessDTO) => {
