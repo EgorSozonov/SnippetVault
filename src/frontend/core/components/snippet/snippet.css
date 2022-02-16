@@ -108,6 +108,7 @@
 
 .snippetCodeLibraries {
     display: block;
+    width: 100%;
 }
 
 .taskContainer {
@@ -178,12 +179,15 @@
     fill: transparent;
 }
 
-.headerDropdownLabel {
-    height: 2rem;
-    margin: 0;
-    padding: 0;
+.snippetRightHeader svg:hover {
+    scale: 0.8;
+    transition: all 0.3s ease;
 }
 
+.snippetHeading > span {
+    display: inline;
+    white-space: nowrap;
+}
 /* ------------- */
 /* Comments      */
 /* ------------- */

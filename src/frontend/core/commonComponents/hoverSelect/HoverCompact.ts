@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import "./hoverSelect.css"
+import "./hoverCompact.css"
 import { html } from 'htm/react'
 import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
@@ -32,7 +32,7 @@ const HoverSelectCompact: React.FunctionComponent<Props> = observer(({choices, c
         }
     }
     return html`
-        <div class="hoverSelect" onMouseEnter=${() => mainState.snip.openSelectSet(uniqueName)}
+        <span class="hoverSelectCompact" onMouseEnter=${() => mainState.snip.openSelectSet(uniqueName)}
                 onMouseLeave=${() => mainState.snip.openSelectSet("")}>
             <span class="searchCompact" onClick=${onClickHeader}>
                 <svg width="30" height="30" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -42,18 +42,14 @@ const HoverSelectCompact: React.FunctionComponent<Props> = observer(({choices, c
                 </svg>
             </span>
 
-            <div class=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
-                <ul class="list">
-                    <li>
-                        <ul class="optgroup">
-                            ${choices.map((c: SelectChoice, idx: number) => {
-                                return html`<li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
-                            })}
-                        </ul>
-                    </li>
+            <div class=${(isOpen ? "hoverSelectCompactActive" : "hoverCompactMenu")}>
+                <ul class="hoverCompactMenuList">
+                    ${choices.map((c: SelectChoice, idx: number) => {
+                        return html`<li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
+                    })}
                 </ul>
             </div>
-        </div>
+        </span>
     `
 })
 

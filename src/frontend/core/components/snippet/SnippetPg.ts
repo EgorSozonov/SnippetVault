@@ -16,7 +16,7 @@ import { CurrentLanguage } from "./types/CurrentLanguage"
 import PATHS from "../../params/Path"
 import KeyButton from "../../commonComponents/login/KeyButton"
 import UserButton from "../../commonComponents/login/UserButton"
-import HoverSelectCompact from "../../commonComponents/hoverSelect/HoverSelectCompact"
+import HoverSelectCompact from "../../commonComponents/hoverSelect/HoverCompact"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -71,16 +71,18 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         <main class="snippetsContainer">
             <div class="snippetsHeader">
                 <div class="snippetLeftHeader">
-                    <div>
-                        ${stringOf(lang1)}
-                        ${state.snip.l1.type === "ChoicesLoaded" &&
-                            html`<${HoverSelectCompact} currValue=${state.snip.l1} choices=${state.snip.l1.choices} uniqueName="Lang1Choice"
-                            selectCallback=${state.snip.language1Set}><//>`
-                        }
+                    <div class="snippetHeading">
+                        <span>${stringOf(lang1)}</span>
+                        <span>
+                            ${state.snip.l1.type === "ChoicesLoaded" &&
+                                html`<${HoverSelectCompact} currValue=${state.snip.l1} choices=${state.snip.l1.choices} uniqueName="Lang1Choice"
+                                selectCallback=${state.snip.language1Set}><//>`
+                            }
+                        </span>
                     </div>
                 </div>
                 <div class="taskForHeader">${stringOf(tg)}
-                    <div>
+                    <div class="snippetHeading">
                         ${state.snip.tg.type === "ChoicesLoaded" &&
                             html`<${HoverSelectCompact} currValue=${state.snip.tg} choices=${state.snip.tg.choices} uniqueName="TaskGroupChoice"
                             selectCallback=${state.snip.taskGroupSet}><//>`
@@ -88,7 +90,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                     </div>
                 </div>
                 <div class="snippetRightHeader">
-                    <div>
+                    <div class="snippetHeading">
                         <span>${stringOf(lang2)}</span>
                         ${state.snip.l2.type === "ChoicesLoaded" &&
                             html`<${HoverSelectCompact} currValue=${state.snip.l2} choices=${state.snip.l2.choices} uniqueName="Lang2Choice"

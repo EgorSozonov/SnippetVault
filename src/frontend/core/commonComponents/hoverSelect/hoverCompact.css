@@ -1,0 +1,67 @@
+
+.hoverSelectCompact {
+    position: relative;
+    margin-left: 0.5rem;
+    color: black;
+    min-width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+
+.hoverCompactMenu {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+}
+
+.hoverSelectCompactActive {
+    position: absolute;
+    top: calc(100%);
+    left: calc(50%);
+    transform: translateY(-5px);
+    background-color: hsl(240, 40%, 90%);
+    border-radius: 0.3rem;
+    opacity: 1;
+    pointer-events: auto;
+    transition: transform 100ms ease-in-out, opacity 100ms ease-in-out;
+    overflow: auto;
+    width: 200px;
+    min-height: 7rem;
+    max-height: 13rem;
+    margin: 0px;
+    border-top: none;
+    z-index: 3;
+    scrollbar-width: thin;
+}
+
+
+.hoverCompactMenuList {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.hoverCompactMenuList > li {
+    padding: 6px;
+    background-color: white;
+    text-align: left;
+}
+
+.hoverCompactMenuList > li:hover {
+    font-weight: bold;
+    padding-left: 12px;
+    padding-right: 0;
+    transition: all 0.3s ease;
+}
+
+.searchCompact > svg:hover {
+    scale: 0.8;
+    transition: all 0.3s ease;
+}
