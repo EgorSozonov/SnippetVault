@@ -1,3 +1,5 @@
+import SelectChoice from "../SelectChoice"
+
 export type TaskDTO = {
     id: number,
     name: string,
@@ -6,10 +8,10 @@ export type TaskDTO = {
 }
 
 export type TaskCUDTO = {
-    existingId?: number,
+    existingId: number,
     name: string,
     description: string,
-    taskGroupName: string,
+    taskGroup: SelectChoice,
     isDeleted: boolean,
 }
 
@@ -27,14 +29,14 @@ export type LanguageDTO = {
 }
 
 export type TaskGroupCUDTO = {
-    existingId?: number,
+    existingId: number,
     name: string,
     code: string,
     isDeleted: boolean,
 }
 
 export type LanguageCUDTO = {
-    existingId?: number,
+    existingId: number,
     code: string,
     name: string,
     sortingOrder: number,

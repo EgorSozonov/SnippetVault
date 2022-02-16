@@ -160,7 +160,20 @@ public class DataService : IDataService {
     #region Admin
     public async Task<ReqResult<TaskCUDTO>> tasksAll() {
         var res = await st.tasksAll();
-        return res;
+
+        if (res is Success<TaskCUIntern> succ) {
+            return new Success<TaskCUDTO>(succ.vals.Select(x => new TaskCUDTO() {
+                name = x.name,
+                description = x.description,
+                taskGroup = new SelectChoice() {id = x.taskGroupId, name = x.taskGroupName},
+                existingId = x.existingId,
+                isDeleted = x.isDeleted,
+            })
+            .ToList());
+        } else {
+            return new Err<TaskCUDTO>("Error");
+        }
+
     }
 
     public async Task<ReqResult<TaskGroupCUDTO>> taskGroupsAll() {

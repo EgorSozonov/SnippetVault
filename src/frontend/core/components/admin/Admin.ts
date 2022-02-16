@@ -17,9 +17,15 @@ const ListTasks = (props: any) => EditableList<TaskCUDTO>(props)
 const ListTaskGroups = (props: any) => EditableList<TaskGroupCUDTO>(props)
 const ListLanguages = (props: any) => EditableList<LanguageCUDTO>(props)
 
+
+
 const editabilityTaskGroup: Editability<TaskGroupCUDTO>[] = [
     {
         field: "name",
+        fieldType: "string",
+    },
+    {
+        field: "code",
         fieldType: "string",
     },
     {
@@ -28,16 +34,6 @@ const editabilityTaskGroup: Editability<TaskGroupCUDTO>[] = [
     },
 ]
 
-const editabilityTask: Editability<TaskCUDTO>[] = [
-    {
-        field: "name",
-        fieldType: "string",
-    },
-    {
-        field: "isDeleted",
-        fieldType: "bool",
-    },
-]
 const editabilityLanguage: Editability<LanguageCUDTO>[] = [
     {
         field: "name",
@@ -60,9 +56,30 @@ const editabilityLanguage: Editability<LanguageCUDTO>[] = [
 const Admin: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
 
+    const editabilityTask: Editability<TaskCUDTO>[] = [
+        {
+            field: "name",
+            fieldType: "string",
+        },
+        {
+            field: "isDeleted",
+            fieldType: "bool",
+        },
+        {
+            field: "description",
+            fieldType: "string",
+        },
+        {
+            field: "taskGroup",
+            fieldType: "choice",
+            choices: state.admin.taskGroups.map(x => { return { id: x.existingId, name: x.name, } }),
+        },
+    ]
+
     const cuTaskCallback = async (newValue: TaskCUDTO) => {
         const headers = state.user.headersGet()
         if (headers === null) return
+
         state.admin.taskCU(newValue, headers)
     }
     const cuTaskGroupCallback = async (newValue: TaskGroupCUDTO) => {
@@ -121,7 +138,7 @@ const Admin: FunctionComponent = observer(({}: any) => {
                             <div class="adminHeaderButton" onClick=${changeAdminPwHandler}>Change password</div>
                         </div>
                         <${NewProposal} />
-                        <${ListTasks} values=${state.admin.tasks} editabilities=${editabilityTask} title="Task groups"
+                        <${ListTasks} values=${state.admin.tasks} editabilities=${editabilityTask} title="Tasks"
                             cuCallback=${cuTaskCallback} />
                         <${ListTaskGroups} values=${state.admin.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"
                             cuCallback=${cuTaskGroupCallback} />

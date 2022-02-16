@@ -16,13 +16,13 @@ type Props = {
 
 const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {
     const state = useContext<MainState>(StoreContext)
-    const proposal = state.app.editProposal
+    const proposal = state.admin.editProposal
 
 
     useEffect(() => {
         if (dialogState.isOpen === false) return
 
-        state.app.proposalsGet(dialogState.id)
+        state.admin.proposalsGet()
     }, [dialogState.isOpen])
 
     const inputRef = useRef<HTMLTextAreaElement>(null)

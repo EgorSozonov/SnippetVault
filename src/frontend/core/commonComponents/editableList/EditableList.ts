@@ -31,12 +31,13 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     const newSaveHandler = (e: any) => {
         e.preventDefault()
         const formData = new FormData(e.target)
-
+        const newValue = {} as any
         for (var [key, value] of formData.entries()) {
             console.log(key);
             console.log(value);
             // TODO
         }
+        newValue.existingId = -1
     }
 
     const newHandler = () => {
@@ -45,16 +46,20 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
 
     const editSaveHandler = (idx: number) => (e: any) => {
         e.preventDefault()
+        const formData = new FormData(e.target)
+
         const newValue = {...values[idx]}
         editabilities.forEach(ed => {
             if (ed.fieldType === "choice") {
-                const newChoiceInd: number = ed.choices!!.findIndex(x => x.name === e.target[ed.field].value)
+                const newChoiceInd: number = ed.choices!!.findIndex(x => x.name === formData.get(ed.field.toString()))
                 newValue[ed.field] = ed.choices!![newChoiceInd] as any
+            } else if (ed.fieldType === "bool") {
+                newValue[ed.field] = formData.has(ed.field.toString()) as any
             } else {
-                newValue[ed.field] = e.target[ed.field].value
+                newValue[ed.field] = formData.get(ed.field.toString()) as any
             }
         })
-        newValue.existingId = -1
+
         cuCallback(newValue)
     }
 
@@ -70,7 +75,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                             ? html`<${HoverSelectInput} inputName=${x.field} choices=${x.choices} initValue=${v[x.field]}
                                         uniqueName=${"unique" + x.field + idx} />`
                             : (x.fieldType === "bool"
-                                ? html`<div><span class="svCheckbox" />${x.field}</div>`
+                                ? html`<input type="checkbox" class="svCheckbox" name=${x.field} defaultChecked=${v[x.field]}/>`
                                 : html`<input type="text" name=${x.field} defaultValue=${v[x.field]}
                                 onFocus=${inputFocusHandler} />`)
                 }

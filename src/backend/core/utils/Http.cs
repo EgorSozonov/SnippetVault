@@ -26,13 +26,14 @@ public static class HttpUtils {
             await response.WriteAsJsonAsync(new PostResponseDTO() { status = "OK"});
         } else {
             response.StatusCode = 500;
-            await response.WriteAsJsonAsync(new PostResponseDTO() { status = "Error"});     
+            await response.WriteAsJsonAsync(new PostResponseDTO() { status = "Error"});
         }
     }
 
     public static ReqResult<T> wrapSuccess<T>(T val) {
         return new Success<T>(new List<T>() {val});
     }
+
 }
 
 }

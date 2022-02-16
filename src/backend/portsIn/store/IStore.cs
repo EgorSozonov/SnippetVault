@@ -22,11 +22,11 @@ public interface IStore {
     Task<int> snippetApprove(int sn);
     Task<int> snippetDecline(int sn);
     Task<int> snippetMarkPrimary(int tlId, int snId);
-    Task<int> taskGroupCU(TaskGroupCUDTO dto);
     Task<ReqResult<TaskDTO>> taskGet(int taskId);
     Task<ReqResult<TaskDTO>> taskForTLGet(int taskLanguageId);
 
-    Task<ReqResult<TaskCUDTO>> tasksAll();
+    Task<ReqResult<TaskCUIntern>> tasksAll();
+    Task<int> taskGroupCU(TaskGroupCUDTO dto);
     Task<ReqResult<TaskGroupCUDTO>> taskGroupsAll();
     Task<ReqResult<LanguageCUDTO>> languagesAll();
     Task<int> taskCU(TaskCUDTO dto);

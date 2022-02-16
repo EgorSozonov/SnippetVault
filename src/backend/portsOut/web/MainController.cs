@@ -223,6 +223,7 @@ public class MainController : Controller {
     [Route("task/cu")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task taskCreateUpdate([FromBody] TaskCUDTO dto) {
+        if (dto == null) return;
         await applyPostRequest(api.taskCU(dto), HttpContext.Response);
     }
 
@@ -244,6 +245,7 @@ public class MainController : Controller {
     [Route("language/cu")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task languageCreateUpdate([FromBody] LanguageCUDTO dto) {
+        if (dto == null) return;
         await applyPostRequest(api.languageCU(dto), HttpContext.Response);
     }
 
@@ -251,6 +253,7 @@ public class MainController : Controller {
     [Route("taskGroup/cu")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task taskGroupCreateUpdate([FromBody] TaskGroupCUDTO dto) {
+        if (dto == null) return;
         await applyPostRequest(api.taskGroupCU(dto), HttpContext.Response);
     }
 

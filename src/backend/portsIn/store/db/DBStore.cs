@@ -91,7 +91,7 @@ public class DBStore : IStore {
 		JOIN sv.task task ON task.id=tl.""taskId""
 		JOIN sv.language lang ON lang.id=tl.""languageId""
         JOIN sv.user u ON u.id=sn.""authorId""
-		WHERE sn.status=1 AND lang.""isDeleted""=0::bit AND t.""isDeleted""=0::bit;
+		WHERE sn.status=1 AND lang.""isDeleted""=0::bit AND task.""isDeleted""=0::bit;
     ";
     public async Task<ReqResult<ProposalDTO>> proposalsGet() {
         await using (var cmd = new NpgsqlCommand(proposalsGetQ, db.conn)) {
@@ -323,13 +323,14 @@ public class DBStore : IStore {
     }
 
     private static readonly string tasksAllQ = @"
-        SELECT id AS ""existingId"", ""taskGroupId"" AS ""tgId"", name, description, ""isDeleted""
-        FROM sv.task;
+        SELECT t.id AS ""existingId"", ""taskGroupId"", tg.name AS ""taskGroupName"", t.name, t.description, t.""isDeleted""
+        FROM sv.task t
+        JOIN sv.""taskGroup"" tg ON tg.id = t.""taskGroupId"";
     ";
-    public async Task<ReqResult<TaskCUDTO>> tasksAll() {
+    public async Task<ReqResult<TaskCUIntern>> tasksAll() {
         await using (var cmd = new NpgsqlCommand(tasksAllQ, db.conn)) {
             await using (var reader = await cmd.ExecuteReaderAsync()) {
-                return readResultSet<TaskCUDTO>(reader);
+                return readResultSet<TaskCUIntern>(reader);
             }
         }
     }
@@ -650,7 +651,7 @@ public class DBStore : IStore {
     private static void taskParamAdder(NpgsqlCommand cmd, TaskCUDTO dto) {
         cmd.Parameters.AddWithValue("name", NpgsqlTypes.NpgsqlDbType.Varchar, dto.name);
         cmd.Parameters.AddWithValue("description", NpgsqlTypes.NpgsqlDbType.Varchar, dto.description);
-        cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, dto.tgId);
+        cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, dto.taskGroup.id);
     }
 
     private static void taskGroupParamAdder(NpgsqlCommand cmd, TaskGroupCUDTO dto) {
