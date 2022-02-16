@@ -70,7 +70,7 @@ public class DBStore : IStore {
     }
 
     private static readonly string snippetGetQ = @"
-        SELECT ""taskLanguageId"", ""status"", content, score
+        SELECT ""taskLanguageId"", ""status"", content, score, libraries
 		FROM sv.snippet s
 		WHERE id = @snId;
     ";
@@ -127,12 +127,19 @@ public class DBStore : IStore {
     }
 
     private static readonly string proposalUpdateQ = @"
-        UPDATE sv.snippet SET content = @content WHERE id = @snId;
+        UPDATE sv.snippet SET content = @content, libraries = @libraries
+        WHERE id = @snId;
     ";
     public async Task<int> proposalUpdate(ProposalUpdateDTO dto) {
+        var newLibraries = dto.libraries != null && dto.libraries.Length > 0 ? dto.libraries : null;
         await using (var cmdProp = new NpgsqlCommand(proposalUpdateQ, db.conn)) {
                 cmdProp.Parameters.AddWithValue("snId", NpgsqlTypes.NpgsqlDbType.Integer, dto.existingId);
                 cmdProp.Parameters.AddWithValue("content", NpgsqlTypes.NpgsqlDbType.Varchar, dto.content);
+                if (newLibraries != null) {
+                    cmdProp.Parameters.AddWithValue("libraries", NpgsqlTypes.NpgsqlDbType.Varchar, newLibraries);
+                } else {
+                    cmdProp.Parameters.AddWithValue("libraries", NpgsqlTypes.NpgsqlDbType.Varchar, DBNull.Value);
+                }
                 return await cmdProp.ExecuteNonQueryAsync();
         }
     }

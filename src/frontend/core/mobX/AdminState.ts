@@ -44,7 +44,6 @@ export default class AdminState {
 
     editProposalSet = action((newValue: BareSnippetDTO[]): void => {
         if (!newValue || newValue.length !== 1) this.editProposal = null
-
         this.editProposal = newValue[0]
     })
 

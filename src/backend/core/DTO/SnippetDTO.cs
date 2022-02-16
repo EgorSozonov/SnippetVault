@@ -18,6 +18,7 @@ public class ProposalDTO {
 
 public class BareSnippetDTO {
     public string content {get; set;}
+    public string libraries {get; set;}
 }
 
 public class ProposalCreateDTO {
@@ -30,6 +31,7 @@ public class ProposalCreateDTO {
 public class ProposalUpdateDTO {
     public int existingId { get; set; }
     public string content { get; set; }
+    public string libraries { get; set; }
 }
 
 public class SnippetDTO {

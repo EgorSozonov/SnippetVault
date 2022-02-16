@@ -63,7 +63,7 @@ public class DataService : IDataService {
     public async Task<ReqResult<BareSnippetDTO>> proposalGet(int snId) {
         var snippetIntern = await st.snippetGet(snId);
         if (snippetIntern is Success<SnippetIntern> succ) {
-            return new Success<BareSnippetDTO>(succ.vals.Select(x => new BareSnippetDTO() {content = x.content}).ToList());
+            return new Success<BareSnippetDTO>(succ.vals.Select(x => new BareSnippetDTO() {content = x.content, libraries = x.libraries, }).ToList());
         } else {
             return new Err<BareSnippetDTO>("Error");
         }

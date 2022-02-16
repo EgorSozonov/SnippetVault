@@ -52,7 +52,6 @@ public class MainController : Controller {
         await applyPostRequest(api.proposalUpdate(dto), HttpContext.Response);
     }
 
-
     [HttpGet]
     [Route("snippet/{snId:int}")]
     public async Task proposalGet([FromRoute] int snId) {

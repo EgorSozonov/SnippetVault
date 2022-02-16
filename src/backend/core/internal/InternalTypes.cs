@@ -19,6 +19,7 @@ public class SnippetIntern {
     public string content {get; set;}
     public int status {get; set;}
     public int score {get; set;}
+    public string libraries {get; set;}
 }
 
 public class UserNewIntern {

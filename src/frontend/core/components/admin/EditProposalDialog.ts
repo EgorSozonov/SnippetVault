@@ -28,7 +28,6 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
     const inputLibRef = useRef<HTMLTextAreaElement>(null)
     if (proposal !== null && inputRef !== null && inputRef.current !== null) {
         inputRef.current.value = proposal.content
-
         if (proposal.libraries && inputLibRef !== null && inputLibRef.current !== null) {
             inputLibRef.current.value = proposal.libraries
         }
@@ -41,7 +40,9 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
         const headers = state.user.headersGet()
         if (headers === null) return
 
-        const dto: ProposalUpdateDTO = {content: text, existingId: dialogState.id, }
+        const libraries = (inputLibRef !== null && inputLibRef.current !== null) ? inputLibRef.current?.value : undefined
+
+        const dto: ProposalUpdateDTO = {content: text, existingId: dialogState.id, libraries: libraries, }
         state.admin.proposalUpdate(dto, headers)
         closeCallback()
     }
@@ -55,22 +56,20 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
                         <textarea class="adminProposalDialogTextarea" ref=${inputRef} />
                     </div>
                 </div>
-                ${proposal.libraries &&
-                    html`<div>
-                        Libraries
-                        <div class="adminProposalDialogTextareaContainer">
-                            <textarea class="adminProposalDialogTextarea" ref=${inputLibRef} />
-                        </div>
+                <div class="adminProposalDialogTextareaContainer">
+                    Libraries
+                    <div class="adminProposalDialogTextareaContainer">
+                        <textarea class="adminProposalDialogTextarea" ref=${inputLibRef} />
                     </div>
-                `}
+                </div>
                 <div class="adminProposalDialogButtons">
-                <div class="adminProposalDialogButton" onClick=${closeCallback}>
-                    Cancel
+                    <div class="adminProposalDialogButton" onClick=${closeCallback}>
+                        Cancel
+                    </div>
+                    <div class="adminProposalDialogButton" onClick=${saveCommentHandler}>
+                        OK
+                    </div>
                 </div>
-                <div class="adminProposalDialogButton" onClick=${saveCommentHandler}>
-                    OK
-                </div>
-            </div>
                 `
             }
         <//>
