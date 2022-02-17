@@ -26,7 +26,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
         state.snip.userVote(voteDTO, headers)
     }
 
-    const isSignedIn = state.user.isUser()
+    const isSignedIn = state.user.isUser.get()
 
     return html`
         <div class="alternativeItem">

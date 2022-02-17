@@ -23,7 +23,7 @@ type Props = {
 
 const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternative, lang, task, tlId, }) => {
     const state = useContext<MainState>(StoreContext)
-    const isSignedIn = state.user.isUser()
+    const isSignedIn = state.user.isUser.get()
     const voteHandler = (snId: number) => () => {
         const headers = state.user.headersGet()
         if (headers === null) return

@@ -56,7 +56,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
                     `
                 })}
             </ol>
-            ${state.user.isUser() === true &&
+            ${state.user.isUser.get() === true &&
                 html`
                     <div>
                         <div>Enter comment as <span class="alternativeDialogUsername">${state.user.acc!.name}</span>:
@@ -75,7 +75,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
                     </div>
                 `
             }
-            ${state.user.isUser() === false &&
+            ${state.user.isUser.get() === false &&
                 html`<${Login} />`
             }
         <//>

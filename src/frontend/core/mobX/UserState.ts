@@ -1,5 +1,5 @@
 import { notEqual } from "assert"
-import { action, makeAutoObservable } from "mobx"
+import { action, computed, makeAutoObservable } from "mobx"
 import IClient from "../../ports/IClient"
 import { ChangePwAdminDTO, ChangePwDTO, SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
 import { ProfileDTO } from "../types/dto/UserDTO"
@@ -19,7 +19,7 @@ export default class UserState {
         makeAutoObservable(this)
     }
 
-    isUser = action(() => {
+    isUser = computed(() => {
         return (this.acc !== null && this.acc.status === "user")
     })
 

@@ -25,7 +25,7 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
     const inputLibRef = useRef<HTMLTextAreaElement>(null)
     const [taskFromBackend, setTaskFromBackend] = useState<TaskDTO | null>(null)
     const acc = state.user.acc
-    const signedIn = state.user.isUser()
+    const signedIn = state.user.isUser.get()
 
     const [isLibOpen, setIsLibOpen] = useState(false)
     const needData = acc !== null && signedIn === true

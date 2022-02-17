@@ -43,7 +43,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         state.snip.codesFromUrlSet(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
     }
 
-    const isSignedIn = state.user.isUser()
+    const isSignedIn = state.user.isUser.get()
 
     useEffect(() => {
         state.snip.languagesGet()

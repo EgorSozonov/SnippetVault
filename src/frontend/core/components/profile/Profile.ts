@@ -49,7 +49,7 @@ const Profile: React.FunctionComponent = observer(() => {
         state.user.profileGet(headers)
     }, [state.user.acc])
 
-    const isUser = state.user.isUser()
+    const isUser = state.user.isUser.get()
     const oldPwRef = useRef<HTMLInputElement>(null)
     const newPwRef = useRef<HTMLInputElement>(null)
 
