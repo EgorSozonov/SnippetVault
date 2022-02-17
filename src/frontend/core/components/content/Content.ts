@@ -15,7 +15,7 @@ import ErrorBoundary from "../../commonComponents/errorBoundary/ErrorBoundary"
 const Content: React.FunctionComponent = () => {
     return html`
         <${ErrorBoundary}>
-            <${BrowserRouter}>
+            <${BrowserRouter} basename="/sv">
                 <div class="browserRouter">
                     <${Routes}>
                         <${Route} exact="true" path=${`${PATHS["snippet"].url}`} element=${html`<${SnippetPg} />`} />
