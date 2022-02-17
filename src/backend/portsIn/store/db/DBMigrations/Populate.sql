@@ -23,16 +23,16 @@ OVERRIDING SYSTEM VALUE	VALUES (5, 'TS', 'Typescript', 0::bit, 2)
 ON CONFLICT (id) DO UPDATE SET code='TS', name='Typescript', "isDeleted" = 0::bit, "sortingOrder" = 2;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (6, 'SQL1', 'MySQL', 0::bit, 3)
-ON CONFLICT (id) DO UPDATE SET code='SQL1', name='MySQL', "isDeleted" = 0::bit, "sortingOrder" = 3;
+OVERRIDING SYSTEM VALUE	VALUES (6, 'MSQL', 'MySQL', 0::bit, 3)
+ON CONFLICT (id) DO UPDATE SET code='MSQL', name='MySQL', "isDeleted" = 0::bit, "sortingOrder" = 3;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (7, 'SQL2', 'T-SQL', 0::bit, 3)
-ON CONFLICT (id) DO UPDATE SET code='SQL2', name='T-SQL', "isDeleted" = 0::bit, "sortingOrder" = 3;
+OVERRIDING SYSTEM VALUE	VALUES (7, 'TSQL', 'T-SQL', 0::bit, 3)
+ON CONFLICT (id) DO UPDATE SET code='TSQL', name='T-SQL', "isDeleted" = 0::bit, "sortingOrder" = 3;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (8, 'SQL3', 'PostgreSQL', 0::bit, 3)
-ON CONFLICT (id) DO UPDATE SET code='SQL3', name='PostgreSQL', "isDeleted" = 0::bit, "sortingOrder" = 3;
+OVERRIDING SYSTEM VALUE	VALUES (8, 'PSQL', 'PostgreSQL', 0::bit, 3)
+ON CONFLICT (id) DO UPDATE SET code='PSQL', name='PostgreSQL', "isDeleted" = 0::bit, "sortingOrder" = 3;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
 OVERRIDING SYSTEM VALUE	VALUES (9, 'Kotl', 'Kotlin', 0::bit, 1)
@@ -49,6 +49,10 @@ ON CONFLICT (id) DO UPDATE SET code='Swif', name='Swift', "isDeleted" = 0::bit, 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
 OVERRIDING SYSTEM VALUE	VALUES (12, 'Java', 'Java', 0::bit, 1)
 ON CONFLICT (id) DO UPDATE SET code='Java', name='Java', "isDeleted" = 0::bit, "sortingOrder" = 1;
+
+INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
+OVERRIDING SYSTEM VALUE	VALUES (13, 'Dart', 'Dart', 0::bit, 1)
+ON CONFLICT (id) DO UPDATE SET code='Dart', name='Dart', "isDeleted" = 0::bit, "sortingOrder" = 1;
 
 ---------------------------
 -- Task groups

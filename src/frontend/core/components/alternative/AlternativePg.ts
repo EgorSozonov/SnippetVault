@@ -4,7 +4,6 @@ import { useParams } from "react-router";
 import { FunctionComponent, useContext, useEffect, useState } from "react"
 import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
-import IClient from "../../../ports/IClient"
 import { observer } from "mobx-react-lite"
 import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
@@ -63,8 +62,8 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
             <div class="alternativeBody">
                 <div class="alternativeHeaderTitle">
                     <span>Alternatives</span>
-                    ${state.user.acc === null ? html`<${NavLink} exact to=${PATHS["profile"].url}}><${KeyButton} /><//>`
-                                              : html`<${NavLink} exact to=${PATHS["profile"].url}><${UserButton} /><//>` }
+                    ${state.user.acc === null ? html`<${NavLink} title="Sign in" exact="true" to=${PATHS["profile"].url}}><${KeyButton} /><//>`
+                                              : html`<${NavLink} title="Profile" exact="true" to=${PATHS["profile"].url}><${UserButton} /><//>` }
                 </div>
                 <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} openDialog=${openDialog} />
                 ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {

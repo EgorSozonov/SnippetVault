@@ -7,16 +7,15 @@ body {
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    scrollbar-width: thin;
+    box-sizing: border-box;
   }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.browserRouter {
-    background-color: hsl(0, 0%, 18%);
-    scrollbar-width: thin;
+.snippetRoot {
+    scrollbar-width: none;
 }
 
 .rightMost {

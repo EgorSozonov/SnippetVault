@@ -18,10 +18,9 @@
 
 .hoverSelectCompactActive {
     position: absolute;
-    top: calc(100%);
+    top: calc(100% + 5px);
     left: calc(50%);
     transform: translateY(-5px);
-    background-color: hsl(240, 40%, 90%);
     border-radius: 0.3rem;
     opacity: 1;
     pointer-events: auto;
@@ -39,6 +38,8 @@
 
 .hoverCompactMenuList {
     list-style: none;
+    background-color: hsl(0, 0%, 35%);
+    color: white;
     padding: 0px;
     margin: 0px;
     -webkit-touch-callout: none;
@@ -50,8 +51,9 @@
 
 .hoverCompactMenuList > li {
     padding: 6px;
-    background-color: white;
     text-align: left;
+    font-weight: normal;
+    font-size: 1.0rem;
 }
 
 .hoverCompactMenuList > li:hover {
@@ -61,7 +63,10 @@
     transition: all 0.3s ease;
 }
 
-.searchCompact > svg:hover {
+.searchCompact > svg {
     scale: 0.8;
-    transition: all 0.3s ease;
+}
+.searchCompact > svg:hover {
+    scale: 0.7;
+    transition: all 0.3s ease-in;
 }

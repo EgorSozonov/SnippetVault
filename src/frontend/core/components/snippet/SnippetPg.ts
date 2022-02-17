@@ -97,7 +97,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                             selectCallback=${state.snip.language2Set}><//>`
                         }
                     </div>
-                    <${NavLink} exact to=${PATHS["profile"].url}>
+                    <${NavLink} exact="true" title=${isSignedIn === true ? "Profile" : "Sign in"} to=${PATHS["profile"].url}>
                         ${isSignedIn === true ? html`<${UserButton} />` : html`<${KeyButton} />` }
                     <//>
                 </div>

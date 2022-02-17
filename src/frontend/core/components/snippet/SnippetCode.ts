@@ -44,7 +44,7 @@ function SnippetCode({content, isRight, langId, libraries, tlId, } : Props) {
     return html`
         ${isRight === true
             ? html`
-                <div class="snippetCodeContainer">
+
                     <div class="snippetButtons">
                         ${alternativesLink}
                         <div class="commentButton" title="Copy code to clipboard" onClick=${() => copyTextToClipboard(content)}>C</div>
@@ -52,9 +52,9 @@ function SnippetCode({content, isRight, langId, libraries, tlId, } : Props) {
                     <div class="snippetCodeLibraries">
                         ${snippetContent}
                     </div>
-                </div>
+
             `
-            : html`<div class="snippetCodeContainer">
+            : html`
                     <div class="snippetCodeLibraries">
                         ${snippetContent}
                     </div>
@@ -62,7 +62,7 @@ function SnippetCode({content, isRight, langId, libraries, tlId, } : Props) {
                         ${alternativesLink}
                         <div class="commentButton" title="Copy code to clipboard" onClick=${() => copyTextToClipboard(content)}>C</div>
                     </div>
-                </div>
+
             `
         }
     `

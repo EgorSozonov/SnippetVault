@@ -31,7 +31,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
     return html`
         <div class="alternativeItem">
             <div class="alternativeItemCode">
-                ${alternative.code}
+                ${alternative.content}
             </div>
             <div class="alternativeItemHeader">
                 <span>
@@ -55,7 +55,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
                 }
             </div>
             <div class="alternativeItemFooter">
-                <span class="alternativeItemFooterComments" onClick=${openDialog(alternative.id, tlId, alternative.code)}>
+                <span class="alternativeItemFooterComments" onClick=${openDialog(alternative.id, tlId, alternative.content)}>
                     <span class="alternativeItemButton" title="Comment">C</span>
                     ${alternative.commentCount > 0 &&
                         (alternative.commentCount > 1 ? html`${alternative.commentCount} comments` : html`1 comment`)

@@ -1,7 +1,7 @@
 /* Menu header: the inputs for choices */
 
 .headerContainer {
-    width: 100%;
+    width: 90%;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -55,14 +55,6 @@
     padding-right: 1vw;
 }
 
-.snippetsContainer {
-    display: flex;
-    flex-direction: column;
-    color: white;
-    width: 100%;
-    height: 100vh;
-}
-
 .snippetRow {
     display: flex;
     flex-direction: row;
@@ -72,30 +64,49 @@
     background-color: hsl(0, 0%, 18%);
 }
 
-.snippetCodeContainer {
+.snippetsContainer {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    width: 100%;
+    height: 100vh;
+}
+
+
+
+.snippetContent {
+    width: 41vw;
+    box-sizing: border-box;
+    border-style: solid;
+    border-width: 1px;
+    border-top-width: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
     display: flex;
     flex-direction: row;
     padding: 5px;
 }
 
+
 .snippetButtons {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: flex-start;
 }
 
 .snippetButtonsRight {
     margin-left: auto;
 }
 
-.snippetContent {
-    width: 41vw;
-    border-style: solid;
-    border-width: 1px;
-    border-top-width: 0;
+
+.snippetCodeLibraries {
+    display: block;
+    width: 100%;
     overflow-y: auto;
+    scrollbar-width: none;
 }
+
 
 .snippetCode {
     margin: 5px;
@@ -104,19 +115,13 @@
     background-color: black;
     padding: 0.5rem;
     border-radius: 0.3rem;
-}
 
-.snippetCodeLibraries {
-    display: block;
-    width: 100%;
 }
 
 .taskContainer {
     width: 16vw;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-color: hsl(0, 0%, 43%);
-    min-height: 4em;
+    border-bottom: 1px solid hsl(0, 0%, 43%);
+    min-height: 4rem;
     text-align: center;
 }
 
@@ -131,57 +136,61 @@
 
 .taskForHeader {
     width: 16vw;
+    border-bottom: solid 1px hsl(0, 0%, 43%);
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-color: hsl(0, 0%, 43%);
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 .snippetLeftHeader {
     width: 41vw;
-    text-align: center;
+    border: 1px solid hsl(120, 71%, 43%);
+    box-sizing: border-box;
+    background-color: hsl(0, 0%, 28%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: hsl(120, 100%, 62%);
-    background-color: hsl(0, 0%, 28%);
-    border-style: solid;
-    border-width: 1px;
-    border-color: hsl(120, 71%, 43%);
     font-size: 1.2rem;
-    font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
+    font-weight: bold;
 }
 
 .snippetRightHeader {
     width: 41vw;
     position: relative;
-    text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: hsl(60, 100%, 59%);
     background-color: hsl(0, 0%, 28%);
-    border-style: solid;
-    border-width: 1px;
-    border-color: hsl(46, 84%, 39%);
+    border: 1px solid hsl(46, 84%, 39%);
+    color: hsl(60, 100%, 59%);
     font-size: 1.2rem;
-    font-family: 'Old English Text MT', 'Arial Narrow', Arial, sans-serif;
-
+    font-weight: bold;
 }
 
 .snippetRightHeader > a {
     position: absolute;
     right: 10px;
-    top: 20%;
+    top: 6px;
+    height: 24px;
+    width: 24px;
     stroke: white;
     fill: transparent;
 }
 
-.snippetRightHeader svg:hover {
+.snippetRightHeader svg {
     scale: 0.8;
-    transition: all 0.3s ease;
+}
+.snippetRightHeader svg:hover {
+    scale: 0.7;
+    transition: all 0.3s ease-in;
+}
+
+.snippetHeading {
+    display: inline-flex;
+    align-items: center;
 }
 
 .snippetHeading > span {
@@ -195,11 +204,10 @@
 .commentButton {
     cursor: pointer;
     font-family: 'Arial Narrow', Arial, sans-serif;
-    border-width: 1px;
-    border-style: solid;
+    border: 1px solid white;
     border-radius: 50%;
-    background-color: white;
-    color: black;
+    background-color: hsl(0, 0%, 18%);
+    color: white;
     text-align: center;
     font-size: 0.6rem;
     margin: 5px;
@@ -240,6 +248,7 @@ select {
 .snippetProposalButtonContainer {
     display: flex;
     height: 100%;
+    width: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;

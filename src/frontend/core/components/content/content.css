@@ -1,3 +1,4 @@
 .browserRouter {
-    width: 100vw;
+    width: 99vw;
+    scrollbar-width: none;
 }

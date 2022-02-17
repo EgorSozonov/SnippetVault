@@ -61,7 +61,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
                 </div>
                 <div class="alternativeHeaderMainRight">
                     <div class="alternativeHeaderMainRightCode">
-                        ${primaryAlternative !== null && primaryAlternative.code}
+                        ${primaryAlternative !== null && primaryAlternative.content}
                     </div>
                 </div>
             </div>

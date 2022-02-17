@@ -109,6 +109,8 @@ export default class SnipState {
     })
 
     alternativesSet = action((newValue: AlternativesDTO[]): void => {
+        console.log("alternatives response:")
+        console.log(newValue)
         if (!newValue || newValue === null || newValue.length !== 1) {
             this.alternatives = null
             return
