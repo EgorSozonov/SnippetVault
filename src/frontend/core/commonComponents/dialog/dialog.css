@@ -72,7 +72,7 @@
 
 
 .dialogContainerFullscreen {
-    width: 100vw;
+    width: 99vw;
     height: 100vh;
     color: white;
     background: hsla(0, 0%, 32%);

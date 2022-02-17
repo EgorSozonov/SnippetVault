@@ -270,11 +270,10 @@
 }
 
 .alternativeDialogTextarea {
-    width: 90vw;
-    height: 100%;
     margin-top: 1rem;
     margin-bottom: 1rem;
-
+    width: 90vw;
+    max-width: 90vw;
 }
 
 .clickable {
