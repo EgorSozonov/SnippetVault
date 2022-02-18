@@ -11,7 +11,7 @@ using static HttpUtils;
 
 
 [Controller]
-[Route("/api/v1")]
+[Route("/api")]
 public class MainController : Controller {
     private readonly IDataService api;
     private readonly IAuthService auth;
@@ -271,6 +271,12 @@ public class MainController : Controller {
         await sendQueryResult<StatsDTO>(result, HttpContext.Response);
     }
     #endregion
+
+    [HttpGet]
+    [Route("health")]
+    public async Task healthCheck() {
+        await HttpContext.Response.WriteAsync("SnippetVault backend running at " + DateTime.Now);
+    }
 
     private static async Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {
         try {
