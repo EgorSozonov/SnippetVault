@@ -23,7 +23,7 @@ export default class UserState {
         return (this.acc !== null && this.acc.status === "user")
     })
 
-    isAdmin = action(() => {
+    isAdmin = computed(() => {
         return (this.acc !== null && this.acc.status === "admin")
     })
 

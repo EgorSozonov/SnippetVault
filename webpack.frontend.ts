@@ -19,7 +19,7 @@ const webpackFrontend = (args: any): Configuration => {
 		},
 		output: {
 			path: path.resolve("./target/frontend/sv"),
-            publicPath: "./",
+            publicPath: "sv",
 		},
 		target: "web",
 		devtool: isProduction ? false : "source-map",

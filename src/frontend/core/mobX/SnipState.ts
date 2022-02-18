@@ -147,6 +147,10 @@ export default class SnipState {
         this.alternatives.rows = sorted
     })
 
+    snippetMarkPrimary = action((snId: number, headers: SignInSuccessDTO): void => {
+        this.client.snippetMarkPrimary(snId, headers)
+    })
+
     commentsGet = action(async (snId: number) => {
         await fetchFromClient(this.client.commentsGet(snId), this.commentsSet)
     })
