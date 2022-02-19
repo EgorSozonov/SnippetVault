@@ -27,6 +27,9 @@ const AdminLogin: FunctionComponent = observer(({}: any) => {
             <div>
                 Log in as an administrator:
             </div>
+            <div>
+                This website uses cookies for identification of signed in users. By signing in you are consenting to our cookie use policy.
+            </div>
 
             <div class="adminLoginLabel">Username</div>
             <input class="loginFormInput" ref=${unameRef} type="text" />

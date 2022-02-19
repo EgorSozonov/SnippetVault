@@ -2,3 +2,13 @@
     width: 99vw;
     scrollbar-width: none;
 }
+
+.contentFooter {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+}

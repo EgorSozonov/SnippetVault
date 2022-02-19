@@ -5,6 +5,8 @@ import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
 import {observer} from "mobx-react-lite"
 import { SignInDTO } from "../../types/dto/AuthDTO"
+import { NavLink } from "react-router-dom"
+import PATHS from "../../params/Path"
 
 
 type Props = {
@@ -27,10 +29,16 @@ const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
 
     return html`
         <div class="loginForm">
-            <div>
-                Log in:
+            <div class="loginTitle">
+                Log in
             </div>
-
+            <div class="loginCookieInfo">
+                <p>
+                This website uses cookies for identification of signed in users.
+                </p>
+                <p>By signing in you are consenting to our <${NavLink} to=${PATHS["termsOfService"].url} title="Terms of Service" exact="true">Terms of Service<//> and cookie usage policy.
+                </p>
+            </div>
             <div class="loginFormLabel">Username</div>
             <input class="loginFormInput" ref=${unameRef} type="text" />
 
