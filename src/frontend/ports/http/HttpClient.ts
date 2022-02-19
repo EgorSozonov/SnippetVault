@@ -62,8 +62,8 @@ class HttpClient implements IClient {
         return this.postRequestNoPayload(`/snippet/decline/${snId}`, headers)
     }
 
-    snippetMarkPrimary(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/snippet/markPrimary/${snId}`, headers)
+    snippetMarkPrimary(tlId: number, snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        return this.postRequestNoPayload(`/snippet/markPrimary/${tlId}/${snId}`, headers)
     }
 
     commentsGet(snId: number): Promise<EitherMsg<CommentDTO[]>> {

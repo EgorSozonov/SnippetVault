@@ -62,7 +62,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
             <div class="alternativeBody">
                 <div class="alternativeHeaderTitle">
                     <span>Alternatives</span>
-                    ${state.user.acc === null ? html`<${NavLink} title="Sign in" exact="true" to=${PATHS["profile"].url}}><${KeyButton} /><//>`
+                    ${state.user.acc === null ? html`<${NavLink} title="Sign in" exact="true" to=${PATHS["profile"].url}><${KeyButton} /><//>`
                                               : html`<${NavLink} title="Profile" exact="true" to=${PATHS["profile"].url}><${UserButton} /><//>` }
                 </div>
                 <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} openDialog=${openDialog} />

@@ -20,7 +20,7 @@ type IClient = {
     proposalUpdate: (dto: ProposalUpdateDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     proposalApprove: (snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     proposalDecline: (snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
-    snippetMarkPrimary: (snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
+    snippetMarkPrimary: (tlId: number, snId: number, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     commentsGet: (snId: number) => Promise<EitherMsg<CommentDTO[]>>
     commentCreate: (dto: CommentCUDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
 

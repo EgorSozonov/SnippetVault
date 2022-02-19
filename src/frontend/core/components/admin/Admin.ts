@@ -112,7 +112,7 @@ const Admin: FunctionComponent = observer(({}: any) => {
 
     return html`
         <div class="adminContainer">
-            ${state.user.isAdmin() === false
+            ${state.user.isAdmin.get() === false
                 ? html`
                         <${AdminLogin} />
                     `

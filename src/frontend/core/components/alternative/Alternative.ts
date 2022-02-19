@@ -26,11 +26,11 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
         state.snip.userVote(voteDTO, headers)
     }
 
-    const setPrimaryHandler = (snId: number) => () => {
+    const setPrimaryHandler = (tlId: number, snId: number) => () => {
         const headers = state.user.headersGet()
         if (headers === null) return
 
-        state.snip.snippetMarkPrimary(snId, headers)
+        state.snip.snippetMarkPrimary(tlId, snId, headers)
     }
 
     const isSignedIn = state.user.isUser.get()
@@ -61,7 +61,8 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
                         `)
                 }
                 ${isAdmin &&
-                    html`<span class="alternativeFooterPrimary" onClick=${setPrimaryHandler} title="Set as primary snippet">P
+                    html`<span class="alternativeFooterPrimary" onClick=${setPrimaryHandler(tlId, alternative.id)} title="Set as primary snippet">
+                        <span class="alternativeItemButton">P</span>Primary
                     </span>`
                 }
             </div>

@@ -176,7 +176,7 @@ public class DBStore : IStore {
     }
 
     private static readonly string snippetMarkPrimaryQ = @"
-        UPDATE sv.""taskLanguage"" SET ""primarySnippetId"" = @snId WHERE id=@tlId AND ""isDeleted""=0::bit;
+        UPDATE sv.""taskLanguage"" SET ""primarySnippetId"" = @snId WHERE id=@tlId;
     ";
     public async Task<int> snippetMarkPrimary(int tlId, int snId) {
         await using (var cmd = new NpgsqlCommand(snippetMarkPrimaryQ, db.conn)) {
