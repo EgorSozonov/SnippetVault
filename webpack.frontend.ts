@@ -19,7 +19,7 @@ const webpackFrontend = (args: any): Configuration => {
 		},
 		output: {
 			path: path.resolve("./target/frontend/sv"),
-            publicPath: "sv",
+            publicPath: "/sv",
 		},
 		target: "web",
 		devtool: isProduction ? false : "source-map",
@@ -93,7 +93,7 @@ const webpackFrontend = (args: any): Configuration => {
 			compress: false,
 			port: 47001,
 			historyApiFallback:  {
-                index: 'index.html'
+                index: '/sv'
             },
 			hot: true,
             magicHtml: true,
