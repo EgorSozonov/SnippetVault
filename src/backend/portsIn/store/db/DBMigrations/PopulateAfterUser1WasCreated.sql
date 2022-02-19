@@ -262,18 +262,18 @@ ON CONFLICT (id) DO UPDATE SET "taskId" = 6, "languageId" = 2, "primarySnippetId
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
-OVERRIDING SYSTEM VALUE	VALUES (1, 1, 'ref readonly int x = ref value;', 1, '20220120', 16, 3)
-ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 1, content = 'ref readonly int x = ref value;', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+OVERRIDING SYSTEM VALUE	VALUES (1, 1, 'ref readonly int x = ref value;', 1, '20220120', 1, 3)
+ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 1, content = 'ref readonly int x = ref value;', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
-OVERRIDING SYSTEM VALUE	VALUES (2, 2, 'var x = 0;', 1, '20220120', 16, 3)
-ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 2, content = 'var x = 0;', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+OVERRIDING SYSTEM VALUE	VALUES (2, 2, 'var x = 0;', 1, '20220120', 1, 3)
+ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 2, content = 'var x = 0;', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
-OVERRIDING SYSTEM VALUE	VALUES (3, 3, 'x = 5;', 1, '20220120', 16, 3)
-ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 3, content = 'x = 5;', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+OVERRIDING SYSTEM VALUE	VALUES (3, 3, 'x = 5;', 1, '20220120', 1, 3)
+ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 3, content = 'x = 5;', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
@@ -283,39 +283,39 @@ OVERRIDING SYSTEM VALUE	VALUES (4, 4, 'if (x > 5) {
     // else-if branch
 } else {
     // else branch
-}', 1, '20220120', 16, 3)
+}', 1, '20220120', 1, 3)
 ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 4, content = 'if (x > 5) {
     // if branch
 } else if (x > 3) {
     // else-if branch
 } else {
     // else branch
-}', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+}', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
-OVERRIDING SYSTEM VALUE	VALUES (5, 5, 'var four = Math.sqrt(16.0);', 1, '20220120', 16, 3)
-ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 5, content = 'var x = Math.sqrt(5.0);', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+OVERRIDING SYSTEM VALUE	VALUES (5, 5, 'var four = Math.sqrt(16.0);', 1, '20220120', 1, 3)
+ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 5, content = 'var x = Math.sqrt(5.0);', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
-OVERRIDING SYSTEM VALUE	VALUES (6, 6, 'var sixteen = Math.Pow(2, 4);', 1, '20220120', 16, 3)
-ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 6, content = 'var sixteen = Math.Pow(2, 4);', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+OVERRIDING SYSTEM VALUE	VALUES (6, 6, 'var sixteen = Math.Pow(2, 4);', 1, '20220120', 1, 3)
+ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 6, content = 'var sixteen = Math.Pow(2, 4);', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
-OVERRIDING SYSTEM VALUE	VALUES (7, 7, 'let x = value;', 1, '20220120', 16, 3)
-ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 1, content = '', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+OVERRIDING SYSTEM VALUE	VALUES (7, 7, 'let x = value;', 1, '20220120', 1, 3)
+ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 1, content = '', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
-OVERRIDING SYSTEM VALUE	VALUES (8, 8, 'let mut x = 5;', 1, '20220120', 16, 3)
-ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 2, content = '', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+OVERRIDING SYSTEM VALUE	VALUES (8, 8, 'let mut x = 5;', 1, '20220120', 1, 3)
+ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 2, content = '', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
-OVERRIDING SYSTEM VALUE	VALUES (9, 9, 'x = 0;', 1, '20220120', 16, 3)
-ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 3, content = '', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+OVERRIDING SYSTEM VALUE	VALUES (9, 9, 'x = 0;', 1, '20220120', 1, 3)
+ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 3, content = '', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
@@ -325,24 +325,24 @@ OVERRIDING SYSTEM VALUE	VALUES (10, 10, 'if x > 5 {
     // else if branch
 } else {
     // else branch
-}', 1, '20220120', 16, 3)
+}', 1, '20220120', 1, 3)
 ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 4, content = 'if x > 5 {
     // if branch
 } else if x > 3 {
     // else if branch
 } else {
     // else branch
-}', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+}', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
-OVERRIDING SYSTEM VALUE	VALUES (11, 11, 'let four = f64::sqrt(16.0);', 1, '20220120', 16, 3)
-ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 5, content = 'let four = f64::sqrt(16.0);', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+OVERRIDING SYSTEM VALUE	VALUES (11, 11, 'let four = f64::sqrt(16.0);', 1, '20220120', 1, 3)
+ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 5, content = 'let four = f64::sqrt(16.0);', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
-OVERRIDING SYSTEM VALUE	VALUES (12, 12, 'let sixteen = f64::checked_pow(2, 4);', 1, '20220120', 16, 3)
-ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 6, content = 'let sixteen = f64::checked_pow(2, 4);', score = 1, "tsUpload" = '20220120', "authorId" = 16, status = 3;
+OVERRIDING SYSTEM VALUE	VALUES (12, 12, 'let sixteen = f64::checked_pow(2, 4);', 1, '20220120', 1, 3)
+ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 6, content = 'let sixteen = f64::checked_pow(2, 4);', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
 
 ---------------------------
 -- Primary snippets
