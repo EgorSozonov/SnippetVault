@@ -91,7 +91,7 @@ const webpackFrontend = (args: any): Configuration => {
 			},
             static: "target/frontend",
 			compress: false,
-			port: 47001,
+			port: 47000,
 			historyApiFallback:  {
                 index: '/sv'
             },

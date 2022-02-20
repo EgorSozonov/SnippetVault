@@ -7,16 +7,18 @@ using Microsoft.Extensions.DependencyInjection;
 class Program {
     static void Main(string[] args) {
         CreateWebHostBuilder(args)
-            .UseUrls("http://localhost:47000/")
-            .UseKestrel()
+            .UseUrls("http://localhost:47001/")
+            .UseKestrel(o => o.UseSystemd())
             .Build()
-            .Run();
+            .Run()
+            ;
     }
 
 
     public static IWebHostBuilder CreateWebHostBuilder(string[] args) {
         return new WebHostBuilder()
-            .UseEnvironment(Microsoft.Extensions.Hosting.Environments.Development)
+            .UseEnvironment(Microsoft.Extensions.Hosting.Environments.Production)
+
             .ConfigureAppConfiguration((hostingContext, config) => {
                 config.AddJsonFile("creds.json",
                     optional: false,
@@ -26,12 +28,10 @@ class Program {
                 serviceCollection.AddScoped<IDBContext, DBContext>()
                                  .AddScoped<IDataService, DataService>()
                                  .AddScoped<IAuthService, AuthService>()
-                                 .AddScoped<IStaticFiles, StaticFiles>()
                                  .AddScoped<IStore, DBStore>()
                                  .AddScoped<AuthorizeFilter>()
                                  .AddScoped<AuthorizeAdminFilter>()
                                  )
-                                
             .UseStartup<WebApp>();
     }
 }

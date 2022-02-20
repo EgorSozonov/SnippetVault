@@ -90,6 +90,9 @@ ALTER TABLE sv.language ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 --
 -- Name: snippet; Type: TABLE; Schema: sv; Owner: sv_user
 --
+INSERT INTO sv."snippetStatus"(
+	id, code)
+	VALUES (1, 'Proposed'), (2, 'Declined'), (3, 'Approved') ;
 
 CREATE TABLE sv.snippet (
     id integer NOT NULL,
@@ -538,11 +541,7 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."userVote" TO sv_role;
 -- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: sv; Owner: zrx
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE zrx IN SCHEMA sv GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO sv_role;
-ALTER DEFAULT PRIVILEGES FOR ROLE zrx IN SCHEMA sv GRANT SELECT,INSERT,DELETE,UPDATE ON TABLES  TO postgres;
-
 
 --
 -- PostgreSQL database dump complete
 --
-

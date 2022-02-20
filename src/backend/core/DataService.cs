@@ -6,10 +6,8 @@ namespace SnippetVault {
 
 public class DataService : IDataService {
     private readonly IStore st;
-    private readonly IStaticFiles staticFiles;
-    public DataService(IStore _st, IStaticFiles _statics) {
+    public DataService(IStore _st) {
         this.st = _st;
-        this.staticFiles = _statics;
     }
 
     public async Task<ReqResult<SnippetDTO>> snippetsGet(int taskGroup, int lang1, int lang2) {

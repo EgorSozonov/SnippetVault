@@ -24,7 +24,7 @@ public class WebApp {
         services.AddControllers();
         services.AddScoped<AuthorizeFilter>();
         services.AddRouting();
-        
+
         services.AddCors(o => o.AddPolicy("SVCorsPolicy", builder => {
             builder.WithOrigins("http://localhost:47001")
                    .AllowAnyMethod()
@@ -38,25 +38,23 @@ public class WebApp {
         } else {
             app.UseExceptionHandler("/Error");
             app.UseHsts();
-        }        
+        }
 
         app.UseCors("SVCorsPolicy");
-        
-        
+
+
         DefaultFilesOptions options = new DefaultFilesOptions();
         app.UseDefaultFiles(new DefaultFilesOptions());
-        app.UseStaticFiles(new StaticFileOptions {
-            FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "StaticFiles"))
-        });
+
         app.UseRouting();
         app.UseEndpoints(endpointRouteBuilder => {
-            
-            endpointRouteBuilder.MapControllers();            
+
+            endpointRouteBuilder.MapControllers();
         });
 
         //app.UseMiddleware<AuthorizeMiddleware>();
-        
+
     }
-}   
+}
 
 }

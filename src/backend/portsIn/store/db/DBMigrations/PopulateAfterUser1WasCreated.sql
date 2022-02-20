@@ -260,6 +260,10 @@ ON CONFLICT (id) DO UPDATE SET "taskId" = 6, "languageId" = 2, "primarySnippetId
 -- Snippets
 ---------------------------
 
+INSERT INTO sv."user"(
+	name, "dateJoined", expiration, "accessToken", hash, salt, "isDeleted")
+	VALUES ('John Wick', '2022-02-15', '2022-03-15', 'asdf', bytea '\xDEADBEEF', bytea '\xDEADBEEF', 0::bit);
+
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
 OVERRIDING SYSTEM VALUE	VALUES (1, 1, 'ref readonly int x = ref value;', 1, '20220120', 1, 3)
