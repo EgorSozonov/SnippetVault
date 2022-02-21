@@ -16,7 +16,7 @@ type Paths = {
 }
 
 const PATHS: Paths = {
-    "snippet": {description: "View snippets", url: "/sn", },
+    "snippet": {description: "View snippets", url: "/", },
     "alternative": {description: "Alternatives & comments", url: "/alternative/:langId/:tlId", urlPrefix: "/alternative", },
     "admin": {description: "Admin page", url: "/adminning", },
     "profile": {description: "Profile", url: "/profile", },

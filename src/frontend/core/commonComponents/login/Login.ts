@@ -6,7 +6,7 @@ import { StoreContext } from "../../App"
 import {observer} from "mobx-react-lite"
 import { SignInDTO } from "../../types/dto/AuthDTO"
 import { NavLink } from "react-router-dom"
-import PATHS from "../../params/Path"
+import PATHS from "../../Path"
 
 
 type Props = {

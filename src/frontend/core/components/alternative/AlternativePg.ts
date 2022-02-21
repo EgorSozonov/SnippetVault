@@ -14,7 +14,7 @@ import CommentDialog from "./CommentDialog";
 import KeyButton from "../../commonComponents/login/KeyButton";
 import UserButton from "../../commonComponents/login/UserButton";
 import { NavLink } from "react-router-dom";
-import PATHS from "../../params/Path";
+import PATHS from "../../Path";
 
 
 const AlternativePg: FunctionComponent = observer(({}: any) => {

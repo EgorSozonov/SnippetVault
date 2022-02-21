@@ -53,6 +53,8 @@ const Profile: React.FunctionComponent = observer(() => {
     const oldPwRef = useRef<HTMLInputElement>(null)
     const newPwRef = useRef<HTMLInputElement>(null)
 
+    console.log("profile")
+
     const changePwMenu = html`
         <div>
             <div>Old password:</div>

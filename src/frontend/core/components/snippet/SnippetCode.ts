@@ -1,7 +1,7 @@
 import "./snippet.css"
 import { html } from "htm/react"
 import { NavLink } from "react-router-dom";
-import PATHS from "../../params/Path";
+import PATHS from "../../Path";
 
 
 type Props = {

@@ -9,23 +9,21 @@ import { render } from "react-dom"
 export const StoreContext = createContext<MainState>(new MainState())
 
 export const StoreProvider: FunctionComponent<{children: any}> = ({ children, }) => {
-    return (html`<${StoreContext.Provider} value=${new MainState()}>${children}<//>`)
+    return (html`
+        <${StoreContext.Provider} value=${new MainState()}>
+            ${children}
+        <//>`)
 }
 
-const App: FunctionComponent = () => {
+export const App: FunctionComponent = () => {
     return html`
-            <${Content} />
+            <${StoreProvider}>
+                <${Content} />
+            <//>
     `
 }
 
 const root = document.getElementById("snippetRoot")
 if (root) {
-    render(
-        html`
-            <${StoreProvider}>
-                <${Content} />
-            <//>
-        `,
-        root
-    )
+    render(html`<${App} />`, root)
 }

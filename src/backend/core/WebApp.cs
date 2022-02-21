@@ -26,7 +26,7 @@ public class WebApp {
         services.AddRouting();
 
         services.AddCors(o => o.AddPolicy("SVCorsPolicy", builder => {
-            builder.WithOrigins("http://localhost:47001")
+            builder.WithOrigins("*")
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         }));

@@ -19,8 +19,8 @@ const webpackFrontend = (args: any): Configuration => {
 			"snippetVault": path.resolve("./src/frontend/core/App.ts"),
 		},
 		output: {
-			path: path.resolve("./target/frontend/sv"),
-            publicPath: "/sv",
+			path: path.resolve("./target/frontend"),
+            publicPath: ".",
 		},
 		target: "web",
 		devtool: mode ? false : "source-map",
@@ -94,7 +94,7 @@ const webpackFrontend = (args: any): Configuration => {
 			compress: false,
 			port: 10200,
 			historyApiFallback:  {
-                index: '/sv'
+                index: '.'
             },
 			hot: true,
             magicHtml: true,

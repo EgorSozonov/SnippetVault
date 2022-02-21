@@ -1,7 +1,7 @@
 import { FunctionComponent, useContext, useEffect, useRef, useState } from "react"
 import { NavLink } from "react-router-dom"
 import EditableList from "../../commonComponents/editableList/EditableList"
-import PATHS from "../../params/Path"
+import PATHS from "../../Path"
 import NewProposals from "./NewProposal"
 import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
