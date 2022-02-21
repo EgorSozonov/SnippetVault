@@ -1,6 +1,5 @@
 export type SignInSuccessDTO = {
     userId: number,
-    accessToken: string,
 }
 
 export type SignInDTO = {
@@ -19,7 +18,7 @@ export type SignInAdminDTO = {
     password2: string,
 }
 
-export type ChangePwAdminDTO = {    
+export type ChangePwAdminDTO = {
     signIn: SignInAdminDTO,
     newPw: string,
 }

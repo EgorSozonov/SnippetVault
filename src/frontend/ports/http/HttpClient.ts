@@ -140,8 +140,10 @@ class HttpClient implements IClient {
         try {
             const r = headers
                 ? await this.client.get<T>(
-                    url, { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, },
-                  })
+                    url,
+                    { headers: { userId: headers.userId.toString() }, withCredentials: true,
+                    }
+                )
                 : await this.client.get<T>(url);
             if (r.data) {
                 return { isOK: true, value: r.data, }
@@ -156,7 +158,7 @@ class HttpClient implements IClient {
     private async postRequest<T>(url: string, payload: T, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         try {
             const r = await this.client.post<PostResponseDTO>(url, payload,
-                { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, }, }
+                { headers: { userId: headers.userId.toString() }, withCredentials: true, }
             )
             if (r.data && r.data.status === "OK") {
                 return r.data
@@ -171,7 +173,7 @@ class HttpClient implements IClient {
     private async postRequestNoPayload(url: string, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
         try {
             const r = await this.client.post<PostResponseDTO>(url, undefined,
-                                                    { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, }, })
+                                                    { headers: { userId: headers.userId.toString() }, withCredentials: true, })
             if (r.data && r.data.status === "OK") {
                 return r.data
             } else {
@@ -185,7 +187,7 @@ class HttpClient implements IClient {
     private async postRequestWithResult<T, U>(url: string, payload: T, headers: SignInSuccessDTO): Promise<EitherMsg<U>> {
         try {
             const r = await this.client.post<U>(
-                url, payload, { headers: { userId: headers.userId.toString(), accessToken: headers.accessToken, },
+                url, payload, { headers: { userId: headers.userId.toString() }, withCredentials: true,
             })
             return {isOK: true, value: r.data, }
         } catch(e: any) {

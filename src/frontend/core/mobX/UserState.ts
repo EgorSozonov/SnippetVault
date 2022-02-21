@@ -27,35 +27,41 @@ export default class UserState {
         return (this.acc !== null && this.acc.status === "admin")
     })
 
-    signInOrRegister = action(async (dto: SignInDTO, mode: "signIn" | "register"): Promise<UserAccount | null> => {
+    signInOrRegister = action(async (dto: SignInDTO, mode: "signIn" | "register") => {
         const response = mode === "signIn" ? await this.client.userSignIn(dto) : await this.client.userRegister(dto)
-        return this.applySignInResponse(response, "user", dto.userName)
+        this.applySignInResponse(response, "user", dto.userName)
     })
 
-    changePw = action(async (dto: ChangePwDTO, headers: SignInSuccessDTO): Promise<UserAccount | null> => {
+    changePw = action(async (dto: ChangePwDTO, headers: SignInSuccessDTO) => {
         const response = await this.client.userChangePw(dto, headers)
-        return this.applySignInResponse(response, "user", dto.signIn.userName)
+        this.applySignInResponse(response, "user", dto.signIn.userName)
     })
 
-    signInAdmin = action(async (dto: SignInAdminDTO): Promise<UserAccount | null> => {
+    signInAdmin = action(async (dto: SignInAdminDTO) => {
         const response = await this.client.userSignInAdmin(dto)
-        return this.applySignInResponse(response, "admin", dto.userName)
+        this.applySignInResponse(response, "admin", dto.userName)
     })
 
-    changeAdminPw = action(async (dto: ChangePwAdminDTO, headers: SignInSuccessDTO): Promise<UserAccount | null> => {
+    changeAdminPw = action(async (dto: ChangePwAdminDTO, headers: SignInSuccessDTO) => {
         const response = await this.client.userChangeAdminPw(dto, headers)
-        return this.applySignInResponse(response, "admin", dto.signIn.userName)
+        this.applySignInResponse(response, "admin", dto.signIn.userName)
     })
 
     applySignInResponse = action((response: EitherMsg<SignInSuccessDTO[]>, status: "user" | "admin", userName: string) => {
         const mbAccount = processSignIn(response, status, userName)
-        if (mbAccount !== null) this.acc = mbAccount
-        return mbAccount
+
+        if (mbAccount !== null) {
+            this.acc = mbAccount
+            localStorage.setItem("account", JSON.stringify(mbAccount))
+        }
     })
 
     private accountsEq(a1: UserAccount | null, a2: UserAccount): boolean {
         if (a1 === null) return false
-        return (a1.userId === a2.userId && a1.accessToken === a2.accessToken)
+        return (a1.userId === a2.userId
+                && a1.expiration.year === a2.expiration.year
+                && a1.expiration.month === a2.expiration.month
+                && a1.expiration.day === a2.expiration.day);
     }
 
     trySignInFromLS = action(() => {
@@ -63,8 +69,8 @@ export default class UserState {
         if (!fromLS || fromLS.length < 1 || fromLS === "undefined") return;
 
         const accFromLS: UserAccount = JSON.parse(fromLS)
+
         if (accFromLS.userId && accFromLS.userId > -1
-              && accFromLS.accessToken && accFromLS.accessToken.length > 0
               && (accFromLS.status === "admin" || accFromLS.status === "user")
               && isSameDay(new Date(), accFromLS.expiration) === true
               && this.accountsEq(this.acc, accFromLS) === false) {
@@ -82,7 +88,6 @@ export default class UserState {
         this.acc = newValue
     })
 
-
     profileGet = action(async (headers: SignInSuccessDTO) => {
         await fetchFromClient(this.client.userProfile(headers), this.profileSet)
     })
@@ -93,6 +98,6 @@ export default class UserState {
 
     headersGet = action((): SignInSuccessDTO | null => {
         if (this.acc === null) return null
-        return { userId: this.acc.userId, accessToken: this.acc.accessToken, }
+        return { userId: this.acc.userId }
     })
 }

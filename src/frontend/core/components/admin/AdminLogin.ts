@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
 import MainState from "../../mobX/AllState"
 import { SignInAdminDTO } from "../../types/dto/AuthDTO"
+import { useCookies } from "react-cookie"
 
 
 const AdminLogin: FunctionComponent = observer(({}: any) => {
@@ -11,6 +12,7 @@ const AdminLogin: FunctionComponent = observer(({}: any) => {
     const unameRef = useRef<HTMLInputElement>(null)
     const pw1Ref = useRef<HTMLInputElement>(null)
     const pw2Ref = useRef<HTMLInputElement>(null)
+    const [cookies, setCookie] = useCookies(["account"]);
 
     const signInOrRegisterHandler = async () => {
         if (!unameRef.current || !pw1Ref.current || !pw2Ref.current) return
@@ -19,7 +21,10 @@ const AdminLogin: FunctionComponent = observer(({}: any) => {
         const pw2: string = pw2Ref.current.value
         const dto: SignInAdminDTO = {userName: uName, password1: pw1, password2: pw2, }
 
-        state.user.signInAdmin(dto)
+        const mbAcc = state.user.signInAdmin(dto)
+        if (mbAcc !== null) {
+            setCookie("account", JSON.stringify(mbAcc), { sameSite: "strict", httpOnly: true, secure: true, })
+        }
     }
 
     return html`

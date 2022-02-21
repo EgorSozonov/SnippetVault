@@ -9,8 +9,9 @@ import { StoreContext } from "../../App"
 import MainState from "../../mobX/AllState"
 import { Editability } from "../../commonComponents/editableList/utils/Editability"
 import AdminLogin from "./AdminLogin"
-import { LanguageCUDTO, LanguageDTO, TaskCUDTO, TaskGroupCUDTO, TaskGroupDTO } from "../../types/dto/AuxDTO"
+import { LanguageCUDTO, TaskCUDTO, TaskGroupCUDTO,  } from "../../types/dto/AuxDTO"
 import AdminChangePw from "./AdminChangePw"
+import { useCookies } from "react-cookie"
 
 
 const ListTasks = (props: any) => EditableList<TaskCUDTO>(props)
@@ -53,6 +54,7 @@ const editabilityLanguage: Editability<LanguageCUDTO>[] = [
 
 const Admin: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
+    const [cookie, setCookie] = useCookies(["account"])
 
     const editabilityTask: Editability<TaskCUDTO>[] = [
         {
@@ -98,7 +100,7 @@ const Admin: FunctionComponent = observer(({}: any) => {
         state.admin.proposalsGet()
 
         state.admin.statsGet()
-        state.user.trySignInFromLS()
+        state.user.trySignInFromLS(cookie.account)
     }, [state.user.acc])
 
     const [changeAdminPwMode, setChangeAdminPwMode] = useState(false)

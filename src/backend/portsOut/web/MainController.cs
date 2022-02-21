@@ -154,7 +154,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("user/register")]
     public async Task userRegister([FromBody] SignInDTO dto) {
-        var result = await auth.userRegister(dto);
+        var result = await auth.userRegister(dto, HttpContext.Response.Cookies);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
     }
 

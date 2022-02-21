@@ -9,7 +9,6 @@ export type UserStatus =
 export type UserAccount = {
     name: string,
     userId: number,
-    accessToken: string,
     expiration: DateOnly,
     status: UserStatus,
 }
