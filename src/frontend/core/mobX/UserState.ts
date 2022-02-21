@@ -1,11 +1,11 @@
-import { notEqual } from "assert"
 import { action, computed, makeAutoObservable } from "mobx"
 import IClient from "../../ports/IClient"
 import { ChangePwAdminDTO, ChangePwDTO, SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
 import { ProfileDTO } from "../types/dto/UserDTO"
 import EitherMsg from "../types/EitherMsg"
-import { UserAccount, UserStatus } from "../types/UserAccount"
+import { UserAccount } from "../types/UserAccount"
 import { dateOfTS, isSameDay } from "../utils/DateUtils"
+import { processSignIn } from "../utils/User"
 import { fetchFromClient } from "./Utils"
 
 
@@ -27,45 +27,30 @@ export default class UserState {
         return (this.acc !== null && this.acc.status === "admin")
     })
 
-    signInOrRegister = action(async (dto: SignInDTO, mode: "signIn" | "register"): Promise<void> => {
+    signInOrRegister = action(async (dto: SignInDTO, mode: "signIn" | "register"): Promise<UserAccount | null> => {
         const response = mode === "signIn" ? await this.client.userSignIn(dto) : await this.client.userRegister(dto)
-        this.applySignInResponse(response, "user", dto.userName)
+        return this.applySignInResponse(response, "user", dto.userName)
     })
 
-    changePw = action(async (dto: ChangePwDTO, headers: SignInSuccessDTO): Promise<void> => {
+    changePw = action(async (dto: ChangePwDTO, headers: SignInSuccessDTO): Promise<UserAccount | null> => {
         const response = await this.client.userChangePw(dto, headers)
-        this.applySignInResponse(response, "user", dto.signIn.userName)
+        return this.applySignInResponse(response, "user", dto.signIn.userName)
     })
 
-    signInAdmin = action(async (dto: SignInAdminDTO): Promise<void> => {
+    signInAdmin = action(async (dto: SignInAdminDTO): Promise<UserAccount | null> => {
         const response = await this.client.userSignInAdmin(dto)
-        this.applySignInResponse(response, "admin", dto.userName)
+        return this.applySignInResponse(response, "admin", dto.userName)
     })
 
-    changeAdminPw = action(async (dto: ChangePwAdminDTO, headers: SignInSuccessDTO): Promise<void> => {
+    changeAdminPw = action(async (dto: ChangePwAdminDTO, headers: SignInSuccessDTO): Promise<UserAccount | null> => {
         const response = await this.client.userChangeAdminPw(dto, headers)
-        this.applySignInResponse(response, "admin", dto.signIn.userName)
+        return this.applySignInResponse(response, "admin", dto.signIn.userName)
     })
 
     applySignInResponse = action((response: EitherMsg<SignInSuccessDTO[]>, status: "user" | "admin", userName: string) => {
-        if (response.isOK === false) {
-            console.log(response.errMsg)
-            return
-        } else if (response.value.length < 1) {
-            console.log("Error: empty response")
-            return
-        } else if (response.value[0].accessToken.length < 1) {
-            console.log("Error: empty access token")
-        }
-
-        const successDTO = response.value[0]
-        const expiration = dateOfTS(new Date())
-        const account: UserAccount = {
-            name: userName, expiration, accessToken: successDTO.accessToken, userId: successDTO.userId, status,
-        }
-
-        localStorage.setItem("account", JSON.stringify(account))
-        this.acc = account
+        const mbAccount = processSignIn(response, status, userName)
+        if (mbAccount !== null) this.acc = mbAccount
+        return mbAccount
     })
 
     private accountsEq(a1: UserAccount | null, a2: UserAccount): boolean {
@@ -75,15 +60,15 @@ export default class UserState {
 
     trySignInFromLS = action(() => {
         const fromLS = localStorage.getItem("account")
-        if (fromLS && fromLS.length > 0 && fromLS !== "undefined") {
-            const accFromLS: UserAccount = JSON.parse(fromLS)
-            if (accFromLS.userId && accFromLS.userId > -1
-                  && accFromLS.accessToken && accFromLS.accessToken.length > 0
-                  && (accFromLS.status === "admin" || accFromLS.status === "user")
-                  && isSameDay(new Date(), accFromLS.expiration) === true
-                  && this.accountsEq(this.acc, accFromLS) === false) {
-                this.acc = accFromLS
-            }
+        if (!fromLS || fromLS.length < 1 || fromLS === "undefined") return;
+
+        const accFromLS: UserAccount = JSON.parse(fromLS)
+        if (accFromLS.userId && accFromLS.userId > -1
+              && accFromLS.accessToken && accFromLS.accessToken.length > 0
+              && (accFromLS.status === "admin" || accFromLS.status === "user")
+              && isSameDay(new Date(), accFromLS.expiration) === true
+              && this.accountsEq(this.acc, accFromLS) === false) {
+            this.acc = accFromLS
         }
     })
 

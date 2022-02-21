@@ -1,7 +1,6 @@
 import { action, IObservableArray, makeAutoObservable, observable } from "mobx"
-import SelectChoice from "../types/SelectChoice"
 import IClient from "../../ports/IClient"
-import { LanguageCUDTO, LanguageDTO, TaskCUDTO, TaskGroupCUDTO, TaskGroupDTO } from "../types/dto/AuxDTO"
+import { LanguageCUDTO,  TaskCUDTO, TaskGroupCUDTO, } from "../types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, BareSnippetDTO, ProposalUpdateDTO } from "../types/dto/SnippetDTO"
 import { StatsDTO } from "../types/dto/UserDTO"
 import { fetchFromClient } from "./Utils"

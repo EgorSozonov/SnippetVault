@@ -7,6 +7,7 @@ import {observer} from "mobx-react-lite"
 import { SignInDTO } from "../../types/dto/AuthDTO"
 import { NavLink } from "react-router-dom"
 import PATHS from "../../Path"
+import { useCookies } from "react-cookie"
 
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
 
 const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
     const state = useContext<MainState>(StoreContext)
+    const [cookies, setCookie] = useCookies(['account']);
 
     const unameRef = useRef<HTMLInputElement>(null)
     const pwRef = useRef<HTMLInputElement>(null)
@@ -24,7 +26,10 @@ const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
         const pw: string = pwRef.current.value
         const dto: SignInDTO = {userName: uName, password: pw, }
 
-        state.user.signInOrRegister(dto, mode)
+        const mbAcc = state.user.signInOrRegister(dto, mode)
+        if (mbAcc !== null) {
+            setCookie
+        }
     }
 
     return html`
