@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 class Program {
     static void Main(string[] args) {
         CreateWebHostBuilder(args)
-            .UseUrls("http://localhost:47001/")
+            .UseUrls("http://localhost:10201/")
             .UseKestrel(o => o.UseSystemd())
             .Build()
             .Run()

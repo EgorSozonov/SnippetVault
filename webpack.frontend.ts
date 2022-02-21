@@ -8,9 +8,10 @@ import Terser from "terser-webpack-plugin";
 
 
 const webpackFrontend = (args: any): Configuration => {
-	const isProduction = args && args["mode"] === "production";
+	const mode = (args && args["mode"] === "production") ? "production" : "development";
+
 	console.log('');
-	console.log(isProduction ? "PRODUCTION BUILD" : "DEVELOPMENT BUILD");
+	console.log(mode.toUpperCase() + " BUILD");
 	console.log('');
 
 	const config: Configuration = {
@@ -22,9 +23,9 @@ const webpackFrontend = (args: any): Configuration => {
             publicPath: "/sv",
 		},
 		target: "web",
-		devtool: isProduction ? false : "source-map",
+		devtool: mode ? false : "source-map",
 		optimization: {
-            minimize: isProduction,
+            minimize: mode === "production",
 			splitChunks: {
 				// always create vendor.js
 				cacheGroups: {
@@ -91,7 +92,7 @@ const webpackFrontend = (args: any): Configuration => {
 			},
             static: "target/frontend",
 			compress: false,
-			port: 47000,
+			port: 10200,
 			historyApiFallback:  {
                 index: '/sv'
             },
@@ -101,8 +102,8 @@ const webpackFrontend = (args: any): Configuration => {
 
 		plugins: [
 			new webpack.EnvironmentPlugin({
-				NODE_ENV: isProduction ? "production" : "development",
-				DEBUG: !isProduction
+				NODE_ENV: mode,
+				DEBUG: mode === "development",
 			}),
             new Manifest({
                 fileName: "manifest.json",

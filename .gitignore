@@ -20,6 +20,7 @@ src/backend/obj
 src/backend/target
 src/backend/portsIn/store/db/creds.json
 src/backend/core/auth/*
+*.service
 include/*
 config/creds*
 src/**/creds.json
