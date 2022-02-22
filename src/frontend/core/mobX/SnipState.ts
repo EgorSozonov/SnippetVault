@@ -1,7 +1,7 @@
 import { action, IObservableArray, makeAutoObservable, observable } from "mobx"
 import SelectChoice from "../types/SelectChoice"
 import IClient from "../../ports/IClient"
-import SnippetState, { updateId, updateUrl, updateWithChoicesUrl as updateWithNewlyReceivedChoices, } from "../components/snippet/utils/SnippetState"
+import SnippetState, { updateId, updateLanguageChoices, updateLanguageId, updateLanguagesWithChoices, updateUrl, updateWithChoicesUrl, } from "../components/snippet/utils/SnippetState"
 import { LanguageDTO, TaskGroupDTO, } from "../types/dto/AuxDTO"
 import { SnippetDTO, AlternativesDTO, ProposalCreateDTO, } from "../types/dto/SnippetDTO"
 import { CommentCUDTO, CommentDTO, StatsDTO, VoteDTO } from "../types/dto/UserDTO"
@@ -22,9 +22,9 @@ export default class SnipState {
     public stats: StatsDTO | null = null
 
     public languages: IObservableArray<LanguageDTO> = observable.array([])
+    public languageChoices: IObservableArray<SelectChoice> = observable.array([])
 
     public taskGroups: IObservableArray<SelectChoice> = observable.array([])
-
     public comments: IObservableArray<CommentDTO> = observable.array([])
 
     public alternatives: AlternativesDTO | null = null
@@ -48,33 +48,48 @@ export default class SnipState {
     languagesGet = action(async () => {
         const resultLangs: EitherMsg<LanguageDTO[]> = await this.client.languagesGet()
         if (resultLangs.isOK === true) {
-            const langList = sortLanguages(resultLangs.value)
-            this.languageListSet(langList)
             this.languagesSet(resultLangs.value)
+            const langList = sortLanguages(resultLangs.value)
+            this.languageChoices = observable.array(langList)
+            this.languageChoicesSet(langList)
         } else {
             console.log(resultLangs.errMsg)
         }
     })
 
-    language1Set = action((newValue: SelectChoice): void => {
-        this.l1 = updateId(this.l1, newValue.id)
+    language1Chosen = action((newValue: SelectChoice): void => {
+        const newL1 = updateLanguageId(this.l1, this.l2, this.languageChoices, newValue.id)
+        this.l1 = newL1
+        if (newL1.type === "ChoicesLoaded") {
+            this.l2 = updateLanguageChoices(this.l2, newL1.choices)
+        }
     })
 
-    language2Set = action((newValue: SelectChoice): void => {
-        this.l2 = updateId(this.l2, newValue.id)
+    language2Chosen = action((newValue: SelectChoice): void => {
+        const newL2 = updateLanguageId(this.l2, this.l1, this.languageChoices, newValue.id)
+        this.l2 = newL2
+        if (newL2.type === "ChoicesLoaded") {
+            this.l1 = updateLanguageChoices(this.l1, newL2.choices)
+        }
     })
 
-    languageListSet = action((newValue: SelectChoice[]): void => {
-        this.l1 = updateWithNewlyReceivedChoices(this.l1, newValue)
-        this.l2 = updateWithNewlyReceivedChoices(this.l2, newValue)
+    languageChoicesSet = action((newValue: SelectChoice[]): void => {
+        if (newValue.length > 1) {
+            const withoutFirstTwo: SelectChoice[] = newValue.slice(2)
+            this.l1 = updateLanguagesWithChoices(this.l1, newValue[0], withoutFirstTwo)
+            this.l2 = updateLanguagesWithChoices(this.l2, newValue[1], withoutFirstTwo)
+        } else if (newValue.length === 1) {
+            this.l1 = updateLanguagesWithChoices(this.l1, newValue[0], [])
+            this.l2 = updateLanguagesWithChoices(this.l2, newValue[0], [])
+        }
     })
 
     languagesSet = action((newValue: LanguageDTO[]): void => {
         this.languages = observable.array(newValue)
     })
 
-    taskGroupSet = action((newValue: SelectChoice): void => {
-        this.tg = updateId(this.tg, newValue.id)
+    taskGroupChosen = action((newValue: SelectChoice): void => {
+        this.tg = updateId(this.tg, this.taskGroups, newValue.id)
     })
 
     taskGroupsGet = action(async () => {
@@ -85,7 +100,7 @@ export default class SnipState {
         const newArr = newValue.map(x =>  {return {id: x.id, name: x.name, code: x.code, }})
 
         this.taskGroups = observable.array(newArr)
-        this.tg = updateWithNewlyReceivedChoices(this.tg, newArr)
+        this.tg = updateWithChoicesUrl(this.tg, newArr)
     })
 
     proposalCreate = action(async (dto: ProposalCreateDTO, headers: SignInSuccessDTO) => {
@@ -109,8 +124,6 @@ export default class SnipState {
     })
 
     alternativesSet = action((newValue: AlternativesDTO[]): void => {
-        console.log("alternatives response:")
-        console.log(newValue)
         if (!newValue || newValue === null || newValue.length !== 1) {
             this.alternatives = null
             return

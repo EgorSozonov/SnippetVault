@@ -76,7 +76,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         <span>
                             ${state.snip.l1.type === "ChoicesLoaded" &&
                                 html`<${HoverSelectCompact} currValue=${state.snip.l1} choices=${state.snip.l1.choices} uniqueName="Lang1Choice"
-                                selectCallback=${state.snip.language1Set}><//>`
+                                selectCallback=${state.snip.language1Chosen}><//>`
                             }
                         </span>
                     </div>
@@ -85,7 +85,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                     <div class="snippetHeading">
                         ${state.snip.tg.type === "ChoicesLoaded" &&
                             html`<${HoverSelectCompact} currValue=${state.snip.tg} choices=${state.snip.tg.choices} uniqueName="TaskGroupChoice"
-                            selectCallback=${state.snip.taskGroupSet}><//>`
+                            selectCallback=${state.snip.taskGroupChosen}><//>`
                         }
                     </div>
                 </div>
@@ -94,7 +94,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         <span>${stringOf(lang2)}</span>
                         ${state.snip.l2.type === "ChoicesLoaded" &&
                             html`<${HoverSelectCompact} currValue=${state.snip.l2} choices=${state.snip.l2.choices} uniqueName="Lang2Choice"
-                            selectCallback=${state.snip.language2Set}><//>`
+                            selectCallback=${state.snip.language2Chosen}><//>`
                         }
                     </div>
                     <${NavLink} exact="true" title=${isSignedIn === true ? "Profile" : "Sign in"} to=${PATHS["profile"].url}>

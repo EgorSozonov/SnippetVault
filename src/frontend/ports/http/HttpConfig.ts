@@ -9,6 +9,7 @@ const axiosConfig: AxiosRequestConfig = {
     baseURL: BASE_URL + API_PREFIX,
     timeout: 10000,
     transformResponse: [deserializeJSON],
+    withCredentials: true,
     //headers: {'X-Custom-Header': 'foobar'},
 }
 

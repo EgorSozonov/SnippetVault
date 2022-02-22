@@ -29,6 +29,7 @@ public class WebApp {
             builder.WithOrigins(new string[] {"http://localhost:8080", "http://localhost:10200", "http://sozonov.tech", "https://sozonov.tech",
             "http://www.sozonov.tech", "https://www.sozonov.tech"})
                    .AllowAnyMethod()
+                   .AllowCredentials()
                    .AllowAnyHeader();
         }));
     }
