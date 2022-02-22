@@ -620,6 +620,20 @@ public class DBStore : IStore {
 
     #endregion
 
+    private static readonly string logMessageQ = @"
+        INSERT INTO sv.log(ts, type, code, msg)
+	    VALUES (@ts, @msgType, @code, @message);
+    ";
+    public async Task<int> logMessage(DateTime ts, int msgType, string code, string message) {
+        await using (var cmd = new NpgsqlCommand(logMessageQ, db.conn)) {
+            cmd.Parameters.AddWithValue("ts", NpgsqlTypes.NpgsqlDbType.TimestampTz, ts.ToUniversalTime());
+            cmd.Parameters.AddWithValue("msgType", NpgsqlTypes.NpgsqlDbType.Integer, msgType);
+            cmd.Parameters.AddWithValue("code", NpgsqlTypes.NpgsqlDbType.Varchar, code.Substring(0, Math.Min(16, code.Length)));
+            cmd.Parameters.AddWithValue("message", NpgsqlTypes.NpgsqlDbType.Varchar, message);
+            return await cmd.ExecuteNonQueryAsync();
+        }
+    }
+
     #region Utils
     private static ReqResult<T> readResultSet<T>(NpgsqlDataReader reader) where T : class, new() {
         try {

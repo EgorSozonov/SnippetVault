@@ -21,16 +21,18 @@ class Program {
 
             .ConfigureAppConfiguration((hostingContext, config) => {
                 config.AddJsonFile("creds.json",
-                    optional: false,
-                    reloadOnChange: false);
+                optional: false,
+                reloadOnChange: false);
             })
             .ConfigureServices(serviceCollection =>
                 serviceCollection.AddScoped<IDBContext, DBContext>()
                                  .AddScoped<IDataService, DataService>()
                                  .AddScoped<IAuthService, AuthService>()
+                                 .AddScoped<LogService>()
                                  .AddScoped<IStore, DBStore>()
                                  .AddScoped<AuthorizeFilter>()
                                  .AddScoped<AuthorizeAdminFilter>()
+                                 .AddScoped<ExceptionMiddleware>()
                                  )
             .UseStartup<WebApp>();
     }

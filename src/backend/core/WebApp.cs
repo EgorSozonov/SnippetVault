@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using System.IO;
 
 
 public class WebApp {
@@ -26,8 +24,11 @@ public class WebApp {
         services.AddRouting();
 
         services.AddCors(o => o.AddPolicy("SVCorsPolicy", builder => {
-            builder.WithOrigins(new string[] {"http://localhost:8080", "http://localhost:10200", "http://sozonov.tech", "https://sozonov.tech",
-            "http://www.sozonov.tech", "https://www.sozonov.tech"})
+            builder.WithOrigins(new string[] {
+                "http://sozonov.tech", "https://sozonov.tech",
+                "http://www.sozonov.tech", "https://www.sozonov.tech",
+                //"http://localhost:8080", "http://localhost:10200",
+            })
                    .AllowAnyMethod()
                    .AllowCredentials()
                    .AllowAnyHeader();
@@ -38,24 +39,19 @@ public class WebApp {
         if (env.IsDevelopment()) {
             app.UseDeveloperExceptionPage();
         } else {
-            app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
 
         app.UseCors("SVCorsPolicy");
-
+        app.UseMiddleware<ExceptionMiddleware>();
 
         DefaultFilesOptions options = new DefaultFilesOptions();
         app.UseDefaultFiles(new DefaultFilesOptions());
 
         app.UseRouting();
         app.UseEndpoints(endpointRouteBuilder => {
-
             endpointRouteBuilder.MapControllers();
         });
-
-        //app.UseMiddleware<AuthorizeMiddleware>();
-
     }
 }
 

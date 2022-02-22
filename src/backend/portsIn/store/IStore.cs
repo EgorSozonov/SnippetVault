@@ -44,6 +44,8 @@ public interface IStore {
     Task<ReqResult<ProfileDTO>> userProfile(int userId);
     Task<ReqResult<UserDTO>> userData(int userId);
     Task<int> commentCreate(int userId, int snId, string content, DateTime ts);
+
+    Task<int> logMessage(DateTime ts, int msgType, string code, string message);
 }
 
 }

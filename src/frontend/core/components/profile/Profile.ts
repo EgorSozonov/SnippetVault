@@ -75,7 +75,7 @@ const Profile: React.FunctionComponent = observer(() => {
                                 <h2>${state.user.acc !== null && state.user.acc.name}</h2>
                             </div>
                             <div class="profileHeaderSubscript">
-                                <h5>User Profilee</h5>
+                                <h5>User Profile</h5>
                             </div>
                             <div class="profileChangePasswordButton clickable" title="Change password" onClick=${openChangePwHandler}>Pw
                             </div>
