@@ -9,18 +9,18 @@ function prependZero(i: number): string {
 
 export type DateOnly = {
     year: number,
-    /** 
+    /**
      * 1-based month number
      */
     month: number,
-    /** 
+    /**
      * 1-based day-of-month
      */
     day: number,
 }
 
 export function dateOfTS(ts: Date): DateOnly {
-    return { year: ts.getFullYear(), month: ts.getMonth(), day: ts.getDay(), }
+    return { year: ts.getFullYear(), month: ts.getMonth() + 1, day: ts.getDate(), }
 }
 
 export function isSameDay(ts: Date, dt: DateOnly): boolean {

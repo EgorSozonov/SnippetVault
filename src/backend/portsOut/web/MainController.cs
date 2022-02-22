@@ -161,7 +161,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("user/signIn")]
     public async Task userSignIn([FromBody] SignInDTO dto) {
-        var result = await auth.userAuthenticate(dto);
+        var result = await auth.userAuthenticate(dto, HttpContext.Response.Cookies);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response, 401);
     }
 
@@ -169,14 +169,14 @@ public class MainController : Controller {
     [Route("user/changePw")]
     [ServiceFilter(typeof(AuthorizeFilter))]
     public async Task userChangePw([FromBody] ChangePwDTO dto) {
-        var result = await auth.userUpdatePw(dto);
+        var result = await auth.userUpdatePw(dto, HttpContext.Response.Cookies);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
     }
 
     [HttpPost]
     [Route("user/signInAdmin")]
     public async Task userSignInAdmin([FromBody] SignInAdminDTO dto) {
-        var result = await auth.userAuthenticateAdmin(dto);
+        var result = await auth.userAuthenticateAdmin(dto, HttpContext.Response.Cookies);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response, 401);
     }
 
@@ -184,7 +184,7 @@ public class MainController : Controller {
     [Route("user/changeAdminPw")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
     public async Task userChangeAdminPw([FromBody] ChangePwAdminDTO dto) {
-        var result = await auth.userUpdateAdminPw(dto);
+        var result = await auth.userUpdateAdminPw(dto, HttpContext.Response.Cookies);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
     }
 
@@ -275,6 +275,8 @@ public class MainController : Controller {
     [HttpGet]
     [Route("health")]
     public async Task healthCheck() {
+        var a = HttpContext.Request.Headers.Origin;
+
         await HttpContext.Response.WriteAsync("SnippetVault backend running at " + DateTime.Now);
     }
 

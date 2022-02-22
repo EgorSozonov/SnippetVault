@@ -26,7 +26,8 @@ public class WebApp {
         services.AddRouting();
 
         services.AddCors(o => o.AddPolicy("SVCorsPolicy", builder => {
-            builder.WithOrigins("*")
+            builder.WithOrigins(new string[] {"http://localhost:8080", "http://localhost:10200", "http://sozonov.tech", "https://sozonov.tech",
+            "http://www.sozonov.tech", "https://www.sozonov.tech"})
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         }));
