@@ -14,14 +14,12 @@ public class AuthorizeAdminFilter : Attribute, IAsyncActionFilter    {
     }
 
     public void OnActionExecuted(ActionExecutedContext context)    {
-        
+
     }
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate continuation) {
         try {
-            context.HttpContext.Request.Headers.TryGetValue("accessToken", out var accessTokens);
-            if (accessTokens.Any()) {
-                string accessToken = accessTokens.First();
+            if (context.HttpContext.Request.Cookies.TryGetValue("accessToken", out var accessToken)) {
                 bool authorized = await authService.userAuthorizeAdmin(accessToken);
                 if (!authorized) context.Result = new UnauthorizedResult();
             } else {

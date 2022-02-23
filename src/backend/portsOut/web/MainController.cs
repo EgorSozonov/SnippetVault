@@ -275,6 +275,7 @@ public class MainController : Controller {
     [HttpGet]
     [Route("health")]
     public async Task healthCheck() {
+
         await HttpContext.Response.WriteAsync("SnippetVault backend running at " + DateTime.Now);
     }
 

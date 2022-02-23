@@ -23,8 +23,7 @@ public class AuthorizeFilter : Attribute, IAsyncActionFilter    {
             string userIdStr = userIdStrs.First();
             int.TryParse(userIdStr, out int userId);
 
-            context.HttpContext.Request.Cookies.TryGetValue("accessToken", out var accessToken);
-            if (accessToken != null) {
+            if (context.HttpContext.Request.Cookies.TryGetValue("accessToken", out var accessToken)) {
                 bool authorized = await authService.userAuthorize(userId, accessToken);
                 if (!authorized) context.Result = new UnauthorizedResult();
             } else {
