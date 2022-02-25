@@ -51,7 +51,7 @@ export default class SnipState {
             this.languagesSet(resultLangs.value)
             const langList = sortLanguages(resultLangs.value)
             this.languageChoices = observable.array(langList)
-            this.languageChoicesSet(langList)
+            this.languagesChosenSet(langList)
         } else {
             console.log(resultLangs.errMsg)
         }
@@ -73,7 +73,9 @@ export default class SnipState {
         }
     })
 
-    languageChoicesSet = action((newValue: SelectChoice[]): void => {
+    languagesChosenSet = action((newValue: SelectChoice[]): void => {
+        console.log("languages chosen, setting")
+        console.log(newValue)
         if (newValue.length > 1) {
             const withoutFirstTwo: SelectChoice[] = newValue.slice(2)
             this.l1 = updateLanguagesWithChoices(this.l1, newValue[0], withoutFirstTwo)
@@ -109,12 +111,15 @@ export default class SnipState {
 
     codesFromUrlSet = action((tgCode: string, l1Code: string, l2Code: string) => {
         if (tgCode.length > 0 && tgCode !== "undefined" && this.tg.code === "") {
+            console.log("updating tg from URL")
             this.tg = updateUrl(this.tg, tgCode)
         }
         if (l1Code.length > 0 && l1Code !== "undefined" && this.l1.code === "") {
+            console.log("updating l1 from URL")
             this.l1 = updateUrl(this.l1, l1Code)
         }
         if (l2Code.length > 0 && l2Code !== "undefined" && this.l2.code === "") {
+            console.log("updating l2 from URL")
             this.l2 = updateUrl(this.l2, l2Code)
         }
     })

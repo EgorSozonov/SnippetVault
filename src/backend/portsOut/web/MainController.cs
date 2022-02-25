@@ -113,7 +113,7 @@ public class MainController : Controller {
     }
 
     [HttpGet]
-    [Route("languages/get")]
+    [Route("languages")]
     public async Task languages() {
         var result = await api.languagesGet();
         await sendQueryResult<LanguageDTO>(result, HttpContext.Response);

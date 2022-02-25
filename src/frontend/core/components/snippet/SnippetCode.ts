@@ -18,6 +18,7 @@ function copyTextToClipboard(text: string) {
 
 function SnippetCode({content, isRight, langId, libraries, tlId, } : Props) {
     const snippetContent = html`
+
         <div>
             <pre class="snippetCode">
                 ${content}
@@ -35,7 +36,7 @@ function SnippetCode({content, isRight, langId, libraries, tlId, } : Props) {
         }
     `
     const alternativesLink = html`
-        <${NavLink} exact to=${`${PATHS["alternative"].urlPrefix}/${langId}/${tlId}`}>
+        <${NavLink} exact="true" to=${`${PATHS["alternative"].urlPrefix}/${langId}/${tlId}`}>
             <div title="Alternative versions" class="commentButton">
                 A
             </div>

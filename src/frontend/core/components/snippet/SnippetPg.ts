@@ -17,6 +17,7 @@ import PATHS from "../../Path"
 import KeyButton from "../../commonComponents/login/KeyButton"
 import UserButton from "../../commonComponents/login/UserButton"
 import HoverSelectCompact from "../../commonComponents/hoverSelect/HoverCompact"
+import SelectChoice from "../../types/SelectChoice"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -37,12 +38,6 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const taskCode = searchParams.get("task")
     const nonEmptyParams = checkNonempty([taskCode, lang1Code, lang2Code, ])
 
-    // If all query params present and at least one of them doesn't match Redux, make a new request to server and update the Redux ids.
-    // Otherwise, if all params are present in Redux, update the URL if it doesn't match.
-    if (nonEmptyParams.length > 0) {
-        state.snip.codesFromUrlSet(nonEmptyParams[0], nonEmptyParams[1], nonEmptyParams[2])
-    }
-
     const isSignedIn = state.user.isUser.get()
 
     useEffect(() => {
@@ -51,12 +46,40 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         state.user.trySignInFromLS()
     }, [])
 
-    useEffect( () => {
-        if (isStateOK([tg, lang1, lang2])) {
-            setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
-            state.snip.snippetsGetByCode(tg.code, lang1.code, lang2.code)
-        }
-    }, [lang1, lang2, tg])
+    const language1Handler = (newValue: SelectChoice) => {
+        const indLang = state.snip.languageChoices.findIndex(x => x.id === newValue.id)
+        if (indLang < 0) return
+
+        setSearchParams(`lang1=${state.snip.languageChoices[indLang].code}&lang2=${lang2Code}&task=${taskCode}`)
+        state.snip.language1Chosen(newValue)
+    }
+
+    const language2Handler = (newValue: SelectChoice) => {
+        const indLang = state.snip.languageChoices.findIndex(x => x.id === newValue.id)
+        if (indLang < 0) return
+
+        setSearchParams(`lang1=${lang1Code}&lang2=${state.snip.languageChoices[indLang].code}&task=${taskCode}`)
+        state.snip.language2Chosen(newValue)
+    }
+
+    const taskGroupHandler = (newValue: SelectChoice) => {
+        const indTg = state.snip.taskGroups.findIndex(x => x.id === newValue.id)
+        if (indTg < 0) return
+
+        setSearchParams(`lang1=${lang1Code}&lang2=${lang2Code}&task=${state.snip.taskGroups[indTg].code}`)
+        state.snip.taskGroupChosen(newValue)
+    }
+
+    if (nonEmptyParams.length < 3 && isStateOK([tg, lang1, lang2]) === true) {
+        setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
+    }
+    useEffect(() => {
+        (async () => {
+            if (nonEmptyParams.length === 3) {
+                await state.snip.snippetsGetByCode(taskCode!!, lang1Code!!, lang2Code!!)
+            }
+        })()
+    }, [lang1Code, lang2Code, taskCode])
 
     const proposalHandler = (snippet: SnippetDTO, isRight: boolean) => () => {
         if (isRight === true && lang2.type === "ChoicesLoaded") {
@@ -76,7 +99,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         <span>
                             ${state.snip.l1.type === "ChoicesLoaded" &&
                                 html`<${HoverSelectCompact} currValue=${state.snip.l1} choices=${state.snip.l1.choices} uniqueName="Lang1Choice"
-                                selectCallback=${state.snip.language1Chosen}><//>`
+                                selectCallback=${language1Handler}><//>`
                             }
                         </span>
                     </div>
@@ -85,7 +108,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                     <div class="snippetHeading">
                         ${state.snip.tg.type === "ChoicesLoaded" &&
                             html`<${HoverSelectCompact} currValue=${state.snip.tg} choices=${state.snip.tg.choices} uniqueName="TaskGroupChoice"
-                            selectCallback=${state.snip.taskGroupChosen}><//>`
+                            selectCallback=${taskGroupHandler}><//>`
                         }
                     </div>
                 </div>
@@ -94,7 +117,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
                         <span>${stringOf(lang2)}</span>
                         ${state.snip.l2.type === "ChoicesLoaded" &&
                             html`<${HoverSelectCompact} currValue=${state.snip.l2} choices=${state.snip.l2.choices} uniqueName="Lang2Choice"
-                            selectCallback=${state.snip.language2Chosen}><//>`
+                            selectCallback=${language2Handler}><//>`
                         }
                     </div>
                     <${NavLink} exact="true" title=${isSignedIn === true ? "Profile" : "Sign in"} to=${PATHS["profile"].url}>

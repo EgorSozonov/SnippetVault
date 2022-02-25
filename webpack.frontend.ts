@@ -19,7 +19,7 @@ const webpackFrontend = (args: any): Configuration => {
 			"snippetVault": path.resolve("./src/frontend/core/App.ts"),
 		},
 		output: {
-			path: path.resolve("./target/frontend"),
+			path: path.resolve("./target/frontend/sv"),
             publicPath: ".",
 		},
 		target: "web",

@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext, useEffect, useRef } from "react"
+import { FunctionComponent, useContext, useRef } from "react"
 import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
