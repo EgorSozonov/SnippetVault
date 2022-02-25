@@ -39,6 +39,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
     const nonEmptyParams = checkNonempty([taskCode, lang1Code, lang2Code, ])
 
     const isSignedIn = state.user.isUser.get()
+    state.snip.codesFromUrlSet(taskCode, lang1Code, lang2Code)
 
     useEffect(() => {
         state.snip.languagesGet()
