@@ -28,6 +28,7 @@ src/.DS_Store
 .DS_Store
 Src/.DS_Store?
 
+.gradle/*
 gradle/*
 # Ignore Gradle GUI config
 gradle-app.setting
