@@ -19,7 +19,7 @@ public AuthService(IStore _st) {
 }
 
 
-public Mono<ReqResult<SignInSuccess>> userRegister(SignIn dto, ) {
+public Mono<ReqResult<SignInSuccess>> userRegister(SignIn dto, IResponseCookies cookies) {
     if (dto.password == null || dto.password.length() < 8) {
         return new Err<SignInSuccess>("Error! Password length must be at least 8 symbols");
     }

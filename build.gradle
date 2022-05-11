@@ -26,6 +26,9 @@ dependencies {
 	annotationProcessor "org.projectlombok:lombok"
 
 	implementation "org.springframework.boot:spring-boot-starter-webflux"
+    implementation "org.springframework.boot:spring-boot-starter-data-r2dbc"
+    //runtime "io-r2dbc:r2dbc-postgresql"
+
 	implementation "org.springframework.security:spring-security-core"
 
     implementation 'de.mkammerer:argon2-jvm-nolibs:2.11'
