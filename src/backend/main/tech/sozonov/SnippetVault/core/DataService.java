@@ -9,10 +9,11 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class DataService {
-    public Mono<ServerResponse> foo(ServerRequest req) {
-        return ServerResponse.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(Mono.just("Hello, Spring!"), String.class);
-    }
-    
+
+public Mono<ServerResponse> foo(ServerRequest req) {
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(Mono.just("Hello, Spring!"), String.class);
+}
+
 }

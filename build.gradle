@@ -1,5 +1,5 @@
 plugins {
-	id "org.springframework.boot" version "3.0.0-SNAPSHOT"
+	id "org.springframework.boot" version "2.6.7"
 	id "io.spring.dependency-management" version "1.0.11.RELEASE"
 	id "java"
 }
@@ -29,6 +29,17 @@ dependencies {
 
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 	testImplementation "io.projectreactor:reactor-test"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs= ["src/backend/main"]
+        }
+        resources {
+            srcDirs= ["src/backend/resources"]
+        }
+    }
 }
 
 tasks.named("test") {
