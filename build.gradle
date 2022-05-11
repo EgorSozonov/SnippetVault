@@ -21,11 +21,14 @@ repositories {
 }
 
 dependencies {
-	implementation "org.springframework.boot:spring-boot-starter-webflux"
-	implementation "org.springframework.security:spring-security-core"
-	compileOnly "org.projectlombok:lombok"
+    compileOnly "org.projectlombok:lombok"
 	developmentOnly "org.springframework.boot:spring-boot-devtools"
 	annotationProcessor "org.projectlombok:lombok"
+
+	implementation "org.springframework.boot:spring-boot-starter-webflux"
+	implementation "org.springframework.security:spring-security-core"
+
+    implementation 'de.mkammerer:argon2-jvm-nolibs:2.11'
 
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 	testImplementation "io.projectreactor:reactor-test"

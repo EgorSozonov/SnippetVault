@@ -7,7 +7,7 @@ public static class SignInSuccess {
     public int userId;
 }
 
-public static  class SignIn {
+public static class SignIn {
     public String userName;
     public String password;
 }

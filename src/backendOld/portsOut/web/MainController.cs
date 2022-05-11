@@ -31,7 +31,7 @@ public class MainController : Controller {
 
     [HttpGet]
     [Route("snippets/byCode")]
-    public async Task snippetsByCode([FromQuery] string taskGroup, [FromQuery] string lang1, [FromQuery] string lang2) {
+    public async Task snippetsByCode(@RequestParam string taskGroup, @RequestParam string lang1, @RequestParam string lang2) {
         var result = await api.snippetsGetByCode(taskGroup, lang1, lang2);
         await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
     }
@@ -39,7 +39,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("proposal/create")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task proposalCreate([FromBody] ProposalCreateDTO dto) {
+    public async Task proposalCreate(@RequestBody ProposalCreateDTO dto) {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
         int.TryParse(mbUserId[0].ToString(), out int userId);
         await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);
@@ -48,7 +48,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("proposal/update")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task proposalUpdate([FromBody] ProposalUpdateDTO dto) {
+    public async Task proposalUpdate(@RequestBody ProposalUpdateDTO dto) {
         await applyPostRequest(api.proposalUpdate(dto), HttpContext.Response);
     }
 
@@ -153,14 +153,14 @@ public class MainController : Controller {
 
     [HttpPost]
     [Route("user/register")]
-    public async Task userRegister([FromBody] SignInDTO dto) {
+    public async Task userRegister(@RequestBody SignInDTO dto) {
         var result = await auth.userRegister(dto, HttpContext.Response.Cookies);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
     }
 
     [HttpPost]
     [Route("user/signIn")]
-    public async Task userSignIn([FromBody] SignInDTO dto) {
+    public async Task userSignIn(@RequestBody SignInDTO dto) {
         var result = await auth.userAuthenticate(dto, HttpContext.Response.Cookies);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response, 401);
     }
@@ -168,14 +168,14 @@ public class MainController : Controller {
     [HttpPost]
     [Route("user/changePw")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task userChangePw([FromBody] ChangePwDTO dto) {
+    public async Task userChangePw(@RequestBody ChangePwDTO dto) {
         var result = await auth.userUpdatePw(dto, HttpContext.Response.Cookies);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
     }
 
     [HttpPost]
     [Route("user/signInAdmin")]
-    public async Task userSignInAdmin([FromBody] SignInAdminDTO dto) {
+    public async Task userSignInAdmin(@RequestBody SignInAdminDTO dto) {
         var result = await auth.userAuthenticateAdmin(dto, HttpContext.Response.Cookies);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response, 401);
     }
@@ -183,7 +183,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("user/changeAdminPw")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task userChangeAdminPw([FromBody] ChangePwAdminDTO dto) {
+    public async Task userChangeAdminPw(@RequestBody ChangePwAdminDTO dto) {
         var result = await auth.userUpdateAdminPw(dto, HttpContext.Response.Cookies);
         await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
     }
@@ -191,7 +191,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("user/vote")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task userVote([FromBody] VoteDTO dto) {
+    public async Task userVote(@RequestBody VoteDTO dto) {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
         int.TryParse(mbUserId[0].ToString(), out int userId);
         await applyPostRequest(api.userVote(dto, userId), HttpContext.Response);
@@ -200,7 +200,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("comment/cu")]
     [ServiceFilter(typeof(AuthorizeFilter))]
-    public async Task commentCreate([FromBody] CommentCUDTO dto) {
+    public async Task commentCreate(@RequestBody CommentCUDTO dto) {
         HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
         int.TryParse(mbUserId[0].ToString(), out int userId);
         await applyPostRequest(api.commentCreate(dto, userId), HttpContext.Response);
@@ -229,7 +229,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("task/cu")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task taskCreateUpdate([FromBody] TaskCUDTO dto) {
+    public async Task taskCreateUpdate(@RequestBody TaskCUDTO dto) {
         if (dto == null) return;
         await applyPostRequest(api.taskCU(dto), HttpContext.Response);
     }
@@ -251,7 +251,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("language/cu")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task languageCreateUpdate([FromBody] LanguageCUDTO dto) {
+    public async Task languageCreateUpdate(@RequestBody LanguageCUDTO dto) {
         if (dto == null) return;
         await applyPostRequest(api.languageCU(dto), HttpContext.Response);
     }
@@ -259,7 +259,7 @@ public class MainController : Controller {
     [HttpPost]
     [Route("taskGroup/cu")]
     [ServiceFilter(typeof(AuthorizeAdminFilter))]
-    public async Task taskGroupCreateUpdate([FromBody] TaskGroupCUDTO dto) {
+    public async Task taskGroupCreateUpdate(@RequestBody TaskGroupCUDTO dto) {
         if (dto == null) return;
         await applyPostRequest(api.taskGroupCU(dto), HttpContext.Response);
     }

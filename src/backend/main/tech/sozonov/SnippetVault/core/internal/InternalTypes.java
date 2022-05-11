@@ -1,7 +1,9 @@
 package tech.sozonov.SnippetVault.core.internal;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import lombok.Builder;
+
 
 public class InternalTypes {
 
@@ -26,6 +28,7 @@ public static class SnippetIntern {
     public String libraries;
 }
 
+@Builder
 public static class UserNewIntern {
     public String userName;
     public String hash;

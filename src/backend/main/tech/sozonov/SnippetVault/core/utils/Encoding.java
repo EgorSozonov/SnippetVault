@@ -12,7 +12,7 @@ public class Encoding {
 public static String convertToBase64(String inp) {
     byte[] asciiArray = inp.getBytes(StandardCharsets.US_ASCII);
     int resultLength = asciiArray.length % 4 == 0 ? asciiArray.length : ((asciiArray.length/4 + 1)*4);
-    var resultArray = new byte[resultLength];
+    val resultArray = new byte[resultLength];
     // . -> A [46 -> 65]
     // / -> B [47 -> 66]
     // A-X are transformed by simple +2 in ASCII
@@ -43,12 +43,12 @@ public static String convertToBase64(String inp) {
     }
     // Padding with "="
     for (int i = asciiArray.length; i < resultLength; ++i) {
-        resultArray[i] = 61; 
+        resultArray[i] = 61;
     }
     return Arrays.toString(resultArray);
 }
 
-/** 
+/**
  * Converting to bcrypt's weirdo encoding from real Base64.
  * Source alphabet: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
  * Target alphabet: ./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
@@ -57,8 +57,8 @@ public static String convertToBcrypt(String inp) {
     byte[] asciiArray = inp.getBytes(StandardCharsets.US_ASCII);
     int j = asciiArray.length - 1;
     while (j > 0 && asciiArray[j] == 61) --j;
-    int resultLength = j + 1; 
-    var resultArray = new byte[resultLength];
+    int resultLength = j + 1;
+    val resultArray = new byte[resultLength];
     // . -> A [46 <- 65]
     // / -> B [47 <- 66]
     // C-Z are transformed by simple -2 in ASCII

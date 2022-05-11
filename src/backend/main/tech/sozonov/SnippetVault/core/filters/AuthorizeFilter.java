@@ -24,8 +24,8 @@ public Mono<ServerResponse> filter(ServerRequest serverRequest, HandlerFunction<
     String userIdStr = serverRequest.headers().firstHeader("userId");
     val accessToken = serverRequest.cookies().getFirst("accessToken");
     try {
-        double userId = Double.parseDouble(userIdStr);
-        boolean isAuthorized = authService.userAuthorize(userId, accessToken).get();
+        int userId = Integer.parseInt(userIdStr);
+        boolean isAuthorized = authService.userAuthorize(userId, accessToken.getValue()).block();
         if (!isAuthorized) return ServerResponse.status(401).build();
     } catch (Exception e) {
         return ServerResponse.status(401).build();
