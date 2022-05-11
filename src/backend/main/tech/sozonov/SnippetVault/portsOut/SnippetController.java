@@ -37,27 +37,10 @@ public Task snippets(@PathVariable("taskGroup") int taskGroup,
     await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
 }
 
-
 @GetMapping("snippets/byCode")
 public Task snippetsByCode(@RequestParam String taskGroup, @RequestParam String lang1, @RequestParam String lang2) {
     var result = await api.snippetsGetByCode(taskGroup, lang1, lang2);
     await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
-}
-
-
-@PostMapping("proposal/create")
-[ServiceFilter(typeof(AuthorizeFilter))]
-public Mono<ResponseEntity> proposalCreate(@RequestBody ProposalCreate dto) {
-    HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
-    int.TryParse(mbUserId[0].ToString(), out int userId);
-    await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);
-}
-
-
-@PostMapping("proposal/update")
-[ServiceFilter(typeof(AuthorizeAdminFilter))]
-public Task proposalUpdate(@RequestBody ProposalUpdate dto) {
-    await applyPostRequest(api.proposalUpdate(dto), HttpContext.Response);
 }
 
 @GetMapping("snippet/{snId}")
@@ -66,24 +49,7 @@ public Task proposalGet(@PathVariable("snId") int snId) {
     await sendQueryResult<BareSnippetDTO>(result, HttpContext.Response);
 }
 
-@PostMapping("snippet/approve/{snId}")
-[ServiceFilter(typeof(AuthorizeAdminFilter))]
-public Task snippetApprove(@PathVariable("snId") int snId) {
-    await applyPostRequest(api.snippetApprove(snId), HttpContext.Response);
-}
 
-
-@PostMapping("snippet/decline/{snId}")
-[ServiceFilter(typeof(AuthorizeAdminFilter))]
-public Task snippetDecline(@PathVariable("snId") int snId) {
-    await applyPostRequest(api.snippetDecline(snId), HttpContext.Response);
-}
-
-@PostMapping("snippet/markPrimary/{tlId}/{snId}")
-[ServiceFilter(typeof(AuthorizeAdminFilter))]
-public Task snippetMarkPrimary(@PathVariable("tlId") int tlId, @PathVariable("snId") int snId) {
-    await applyPostRequest(api.snippetMarkPrimary(tlId, snId), HttpContext.Response);
-}
 
 @GetMapping("proposals")
 public Task proposals() {

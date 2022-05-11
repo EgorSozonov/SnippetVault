@@ -43,7 +43,7 @@ class HttpClient implements IClient {
     }
 
     proposalCreate(dto: ProposalCreateDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequest<ProposalCreateDTO>(`/proposal/create`, dto, headers)
+        return this.postRequest<ProposalCreateDTO>(`/secure/proposal/create`, dto, headers)
     }
 
     proposalGet(snId: number): Promise<EitherMsg<BareSnippetDTO[]>> {
@@ -51,19 +51,19 @@ class HttpClient implements IClient {
     }
 
     proposalUpdate(dto: ProposalUpdateDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequest<ProposalUpdateDTO>(`/proposal/update`, dto, headers)
+        return this.postRequest<ProposalUpdateDTO>(`/admin/proposal/update`, dto, headers)
     }
 
     proposalApprove(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/snippet/approve/${snId}`, headers)
+        return this.postRequestNoPayload(`/admin/snippet/approve/${snId}`, headers)
     }
 
     proposalDecline(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/snippet/decline/${snId}`, headers)
+        return this.postRequestNoPayload(`/admin/snippet/decline/${snId}`, headers)
     }
 
     snippetMarkPrimary(tlId: number, snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/snippet/markPrimary/${tlId}/${snId}`, headers)
+        return this.postRequestNoPayload(`/admin/snippet/markPrimary/${tlId}/${snId}`, headers)
     }
 
     commentsGet(snId: number): Promise<EitherMsg<CommentDTO[]>> {
@@ -71,23 +71,23 @@ class HttpClient implements IClient {
     }
 
     commentCreate(dto: CommentCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequest("/comment/cu", dto, headers)
+        return this.postRequest("/secure/comment/cu", dto, headers)
     }
 
     languageCU(dto: LanguageCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequest(`/language/cu`, dto, headers)
+        return this.postRequest(`/admin/language/cu`, dto, headers)
     }
 
     taskCU(dto: TaskCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequest(`/task/cu`, dto, headers)
+        return this.postRequest(`/admin/task/cu`, dto, headers)
     }
 
     taskGet(taskId: number): Promise<EitherMsg<TaskDTO[]>> {
-        return this.getRequestNoCreds(`/task/${taskId}`)
+        return this.getRequestNoCreds(`/admin/task/${taskId}`)
     }
 
     taskGroupCU(dto: TaskGroupCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequest(`/taskGroup/cu`, dto, headers)
+        return this.postRequest(`/admin/taskGroup/cu`, dto, headers)
     }
 
     userRegister(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
@@ -95,7 +95,7 @@ class HttpClient implements IClient {
     }
 
     userVote(dto: VoteDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequest("/user/vote", dto, headers)
+        return this.postRequest("/secure/user/vote", dto, headers)
     }
 
     userSignIn(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
@@ -107,15 +107,15 @@ class HttpClient implements IClient {
     }
 
     userProfile(headers: SignInSuccessDTO): Promise<EitherMsg<ProfileDTO[]>> {
-        return this.getRequest("/user/profile", headers)
+        return this.getRequest("/secure/user/profile", headers)
     }
 
     userChangePw(dto: ChangePwDTO, headers: SignInSuccessDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
-        return this.postRequestWithResult("/user/changePw", dto, headers)
+        return this.postRequestWithResult("/secure/user/changePw", dto, headers)
     }
 
     userChangeAdminPw(dto: ChangePwAdminDTO, headers: SignInSuccessDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
-        return this.postRequestWithResult("/user/changeAdminPw", dto, headers)
+        return this.postRequestWithResult("/admin/changeAdminPw", dto, headers)
     }
 
     // Admin

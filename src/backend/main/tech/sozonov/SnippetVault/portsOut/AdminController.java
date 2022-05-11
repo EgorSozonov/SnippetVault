@@ -34,12 +34,6 @@ public Mono<List<TaskCU>> tasksAll() {
 }
 
 
-@PostMapping("task/cu")
-[ServiceFilter(typeof(AuthorizeAdminFilter))]
-public Mono<RequestEntity> taskCreateUpdate(@RequestBody TaskCU dto) {
-    if (dto == null) return;
-    await applyPostRequest(api.taskCU(dto), HttpContext.Response);
-}
 
 @GetMapping("taskGroup/all")
 public Mono<List<TaskGroup>> taskGroupsAll() {
@@ -51,22 +45,6 @@ public Mono<List<TaskGroup>> taskGroupsAll() {
 public Mono<List<Language>> languagesAll() {
     val result = await api.languagesAll();
     await sendQueryResult<LanguageCUDTO>(result, HttpContext.Response);
-}
-
-
-@PostMapping("language/cu")
-[ServiceFilter(typeof(AuthorizeAdminFilter))]
-public Mono<RequestEntity> languageCreateUpdate(@RequestBody LanguageCU dto) {
-    if (dto == null) return;
-    await applyPostRequest(api.languageCU(dto), HttpContext.Response);
-}
-
-
-@PostMapping("taskGroup/cu")
-[ServiceFilter(typeof(AuthorizeAdminFilter))]
-public Mono<List<TaskGroup>> taskGroupCreateUpdate(@RequestBody TaskGroupCU dto) {
-    if (dto == null) return;
-    await applyPostRequest(api.taskGroupCU(dto), HttpContext.Response);
 }
 
 @GetMapping("admin/stats")
