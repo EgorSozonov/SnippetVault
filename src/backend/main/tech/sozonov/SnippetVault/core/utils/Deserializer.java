@@ -1,15 +1,22 @@
 package tech.sozonov.SnippetVault.core.utils;
 
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.function.BiConsumer;
+
+import tech.sozonov.SnippetVault.core.utils.Types.Pair;
+
 public class Deserializer<T> {
 
-// PropTarget[] columnTargets;
-// List<Action<T, int>> settersInt;
-// List<Action<T, double>> settersDouble;
-// List<Action<T, decimal>> settersDecimal;
-// List<Action<T, string>> settersString;
-// List<Action<T, bool>> settersBool;
-// List<Action<T, DateTime>> settersTS;
-// public boolean isOK;
+PropTarget[] columnTargets;
+List<BiConsumer<T, Integer>> settersInt;
+List<BiConsumer<T, Double>> settersDouble;
+//List<BiConsumer<T, Decimal>> settersDecimal;
+List<BiConsumer<T, String>> settersString;
+List<BiConsumer<T, Boolean>> settersBool;
+List<BiConsumer<T, LocalDateTime>> settersTS;
+public boolean isOK;
 
 // private struct PropTarget {
 //     public ValueType propType;
@@ -17,9 +24,37 @@ public class Deserializer<T> {
 // }
 
 
+
+public Pair<T, String> unpackRow(Row dbRow) {
+
+
+    var result = new T();
+    for (int j = 0; j < columnTargets.length; ++j) {
+        var tgt = columnTargets[j];
+        if (tgt.propType == ValueType.doubl) {
+            settersDouble.get(tgt.indexSetter).apply(result, dbRow.get(j, Double.class));
+        } //else if (tgt.propType == ValueType.deciml) {
+          //  settersDecimal[tgt.indexSetter](result, dbRow.GetDecimal(j));
+        //}
+        else if (tgt.propType == ValueType.integr) {
+            settersInt.get(tgt.indexSetter).apply(result, dbRow.get(j, Integer.class));
+        } else if (tgt.propType == ValueType.strin) {
+            settersString[tgt.indexSetter](result, dbRow.IsDBNull(j) ? "" : dbRow.GetString(j));
+        } else if (tgt.propType == ValueType.boole) {
+            settersBool[tgt.indexSetter](result, dbRow.IsDBNull(j) ? false : dbRow.GetBoolean(j));
+        } else if (tgt.propType == ValueType.timestampe) {
+            settersTS[tgt.indexSetter](result, dbRow.IsDBNull(j) ? LocalDateTime.MIN : dbRow.GetDateTime(j));
+        }
+    }
+
+
+
+    return new Pair(result, "");
+}
+
 // public DBDeserializer(string[] queryColumns){
 //     this.isOK = true;
-//     determineTypeProperties(queryColumns, 
+//     determineTypeProperties(queryColumns,
 //                             out columnTargets,
 //                             out settersInt,
 //                             out settersDouble,
@@ -46,14 +81,14 @@ public class Deserializer<T> {
 //     int numProps = queryColumns.Length;
 //     var properties = typeof(T).GetProperties();
 //     propTargets = new PropTarget[numProps];
-    
-//     settersInt = new List<Action<T, int>>(numProps);        
+
+//     settersInt = new List<Action<T, int>>(numProps);
 //     settersString = new List<Action<T, string>>(numProps);
 //     settersDouble = new List<Action<T, double>>(numProps);
 //     settersDecimal = new List<Action<T, decimal>>(numProps);
 //     settersBool = new List<Action<T, bool>>(numProps);
 //     settersTS = new List<Action<T, DateTime>>(numProps);
-    
+
 //     var dictProps = new Dictionary<string, Pair<string, Type>>();
 //     foreach (var prop in properties) {
 //         string normalizedName = prop.Name.Replace(" ", "").ToLower();
@@ -63,21 +98,21 @@ public class Deserializer<T> {
 //         }
 //         dictProps.Add(normalizedName, new Pair<string, Type>(prop.Name, prop.PropertyType));
 //     }
-    
+
 //     for (int i = 0; i < numProps; ++i){
 //         string nameCol = queryColumns[i].Replace(" ", "").ToLower();
 //         if (!dictProps.TryGetValue(nameCol, out Pair<string, Type> tp)) {
 //             errMsg = $"Column ${nameCol} not found among the properties of ${typeof(T)}";
 //         }
-//         if (tp.snd == typeof(int)) {                
+//         if (tp.snd == typeof(int)) {
 //             settersInt.Add((Action<T, int>) Delegate.CreateDelegate(typeof(Action<T, int>), null,
 //                             typeof(T).GetProperty(tp.fst).GetSetMethod()));
 //             propTargets[i] = new PropTarget() { indexSetter = settersInt.Count - 1, propType = ValueType.integr};
 //         } else if (tp.snd == typeof(double)) {
 //             settersDouble.Add((Action<T, double>) Delegate.CreateDelegate(typeof(Action<T, double>), null,
 //                     typeof(T).GetProperty(tp.fst).GetSetMethod()));
-//             propTargets[i] = new PropTarget() { indexSetter = settersDouble.Count - 1, propType = ValueType.doubl};    
-//         } else if (tp.snd == typeof(decimal)) {                
+//             propTargets[i] = new PropTarget() { indexSetter = settersDouble.Count - 1, propType = ValueType.doubl};
+//         } else if (tp.snd == typeof(decimal)) {
 //             settersDecimal.Add((Action<T, decimal>) Delegate.CreateDelegate(typeof(Action<T, decimal>), null,
 //                     typeof(T).GetProperty(tp.fst).GetSetMethod()));
 //             propTargets[i] = new PropTarget() { indexSetter = settersDecimal.Count - 1, propType = ValueType.deciml};
@@ -101,40 +136,18 @@ public class Deserializer<T> {
 //     errMsg = "";
 // }
 
+private static class PropTarget {
+    public ValueType propType;
+    public int indexSetter;
+}
 
-// public List<T> readResults(NpgsqlDataReader reader, out string errMsg) {
-//     var result = new List<T>(10);
-//     while (reader.Read()) {
-//         var newVal = new T();
-//         for (int j = 0; j < columnTargets.Length; ++j) {
-//             var tgt = columnTargets[j];
-//             if (tgt.propType == ValueType.doubl) {                    
-//                 settersDouble[tgt.indexSetter](newVal, reader.GetDouble(j)); 
-//             } else if (tgt.propType == ValueType.deciml) {
-//                 settersDecimal[tgt.indexSetter](newVal, reader.GetDecimal(j));       
-//             } else if (tgt.propType == ValueType.integr) {                    
-//                 settersInt[tgt.indexSetter](newVal, reader.IsDBNull(j) ? 0 : reader.GetInt32(j));                      
-//             } else if (tgt.propType == ValueType.strin) {
-//                 settersString[tgt.indexSetter](newVal, reader.IsDBNull(j) ? "" : reader.GetString(j));
-//             } else if (tgt.propType == ValueType.boole) {
-//                 settersBool[tgt.indexSetter](newVal, reader.IsDBNull(j) ? false : reader.GetBoolean(j));
-//             } else if (tgt.propType == ValueType.timestampe) {
-//                 settersTS[tgt.indexSetter](newVal, reader.IsDBNull(j) ? DateTime.MinValue : reader.GetDateTime(j));
-//             }
-//         }
-//         result.Add(newVal);
-//     }
-//     errMsg = "";
-//     return result;
-// }
-
-// public enum ValueType {
-//     integr,
-//     doubl,
-//     deciml,
-//     strin,
-//     boole,
-//     timestampe,
-// }
+public static enum ValueType {
+    integr,
+    doubl,
+    deciml,
+    strin,
+    boole,
+    timestampe,
+}
 
 }
