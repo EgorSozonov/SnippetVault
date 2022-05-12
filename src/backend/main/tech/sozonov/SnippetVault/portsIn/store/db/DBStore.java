@@ -26,18 +26,13 @@ public Flux<Snippet> snippetsGet(int taskGroup, int lang1, int lang2) {
     val deserializer = new Deserializer<Snippet>();
     Mono.from(conn)
         .flatMap(
-            c -> Mono.from(c.createStatement(snippetsQ).execute())
+            c -> Mono.from(c.createStatement(snippetsQ)
+                            .bind(":l1", lang1)
+                            .bind(":l2", lang1)
+                            .bind(":tgId", taskGroup)
+                            .execute())
     	)
         .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)))
-
-    // try (val cmd = new NpgsqlCommand(snippetsQ, db.conn)) {
-    //     cmd.Parameters.AddWithValue("l1", NpgsqlTypes.NpgsqlDbType.Integer, lang1);
-    //     cmd.Parameters.AddWithValue("l2", NpgsqlTypes.NpgsqlDbType.Integer, lang2);
-    //     cmd.Parameters.AddWithValue("tgId", NpgsqlTypes.NpgsqlDbType.Integer, taskGroup);
-    //     try (val reader = await cmd.ExecuteReaderAsync()) {
-    //         return readResultSet<SnippetDTO>(reader);
-    //     }
-    // }
 }
 
 

@@ -33,18 +33,18 @@ public Pair<T, String> unpackRow(Row dbRow) {
         var tgt = columnTargets[j];
         if (tgt.propType == ValueType.doubl) {
             settersDouble.get(tgt.indexSetter).apply(result, dbRow.get(j, Double.class));
-        } //else if (tgt.propType == ValueType.deciml) {
-          //  settersDecimal[tgt.indexSetter](result, dbRow.GetDecimal(j));
-        //}
-        else if (tgt.propType == ValueType.integr) {
+        } else if (tgt.propType == ValueType.integr) {
             settersInt.get(tgt.indexSetter).apply(result, dbRow.get(j, Integer.class));
         } else if (tgt.propType == ValueType.strin) {
-            settersString[tgt.indexSetter](result, dbRow.IsDBNull(j) ? "" : dbRow.GetString(j));
+            settersString.get(tgt.indexSetter).apply(result, dbRow.get(j, String.class));
         } else if (tgt.propType == ValueType.boole) {
             settersBool[tgt.indexSetter](result, dbRow.IsDBNull(j) ? false : dbRow.GetBoolean(j));
         } else if (tgt.propType == ValueType.timestampe) {
             settersTS[tgt.indexSetter](result, dbRow.IsDBNull(j) ? LocalDateTime.MIN : dbRow.GetDateTime(j));
         }
+        //else if (tgt.propType == ValueType.deciml) {
+          //  settersDecimal[tgt.indexSetter](result, dbRow.GetDecimal(j));
+        //}
     }
 
 
