@@ -1,11 +1,10 @@
-package tech.sozonov.SnippetVault.cmn.core.internal;
+package tech.sozonov.SnippetVault.cmn.internal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import lombok.Builder;
 
-
 public class InternalTypes {
+
 
 public static class AuthenticateIntern {
     public int userId;
@@ -51,5 +50,6 @@ public static class  SnippetStatus {
     public static final int Declined = 2;
     public static final int Approved = 3;
 }
+
 
 }

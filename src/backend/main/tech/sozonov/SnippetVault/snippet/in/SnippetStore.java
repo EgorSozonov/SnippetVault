@@ -137,22 +137,5 @@ public Mono<Integer> proposalCreate(ProposalCreate dto, int authorId) {
         });
 }
 
-private static final String proposalUpdateQ = """
-    UPDATE sv.snippet SET content = :content, libraries = :libraries
-    WHERE id = :snId;
-""";
-public Mono<Integer> proposalUpdate(ProposalUpdate dto) {
-    val newLibraries = dto.libraries != null && dto.libraries.Length > 0 ? dto.libraries : null;
-    Mono.from(conn)
-        .flatMap(
-            c -> Mono.from(c.createStatement(proposalUpdateQ)
-                            .bind(":snId", dto.existingId)
-                            .bind(":content", dto.content)
-                            .bind(":libraries", newLibraries)
-                            .execute())
-    	)
-        .flatMap(result -> result.getRowsUpdated());
-}
-
 
 }

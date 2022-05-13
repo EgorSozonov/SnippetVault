@@ -1,14 +1,11 @@
-package tech.sozonov.SnippetVault.admin.in;
+package tech.sozonov.SnippetVault.admin;
 import java.time.LocalDateTime;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.admin.core.AdminDTO.*;
-import tech.sozonov.SnippetVault.cmn.core.internal.InternalTypes.*;
-
+import tech.sozonov.SnippetVault.admin.AdminDTO.*;
+import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.*;
 
 public interface IAdminStore {
-
 
 
 Mono<Integer> snippetApprove(int sn);
@@ -27,7 +24,6 @@ Mono<Integer> taskCU(TaskCU dto);
 Mono<Integer> languageCU(LanguageCU dto);
 Mono<Stats> statsForAdmin();
 Mono<Long> userCount();
-
 
 Mono<Integer> logMessage(LocalDateTime ts, int msgType, String code, String message);
 

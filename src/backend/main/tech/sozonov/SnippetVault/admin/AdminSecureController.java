@@ -1,4 +1,4 @@
-package tech.sozonov.SnippetVault.admin.out;
+package tech.sozonov.SnippetVault.admin;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;

@@ -2,7 +2,8 @@ package tech.sozonov.SnippetVault.snippet.in;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.cmn.core.internal.InternalTypes.SnippetIntern;
+import tech.sozonov.SnippetVault.admin.AdminDTO.TaskGroup;
+import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
 import tech.sozonov.SnippetVault.snippet.core.SnippetDTO.*;
 
 public interface ISnippetStore {

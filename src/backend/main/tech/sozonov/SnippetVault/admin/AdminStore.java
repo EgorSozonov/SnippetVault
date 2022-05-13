@@ -1,11 +1,15 @@
-package tech.sozonov.SnippetVault.admin.in;
+package tech.sozonov.SnippetVault.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
 import reactor.core.publisher.Mono;
 
 public class AdminStore implements IAdminStore {
+private Connection conn;
 
-
+@Autowired
+public AdminStore(Connection _conn) {
+    conn = _conn;
+}
 
 private static final String snippetApproveQ = """
     BEGIN;
@@ -33,7 +37,7 @@ public  Mono<Integer> snippetApprove(int snId) {
 private static final String snippetDeclineQ = """
     UPDATE sv.snippet SET status=2 WHERE id = :snId;
 """;
-public  Mono<Integer> snippetDecline(int snId) {
+public Mono<Integer> snippetDecline(int snId) {
     Mono.from(conn)
         .flatMap(
             c -> Mono.from(c.createStatement(snippetDeclineQ)
@@ -46,7 +50,7 @@ public  Mono<Integer> snippetDecline(int snId) {
 private static final String snippetMarkPrimaryQ = """
     UPDATE sv."taskLanguage" SET "primarySnippetId" = :snId WHERE id=:tlId;
 """;
-public  Mono<Integer> snippetMarkPrimary(int tlId, int snId) {
+public Mono<Integer> snippetMarkPrimary(int tlId, int snId) {
     Mono.from(conn)
         .flatMap(
             c -> Mono.from(c.createStatement(snippetMarkPrimaryQ)
@@ -315,7 +319,7 @@ private static final String logMessageQ = """
     INSERT INTO sv.log(ts, type, code, msg)
     VALUES (:ts, :msgType, :code, :message);
 """;
-public  Mono<Integer> logMessage(DateTime ts, int msgType, String code, String message) {
+public  Mono<Integer> logMessage(LocalDateTime ts, int msgType, String code, String message) {
     Mono.from(conn)
         .flatMap(
             c -> Mono.from(c.createStatement(logMessageQ)
@@ -327,5 +331,21 @@ public  Mono<Integer> logMessage(DateTime ts, int msgType, String code, String m
         .flatMap(result -> result.getRowsUpdated());
 }
 
+private static final String proposalUpdateQ = """
+    UPDATE sv.snippet SET content = :content, libraries = :libraries
+    WHERE id = :snId;
+""";
+public Mono<Integer> proposalUpdate(ProposalUpdate dto) {
+    val newLibraries = dto.libraries != null && dto.libraries.Length > 0 ? dto.libraries : null;
+    Mono.from(conn)
+        .flatMap(
+            c -> Mono.from(c.createStatement(proposalUpdateQ)
+                            .bind(":snId", dto.existingId)
+                            .bind(":content", dto.content)
+                            .bind(":libraries", newLibraries)
+                            .execute())
+    	)
+        .flatMap(result -> result.getRowsUpdated());
+}
 
 }

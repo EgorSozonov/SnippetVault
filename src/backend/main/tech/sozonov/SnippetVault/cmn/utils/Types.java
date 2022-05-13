@@ -1,6 +1,8 @@
 package tech.sozonov.SnippetVault.core.utils;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+
 
 public class Types {
 
@@ -35,6 +37,7 @@ public static final class Err<T> extends ReqResult<T> {
     }
 }
 
+@AllArgsConstructor
 public static final class SelectChoice {
     public int id;
     public String name;

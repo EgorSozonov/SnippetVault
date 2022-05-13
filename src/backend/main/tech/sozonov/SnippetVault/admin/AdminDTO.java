@@ -1,7 +1,8 @@
 
-package tech.sozonov.SnippetVault.admin.core;
-import tech.sozonov.SnippetVault.cmn.core.utils.Types.CreateUpdate;
-import tech.sozonov.SnippetVault.cmn.core.utils.Types.SelectChoice;
+package tech.sozonov.SnippetVault.admin;
+import lombok.AllArgsConstructor;
+import tech.sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
+import tech.sozonov.SnippetVault.cmn.utils.Types.SelectChoice;
 
 public class AdminDTO {
 
@@ -27,9 +28,17 @@ public static class Language {
 }
 
 public static class TaskCU extends CreateUpdate {
-    public SelectChoice taskGroup;
     public String name;
     public String description;
+    public SelectChoice taskGroup;
+
+    public TaskCU(String _name, String _description, SelectChoice _taskGroup, int _existingId, boolean _isDeleted) {
+        name = _name;
+        description = _description;
+        taskGroup = _taskGroup;
+        existingId = _existingId;
+        isDeleted = _isDeleted;
+    }
 }
 
 public static class TaskGroupCU extends CreateUpdate {
@@ -53,6 +62,12 @@ public static class Stats {
     public int alternativeCount;
     public int proposalCount;
     public long userCount;
+}
+
+public class ProposalUpdate {
+    public int existingId;
+    public String content;
+    public String libraries;
 }
 
 

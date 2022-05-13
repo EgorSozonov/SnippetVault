@@ -31,12 +31,6 @@ public class ProposalCreate {
     public String libraries;
 }
 
-public class ProposalUpdate {
-    public int existingId;
-    public String content;
-    public String libraries;
-}
-
 public class Snippet {
     public int leftId;
     public String leftCode;
