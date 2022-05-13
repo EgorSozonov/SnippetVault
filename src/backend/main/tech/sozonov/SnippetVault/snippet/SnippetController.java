@@ -1,4 +1,4 @@
-package tech.sozonov.SnippetVault.snippet.out;
+package tech.sozonov.SnippetVault.snippet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,28 +11,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.core.AuthService;
-import tech.sozonov.SnippetVault.core.DTO.SnippetDTO.Alternative;
-import tech.sozonov.SnippetVault.core.DTO.SnippetDTO.BareSnippet;
-import tech.sozonov.SnippetVault.core.DTO.SnippetDTO.ProposalCreate;
-import tech.sozonov.SnippetVault.core.DTO.SnippetDTO.Snippet;
-import tech.sozonov.SnippetVault.snippet.core.DataService;
+import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 
 
 @RestController
 @RequestMapping("/api")
 public class SnippetController {
 
-private final DataService api;
-private final AuthService auth;
+private final SnippetService snippetService;
+
 
 @Autowired
-public SnippetController(DataService _api, AuthService _auth) {
-    this.api = _api;
-    this.auth = _auth;
+public SnippetController(SnippetService _snippetService) {
+    this.snippetService = _snippetService;
 }
 
+
+@GetMapping("languages")
+public Flux<Language> languages() {
+    return snippetService.languagesGet();
+}
+
+@GetMapping("taskGroups")
+public Flux<TaskGroup> taskGroups() {
+    return snippetService.taskGroupsGet();
+}
+
+
+@GetMapping("task/{taskId}")
+public Mono<Task> task(@PathVariable("taskId") int taskId) {
+    return adminService.taskGet(taskId);
+}
 
 @GetMapping("snippets/{taskGroup}/{lang1}/{lang2}")
 public Mono<List<Snippet>> snippets(@PathVariable("taskGroup") int taskGroup,

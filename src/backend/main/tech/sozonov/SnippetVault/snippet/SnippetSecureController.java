@@ -1,4 +1,4 @@
-package tech.sozonov.SnippetVault.snippet.out;
+package tech.sozonov.SnippetVault.snippet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;

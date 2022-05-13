@@ -11,16 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.core.AuthService;
-import tech.sozonov.SnippetVault.core.DTO.AuthDTO.*;
-import tech.sozonov.SnippetVault.core.DTO.AuxDTO.*;
-import tech.sozonov.SnippetVault.core.DTO.SnippetDTO.*;
+import tech.sozonov.SnippetVault.admin.AdminDTO.TaskCU;
 import tech.sozonov.SnippetVault.snippet.core.DataService;
-
 
 @RestController
 @RequestMapping("/api/admin")
 public class AdminSecureController {
+
 
 @PostMapping("task/cu")
 public Mono<ResponseEntity> taskCreateUpdate(@RequestBody TaskCU dto) {

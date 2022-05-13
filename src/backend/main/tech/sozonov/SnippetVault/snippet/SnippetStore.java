@@ -1,4 +1,4 @@
-package tech.sozonov.SnippetVault.snippet.in;
+package tech.sozonov.SnippetVault.snippet;
 
 public class SnippetStore {
 

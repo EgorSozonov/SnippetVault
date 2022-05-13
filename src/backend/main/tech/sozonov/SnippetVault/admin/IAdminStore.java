@@ -20,6 +20,7 @@ Flux<TaskCUIntern> tasksAll();
 Mono<Integer> taskGroupCU(TaskGroupCU dto);
 Flux<TaskGroupCU> taskGroupsAll();
 Flux<LanguageCU> languagesAll();
+Flux<Language> languagesGet();
 Mono<Integer> taskCU(TaskCU dto);
 Mono<Integer> languageCU(LanguageCU dto);
 Mono<Stats> statsForAdmin();

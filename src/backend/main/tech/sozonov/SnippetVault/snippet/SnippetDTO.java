@@ -1,4 +1,6 @@
-package tech.sozonov.SnippetVault.snippet.core;
+package tech.sozonov.SnippetVault.snippet;
+
+import java.time.LocalDateTime;
 
 public class SnippetDTO {
 
@@ -7,6 +9,26 @@ public class SnippetDTO {
  *  All LocalDateTime members in all DTOs must have names starting with "ts" for correct deserialization on the client.
  *  !!!
  */
+
+public static class TaskGroup {
+    public int id;
+    public String name;
+    public String code;
+}
+
+public static class Task {
+    public int id;
+    public String name;
+    public String taskGroupName;
+    public String description;
+}
+
+public static class Language {
+    public int id;
+    public String name;
+    public String code;
+    public int sortingOrder;
+}
 
 public class Proposal {
     public int proposalId;

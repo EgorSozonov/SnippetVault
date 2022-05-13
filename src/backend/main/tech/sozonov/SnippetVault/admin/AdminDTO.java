@@ -6,27 +6,6 @@ import tech.sozonov.SnippetVault.cmn.utils.Types.SelectChoice;
 
 public class AdminDTO {
 
-
-public static class Task {
-    public int id;
-    public String name;
-    public String taskGroupName;
-    public String description;
-}
-
-public static class TaskGroup {
-    public int id;
-    public String name;
-    public String code;
-}
-
-public static class Language {
-    public int id;
-    public String name;
-    public String code;
-    public int sortingOrder;
-}
-
 public static class TaskCU extends CreateUpdate {
     public String name;
     public String description;
