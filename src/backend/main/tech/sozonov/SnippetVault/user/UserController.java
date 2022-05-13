@@ -1,4 +1,4 @@
-package tech.sozonov.SnippetVault.user.out;
+package tech.sozonov.SnippetVault.user;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,8 +40,10 @@ public Mono<SignInSuccess> userSignInAdmin(@RequestBody SignInAdmin dto) {
     await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response, 401);
 }
 
-
-
+@PostMapping("changeAdminPw")
+public Mono<SignInSuccess> userChangeAdminPw(@RequestBody ChangePwAdmin dto) {
+    return adminService.userUpdateAdminPw(dto, HttpContext.Response.Cookies);
+}
 
 
 

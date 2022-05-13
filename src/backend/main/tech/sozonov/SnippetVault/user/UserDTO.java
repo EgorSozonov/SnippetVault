@@ -1,4 +1,4 @@
-package tech.sozonov.SnippetVault.user.core;
+package tech.sozonov.SnippetVault.user;
 import java.time.LocalDateTime;
 import tech.sozonov.SnippetVault.core.utils.Types.CreateUpdate;
 

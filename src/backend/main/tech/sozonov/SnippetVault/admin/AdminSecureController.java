@@ -11,59 +11,60 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.admin.AdminDTO.TaskCU;
-import tech.sozonov.SnippetVault.snippet.core.DataService;
+import tech.sozonov.SnippetVault.admin.AdminDTO.*;
 
 @RestController
 @RequestMapping("/api/admin")
 public class AdminSecureController {
 
 
+private AdminService adminService;
+
+@Autowired
+public AdminSecureController(AdminService _adminService) {
+    adminService = _adminService;
+}
+
 @PostMapping("task/cu")
 public Mono<ResponseEntity> taskCreateUpdate(@RequestBody TaskCU dto) {
-    if (dto == null) return;
-    await applyPostRequest(api.taskCU(dto), HttpContext.Response);
+    if (dto == null) return Mono.just(ResponseEntity.badRequest().build());
+    return adminService.taskCU(dto);
 }
 
 @PostMapping("language/cu")
 public Mono<ResponseEntity> languageCreateUpdate(@RequestBody LanguageCU dto) {
-    if (dto == null) return;
-    await applyPostRequest(api.languageCU(dto), HttpContext.Response);
+    if (dto == null) return Mono.just(ResponseEntity.badRequest().build());
+    applyPostRequest(adminService.languageCU(dto), HttpContext.Response);
 }
 
 @PostMapping("taskGroup/cu")
-public Mono<List<TaskGroup>> taskGroupCreateUpdate(@RequestBody TaskGroupCU dto) {
+public Mono<List<TaskGroupCU>> taskGroupCreateUpdate(@RequestBody TaskGroupCU dto) {
     if (dto == null) return;
-    await applyPostRequest(api.taskGroupCU(dto), HttpContext.Response);
+    applyPostRequest(adminService.taskGroupCU(dto), HttpContext.Response);
 }
 
 @PostMapping("proposal/update")
 public Mono<ResponseEntity> proposalUpdate(@RequestBody ProposalUpdate dto) {
-    await applyPostRequest(api.proposalUpdate(dto), HttpContext.Response);
+    applyPostRequest(adminService.proposalUpdate(dto), HttpContext.Response);
 }
 
 
 @PostMapping("snippet/approve/{snId}")
 public Mono<ResponseEntity> snippetApprove(@PathVariable("snId") int snId) {
-    await applyPostRequest(api.snippetApprove(snId), HttpContext.Response);
+    applyPostRequest(adminService.snippetApprove(snId), HttpContext.Response);
 }
 
 
 @PostMapping("snippet/decline/{snId}")
 public Mono<ResponseEntity> snippetDecline(@PathVariable("snId") int snId) {
-    await applyPostRequest(api.snippetDecline(snId), HttpContext.Response);
+    applyPostRequest(adminService.snippetDecline(snId), HttpContext.Response);
 }
 
 @PostMapping("snippet/markPrimary/{tlId}/{snId}")
 public Mono<ResponseEntity> snippetMarkPrimary(@PathVariable("tlId") int tlId, @PathVariable("snId") int snId) {
-    await applyPostRequest(api.snippetMarkPrimary(tlId, snId), HttpContext.Response);
+    applyPostRequest(adminService.snippetMarkPrimary(tlId, snId), HttpContext.Response);
 }
 
-@PostMapping("changeAdminPw")
-public Mono<SignInSuccess> userChangeAdminPw(@RequestBody ChangePwAdmin dto) {
-    var result = await auth.userUpdateAdminPw(dto, HttpContext.Response.Cookies);
-    await sendQueryResult<SignInSuccessDTO>(result, HttpContext.Response);
-}
 
 
 

@@ -1,8 +1,8 @@
-package tech.sozonov.SnippetVault.user.in;
+package tech.sozonov.SnippetVault.user;
 import java.time.LocalDateTime;
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.cmn.core.internal.InternalTypes.*;
-import tech.sozonov.SnippetVault.user.core.UserDTO.*;
+import tech.sozonov.SnippetVault.user.UserDTO.*;
 
 public interface IUserStore {
 

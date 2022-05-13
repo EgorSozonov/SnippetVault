@@ -1,8 +1,6 @@
 package tech.sozonov.SnippetVault.snippet;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.admin.AdminDTO.TaskGroup;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
 import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 
@@ -21,6 +19,9 @@ Flux<TaskGroup> taskGroupsForLangsGet(int lang1, int lang2);
 Flux<Alternative> alternativesForTLGet(int taskLanguageId);
 Flux<Alternative> alternativesForUserGet(int taskLanguageId, int userId);
 Flux<Comment> commentsGet(int snippetId);
+
+Mono<Task> taskGet(int taskId);
+Mono<Task> taskForTLGet(int taskLanguageId);
 Mono<Integer> proposalCreate(ProposalCreate dto, int authorId);
 
 

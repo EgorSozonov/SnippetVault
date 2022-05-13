@@ -1,4 +1,4 @@
-package tech.sozonov.SnippetVault.user.out;
+package tech.sozonov.SnippetVault.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.RequestEntity;

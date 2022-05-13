@@ -22,8 +22,7 @@ public Mono<Task> taskGet(int taskId) {
 public Flux<Language> languagesGet() {
     return snippetStore.languagesGet();
 }
-public Mono<ReqResult<TaskCU>> tasksAll() {
-}
+
     // public async Task<ReqResult<TaskCUDTO>> tasksAll() {
     //     var res = await st.tasksAll();
 

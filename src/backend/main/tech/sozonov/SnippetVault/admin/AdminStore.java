@@ -3,6 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
+import tech.sozonov.SnippetVault.admin.AdminDTO.*;
 
 public class AdminStore implements IAdminStore {
 private Connection conn;
