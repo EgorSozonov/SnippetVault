@@ -2,8 +2,11 @@ package tech.sozonov.SnippetVault.user.in;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.core.DTO.SnippetDTO.Snippet;
-import tech.sozonov.SnippetVault.portsIn.IStore;
+import tech.sozonov.SnippetVault.cmn.core.internal.InternalTypes.AuthenticateIntern;
+import tech.sozonov.SnippetVault.cmn.core.internal.InternalTypes.AuthorizeIntern;
+import tech.sozonov.SnippetVault.cmn.core.internal.InternalTypes.UserNewIntern;
+import tech.sozonov.SnippetVault.cmn.core.utils.Deserializer;
+import tech.sozonov.SnippetVault.user.core.UserDTO.*;
 
 public class UserStore implements IUserStore {
 
@@ -244,6 +247,8 @@ public Mono<Integer> commentDelete(int commentId) {
     	)
         .flatMap(result -> result.getRowsUpdated());
 }
+
+
 
 
 }

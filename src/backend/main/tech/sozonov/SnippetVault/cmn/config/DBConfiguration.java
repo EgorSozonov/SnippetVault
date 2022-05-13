@@ -1,4 +1,4 @@
-package tech.sozonov.SnippetVault.portsIn.store.db;
+package tech.sozonov.SnippetVault.cmn.config;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;

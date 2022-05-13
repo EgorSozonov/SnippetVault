@@ -1,8 +1,10 @@
 
 package tech.sozonov.SnippetVault.admin.core;
-
+import tech.sozonov.SnippetVault.cmn.core.utils.Types.CreateUpdate;
+import tech.sozonov.SnippetVault.cmn.core.utils.Types.SelectChoice;
 
 public class AdminDTO {
+
 
 public static class Task {
     public int id;
@@ -43,4 +45,15 @@ public static class LanguageCU extends CreateUpdate {
 
 public static class PostResponse {
     public String status;
+}
+
+
+public static class Stats {
+    public int primaryCount;
+    public int alternativeCount;
+    public int proposalCount;
+    public long userCount;
+}
+
+
 }

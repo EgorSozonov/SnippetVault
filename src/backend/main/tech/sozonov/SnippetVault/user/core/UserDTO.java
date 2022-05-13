@@ -34,15 +34,6 @@ public static class Vote {
     public int tlId;
 }
 
-public static class Stats {
-    public int primaryCount;
-    public int alternativeCount;
-    public int proposalCount;
-    public long userCount;
-}
-
-
-
 public static class SignInSuccess {
     public int userId;
 }
