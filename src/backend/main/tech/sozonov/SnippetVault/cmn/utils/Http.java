@@ -1,9 +1,19 @@
-package tech.sozonov.SnippetVault.core.utils;
+package tech.sozonov.SnippetVault.cmn.utils;
 
-import tech.sozonov.SnippetVault.core.utils.Types.ReqResult;
+import org.springframework.http.ResponseEntity;
+
+import reactor.core.publisher.Mono;
 
 public class Http {
 
+public static final Mono<ResponseEntity<Void>> BAD_REQUEST = Mono.just(ResponseEntity.badRequest().build());
+
+/**
+ * For a create-update request, wraps the result in a ResponseEntity depending on the number of DB rows affected.
+ */
+public static Mono<ResponseEntity<Void>> wrapCUResponse(Mono<Integer> inp) {
+    return inp.map(x -> x > 0 ? ResponseEntity.ok().build() : ResponseEntity.internalServerError().build());
+}
 // public static Task sendQueryResult<T>(ReqResult<T> result, HttpResponse response) {
 //     await sendQueryResult(result, response, 500);
 // }

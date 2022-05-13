@@ -13,8 +13,6 @@ Mono<Integer> snippetDecline(int sn);
 Mono<Integer> snippetMarkPrimary(int tlId, int snId);
 Mono<Integer> proposalUpdate(ProposalUpdate dto);
 
-
-
 Flux<TaskCUIntern> tasksAll();
 Mono<Integer> taskGroupCU(TaskGroupCU dto);
 Flux<TaskGroupCU> taskGroupsAll();

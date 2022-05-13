@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.admin.AdminDTO.*;
+import tech.sozonov.SnippetVault.cmn.utils.Http;
+
+import static tech.sozonov.SnippetVault.cmn.utils.Http.*;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -26,43 +29,43 @@ public AdminSecureController(AdminService _adminService) {
 }
 
 @PostMapping("task/cu")
-public Mono<ResponseEntity> taskCreateUpdate(@RequestBody TaskCU dto) {
-    if (dto == null) return Mono.just(ResponseEntity.badRequest().build());
-    return adminService.taskCU(dto);
+public Mono<ResponseEntity<Void>> taskCreateUpdate(@RequestBody TaskCU dto) {
+    if (dto == null) return Http.BAD_REQUEST;
+    return wrapCUResponse(adminService.taskCU(dto));
 }
 
 @PostMapping("language/cu")
-public Mono<ResponseEntity> languageCreateUpdate(@RequestBody LanguageCU dto) {
-    if (dto == null) return Mono.just(ResponseEntity.badRequest().build());
-    applyPostRequest(adminService.languageCU(dto), HttpContext.Response);
+public Mono<ResponseEntity<Void>> languageCreateUpdate(@RequestBody LanguageCU dto) {
+    if (dto == null) return Http.BAD_REQUEST;
+    return wrapCUResponse(adminService.languageCU(dto));
 }
 
 @PostMapping("taskGroup/cu")
-public Mono<List<TaskGroupCU>> taskGroupCreateUpdate(@RequestBody TaskGroupCU dto) {
-    if (dto == null) return;
-    applyPostRequest(adminService.taskGroupCU(dto), HttpContext.Response);
+public Mono<ResponseEntity<Void>> taskGroupCreateUpdate(@RequestBody TaskGroupCU dto) {
+    if (dto == null) return Http.BAD_REQUEST;
+    return wrapCUResponse(adminService.taskGroupCU(dto));
 }
 
 @PostMapping("proposal/update")
-public Mono<ResponseEntity> proposalUpdate(@RequestBody ProposalUpdate dto) {
-    applyPostRequest(adminService.proposalUpdate(dto), HttpContext.Response);
+public Mono<ResponseEntity<Void>> proposalUpdate(@RequestBody ProposalUpdate dto) {
+    return wrapCUResponse(adminService.proposalUpdate(dto));
 }
 
 
 @PostMapping("snippet/approve/{snId}")
-public Mono<ResponseEntity> snippetApprove(@PathVariable("snId") int snId) {
-    applyPostRequest(adminService.snippetApprove(snId), HttpContext.Response);
+public Mono<ResponseEntity<Void>> snippetApprove(@PathVariable("snId") int snId) {
+    return wrapCUResponse(adminService.snippetApprove(snId));
 }
 
 
 @PostMapping("snippet/decline/{snId}")
-public Mono<ResponseEntity> snippetDecline(@PathVariable("snId") int snId) {
-    applyPostRequest(adminService.snippetDecline(snId), HttpContext.Response);
+public Mono<ResponseEntity<Void>> snippetDecline(@PathVariable("snId") int snId) {
+    return wrapCUResponse(adminService.snippetDecline(snId));
 }
 
 @PostMapping("snippet/markPrimary/{tlId}/{snId}")
-public Mono<ResponseEntity> snippetMarkPrimary(@PathVariable("tlId") int tlId, @PathVariable("snId") int snId) {
-    applyPostRequest(adminService.snippetMarkPrimary(tlId, snId), HttpContext.Response);
+public Mono<ResponseEntity<Void>> snippetMarkPrimary(@PathVariable("tlId") int tlId, @PathVariable("snId") int snId) {
+    return wrapCUResponse(adminService.snippetMarkPrimary(tlId, snId));
 }
 
 
