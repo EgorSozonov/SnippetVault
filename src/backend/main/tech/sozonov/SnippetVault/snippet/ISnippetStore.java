@@ -9,7 +9,7 @@ public interface ISnippetStore {
 
 Flux<Snippet> snippetsGet(int taskGroupId, int lang1Id, int lang2Id);
 Flux<Snippet> snippetsGetByCode(String taskGroupCode, String lang1Code, String lang2Code);
-Mono<SnippetIntern> snippetGet(int snId);
+
 Flux<Language> languagesGet();
 Flux<TaskGroup> taskGroupsGet();
 Flux<Proposal> proposalsGet();

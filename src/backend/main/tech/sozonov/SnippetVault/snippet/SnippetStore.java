@@ -67,22 +67,6 @@ public Flux<Snippet> snippetsGetByCode(String taskGroup, String lang1, String la
         .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
 }
 
-private static final String snippetGetQ = """
-    SELECT "taskLanguageId", "status", content, score, libraries
-	FROM sv.snippet s
-	WHERE id = :snId;
-""";
-public Mono<SnippetIntern> snippetGet(int snId) {
-    val deserializer = new Deserializer<SnippetIntern>();
-    Mono.from(conn)
-        .flatMap(
-            c -> Mono.from(c.createStatement(snippetGetQ)
-                            .bind(":snId", snId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
-}
-
 private static final String proposalsGetQ = """
     SELECT lang.name AS "languageName", task.name AS "taskName",
 		   sn.id AS "proposalId", sn.content, sn."tsUpload", u.name AS author, u.id AS "authorId"
