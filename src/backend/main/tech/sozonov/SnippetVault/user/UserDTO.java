@@ -1,6 +1,6 @@
 package tech.sozonov.SnippetVault.user;
 import java.time.LocalDateTime;
-import tech.sozonov.SnippetVault.core.utils.Types.CreateUpdate;
+import tech.sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
 
 public class UserDTO {
 

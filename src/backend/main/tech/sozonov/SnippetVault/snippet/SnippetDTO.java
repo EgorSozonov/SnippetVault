@@ -2,6 +2,8 @@ package tech.sozonov.SnippetVault.snippet;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+
 public class SnippetDTO {
 
 
@@ -30,7 +32,7 @@ public static class Language {
     public int sortingOrder;
 }
 
-public class Proposal {
+public static class Proposal {
     public int proposalId;
     public String content;
     public int authorId;
@@ -41,19 +43,20 @@ public class Proposal {
     public String libraries;
 }
 
-public class BareSnippet {
+@AllArgsConstructor
+public static class BareSnippet {
     public String content;
     public String libraries;
 }
 
-public class ProposalCreate {
+public static class ProposalCreate {
     public int langId;
     public int taskId;
     public String content;
     public String libraries;
 }
 
-public class Snippet {
+public static class Snippet {
     public int leftId;
     public String leftCode;
     public int leftTlId;
@@ -66,13 +69,13 @@ public class Snippet {
     public String rightLibraries;
 }
 
-public class Alternatives {
+public static class Alternatives {
     public Alternative primary;
     public Task task;
     public Alternative[] rows;
 }
 
-public class Alternative {
+public static class Alternative {
     public int id;
     public String content;
     public int score;
@@ -81,7 +84,6 @@ public class Alternative {
     public boolean voteFlag;
     public String libraries;
 }
-
 
 
 }

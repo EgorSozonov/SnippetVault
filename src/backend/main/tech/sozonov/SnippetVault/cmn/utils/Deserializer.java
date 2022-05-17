@@ -1,13 +1,12 @@
-package tech.sozonov.SnippetVault.core.utils;
-
+package tech.sozonov.SnippetVault.cmn.utils;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
-
-import tech.sozonov.SnippetVault.core.utils.Types.Pair;
+import tech.sozonov.SnippetVault.cmn.utils.Types.Pair;
 
 public class Deserializer<T> {
+
 
 PropTarget[] columnTargets;
 List<BiConsumer<T, Integer>> settersInt;

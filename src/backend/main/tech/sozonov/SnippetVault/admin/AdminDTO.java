@@ -1,10 +1,10 @@
 
 package tech.sozonov.SnippetVault.admin;
-import lombok.AllArgsConstructor;
 import tech.sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
 import tech.sozonov.SnippetVault.cmn.utils.Types.SelectChoice;
 
 public class AdminDTO {
+
 
 public static class TaskCU extends CreateUpdate {
     public String name;
@@ -35,7 +35,6 @@ public static class PostResponse {
     public String status;
 }
 
-
 public static class Stats {
     public int primaryCount;
     public int alternativeCount;
@@ -43,7 +42,7 @@ public static class Stats {
     public long userCount;
 }
 
-public class ProposalUpdate {
+public static class ProposalUpdate {
     public int existingId;
     public String content;
     public String libraries;

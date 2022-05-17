@@ -1,4 +1,5 @@
 package tech.sozonov.SnippetVault.snippet;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
@@ -37,12 +38,12 @@ public Flux<TaskGroup> taskGroups() {
 }
 
 @GetMapping("taskGroupsForLanguage/{langId}")
-public Mono<List<TaskGroup>> taskGroupsForLanguage(@PathVariable("langId") int langId) {
+public Flux<TaskGroup> taskGroupsForLanguage(@PathVariable("langId") int langId) {
     return snippetService.taskGroupsForLangGet(langId);
 }
 
 @GetMapping("taskGroupsForLanguages/{langId1}/{langId2}")
-public Mono<List<TaskGroup>> taskGroupsForLanguages(@PathVariable("langId1") int langId1, @PathVariable("langId2") int langId2) {
+public Flux<TaskGroup> taskGroupsForLanguages(@PathVariable("langId1") int langId1, @PathVariable("langId2") int langId2) {
     return snippetService.taskGroupsForLangsGet(langId1, langId2);
 }
 
@@ -52,46 +53,40 @@ public Mono<Task> task(@PathVariable("taskId") int taskId) {
 }
 
 @GetMapping("snippets/{taskGroup}/{lang1}/{lang2}")
-public Mono<List<Snippet>> snippets(@PathVariable("taskGroup") int taskGroup,
+public Flux<Snippet> snippets(@PathVariable("taskGroup") int taskGroup,
                      @PathVariable("lang1") int lang1,
                      @PathVariable("lang2") int lang2) {
-    var result = await api.snippetsGet(taskGroup, lang1, lang2);
-    await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
+    return snippetService.snippetsGet(taskGroup, lang1, lang2);
 }
 
 @GetMapping("snippets/byCode")
-public Mono<List<Snippet>> snippetsByCode(@RequestParam String taskGroup, @RequestParam String lang1, @RequestParam String lang2) {
-    var result = await api.snippetsGetByCode(taskGroup, lang1, lang2);
-    await sendQueryResult<SnippetDTO>(result, HttpContext.Response);
+public Flux<Snippet> snippetsByCode(@RequestParam String taskGroup, @RequestParam String lang1, @RequestParam String lang2) {
+    return snippetService.snippetsGetByCode(taskGroup, lang1, lang2);
 }
 
 @GetMapping("snippet/{snId}")
 public Mono<BareSnippet> proposalGet(@PathVariable("snId") int snId) {
-    var result = await api.proposalGet(snId);
-    await sendQueryResult<BareSnippetDTO>(result, HttpContext.Response);
+    return snippetService.proposalGet(snId);
 }
 
 @GetMapping("proposals")
 public Task proposals() {
-    var result = await api.proposalsGet();
-    await sendQueryResult<ProposalDTO>(result, HttpContext.Response);
+    return snippetService.proposalsGet();
 }
 
 @GetMapping("alternatives/{tlId:int}")
 public Mono<List<Alternative>> alternatives(@PathVariable int tlId) {
-    var result = await api.alternativesForTLGet(tlId, null);
-    await sendQueryResult<AlternativesDTO>(result, HttpContext.Response);
+    return snippetService.alternativesForTLGet(tlId, null);
 }
 
 @GetMapping("alternativesForUser/{tlId:int}/{userId:int}")
 public Mono<List<Alternative>> alternativesForUser(@PathVariable int tlId, @PathVariable int userId) {
-    var result = await api.alternativesForTLGet(tlId, userId);
-    await sendQueryResult<AlternativesDTO>(result, HttpContext.Response);
+    return snippetService.alternativesForTLGet(tlId, userId);
 }
 
 @GetMapping("health")
 public Mono<String> healthCheck() {
-    await HttpContext.Response.WriteAsync("SnippetVault backend running at " + DateTime.Now);
+    return Mono.just("SnippetVault backend is running at " + LocalDateTime.now());
 }
 
 // private static Task readResultSet<T>(NpgsqlDataReader reader, HttpResponse response) where T : class, new() {
@@ -102,20 +97,20 @@ public Mono<String> healthCheck() {
 //         }
 //         var readerSnippet = new DBDeserializer<T>(columnNames);
 //         if (!readerSnippet.isOK)  {
-//             await response.WriteAsync("Error");
+//             response.WriteAsync("Error");
 //             return;
 //         }
 
 //         var results = readerSnippet.readResults(reader, out String errMsg);
 //         if (errMsg != "") {
-//             await response.WriteAsync(errMsg);
+//             response.WriteAsync(errMsg);
 //             return;
 //         }
-//         await response.WriteAsJsonAsync<List<T>>(results);
+//         response.WriteAsJsonAsync<List<T>>(results);
 //         return;
 //     } catch (Exception e) {
 //         Console.WriteLine(e.Message);
-//         await response.WriteAsync("Exception");
+//         response.WriteAsync("Exception");
 //         return;
 //     }
 // }

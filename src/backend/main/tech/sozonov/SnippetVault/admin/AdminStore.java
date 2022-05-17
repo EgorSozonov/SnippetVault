@@ -4,6 +4,7 @@ import lombok.val;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import tech.sozonov.SnippetVault.admin.AdminDTO.*;
+import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
 
 public class AdminStore implements IAdminStore {
 private Connection conn;
@@ -122,35 +123,6 @@ public Flux<Alternative> alternativesForUserGet(int taskLanguageId, int userId) 
         .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
 }
 
-private static final String languagesGetQ = """
-    SELECT l.id, l.name, l."sortingOrder", l.code
-    FROM sv.language l
-    WHERE l."isDeleted" = 0::bit;
-""";
-public Flux<Language> languagesGet() {
-    val deserializer = new Deserializer<Language>();
-    Mono.from(conn)
-        .flatMap(
-            c -> Mono.from(c.createStatement(languagesGetQ)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
-}
-
-private static final String taskGroupsGetQ = """
-    SELECT id, name, code FROM sv."taskGroup"
-    WHERE "isDeleted"=0::bit;
-""";
-public Flux<TaskGroup> taskGroupsGet() {
-    val deserializer = new Deserializer<TaskGroup>();
-    Mono.from(conn)
-        .flatMap(
-            c -> Mono.from(c.createStatement(taskGroupsGetQ)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
-}
-
 private static final String tasksFromGroupGetQ = """
     SELECT id, name, description FROM sv."task"
     WHERE "taskGroupId"=:tgId AND "isDeleted"=0::bit;
@@ -230,28 +202,28 @@ public Flux<TaskCUIntern> tasksAll() {
             c -> Mono.from(c.createStatement(tasksAllQ)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String taskGroupsAllQ = """
     SELECT id AS "existingId", code, name, "isDeleted"
     FROM sv."taskGroup";
 """;
-public  Flux<TaskGroupCU> taskGroupsAll() {
+public Flux<TaskGroupCU> taskGroupsAll() {
     val deserializer = new Deserializer<TaskGroupCU>();
     Mono.from(conn)
         .flatMap(
             c -> Mono.from(c.createStatement(taskGroupsAllQ)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String languagesAllQ = """
     SELECT id AS "existingId", code, name, "sortingOrder", "isDeleted"
     FROM sv.language;
 """;
-public Mono<ReqResult<LanguageCUDTO>> languagesAll() {
+public Flux<LanguageCU> languagesAll() {
     try (val cmd = new NpgsqlCommand(languagesAllQ, db.conn)) {
         try (val reader = await cmd.ExecuteReaderAsync()) {
             return readResultSet<LanguageCUDTO>(reader);
@@ -314,7 +286,7 @@ public Mono<Stats> statsForAdmin() {
             c -> Mono.from(c.createStatement(statsForAdminQ)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String logMessageQ = """
@@ -350,21 +322,6 @@ public Mono<Integer> proposalUpdate(ProposalUpdate dto) {
         .flatMap(result -> result.getRowsUpdated());
 }
 
-private static final String snippetGetQ = """
-    SELECT "taskLanguageId", "status", content, score, libraries
-	FROM sv.snippet s
-	WHERE id = :snId;
-""";
-public Mono<SnippetIntern> snippetGet(int snId) {
-    val deserializer = new Deserializer<SnippetIntern>();
-    Mono.from(conn)
-        .flatMap(
-            c -> Mono.from(c.createStatement(snippetGetQ)
-                            .bind(":snId", snId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
-}
 
 
 }

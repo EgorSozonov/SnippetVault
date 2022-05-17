@@ -5,17 +5,17 @@ import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.admin.AdminDTO.*;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetStatus;
 import tech.sozonov.SnippetVault.cmn.utils.Types.SelectChoice;
-import tech.sozonov.SnippetVault.snippet.SnippetDTO.Proposal;
-
 import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
 
 public class AdminService {
 
 
 private final IAdminStore adminStore;
+private final SnippetService snippetService;
 
-public AdminService(IAdminStore adminStore) {
+public AdminService(IAdminStore adminStore, SnippetService _snippetService) {
     this.adminStore = adminStore;
+    this.snippetService = _snippetService;
 }
 
 public Flux<TaskCU> tasksAll() {
@@ -63,8 +63,9 @@ public Mono<Integer> snippetDecline(int snId) {
 }
 
 public Mono<Integer> snippetMarkPrimary(int tlId, int snId) {
-    val snippet = adminStore.snippetGet(snId);
-    return snippet.map(x -> (x.status == SnippetStatus.Approved && existingSnip.taskLanguageId == tlId) ? adminStore.snippetMarkPrimary(tlId, snId) : -1);
+    val snippet = snippetService.snippetGet(snId);
+    return snippet.flatMap(x -> (x.status == SnippetStatus.Approved && x.taskLanguageId == tlId) ? adminStore.snippetMarkPrimary(tlId, snId) : Mono.just(-1));
+    //return snippet.map(x -> (x.status == SnippetStatus.Approved && existingSnip.taskLanguageId == tlId) ? adminStore.snippetMarkPrimary(tlId, snId) : -1);
 }
 
 public Mono<Stats> statsForAdmin() {

@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.core.AuthService;
-import tech.sozonov.SnippetVault.core.DTO.SnippetDTO.ProposalCreate;
-import tech.sozonov.SnippetVault.snippet.core.DataService;
+import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 
 
 @RestController
@@ -20,10 +18,10 @@ import tech.sozonov.SnippetVault.snippet.core.DataService;
 public class SnippetSecureController {
 
 @PostMapping("proposal/create")
-public Mono<ResponseEntity> proposalCreate(@RequestBody ProposalCreate dto) {
+public Mono<ResponseEntity<Void>> proposalCreate(@RequestBody ProposalCreate dto) {
     HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
     int.TryParse(mbUserId[0].ToString(), out int userId);
-    await applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);
+    applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);
 }
 
 

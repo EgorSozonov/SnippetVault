@@ -2,10 +2,6 @@ package tech.sozonov.SnippetVault.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.cmn.core.internal.InternalTypes.AuthenticateIntern;
-import tech.sozonov.SnippetVault.cmn.core.internal.InternalTypes.AuthorizeIntern;
-import tech.sozonov.SnippetVault.cmn.core.internal.InternalTypes.UserNewIntern;
-import tech.sozonov.SnippetVault.cmn.core.utils.Deserializer;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 
 public class UserStore implements IUserStore {

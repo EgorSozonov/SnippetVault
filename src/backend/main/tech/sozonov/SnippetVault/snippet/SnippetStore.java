@@ -1,6 +1,51 @@
 package tech.sozonov.SnippetVault.snippet;
+import lombok.val;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.netty.Connection;
+import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
+import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
+import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 
 public class SnippetStore {
+
+
+private final Connection conn;
+
+public SnippetStore(Connection _conn) {
+    conn = _conn;
+}
+
+
+private static final String languagesGetQ = """
+    SELECT l.id, l.name, l."sortingOrder", l.code
+    FROM sv.language l
+    WHERE l."isDeleted" = 0::bit;
+""";
+public Flux<Language> languagesGet() {
+    val deserializer = new Deserializer<Language>();
+    Mono.from(conn)
+        .flatMap(
+            c -> Mono.from(c.createStatement(languagesGetQ)
+                            .execute())
+    	)
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+}
+
+private static final String taskGroupsGetQ = """
+    SELECT id, name, code FROM sv."taskGroup"
+    WHERE "isDeleted"=0::bit;
+""";
+public Flux<TaskGroup> taskGroupsGet() {
+    val deserializer = new Deserializer<TaskGroup>();
+    Mono.from(conn)
+        .flatMap(
+            c -> Mono.from(c.createStatement(taskGroupsGetQ)
+                            .execute())
+    	)
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+}
+
 
 
 private static final String snippetsQ = """
@@ -21,14 +66,13 @@ public Flux<Snippet> snippetsGet(int taskGroup, int lang1, int lang2) {
     Mono.from(conn)
         .flatMap(
             c -> Mono.from(c.createStatement(snippetsQ)
-                            .bind(":l1", lang1)
-                            .bind(":l2", lang1)
-                            .bind(":tgId", taskGroup)
+                            .bind("l1", lang1)
+                            .bind("l2", lang1)
+                            .bind("tgId", taskGroup)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
-
 
 private static final String snippetsGetByCodeQ = """
     WITH taskLangs1 AS (
@@ -64,7 +108,24 @@ public Flux<Snippet> snippetsGetByCode(String taskGroup, String lang1, String la
                             .bind(":tgId", taskGroup)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+}
+
+
+private static final String snippetGetQ = """
+    SELECT "taskLanguageId", "status", content, score, libraries
+	FROM sv.snippet s
+	WHERE id = :snId;
+""";
+public Mono<SnippetIntern> snippetGet(int snId) {
+    val deserializer = new Deserializer<SnippetIntern>();
+    Mono.from(conn)
+        .flatMap(
+            c -> Mono.from(c.createStatement(snippetGetQ)
+                            .bind(":snId", snId)
+                            .execute())
+    	)
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String proposalsGetQ = """
@@ -84,7 +145,7 @@ public Flux<Proposal> proposalsGet() {
             c -> Mono.from(c.createStatement(proposalsGetQ)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String taskLanguageCreateQ = """
