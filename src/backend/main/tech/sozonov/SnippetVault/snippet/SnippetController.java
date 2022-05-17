@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import tech.sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 
 @RestController
@@ -75,7 +76,7 @@ public Task proposals() {
 }
 
 @GetMapping("alternatives/{tlId:int}")
-public Mono<List<Alternative>> alternatives(@PathVariable int tlId) {
+public Either<String, Alternatives> alternatives(@PathVariable int tlId) {
     return snippetService.alternativesForTLGet(tlId, null);
 }
 

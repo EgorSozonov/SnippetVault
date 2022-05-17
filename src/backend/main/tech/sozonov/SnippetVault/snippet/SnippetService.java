@@ -6,6 +6,7 @@ import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
+import tech.sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 
 public class SnippetService {
@@ -59,45 +60,54 @@ public Mono<SnippetIntern> snippetGet(int snId) {
     return snippetStore.snippetGet(snId);
 }
 
-public Mono<Alternatives> alternativesForTLGet(int taskLanguageId, Integer userId){
+public Either<String, Alternatives> alternativesForTLGet(int taskLanguageId, Integer userId){
     val allAlternatives = userId == null ? snippetStore.alternativesForTLGet(taskLanguageId) : snippetStore.alternativesForUserGet(taskLanguageId, (int)userId);
     val mbTask = snippetStore.taskForTLGet(taskLanguageId);
-    return allAlternatives.zipWith(mbTask.cache().repeat(), (alts, task) -> {
-        val uniques = new HashSet<Integer>();
-        Alternative primary = null;
-        int primaryId = -1;
-        for (alt : alts) {
+    val uniques = new HashSet<Integer>();
+    Alternative primary = null;
+    int primaryId = -1;
 
-        }
-    });
-    if (allAlternatives is Success<AlternativeDTO> succ && mbTask is Success<TaskDTO> task) {
-        var uniques = new HashSet<Integer>();
-        AlternativeDTO primary = null;
-        int primaryId = -1;
-        foreach (var alt in succ.vals) {
-            if (uniques.Contains(alt.id)) {
+    return allAlternatives.zipWith(mbTask.cache().repeat(),
+        (alt, task) -> {
+
+
+            if (uniques.contains(alt)) {
                 primary = alt;
                 primaryId = alt.id;
                 break;
             }
-            uniques.Add(alt.id);
+            uniques.add(alt.id);
         }
-        if (primary != null) {
-            return new Success<AlternativesDTO>(
-                new List<AlternativesDTO>() {
-                    new AlternativesDTO() {
-                        primary = primary,
-                        task = task.vals[0],
-                        rows = succ.vals.Where(x => x.id != primaryId).ToArray(),
-                    }
-                }
-            );
-        } else {
-            return new Err<AlternativesDTO>("Error: no primary alternative was found");
-        }
-    } else {
-        return new Err<AlternativesDTO>("Error: no alternatives found");
-    }
+    );
+
+    // if (allAlternatives is Success<AlternativeDTO> succ && mbTask is Success<TaskDTO> task) {
+    //     var uniques = new HashSet<Integer>();
+    //     AlternativeDTO primary = null;
+    //     int primaryId = -1;
+    //     foreach (var alt in succ.vals) {
+    //         if (uniques.Contains(alt.id)) {
+    //             primary = alt;
+    //             primaryId = alt.id;
+    //             break;
+    //         }
+    //         uniques.Add(alt.id);
+    //     }
+    //     if (primary != null) {
+    //         return new Success<AlternativesDTO>(
+    //             new List<AlternativesDTO>() {
+    //                 new AlternativesDTO() {
+    //                     primary = primary,
+    //                     task = task.vals[0],
+    //                     rows = succ.vals.Where(x => x.id != primaryId).ToArray(),
+    //                 }
+    //             }
+    //         );
+    //     } else {
+    //         return new Err<AlternativesDTO>("Error: no primary alternative was found");
+    //     }
+    // } else {
+    //     return new Err<AlternativesDTO>("Error: no alternatives found");
+    // }
 }
 
 
