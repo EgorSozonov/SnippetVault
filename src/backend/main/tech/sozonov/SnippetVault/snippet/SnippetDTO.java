@@ -1,6 +1,7 @@
 package tech.sozonov.SnippetVault.snippet;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 
@@ -69,10 +70,11 @@ public static class Snippet {
     public String rightLibraries;
 }
 
+@AllArgsConstructor
 public static class Alternatives {
     public Alternative primary;
+    public List<Alternative> rows;
     public Task task;
-    public Alternative[] rows;
 }
 
 public static class Alternative {

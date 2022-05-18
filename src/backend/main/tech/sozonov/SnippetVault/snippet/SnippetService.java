@@ -1,5 +1,8 @@
 package tech.sozonov.SnippetVault.snippet;
 import java.util.HashSet;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
@@ -60,54 +63,34 @@ public Mono<SnippetIntern> snippetGet(int snId) {
     return snippetStore.snippetGet(snId);
 }
 
-public Either<String, Alternatives> alternativesForTLGet(int taskLanguageId, Integer userId){
-    val allAlternatives = userId == null ? snippetStore.alternativesForTLGet(taskLanguageId) : snippetStore.alternativesForUserGet(taskLanguageId, (int)userId);
+public Mono<Either<String, Alternatives>> alternativesForTLGet(int taskLanguageId, Integer userId){
+    val allAlternatives = (userId == null
+                            ? snippetStore.alternativesForTLGet(taskLanguageId)
+                            : snippetStore.alternativesForUserGet(taskLanguageId, (int)userId)
+                          ).collectList();
     val mbTask = snippetStore.taskForTLGet(taskLanguageId);
-    val uniques = new HashSet<Integer>();
-    Alternative primary = null;
-    int primaryId = -1;
 
-    return allAlternatives.zipWith(mbTask.cache().repeat(),
-        (alt, task) -> {
+    return allAlternatives.zipWith(mbTask, (alts, task) -> {
+        val uniques = new HashSet<Integer>();
+            Alternative primary = null;
 
-
-            if (uniques.contains(alt)) {
-                primary = alt;
-                primaryId = alt.id;
-                break;
+            for (val alt : alts) {
+                if (uniques.contains(alt.id)) {
+                    primary = alt;
+                    break;
+                }
+                uniques.add(alt.id);
             }
-            uniques.add(alt.id);
+            if (primary != null) {
+                final int primaryId = primary.id;
+                return Either.right(new Alternatives(primary, alts.stream().filter(x -> x.id != primaryId).collect(Collectors.toList()), task));
+            } else {
+                return Either.left("Error: no primary alternative was found");
+            }
+
         }
     );
 
-    // if (allAlternatives is Success<AlternativeDTO> succ && mbTask is Success<TaskDTO> task) {
-    //     var uniques = new HashSet<Integer>();
-    //     AlternativeDTO primary = null;
-    //     int primaryId = -1;
-    //     foreach (var alt in succ.vals) {
-    //         if (uniques.Contains(alt.id)) {
-    //             primary = alt;
-    //             primaryId = alt.id;
-    //             break;
-    //         }
-    //         uniques.Add(alt.id);
-    //     }
-    //     if (primary != null) {
-    //         return new Success<AlternativesDTO>(
-    //             new List<AlternativesDTO>() {
-    //                 new AlternativesDTO() {
-    //                     primary = primary,
-    //                     task = task.vals[0],
-    //                     rows = succ.vals.Where(x => x.id != primaryId).ToArray(),
-    //                 }
-    //             }
-    //         );
-    //     } else {
-    //         return new Err<AlternativesDTO>("Error: no primary alternative was found");
-    //     }
-    // } else {
-    //     return new Err<AlternativesDTO>("Error: no alternatives found");
-    // }
 }
 
 
