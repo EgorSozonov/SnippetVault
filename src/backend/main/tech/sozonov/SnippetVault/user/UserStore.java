@@ -142,19 +142,6 @@ public Flux<Comment> commentsGet(int snippetId) {
         .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
-private static final String userCountQ = """
-    SELECT COUNT(*) AS Cnt
-    FROM sv.user WHERE "isDeleted" = 0::bit;
-""";
-public Mono<Long> userCount() {
-    Mono.from(conn)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userCountQ)
-                            .returnGeneratedValues("cnt")
-                            .execute())
-    	);
-}
-
 private static final String userVoteQ = """
     BEGIN;
     WITH existingVote AS (

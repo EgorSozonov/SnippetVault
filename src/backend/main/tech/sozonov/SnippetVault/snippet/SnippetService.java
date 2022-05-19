@@ -57,6 +57,10 @@ public Mono<BareSnippet> proposalGet(int snId) {
     return snippetIntern.map(x -> new BareSnippet(x.content, x.libraries));
 }
 
+public Mono<Integer> proposalCreate(ProposalCreate dto, int authorId) {
+    return snippetStore.proposalCreate(dto, authorId);
+}
+
 public Mono<SnippetIntern> snippetGet(int snId) {
     return snippetStore.snippetGet(snId);
 }

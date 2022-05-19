@@ -2,15 +2,18 @@ package tech.sozonov.SnippetVault.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
 import reactor.core.publisher.Mono;
-
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import java.util.UUID;
 import java.util.list;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
+import tech.sozonov.SnippetVault.cmn.utils.Either;
 
 public class UserService {
 
 
 private final IUserStore userStore;
+private static final errResponse = Mono.just(Either.left("Authentication error"));
 
 @Autowired
 public UserService(IUserStore _userStore) {
@@ -18,7 +21,7 @@ public UserService(IUserStore _userStore) {
 }
 
 
-public Mono<Either<String, SignInSuccess>> userRegister(SignIn dto, IResponseCookies cookies) {
+public Mono<Either<String, SignInSuccess>> userRegister(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
     // TODO
     return Mono.just(Either.left("TODO userRegister"));
 
@@ -48,14 +51,14 @@ public Mono<Either<String, SignInSuccess>> userRegister(SignIn dto, IResponseCoo
 }
 
 private boolean validatePasswordComplexity(String newPw) {
-    return newPw != null && newPw.length() >= 8 &&
+    return newPw != null && newPw.length() >= 8;
 }
 
-public Flux<Comment>> commentsGet(int snippetId) {
+public Flux<Comment> commentsGet(int snippetId) {
     return userStore.commentsGet(snippetId);
 }
 
-public Mono<SignInSuccess> userAuthenticate(SignIn dto, IResponseCookies cookies) {
+public Mono<SignInSuccess> userAuthenticate(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
     val mbUserCreds = userStore.userAuthentGet(dto.userName).get();
     if (mbUserCreds instanceof Success<AuthenticateIntern> userAuthents && userAuthents.vals.Count == 1) {
         val userAuthent = userAuthents.vals[0];
@@ -65,7 +68,7 @@ public Mono<SignInSuccess> userAuthenticate(SignIn dto, IResponseCookies cookies
         boolean authentic = PasswordChecker.checkPassword(userAuthent, dto.password);
         if (!authentic) {
             cookies.Delete("accessToken");
-            return new Err<SignInSuccessDTO>("Authentication error");
+            return errResponse;
         }
 
         String accessToken = "";
@@ -82,12 +85,11 @@ public Mono<SignInSuccess> userAuthenticate(SignIn dto, IResponseCookies cookies
             }
         );
     } else {
-        return new Err<SignInSuccessDTO>("Authentication error");
+        return errResponse;
     }
 }
 
-public Mono<ReqResult<SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto, IResponseCookies cookies) {
-    val err = new Err<SignInSuccess>("Authentication error");
+public Mono<ReqResult<SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto, MultiValueMap<String, HttpCookie> cookies) {
     if (dto.userName != AdminPasswordChecker.adminName) return err;
     val mbUserCreds = userStore.userAuthentGet(dto.userName).block();
 
@@ -112,7 +114,7 @@ public Mono<ReqResult<SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto, IRe
             }
         );
     } else {
-        return err;
+        return errResponse;
     }
 }
 
@@ -135,7 +137,7 @@ public Mono<Boolean> userAuthorizeAdmin(String accessToken) {
         );
 }
 
-public Mono<ReqResult<SignInSuccess>> userUpdateAdminPw(ChangePwAdmin dto, IResponseCookies cookies) {
+public Mono<ReqResult<SignInSuccess>> userUpdateAdminPw(ChangePwAdmin dto, MultiValueMap<String, HttpCookie> cookies) {
     val authentResult = userAuthenticateAdmin(dto.signIn, cookies).block;
 
     if (authentResult instanceof Success<SignInSuccess> success) {
@@ -152,11 +154,11 @@ public Mono<ReqResult<SignInSuccess>> userUpdateAdminPw(ChangePwAdmin dto, IResp
         cookies.Append("accessToken", newAccessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
         return HttpUtils.wrapSuccess(new SignInSuccessDTO() { userId = response.userId });
     } else {
-        return new Err<SignInSuccess>("Authentication error");
+        return errResponse;
     }
 }
 
-public Mono<ReqResult<SignInSuccess>> userUpdatePw(ChangePw dto, IResponseCookies cookies) {
+public Mono<Either<String, SignInSuccess>> userUpdatePw(ChangePw dto, MultiValueMap<String, HttpCookie> cookies) {
     val authentResult = userAuthenticate(dto.signIn, cookies);
 
     if (authentResult is Success<SignInSuccess> success) {
@@ -173,7 +175,7 @@ public Mono<ReqResult<SignInSuccess>> userUpdatePw(ChangePw dto, IResponseCookie
         cookies.Append("accessToken", newAccessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
         return HttpUtils.wrapSuccess(new SignInSuccessDTO() { userId = response.userId });
     } else {
-        return new Err<SignInSuccess>("Authentication error");
+        return errResponse;
     }
 }
 
@@ -195,4 +197,6 @@ private String makeAccessToken() {
     val uuid2 = UUID.randomUUID().toString();
     return (uuid1 + uuid2);
 }
+
+
 }

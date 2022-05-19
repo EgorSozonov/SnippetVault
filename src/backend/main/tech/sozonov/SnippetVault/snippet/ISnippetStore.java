@@ -14,7 +14,6 @@ Mono<SnippetIntern> snippetGet(int snId);
 Flux<Language> languagesGet();
 Flux<TaskGroup> taskGroupsGet();
 Flux<Proposal> proposalsGet();
-Flux<Task> tasksFromGroupGet(int taskGroup);
 Flux<TaskGroup> taskGroupsForLangGet(int langId);
 Flux<TaskGroup> taskGroupsForLangsGet(int lang1, int lang2);
 Flux<Alternative> alternativesForTLGet(int taskLanguageId);

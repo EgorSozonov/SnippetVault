@@ -149,6 +149,99 @@ public Flux<Proposal> proposalsGet() {
         .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
+
+private static final String alternativesForTLGetQ = """
+    SELECT sn.id, sn.content AS content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount"
+    FROM sv."taskLanguage" tl
+    JOIN sv.snippet sn ON sn.id=tl."primarySnippetId"
+    LEFT JOIN sv.comment c ON c."snippetId" = sn.id
+    WHERE tl.id=:tlId
+    GROUP BY sn.id, sn.content, sn."tsUpload", sn.score
+
+    UNION ALL
+
+    SELECT sn.id, sn.content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount"
+    FROM sv.snippet sn
+    LEFT JOIN sv.comment c ON c."snippetId" = sn.id
+    WHERE sn."taskLanguageId" = :tlId AND sn.status = 3
+    GROUP BY sn.id, sn.content, sn."tsUpload", sn.score;
+""";
+public Flux<Alternative> alternativesForTLGet(int taskLanguageId) {
+    val deserializer = new Deserializer<Alternative>();
+    Mono.from(conn)
+        .flatMap(
+            c -> Mono.from(c.createStatement(proposalsGetQ)
+                            .bind("tlId", taskLanguageId)
+                            .execute())
+    	)
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+}
+
+private static final String alternativesForUserGetQ = """
+    SELECT sn.id, sn.content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount",
+           (CASE WHEN uv."snippetId" IS NULL THEN FALSE ELSE TRUE END) AS "voteFlag"
+    FROM sv."taskLanguage" tl
+    JOIN sv.snippet sn ON sn.id=tl."primarySnippetId"
+    LEFT JOIN sv."userVote" uv ON uv."userId" = :userId AND uv."snippetId"=sn.id
+    LEFT JOIN sv.comment c ON c."snippetId" = sn.id
+    WHERE tl.id = :tlId
+    GROUP BY sn.id, sn.content, sn."tsUpload", sn.score, "voteFlag"
+
+    UNION ALL
+
+    SELECT sn.id, sn.content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount",
+           (CASE WHEN uv."snippetId" IS NULL THEN FALSE ELSE TRUE END) AS "voteFlag"
+    FROM sv.snippet sn
+    LEFT JOIN sv.comment c ON c."snippetId" = sn.id
+    LEFT JOIN sv."userVote" uv ON uv."userId" = :userId AND uv."snippetId" = sn.id
+    WHERE sn."taskLanguageId"=:tlId AND sn.status = 3
+    GROUP BY sn.id, sn.content, sn."tsUpload", sn.score, "voteFlag";
+""";
+public Flux<Alternative> alternativesForUserGet(int taskLanguageId, int userId) {
+    val deserializer = new Deserializer<Alternative>();
+    Mono.from(conn)
+        .flatMap(
+            c -> Mono.from(c.createStatement(alternativesForUserGetQ)
+                            .bind("tlId", taskLanguageId)
+                            .bind("userId", userId)
+                            .execute())
+    	)
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+}
+
+private static final String taskGetQ = """
+    SELECT t.id, tg.name AS "taskGroupName", t.name, t.description FROM sv."task" t
+    JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId"
+    WHERE t.id = :taskId;
+""";
+public Mono<Task> taskGet(int taskId) {
+    val deserializer = new Deserializer<Task>();
+    Mono.from(conn)
+        .flatMap(
+            c -> Mono.from(c.createStatement(taskGetQ)
+                            .bind("taskId", taskId)
+                            .execute())
+    	)
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+}
+
+private static final String taskForTLGetQ = """
+    SELECT t.id, tg.name AS "taskGroupName", t.name, t.description FROM sv."taskLanguage" tl
+    JOIN sv.task t ON t.id=tl."taskId"
+    JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId"
+    WHERE tl.id = :tlId AND t."isDeleted" = 0::bit;
+""";
+public Mono<Task> taskForTLGet(int tlId) {
+    val deserializer = new Deserializer<Task>();
+    Mono.from(conn)
+        .flatMap(
+            c -> Mono.from(c.createStatement(taskForTLGetQ)
+                            .bind("tlId", tlId)
+                            .execute())
+    	)
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+}
+
 private static final String taskLanguageCreateQ = """
     INSERT INTO sv."taskLanguage"("taskId", "languageId", "primarySnippetId")
     VALUES (:taskId, :langId, NULL)

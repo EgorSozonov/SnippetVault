@@ -13,8 +13,6 @@ public class SnippetDTO {
  *  !!!
  */
 
-
-
 public static class Task {
     public int id;
     public String name;
