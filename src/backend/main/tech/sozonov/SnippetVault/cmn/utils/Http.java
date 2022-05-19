@@ -1,7 +1,5 @@
 package tech.sozonov.SnippetVault.cmn.utils;
-
 import org.springframework.http.ResponseEntity;
-
 import reactor.core.publisher.Mono;
 
 public class Http {

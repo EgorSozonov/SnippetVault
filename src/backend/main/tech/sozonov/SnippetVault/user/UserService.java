@@ -8,6 +8,8 @@ import java.util.UUID;
 import java.util.list;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
+import org.springframework.util.MultiValueMap;
+import org.springframework.http.HttpCookie;
 
 public class UserService {
 
@@ -58,7 +60,7 @@ public Flux<Comment> commentsGet(int snippetId) {
     return userStore.commentsGet(snippetId);
 }
 
-public Mono<SignInSuccess> userAuthenticate(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
+public Mono<Either<String, SignInSuccess>> userAuthenticate(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
     val mbUserCreds = userStore.userAuthentGet(dto.userName).get();
     if (mbUserCreds instanceof Success<AuthenticateIntern> userAuthents && userAuthents.vals.Count == 1) {
         val userAuthent = userAuthents.vals[0];
@@ -89,7 +91,7 @@ public Mono<SignInSuccess> userAuthenticate(SignIn dto, MultiValueMap<String, Ht
     }
 }
 
-public Mono<ReqResult<SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto, MultiValueMap<String, HttpCookie> cookies) {
+public Mono<Either<String, SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto, MultiValueMap<String, HttpCookie> cookies) {
     if (dto.userName != AdminPasswordChecker.adminName) return err;
     val mbUserCreds = userStore.userAuthentGet(dto.userName).block();
 
@@ -137,7 +139,7 @@ public Mono<Boolean> userAuthorizeAdmin(String accessToken) {
         );
 }
 
-public Mono<ReqResult<SignInSuccess>> userUpdateAdminPw(ChangePwAdmin dto, MultiValueMap<String, HttpCookie> cookies) {
+public Mono<Either<String, SignInSuccess>> userUpdateAdminPw(ChangePwAdmin dto, MultiValueMap<String, HttpCookie> cookies) {
     val authentResult = userAuthenticateAdmin(dto.signIn, cookies).block;
 
     if (authentResult instanceof Success<SignInSuccess> success) {
@@ -190,6 +192,14 @@ public Mono<Profile> userProfile(int userId) {
         prof.vals[0].tsJoined = usr.vals[0].tsJoined;
     }
     return profileIncomplete;
+}
+
+public Mono<Integer> userVote(Vote dto, int userId) {
+    return userStore.userVote(userId, dto.tlId, dto.snId);
+}
+
+public Mono<Integer> commentCreate(CommentCU dto, int userId) {
+    return userStore.commentCreate(userId, dto.snId, dto.content, System.DateTime.Now.ToUniversalTime());
 }
 
 private String makeAccessToken() {

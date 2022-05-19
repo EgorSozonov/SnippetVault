@@ -1,4 +1,6 @@
 package tech.sozonov.SnippetVault.snippet;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -11,12 +13,12 @@ import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 public class SnippetStore {
 
 
-private final Connection conn;
+private DatabaseClient db;
 
-public SnippetStore(Connection _conn) {
-    conn = _conn;
+@Autowired
+public SnippetStore(DatabaseClient _db) {
+    db = _db;
 }
-
 
 private static final String languagesGetQ = """
     SELECT l.id, l.name, l."sortingOrder", l.code
@@ -25,7 +27,7 @@ private static final String languagesGetQ = """
 """;
 public Flux<Language> languagesGet() {
     val deserializer = new Deserializer<Language>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(languagesGetQ)
                             .execute())
@@ -39,7 +41,7 @@ private static final String taskGroupsGetQ = """
 """;
 public Flux<TaskGroup> taskGroupsGet() {
     val deserializer = new Deserializer<TaskGroup>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(taskGroupsGetQ)
                             .execute())
@@ -64,7 +66,7 @@ private static final String snippetsQ = """
 """;
 public Flux<Snippet> snippetsGet(int taskGroup, int lang1, int lang2) {
     val deserializer = new Deserializer<Snippet>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(snippetsQ)
                             .bind("l1", lang1)
@@ -101,7 +103,7 @@ private static final String snippetsGetByCodeQ = """
 """;
 public Flux<Snippet> snippetsGetByCode(String taskGroup, String lang1, String lang2) {
     val deserializer = new Deserializer<Snippet>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(snippetsGetByCodeQ)
                             .bind(":l1Code", lang1)
@@ -120,7 +122,7 @@ private static final String snippetGetQ = """
 """;
 public Mono<SnippetIntern> snippetGet(int snId) {
     val deserializer = new Deserializer<SnippetIntern>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(snippetGetQ)
                             .bind(":snId", snId)
@@ -141,7 +143,7 @@ private static final String proposalsGetQ = """
 """;
 public Flux<Proposal> proposalsGet() {
     val deserializer = new Deserializer<Snippet>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(proposalsGetQ)
                             .execute())
@@ -168,7 +170,7 @@ private static final String alternativesForTLGetQ = """
 """;
 public Flux<Alternative> alternativesForTLGet(int taskLanguageId) {
     val deserializer = new Deserializer<Alternative>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(proposalsGetQ)
                             .bind("tlId", taskLanguageId)
@@ -199,7 +201,7 @@ private static final String alternativesForUserGetQ = """
 """;
 public Flux<Alternative> alternativesForUserGet(int taskLanguageId, int userId) {
     val deserializer = new Deserializer<Alternative>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(alternativesForUserGetQ)
                             .bind("tlId", taskLanguageId)
@@ -216,7 +218,7 @@ private static final String taskGetQ = """
 """;
 public Mono<Task> taskGet(int taskId) {
     val deserializer = new Deserializer<Task>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(taskGetQ)
                             .bind("taskId", taskId)
@@ -233,7 +235,7 @@ private static final String taskForTLGetQ = """
 """;
 public Mono<Task> taskForTLGet(int tlId) {
     val deserializer = new Deserializer<Task>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(taskForTLGetQ)
                             .bind("tlId", tlId)
@@ -253,7 +255,7 @@ private static final String proposalCreateQ = """
     VALUES (:tlId, :content, 1, 0, :libraries, :ts, :authorId);
 """;
 public Mono<Integer> proposalCreate(ProposalCreate dto, int authorId) {
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(taskLanguageCreateQ)
                             .bind(":taskId", dto.taskId)
@@ -262,7 +264,7 @@ public Mono<Integer> proposalCreate(ProposalCreate dto, int authorId) {
                             .execute())
     	)
         .flatMap(tlId -> {
-            Mono.from(conn)
+            Mono.from(db)
                 .flatMap(
                     c -> Mono.from(c.createStatement(proposalCreateQ)
                                     .bind(":tlId", tlId)

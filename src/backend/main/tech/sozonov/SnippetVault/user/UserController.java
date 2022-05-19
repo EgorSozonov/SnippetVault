@@ -39,12 +39,12 @@ public Mono<Either<String, SignInSuccess>> userSignIn(@RequestBody SignIn dto, S
 }
 
 @PostMapping("user/signInAdmin")
-public Mono<SignInSuccess> userSignInAdmin(@RequestBody SignInAdmin dto, ServerHttpRequest req) {
+public Mono<Either<String, SignInSuccess>> userSignInAdmin(@RequestBody SignInAdmin dto, ServerHttpRequest req) {
     return userService.userAuthenticateAdmin(dto, req.getCookies());
 }
 
 @PostMapping("changeAdminPw")
-public Mono<SignInSuccess> userChangeAdminPw(@RequestBody ChangePwAdmin dto, ServerHttpRequest req) {
+public Mono<Either<String, SignInSuccess>> userChangeAdminPw(@RequestBody ChangePwAdmin dto, ServerHttpRequest req) {
     return userService.userUpdateAdminPw(dto, req.getCookies());
 }
 

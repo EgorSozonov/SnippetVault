@@ -1,6 +1,5 @@
 package tech.sozonov.SnippetVault.user;
 import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
 import reactor.core.publisher.Flux;
@@ -12,13 +11,11 @@ import tech.sozonov.SnippetVault.user.UserDTO.*;
 public class UserStore implements IUserStore {
 
 
-// CND806675Q
-// 15-bs654ur
-private Connection conn;
+private DatabaseClient db;
 
 @Autowired
-public UserStore(Connection _conn) {
-    conn = _conn;
+public UserStore(DatabaseClient _db) {
+    db = _db;
 }
 
 private static final String userAuthentGetQ = """
@@ -27,7 +24,7 @@ private static final String userAuthentGetQ = """
 """;
 public  Mono<AuthenticateIntern> userAuthentGet(String userName) {
     val deserializer = new Deserializer<AuthenticateIntern>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(userAuthentGetQ)
                             .bind("name", userName)
@@ -42,7 +39,7 @@ private static final String userAuthorizGetQ = """
 """;
 public Mono<AuthorizeIntern> userAuthorizGet(int userId) {
     val deserializer = new Deserializer<AuthorizeIntern>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(userAuthorizGetQ)
                             .bind("id", userId)
@@ -58,7 +55,7 @@ private static final String userAdminAuthorizQ = """
 """;
 public  Mono<AuthorizeIntern> userAdminAuthoriz() {
     val deserializer = new Deserializer<AuthorizeIntern>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(userAdminAuthorizQ)
                             .bind("name", AdminPasswordChecker.adminName)
@@ -72,7 +69,7 @@ private static final String userUpdateExpirationQ = """
     WHERE id = :id;
 """;
 public Mono<Integer> userUpdateExpiration(int userId, String newToken, LocalDateTime newDate) {
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(userUpdateExpirationQ)
                             .bind("id", userId)
@@ -90,7 +87,7 @@ private static final String userRegisterQ = """
     ON CONFLICT DO NOTHING RETURNING id;
 """;
 public Mono<Integer> userRegister(UserNewIntern user) {
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(userRegisterQ)
                             .bind("name", user.userName)
@@ -111,7 +108,7 @@ private static final String userUpdateQ = """
     WHERE name = :name;
 """;
 public Mono<Integer> userUpdate(UserNewIntern user) {
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(userUpdateQ)
                             .bind("name", user.userName)
@@ -133,7 +130,7 @@ private static final String commentsGetQ = """
 """;
 public Flux<Comment> commentsGet(int snippetId) {
     val deserializer = new Deserializer<Comment>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(commentsGetQ)
                             .bind("snId", snippetId)
@@ -161,7 +158,7 @@ private static final String userVoteQ = """
     COMMIT;
 """;
 public Mono<Integer> userVote(int userId, int tlId, int snId) {
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(userVoteQ)
                             .bind("id", userId)
@@ -183,7 +180,7 @@ private static final String userProfileQ = """
 """;
 public  Mono<Profile> userProfile(int userId) {
     val deserializer = new Deserializer<Profile>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(userProfileQ)
                             .bind("userId", userId)
@@ -197,7 +194,7 @@ private static final String userDataQ = """
 """;
 public  Mono<User> userData(int userId) {
     val deserializer = new Deserializer<User>();
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(userDataQ)
                             .bind("userId", userId)
@@ -211,7 +208,7 @@ private static final String commentCreateQ = """
     VALUES (:userId, :snId, :content, :ts);
 """;
 public Mono<Integer> commentCreate(int userId, int snId, String content, LocalDateTime ts) {
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(commentCreateQ)
                             .bind("userId", userId)
@@ -227,7 +224,7 @@ private static final String commentDeleteQ = """
     DELETE FROM sv.comment WHERE id=:commentId;
 """;
 public Mono<Integer> commentDelete(int commentId) {
-    Mono.from(conn)
+    Mono.from(db)
         .flatMap(
             c -> Mono.from(c.createStatement(commentDeleteQ)
                             .bind("commentId", commentId)
