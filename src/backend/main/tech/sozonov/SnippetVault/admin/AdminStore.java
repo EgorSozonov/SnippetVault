@@ -1,5 +1,6 @@
 package tech.sozonov.SnippetVault.admin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.r2dbc.core.DatabaseClient;
 import lombok.val;
 import java.time.LocalDateTime;
 import reactor.core.publisher.Mono;
@@ -60,13 +61,10 @@ private static final String snippetMarkPrimaryQ = """
     UPDATE sv."taskLanguage" SET "primarySnippetId" = :snId WHERE id=:tlId;
 """;
 public Mono<Integer> snippetMarkPrimary(int tlId, int snId) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(snippetMarkPrimaryQ)
-                            .bind(":tlId", tlId)
-                            .bind(":snId", snId)
-                            .execute())
-    	)
+    db.sql(snippetMarkPrimaryQ)
+        .bind("tlId", tlId)
+        .bind("snId", snId)
+        .all()
         .flatMap(result -> result.getRowsUpdated());
 }
 

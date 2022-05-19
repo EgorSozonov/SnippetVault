@@ -1,5 +1,6 @@
 package tech.sozonov.SnippetVault.snippet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.r2dbc.core.DatabaseClient;
 
 import lombok.val;
 import reactor.core.publisher.Flux;
@@ -27,12 +28,9 @@ private static final String languagesGetQ = """
 """;
 public Flux<Language> languagesGet() {
     val deserializer = new Deserializer<Language>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(languagesGetQ)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(languagesGetQ)
+       .map((row, rowMetadata) -> deserializer.unpackRow(row))
+       .all();
 }
 
 private static final String taskGroupsGetQ = """
@@ -41,15 +39,10 @@ private static final String taskGroupsGetQ = """
 """;
 public Flux<TaskGroup> taskGroupsGet() {
     val deserializer = new Deserializer<TaskGroup>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(taskGroupsGetQ)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(taskGroupsGetQ)
+        .map((row, rowMetadata) -> deserializer.unpackRow(row))
+        .all();
 }
-
-
 
 private static final String snippetsQ = """
     SELECT sn1.id as "leftId", sn1.content as "leftCode", tl1.id AS "leftTlId", sn1.libraries as "leftLibraries",

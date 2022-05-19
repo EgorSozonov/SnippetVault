@@ -3,6 +3,8 @@ import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
+
+import io.r2dbc.spi.Row;
 import tech.sozonov.SnippetVault.cmn.utils.Types.Pair;
 
 public class Deserializer<T> {
@@ -24,7 +26,7 @@ public boolean isOK;
 
 
 
-public Pair<T, String> unpackRow(Row dbRow) {
+public T unpackRow(Row dbRow) {
 
 
     var result = new T();
@@ -48,7 +50,7 @@ public Pair<T, String> unpackRow(Row dbRow) {
 
 
 
-    return new Pair(result, "");
+    return result;
 }
 
 // public DBDeserializer(string[] queryColumns){
