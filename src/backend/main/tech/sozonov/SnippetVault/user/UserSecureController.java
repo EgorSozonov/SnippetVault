@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,11 +25,8 @@ public UserSecureController(UserService _userService) {
 }
 
 @GetMapping("user/profile")
-public Mono<Profile> userProfile() {
-    HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
-    int.TryParse(mbUserId[0].ToString(), out int userId);
-    var result = userService.userProfile(userId);
-    sendQueryResult<ProfileDTO>(result, HttpContext.Response);
+public Mono<Profile> userProfile(@RequestHeader("userId") int userId) {
+    return userService.userProfile(userId);
 }
 
 @PostMapping("user/changePw")

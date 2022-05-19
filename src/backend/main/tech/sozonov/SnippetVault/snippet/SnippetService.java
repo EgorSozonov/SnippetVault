@@ -1,13 +1,11 @@
 package tech.sozonov.SnippetVault.snippet;
 import java.util.HashSet;
-import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import tech.sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;

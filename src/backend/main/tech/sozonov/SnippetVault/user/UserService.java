@@ -1,60 +1,77 @@
 package tech.sozonov.SnippetVault.user;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import lombok.val;
+import reactor.core.publisher.Mono;
+
+import java.util.UUID;
+import java.util.list;
+import tech.sozonov.SnippetVault.user.UserDTO.*;
 
 public class UserService {
+
 
 private final IUserStore userStore;
 
 @Autowired
 public UserService(IUserStore _userStore) {
-    IUserStore.userStore = _userStore;
+    this.userStore = _userStore;
 }
 
 
-public Mono<ReqResult<SignInSuccess>> userRegister(SignIn dto, IResponseCookies cookies) {
-    if (dto.password == null || dto.password.length() < 8) {
-        return new Err<SignInSuccess>("Error! Password length must be at least 8 symbols");
-    }
+public Mono<Either<String, SignInSuccess>> userRegister(SignIn dto, IResponseCookies cookies) {
+    // TODO
+    return Mono.just(Either.left("TODO userRegister"));
 
-    String newSalt = "";
-    val newHashSalt = (dto.userName != AdminPasswordChecker.adminName)
-        ? PasswordChecker.makeHash(dto.password) : AdminPasswordChecker.makeHash(dto.password);
-    val newAccessToken = makeAccessToken();
-    val user = UserNewIntern.builder()
-        .userName(dto.userName).hash(newHash).salt(newSalt)
-        .accessToken(newAccessToken)
-        .dtExpiration(DateOnly.FromDateTime(DateTime.Today))
-    .build();
-    val newUserId = st.userRegister(user).get();
-    if (newUserId > 0) {
-        val successList =  List.of(new SignInSuccess(newUserId));
-        // TODO Secure
-        cookies.Append("accessToken", newAccessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
+    // if (!validatePasswordComplexity(dto.password)) {
+    //     return Mono.just(Either.left("Error! Password length must be at least 8 symbols"));
+    // }
 
-        return new Success<SignInSuccessDTO>(successList);
-    } else {
-        return new Err<SignInSuccessDTO>("Error registering user");
-    }
+    // String newSalt = "";
+    // val newHashSalt = (dto.userName != AdminPasswordChecker.adminName)
+    //     ? PasswordChecker.makeHash(dto.password) : AdminPasswordChecker.makeHash(dto.password);
+    // val newAccessToken = makeAccessToken();
+    // val user = UserNewIntern.builder()
+    //     .userName(dto.userName).hash(newHash).salt(newSalt)
+    //     .accessToken(newAccessToken)
+    //     .dtExpiration(DateOnly.FromDateTime(DateTime.Today))
+    // .build();
+    // val newUserId = userStore.userRegister(user).get();
+    // if (newUserId > 0) {
+    //     val successList =  List.of(new SignInSuccess(newUserId));
+    //     // TODO Secure
+    //     cookies.Append("accessToken", newAccessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
+
+    //     return new Success<SignInSuccessDTO>(successList);
+    // } else {
+    //     return new Err<SignInSuccessDTO>("Error registering user");
+    // }
 }
 
-public Mono<ReqResult<SignInSuccess>> userAuthenticate(SignIn dto, IResponseCookies cookies) {
-    var mbUserCreds = st.userAuthentGet(dto.userName).get();
+private boolean validatePasswordComplexity(String newPw) {
+    return newPw != null && newPw.length() >= 8 &&
+}
+
+public Flux<Comment>> commentsGet(int snippetId) {
+    return userStore.commentsGet(snippetId);
+}
+
+public Mono<SignInSuccess> userAuthenticate(SignIn dto, IResponseCookies cookies) {
+    val mbUserCreds = userStore.userAuthentGet(dto.userName).get();
     if (mbUserCreds instanceof Success<AuthenticateIntern> userAuthents && userAuthents.vals.Count == 1) {
-        var userAuthent = userAuthents.vals[0];
+        val userAuthent = userAuthents.vals[0];
         userAuthent.hash = EncodingUtils.convertToBcrypt(userAuthent.hash);
         userAuthent.salt = EncodingUtils.convertToBcrypt(userAuthent.salt);
 
-        bool authentic = PasswordChecker.checkPassword(userAuthent, dto.password);
+        boolean authentic = PasswordChecker.checkPassword(userAuthent, dto.password);
         if (!authentic) {
             cookies.Delete("accessToken");
             return new Err<SignInSuccessDTO>("Authentication error");
         }
 
         String accessToken = "";
-        if (userAuthent.expiration.Date != DateTime.Today) {
+        if (userAuthent.expiration.Date != LocalDateTime.now().day()) {
             accessToken = makeAccessToken();
-            await st.userUpdateExpiration(userAuthent.userId, accessToken, DateTime.Today);
+            userStore.userUpdateExpiration(userAuthent.userId, accessToken, LocalDateTime.Today);
         } else {
             accessToken = userAuthent.accessToken;
         }
@@ -69,29 +86,29 @@ public Mono<ReqResult<SignInSuccess>> userAuthenticate(SignIn dto, IResponseCook
     }
 }
 
-public Mono<ReqResult<SignInSuccessDTO>> userAuthenticateAdmin(SignInAdminDTO dto, IResponseCookies cookies) {
-    var err = new Err<SignInSuccessDTO>("Authentication error");
+public Mono<ReqResult<SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto, IResponseCookies cookies) {
+    val err = new Err<SignInSuccess>("Authentication error");
     if (dto.userName != AdminPasswordChecker.adminName) return err;
-    var mbUserCreds = st.userAuthentGet(dto.userName).block();
+    val mbUserCreds = userStore.userAuthentGet(dto.userName).block();
 
     if (mbUserCreds instanceof Success<AuthenticateIntern> userAuthents && userAuthents.vals.Count == 1) {
-        var userAuthent = userAuthents.vals[0];
+        val userAuthent = userAuthents.vals[0];
         userAuthent.hash = EncodingUtils.convertToBcrypt(userAuthent.hash);
         userAuthent.salt = EncodingUtils.convertToBcrypt(userAuthent.salt);
 
-        bool authentic = AdminPasswordChecker.checkAdminPassword(userAuthent, dto);
+        boolean authentic = AdminPasswordChecker.checkAdminPassword(userAuthent, dto);
         if (!authentic) return err;
 
         String accessToken = "";
-        if (userAuthent.expiration.Date != DateTime.Today) {
+        if (userAuthent.expiration.Date != LocalDateTime.now()) {
             accessToken = makeAccessToken();
-            st.userUpdateExpiration(userAuthent.userId, accessToken, DateTime.Today).block();
+            userStore.userUpdateExpiration(userAuthent.userId, accessToken, LocalDateTime.Today).block();
         } else {
             accessToken = userAuthent.accessToken;
         }
         cookies.Append("accessToken", accessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
-        return new Success<SignInSuccessDTO>(new List<SignInSuccessDTO>() {
-                new SignInSuccessDTO() { userId = userAuthent.userId, }
+        return new Success<SignInSuccess>(new List<SignInSuccess>() {
+                new SignInSuccess() { userId = userAuthent.userId, }
             }
         );
     } else {
@@ -100,10 +117,10 @@ public Mono<ReqResult<SignInSuccessDTO>> userAuthenticateAdmin(SignInAdminDTO dt
 }
 
 public Mono<Boolean> userAuthorize(int userId, String accessToken) {
-    var mbUserAuthor = st.userAuthorizGet(userId).block();
+    val mbUserAuthor = userStore.userAuthorizGet(userId);
     if (mbUserAuthor instanceof Success<AuthorizeIntern> userAuthors && userAuthors.vals.Count == 1) {
-        var userAuthor = userAuthors.vals[0];
-        bool authorized = userAuthor.expiration.Date == DateTime.Today && userAuthor.accessToken == accessToken;
+        val userAuthor = userAuthors.vals[0];
+        boolean authorized = userAuthor.expiration.Date == DateTime.Today && userAuthor.accessToken == accessToken;
         return authorized;
     } else {
         return false;
@@ -111,61 +128,71 @@ public Mono<Boolean> userAuthorize(int userId, String accessToken) {
 }
 
 public Mono<Boolean> userAuthorizeAdmin(String accessToken) {
-    var mbUserAuthor = st.userAdminAuthoriz().block();
-    if (mbUserAuthor instanceof Success<AuthorizeIntern> userAuthors && userAuthors.vals.Count == 1) {
-        var userAuthor = userAuthors.vals[0];
-        bool authorized = userAuthor.expiration.Date == DateTime.Today && userAuthor.accessToken == accessToken;
-        return authorized;
-    } else {
-        return false;
-    }
+    val mbUserAuthor = userStore.userAdminAuthoriz();
+    return mbUserAuthor.map(x -> (x != null)
+                ? userAuthor.expiration.Date == LocalDateTime.Today && userAuthor.accessToken == accessToken
+                : false;
+        );
 }
 
 public Mono<ReqResult<SignInSuccess>> userUpdateAdminPw(ChangePwAdmin dto, IResponseCookies cookies) {
-    var authentResult = userAuthenticateAdmin(dto.signIn, cookies).block;
+    val authentResult = userAuthenticateAdmin(dto.signIn, cookies).block;
 
-    if (authentResult instanceof Success<SignInSuccessDTO> success) {
-        var response = success.vals[0];
+    if (authentResult instanceof Success<SignInSuccess> success) {
+        val response = success.vals[0];
         String newSalt = "";
-        var newHashSalt = AdminPasswordChecker.makeHash(dto.newPw);
-        var newAccessToken = makeAccessToken();
-        var user = new UserNewIntern() {
+        val newHashSalt = AdminPasswordChecker.makeHash(dto.newPw);
+        val newAccessToken = makeAccessToken();
+        val user = new UserNewIntern() {
             userName = dto.signIn.userName, salt = newSalt,
             hash = newHash, accessToken = newAccessToken, dtExpiration = DateOnly.FromDateTime(DateTime.Now),
         };
-        var updateCount = st.userUpdate(user).block();
+        val updateCount = userStore.userUpdate(user).block();
 
         cookies.Append("accessToken", newAccessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
         return HttpUtils.wrapSuccess(new SignInSuccessDTO() { userId = response.userId });
     } else {
-        return new Err<SignInSuccessDTO>("Authentication error");
+        return new Err<SignInSuccess>("Authentication error");
     }
 }
 
 public Mono<ReqResult<SignInSuccess>> userUpdatePw(ChangePw dto, IResponseCookies cookies) {
-    var authentResult = await userAuthenticate(dto.signIn, cookies);
+    val authentResult = userAuthenticate(dto.signIn, cookies);
 
-    if (authentResult is Success<SignInSuccessDTO> success) {
-        var response = success.vals[0];
+    if (authentResult is Success<SignInSuccess> success) {
+        val response = success.vals[0];
         String newSalt = "";
-        var newHash = PasswordChecker.makeHash(dto.newPw, out newSalt);
-        var newAccessToken = makeAccessToken();
-        var user = new UserNewIntern() {
+        val newHash = PasswordChecker.makeHash(dto.newPw, out newSalt);
+        val newAccessToken = makeAccessToken();
+        val user = new UserNewIntern() {
             userName = dto.signIn.userName, salt = newSalt,
             hash = newHash, accessToken = newAccessToken, dtExpiration = DateOnly.FromDateTime(DateTime.Now),
         };
-        var updateCount = await st.userUpdate(user);
+        val updateCount = userStore.userUpdate(user);
 
         cookies.Append("accessToken", newAccessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
         return HttpUtils.wrapSuccess(new SignInSuccessDTO() { userId = response.userId });
     } else {
-        return new Err<SignInSuccessDTO>("Authentication error");
+        return new Err<SignInSuccess>("Authentication error");
     }
 }
 
+public Mono<Profile> userProfile(int userId) {
+    val profileIncomplete = userStore.userProfile(userId);
+    val userData = userStore.userData(userId);
+
+    // return profileIncomplete.zipWith(userData, () -> {
+    // });
+
+    if (profileIncomplete is Success<Profile> prof && userData is Success<User> usr) {
+        prof.vals[0].tsJoined = usr.vals[0].tsJoined;
+    }
+    return profileIncomplete;
+}
+
 private String makeAccessToken() {
-    var uuid1 = Guid.NewGuid().ToString();
-    var uuid2 = Guid.NewGuid().ToString();
+    val uuid1 = UUID.randomUUID().toString();
+    val uuid2 = UUID.randomUUID().toString();
     return (uuid1 + uuid2);
 }
 }

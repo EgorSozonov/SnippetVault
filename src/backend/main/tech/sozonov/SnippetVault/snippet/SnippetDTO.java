@@ -13,11 +13,7 @@ public class SnippetDTO {
  *  !!!
  */
 
-public static class TaskGroup {
-    public int id;
-    public String name;
-    public String code;
-}
+
 
 public static class Task {
     public int id;

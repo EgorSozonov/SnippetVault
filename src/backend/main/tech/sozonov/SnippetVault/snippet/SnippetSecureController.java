@@ -17,11 +17,18 @@ import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 @RequestMapping("/api/secure")
 public class SnippetSecureController {
 
+private final SnippetService snippetService;
+
+@Autowired
+public SnippetSecureController(SnippetService _snippetService) {
+    this.snippetService = _snippetService;
+}
+
 @PostMapping("proposal/create")
 public Mono<ResponseEntity<Void>> proposalCreate(@RequestBody ProposalCreate dto) {
     HttpContext.Request.Headers.TryGetValue("userId", out var mbUserId);
     int.TryParse(mbUserId[0].ToString(), out int userId);
-    applyPostRequest(api.proposalCreate(dto, userId), HttpContext.Response);
+    snippetService.proposalCreate(dto, userId);
 }
 
 

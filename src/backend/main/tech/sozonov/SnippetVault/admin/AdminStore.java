@@ -1,10 +1,12 @@
 package tech.sozonov.SnippetVault.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
+import java.time.LocalDateTime;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import tech.sozonov.SnippetVault.admin.AdminDTO.*;
 import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
+import tech.sozonov.SnippetVault.cmn.dto.CommonDTO.*;
 
 public class AdminStore implements IAdminStore {
 private Connection conn;
@@ -88,7 +90,7 @@ public Flux<Alternative> alternativesForTLGet(int taskLanguageId) {
                             .bind("tlId", taskLanguageId)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String alternativesForUserGetQ = """
@@ -268,7 +270,7 @@ private Flux<TaskGroup> taskGroupsForArrayLanguages(int[] langs) {
                             .bind("ls", langs)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String statsForAdminQ = """

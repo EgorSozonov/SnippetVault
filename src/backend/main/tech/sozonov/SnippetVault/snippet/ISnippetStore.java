@@ -1,6 +1,7 @@
 package tech.sozonov.SnippetVault.snippet;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import tech.sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
 import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 

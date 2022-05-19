@@ -1,7 +1,12 @@
 package tech.sozonov.SnippetVault.user;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.*;
+import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 
 public class UserStore implements IUserStore {
@@ -28,7 +33,7 @@ public  Mono<AuthenticateIntern> userAuthentGet(String userName) {
                             .bind("name", userName)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String userAuthorizGetQ = """
@@ -43,7 +48,7 @@ public Mono<AuthorizeIntern> userAuthorizGet(int userId) {
                             .bind("id", userId)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 
@@ -59,7 +64,7 @@ public  Mono<AuthorizeIntern> userAdminAuthoriz() {
                             .bind("name", AdminPasswordChecker.adminName)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String userUpdateExpirationQ = """
@@ -126,7 +131,7 @@ private static final String commentsGetQ = """
 	JOIN sv.user u ON u.id=c."userId"
 	WHERE c."snippetId" = :snId;
 """;
-public Mono<Comment> commentsGet(int snippetId) {
+public Flux<Comment> commentsGet(int snippetId) {
     val deserializer = new Deserializer<Comment>();
     Mono.from(conn)
         .flatMap(
@@ -134,8 +139,7 @@ public Mono<Comment> commentsGet(int snippetId) {
                             .bind("snId", snippetId)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
-            val deserializer = new Deserializer<AuthorizeIntern>();
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String userCountQ = """
@@ -198,7 +202,7 @@ public  Mono<Profile> userProfile(int userId) {
                             .bind("userId", userId)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String userDataQ = """
@@ -212,7 +216,7 @@ public  Mono<User> userData(int userId) {
                             .bind("userId", userId)
                             .execute())
     	)
-        .flatMap(result -> result.map((row, rowMetadata) -> return deserializer.read(row)));
+        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
 }
 
 private static final String commentCreateQ = """
@@ -240,8 +244,9 @@ public Mono<Integer> commentDelete(int commentId) {
         .flatMap(
             c -> Mono.from(c.createStatement(commentDeleteQ)
                             .bind("commentId", commentId)
-    	)
-        .flatMap(result -> result.getRowsUpdated());
+    	                  )
+                    .flatMap(result -> result.getRowsUpdated())
+        );
 }
 
 
