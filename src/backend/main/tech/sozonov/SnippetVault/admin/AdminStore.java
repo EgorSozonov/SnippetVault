@@ -33,39 +33,32 @@ private static final String snippetApproveQ = """
 
     COMMIT;
 """;
-public  Mono<Integer> snippetApprove(int snId) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(snippetApproveQ)
-                            .bind(":snId", snId)
-                            .execute())
-    	)
-        .flatMap(result -> result.getRowsUpdated());
+public Mono<Integer> snippetApprove(int snId) {
+    return db.sql(snippetApproveQ)
+             .bind("snId", snId)
+             .fetch()
+             .rowsUpdated();
 }
-
 
 private static final String snippetDeclineQ = """
     UPDATE sv.snippet SET status=2 WHERE id = :snId;
 """;
 public Mono<Integer> snippetDecline(int snId) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(snippetDeclineQ)
-                            .bind(":snId", snId)
-                            .execute())
-    	)
-        .flatMap(result -> result.getRowsUpdated());
+    return db.sql(snippetDeclineQ)
+             .bind("snId", snId)
+             .fetch()
+             .rowsUpdated();
 }
 
 private static final String snippetMarkPrimaryQ = """
     UPDATE sv."taskLanguage" SET "primarySnippetId" = :snId WHERE id=:tlId;
 """;
 public Mono<Integer> snippetMarkPrimary(int tlId, int snId) {
-    db.sql(snippetMarkPrimaryQ)
-        .bind("tlId", tlId)
-        .bind("snId", snId)
-        .all()
-        .flatMap(result -> result.getRowsUpdated());
+    return db.sql(snippetMarkPrimaryQ)
+             .bind("tlId", tlId)
+             .bind("snId", snId)
+             .fetch()
+             .rowsUpdated();
 }
 
 public Flux<TaskGroup> taskGroupsForLangGet(int langId) {
@@ -94,12 +87,9 @@ private static final String tasksAllQ = """
 """;
 public Flux<TaskCUIntern> tasksAll() {
     val deserializer = new Deserializer<TaskCUIntern>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(tasksAllQ)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(tasksAllQ)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
 
 private static final String taskGroupsAllQ = """
@@ -108,12 +98,9 @@ private static final String taskGroupsAllQ = """
 """;
 public Flux<TaskGroupCU> taskGroupsAll() {
     val deserializer = new Deserializer<TaskGroupCU>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(taskGroupsAllQ)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(taskGroupsAllQ)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
 
 private static final String languagesAllQ = """
@@ -122,12 +109,9 @@ private static final String languagesAllQ = """
 """;
 public Flux<LanguageCU> languagesAll() {
     val deserializer = new Deserializer<LanguageCU>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(taskGroupsForArrayLanguagesQ)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(languagesAllQ)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
 
 private static final String taskCreateQ = """
@@ -161,13 +145,10 @@ private static final String taskGroupsForArrayLanguagesQ = """
 """;
 private Flux<TaskGroup> taskGroupsForArrayLanguages(int[] langs) {
     val deserializer = new Deserializer<TaskGroup>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(taskGroupsForArrayLanguagesQ)
-                            .bind("ls", langs)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(taskGroupsForArrayLanguagesQ)
+             .bind("ls", langs)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
 
 private static final String statsForAdminQ = """
@@ -180,28 +161,23 @@ private static final String statsForAdminQ = """
 """;
 public Mono<Stats> statsForAdmin() {
     val deserializer = new Deserializer<Stats>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(statsForAdminQ)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(statsForAdminQ)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .one();
 }
 
 private static final String logMessageQ = """
     INSERT INTO sv.log(ts, type, code, msg)
     VALUES (:ts, :msgType, :code, :message);
 """;
-public  Mono<Integer> logMessage(LocalDateTime ts, int msgType, String code, String message) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(logMessageQ)
-                            .bind("ts", ts)
-                            .bind("msgType", msgType)
-                            .bind("code", code.subString(0, Math.min(16, code.length)))
-                            .bind("commentId", commentId)
-    	))
-        .flatMap(result -> result.getRowsUpdated());
+public Mono<Integer> logMessage(LocalDateTime ts, int msgType, String code, String message) {
+    return db.sql(logMessageQ)
+             .bind("ts", ts)
+             .bind("msgType", msgType)
+             .bind("code", code.substring(0, Math.min(16, code.length())))
+             .bind("message", message)
+             .fetch()
+             .rowsUpdated();
 }
 
 private static final String proposalUpdateQ = """
@@ -210,15 +186,12 @@ private static final String proposalUpdateQ = """
 """;
 public Mono<Integer> proposalUpdate(ProposalUpdate dto) {
     val newLibraries = dto.libraries != null && dto.libraries.length() > 0 ? dto.libraries : null;
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(proposalUpdateQ)
-                            .bind(":snId", dto.existingId)
-                            .bind(":content", dto.content)
-                            .bind(":libraries", newLibraries)
-                            .execute())
-    	)
-        .flatMap(result -> result.getRowsUpdated());
+    return db.sql(proposalUpdateQ)
+             .bind("snId", dto.existingId)
+             .bind("content", dto.content)
+             .bind("libraries", newLibraries)
+             .fetch()
+             .rowsUpdated();
 }
 
 private static final String userCountQ = """
@@ -226,12 +199,10 @@ private static final String userCountQ = """
     FROM sv.user WHERE "isDeleted" = 0::bit;
 """;
 public Mono<Long> userCount() {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userCountQ)
-                            .returnGeneratedValues("cnt")
-                            .execute())
-    	);
+    return db.sql(userCountQ)
+             .fetch()
+             .first()
+             .map(r -> (long) r.get("cnt"));
 }
 
 private static void taskParamAdder(Statement cmd, TaskCU dto) {

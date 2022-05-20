@@ -1,12 +1,15 @@
 package tech.sozonov.SnippetVault.user;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.r2dbc.core.DatabaseClient;
+
 import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.*;
 import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
+import tech.sozonov.SnippetVault.user.auth.AdminPasswordChecker;
 
 public class UserStore implements IUserStore {
 
@@ -22,15 +25,12 @@ private static final String userAuthentGetQ = """
     SELECT id AS "userId", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration, "accessToken"
     FROM sv.user WHERE name = :name;
 """;
-public  Mono<AuthenticateIntern> userAuthentGet(String userName) {
+public Mono<AuthenticateIntern> userAuthentGet(String userName) {
     val deserializer = new Deserializer<AuthenticateIntern>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userAuthentGetQ)
-                            .bind("name", userName)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(userAuthentGetQ)
+             .bind("name", userName)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .one();
 }
 
 private static final String userAuthorizGetQ = """
@@ -39,13 +39,10 @@ private static final String userAuthorizGetQ = """
 """;
 public Mono<AuthorizeIntern> userAuthorizGet(int userId) {
     val deserializer = new Deserializer<AuthorizeIntern>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userAuthorizGetQ)
-                            .bind("id", userId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(userAuthorizGetQ)
+         .bind("id", userId)
+         .map((row, rowMetadata) -> deserializer.unpackRow(row))
+         .one();
 }
 
 
@@ -55,13 +52,10 @@ private static final String userAdminAuthorizQ = """
 """;
 public  Mono<AuthorizeIntern> userAdminAuthoriz() {
     val deserializer = new Deserializer<AuthorizeIntern>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userAdminAuthorizQ)
-                            .bind("name", AdminPasswordChecker.adminName)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(userAdminAuthorizQ)
+             .bind("name", AdminPasswordChecker.adminName)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .one();
 }
 
 private static final String userUpdateExpirationQ = """
@@ -69,15 +63,12 @@ private static final String userUpdateExpirationQ = """
     WHERE id = :id;
 """;
 public Mono<Integer> userUpdateExpiration(int userId, String newToken, LocalDateTime newDate) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userUpdateExpirationQ)
-                            .bind("id", userId)
-                            .bind("newDate", newDate)
-                            .bind("newToken", newToken)
-                            .execute())
-    	)
-        .flatMap(result -> result.getRowsUpdated());
+    return db.sql(userUpdateExpirationQ)
+             .bind("id", userId)
+             .bind("newDate", newDate)
+             .bind("newToken", newToken)
+             .fetch()
+             .rowsUpdated();
 }
 
 private static final String userRegisterQ = """
@@ -87,19 +78,16 @@ private static final String userRegisterQ = """
     ON CONFLICT DO NOTHING RETURNING id;
 """;
 public Mono<Integer> userRegister(UserNewIntern user) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userRegisterQ)
-                            .bind("name", user.userName)
-                            .bind("salt", user.salt)
-                            .bind("hash", user.hash)
-                            .bind("accessToken", user.accessToken)
-                            .bind("tsJoin", LocalDateTime.now())
-                            .bind("dtExpiration", user.dtExpiration)
-                            .returnGeneratedValues("id")
-                            .execute())
-    	)
-        .flatMap(result -> result != null ? result : 0);
+    return db.sql(userRegisterQ)
+             .bind("name", user.userName)
+             .bind("salt", user.salt)
+             .bind("hash", user.hash)
+             .bind("accessToken", user.accessToken)
+             .bind("tsJoin", LocalDateTime.now())
+             .bind("dtExpiration", user.dtExpiration)
+             .fetch()
+             .first()
+             .map(r -> (int) r.get("id"));
 }
 
 private static final String userUpdateQ = """
@@ -108,18 +96,14 @@ private static final String userUpdateQ = """
     WHERE name = :name;
 """;
 public Mono<Integer> userUpdate(UserNewIntern user) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userUpdateQ)
-                            .bind("name", user.userName)
-                            .bind("salt", user.salt)
-                            .bind("hash", user.hash)
-                            .bind("accessToken", user.accessToken)
-                            .bind("dtExpiration", user.dtExpiration)
-                            .execute())
-    	)
-        .flatMap(result -> result.getRowsUpdated());
-
+    return db.sql(userUpdateQ)
+             .bind("name", user.userName)
+             .bind("salt", user.salt)
+             .bind("hash", user.hash)
+             .bind("accessToken", user.accessToken)
+             .bind("dtExpiration", user.dtExpiration)
+             .fetch()
+             .rowsUpdated();
 }
 
 private static final String commentsGetQ = """
@@ -130,13 +114,10 @@ private static final String commentsGetQ = """
 """;
 public Flux<Comment> commentsGet(int snippetId) {
     val deserializer = new Deserializer<Comment>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(commentsGetQ)
-                            .bind("snId", snippetId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(commentsGetQ)
+             .bind("snId", snippetId)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
 
 private static final String userVoteQ = """
@@ -158,15 +139,12 @@ private static final String userVoteQ = """
     COMMIT;
 """;
 public Mono<Integer> userVote(int userId, int tlId, int snId) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userVoteQ)
-                            .bind("id", userId)
-                            .bind("tlId", tlId)
-                            .bind("snId", snId)
-                            .execute())
-    	)
-        .flatMap(result -> result.getRowsUpdated());
+    return db.sql(userVoteQ)
+             .bind("id", userId)
+             .bind("tlId", tlId)
+             .bind("snId", snId)
+             .fetch()
+             .rowsUpdated();
 }
 
 private static final String userProfileQ = """
@@ -180,27 +158,21 @@ private static final String userProfileQ = """
 """;
 public  Mono<Profile> userProfile(int userId) {
     val deserializer = new Deserializer<Profile>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userProfileQ)
-                            .bind("userId", userId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(userProfileQ)
+             .bind("userId", userId)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .one();
 }
 
 private static final String userDataQ = """
     SELECT name, "dateJoined" AS "tsJoined" FROM sv.user WHERE id = :userId;
 """;
-public  Mono<User> userData(int userId) {
+public Mono<User> userData(int userId) {
     val deserializer = new Deserializer<User>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(userDataQ)
-                            .bind("userId", userId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(userDataQ)
+             .bind("userId", userId)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .one();
 }
 
 private static final String commentCreateQ = """
@@ -208,32 +180,24 @@ private static final String commentCreateQ = """
     VALUES (:userId, :snId, :content, :ts);
 """;
 public Mono<Integer> commentCreate(int userId, int snId, String content, LocalDateTime ts) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(commentCreateQ)
-                            .bind("userId", userId)
-                            .bind("content", content)
-                            .bind("snId", snId)
-                            .bind("ts", ts)
-                            .execute())
-    	)
-        .flatMap(result -> result.getRowsUpdated());
+    return db.sql(commentCreateQ)
+             .bind("userId", userId)
+             .bind("content", content)
+             .bind("snId", snId)
+             .bind("ts", ts)
+             .fetch()
+             .rowsUpdated();
 }
 
 private static final String commentDeleteQ = """
     DELETE FROM sv.comment WHERE id=:commentId;
 """;
 public Mono<Integer> commentDelete(int commentId) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(commentDeleteQ)
-                            .bind("commentId", commentId)
-    	                  )
-                    .flatMap(result -> result.getRowsUpdated())
-        );
+    return db.sql(commentDeleteQ)
+             .bind("commentId", commentId)
+             .fetch()
+             .rowsUpdated();
 }
-
-
 
 
 }

@@ -1,4 +1,6 @@
 package tech.sozonov.SnippetVault.snippet;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
 
@@ -29,8 +31,8 @@ private static final String languagesGetQ = """
 public Flux<Language> languagesGet() {
     val deserializer = new Deserializer<Language>();
     return db.sql(languagesGetQ)
-       .map((row, rowMetadata) -> deserializer.unpackRow(row))
-       .all();
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
 
 private static final String taskGroupsGetQ = """
@@ -40,8 +42,8 @@ private static final String taskGroupsGetQ = """
 public Flux<TaskGroup> taskGroupsGet() {
     val deserializer = new Deserializer<TaskGroup>();
     return db.sql(taskGroupsGetQ)
-        .map((row, rowMetadata) -> deserializer.unpackRow(row))
-        .all();
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
 
 private static final String snippetsQ = """
@@ -59,15 +61,12 @@ private static final String snippetsQ = """
 """;
 public Flux<Snippet> snippetsGet(int taskGroup, int lang1, int lang2) {
     val deserializer = new Deserializer<Snippet>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(snippetsQ)
-                            .bind("l1", lang1)
-                            .bind("l2", lang1)
-                            .bind("tgId", taskGroup)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(snippetsQ)
+             .bind("l1", lang1)
+             .bind("l2", lang1)
+             .bind("tgId", taskGroup)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
 
 private static final String snippetsGetByCodeQ = """
@@ -96,17 +95,13 @@ private static final String snippetsGetByCodeQ = """
 """;
 public Flux<Snippet> snippetsGetByCode(String taskGroup, String lang1, String lang2) {
     val deserializer = new Deserializer<Snippet>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(snippetsGetByCodeQ)
-                            .bind(":l1Code", lang1)
-                            .bind(":l2Code", lang1)
-                            .bind(":tgId", taskGroup)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(snippetsGetByCodeQ)
+             .bind("l1Code", lang1)
+             .bind("l2Code", lang1)
+             .bind("tgId", taskGroup)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
-
 
 private static final String snippetGetQ = """
     SELECT "taskLanguageId", "status", content, score, libraries
@@ -115,13 +110,10 @@ private static final String snippetGetQ = """
 """;
 public Mono<SnippetIntern> snippetGet(int snId) {
     val deserializer = new Deserializer<SnippetIntern>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(snippetGetQ)
-                            .bind(":snId", snId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(snippetGetQ)
+             .bind("snId", snId)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .one();
 }
 
 private static final String proposalsGetQ = """
@@ -135,15 +127,11 @@ private static final String proposalsGetQ = """
 	WHERE sn.status=1 AND lang."isDeleted"=0::bit AND task."isDeleted"=0::bit;
 """;
 public Flux<Proposal> proposalsGet() {
-    val deserializer = new Deserializer<Snippet>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(proposalsGetQ)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    val deserializer = new Deserializer<Proposal>();
+    return db.sql(proposalsGetQ)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
-
 
 private static final String alternativesForTLGetQ = """
     SELECT sn.id, sn.content AS content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount"
@@ -163,13 +151,10 @@ private static final String alternativesForTLGetQ = """
 """;
 public Flux<Alternative> alternativesForTLGet(int taskLanguageId) {
     val deserializer = new Deserializer<Alternative>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(proposalsGetQ)
-                            .bind("tlId", taskLanguageId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(alternativesForTLGetQ)
+             .bind("tlId", taskLanguageId)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
 
 private static final String alternativesForUserGetQ = """
@@ -194,14 +179,11 @@ private static final String alternativesForUserGetQ = """
 """;
 public Flux<Alternative> alternativesForUserGet(int taskLanguageId, int userId) {
     val deserializer = new Deserializer<Alternative>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(alternativesForUserGetQ)
-                            .bind("tlId", taskLanguageId)
-                            .bind("userId", userId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(alternativesForUserGetQ)
+             .bind("tlId", taskLanguageId)
+             .bind("userId", userId)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .all();
 }
 
 private static final String taskGetQ = """
@@ -211,13 +193,10 @@ private static final String taskGetQ = """
 """;
 public Mono<Task> taskGet(int taskId) {
     val deserializer = new Deserializer<Task>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(taskGetQ)
-                            .bind("taskId", taskId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(taskGetQ)
+             .bind("taskId", taskId)
+             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .one();
 }
 
 private static final String taskForTLGetQ = """
@@ -228,13 +207,10 @@ private static final String taskForTLGetQ = """
 """;
 public Mono<Task> taskForTLGet(int tlId) {
     val deserializer = new Deserializer<Task>();
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(taskForTLGetQ)
-                            .bind("tlId", tlId)
-                            .execute())
-    	)
-        .flatMap(result -> result.map((row, rowMetadata) -> deserializer.read(row)));
+    return db.sql(taskForTLGetQ)
+        .bind("tlId", tlId)
+        .map((row, rowMetadata) -> deserializer.unpackRow(row))
+        .one();
 }
 
 private static final String taskLanguageCreateQ = """
@@ -248,27 +224,22 @@ private static final String proposalCreateQ = """
     VALUES (:tlId, :content, 1, 0, :libraries, :ts, :authorId);
 """;
 public Mono<Integer> proposalCreate(ProposalCreate dto, int authorId) {
-    Mono.from(db)
-        .flatMap(
-            c -> Mono.from(c.createStatement(taskLanguageCreateQ)
-                            .bind(":taskId", dto.taskId)
-                            .bind(":langId", dto.langId)
-                            .returnGeneratedValues("id")
-                            .execute())
-    	)
-        .flatMap(tlId -> {
-            Mono.from(db)
-                .flatMap(
-                    c -> Mono.from(c.createStatement(proposalCreateQ)
-                                    .bind(":tlId", tlId)
-                                    .bind(":content", dto.content)
-                                    .bind(":libraries", dto.libraries)
-                                    .bind(":ts", LocalDateTime.now())
-                                    .bind(":authorId", authorId)
-                                    .execute())
-            	)
-                .flatMap(result -> result.getRowsUpdated());
-        });
+    return db.sql(taskLanguageCreateQ)
+             .bind("taskId", dto.taskId)
+             .bind("langId", dto.langId)
+             .fetch()
+             .first()
+             .map(r -> (int) r.get("id"))
+             .flatMap(tlId -> {
+                return db.sql(proposalCreateQ)
+                         .bind("tlId", tlId)
+                         .bind("content", dto.content)
+                         .bind("libraries", dto.libraries)
+                         .bind("ts", LocalDateTime.now())
+                         .bind("authorId", authorId)
+                         .fetch()
+                         .rowsUpdated();
+             });
 }
 
 

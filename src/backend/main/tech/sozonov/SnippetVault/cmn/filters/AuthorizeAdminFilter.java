@@ -1,4 +1,4 @@
-package tech.sozonov.SnippetVault.cmn.core.filters;
+package tech.sozonov.SnippetVault.cmn.filters;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -7,12 +7,12 @@ import org.springframework.web.util.pattern.PathPatternParser;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.core.AuthService;
+import tech.sozonov.SnippetVault.user.UserService;
 
 public class AuthorizeAdminFilter implements WebFilter {
 
 
-private AuthService authService;
+private UserService userService;
 private final PathPattern pathPattern;
 
 public AuthorizeAdminFilter() {
@@ -25,7 +25,7 @@ public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterCha
     if (pathPattern.matches(webExchange.getRequest().getPath().pathWithinApplication())) {
         val accessToken = webExchange.getRequest().getCookies().getFirst("accessToken");
         try {
-            authorized = authService.userAuthorizeAdmin(accessToken.getValue()).block();
+            authorized = userService.userAuthorizeAdmin(accessToken.getValue()).block();
         } catch (Exception e) {
             authorized = false;
         }
