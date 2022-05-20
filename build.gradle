@@ -1,0 +1,51 @@
+plugins {
+	id "org.springframework.boot" version "2.6.7"
+	id "io.spring.dependency-management" version "1.0.11.RELEASE"
+	id "java"
+}
+
+group = "tech.sozonov"
+version = "0.0.1-SNAPSHOT"
+sourceCompatibility = "17"
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url "https://repo.spring.io/milestone" }
+	maven { url "https://repo.spring.io/snapshot" }
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok"
+	developmentOnly "org.springframework.boot:spring-boot-devtools"
+	annotationProcessor "org.projectlombok:lombok"
+
+	implementation "org.springframework.boot:spring-boot-starter-webflux"
+    implementation "org.springframework.boot:spring-boot-starter-data-r2dbc"
+    implementation "org.postgresql:r2dbc-postgresql:0.9.1.RELEASE"
+    implementation "org.springframework.data:spring-data-r2dbc"
+    //runtime "io-r2dbc:r2dbc-postgresql"
+
+	testImplementation "org.springframework.boot:spring-boot-starter-test"
+	testImplementation "io.projectreactor:reactor-test"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs= ["src/backend/main"]
+        }
+        resources {
+            srcDirs= ["src/backend/resources"]
+        }
+    }
+}
+
+tasks.named("test") {
+	useJUnitPlatform()
+}

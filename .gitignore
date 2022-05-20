@@ -18,8 +18,7 @@ Src/backend/bin
 src/backend/build
 src/backend/obj
 src/backend/target
-src/backend/portsIn/store/db/creds.json
-src/backend/core/auth/*
+src/backend/cmn/config/creds.json
 *.service
 include/*
 config/creds*
@@ -27,3 +26,18 @@ src/**/creds.json
 src/.DS_Store
 .DS_Store
 Src/.DS_Store?
+
+.gradle/*
+gradle/*
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+
+# Cache of project
+.gradletasknamecache
+src/backend/main/tech/sozonov/SnippetVault/user/auth/*
