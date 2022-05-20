@@ -160,7 +160,7 @@ private static final String taskGroupsForArrayLanguagesQ = """
     WHERE tl."languageId" = ANY(:ls);
 """;
 private Flux<TaskGroup> taskGroupsForArrayLanguages(int[] langs) {
-    val deserializer = new Deserializer<TaskGroup>();
+    val deserializer = new Deserializer<>(TaskGroup.class);
     return db.sql(taskGroupsForArrayLanguagesQ)
              .bind("ls", langs)
              .map((row, rowMetadata) -> deserializer.unpackRow(row))

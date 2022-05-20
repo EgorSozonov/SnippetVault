@@ -3,13 +3,13 @@ import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
-
 import io.r2dbc.spi.Row;
+import lombok.val;
 import tech.sozonov.SnippetVault.cmn.utils.Types.Pair;
 
 public class Deserializer<T> {
 
-
+private Class<T> qlass;
 PropTarget[] columnTargets;
 List<BiConsumer<T, Integer>> settersInt;
 List<BiConsumer<T, Double>> settersDouble;
@@ -19,6 +19,9 @@ List<BiConsumer<T, Boolean>> settersBool;
 List<BiConsumer<T, LocalDateTime>> settersTS;
 public boolean isOK;
 
+public Deserializer(Class<T> _qlass) {
+    qlass = _qlass;
+}
 // private struct PropTarget {
 //     public ValueType propType;
 //     public int indexSetter;
@@ -27,30 +30,30 @@ public boolean isOK;
 
 
 public T unpackRow(Row dbRow) {
-
-
-    var result = new T();
-    for (int j = 0; j < columnTargets.length; ++j) {
-        var tgt = columnTargets[j];
-        if (tgt.propType == ValueType.doubl) {
-            settersDouble.get(tgt.indexSetter).apply(result, dbRow.get(j, Double.class));
-        } else if (tgt.propType == ValueType.integr) {
-            settersInt.get(tgt.indexSetter).apply(result, dbRow.get(j, Integer.class));
-        } else if (tgt.propType == ValueType.strin) {
-            settersString.get(tgt.indexSetter).apply(result, dbRow.get(j, String.class));
-        } else if (tgt.propType == ValueType.boole) {
-            settersBool[tgt.indexSetter](result, dbRow.IsDBNull(j) ? false : dbRow.GetBoolean(j));
-        } else if (tgt.propType == ValueType.timestampe) {
-            settersTS[tgt.indexSetter](result, dbRow.IsDBNull(j) ? LocalDateTime.MIN : dbRow.GetDateTime(j));
+    try {
+        val result = qlass.getDeclaredConstructor().newInstance();
+        for (int j = 0; j < columnTargets.length; ++j) {
+            var tgt = columnTargets[j];
+            if (tgt.propType == ValueType.doubl) {
+                settersDouble.get(tgt.indexSetter).accept(result, (double)dbRow.get(j));
+            } else if (tgt.propType == ValueType.integr) {
+                settersInt.get(tgt.indexSetter).accept(result, dbRow.get(j, Integer.class));
+            } else if (tgt.propType == ValueType.strin) {
+                settersString.get(tgt.indexSetter).accept(result, dbRow.get(j, String.class));
+            } else if (tgt.propType == ValueType.boole) {
+                settersBool.get(tgt.indexSetter).accept(result, dbRow.get(j, Boolean.class));
+            } else if (tgt.propType == ValueType.timestampe) {
+                settersTS.get(tgt.indexSetter).accept(result, dbRow.get(j, LocalDateTime.class));
+            }
+            //else if (tgt.propType == ValueType.deciml) {
+              //  settersDecimal[tgt.indexSetter](result, dbRow.GetDecimal(j));
+            //}
         }
-        //else if (tgt.propType == ValueType.deciml) {
-          //  settersDecimal[tgt.indexSetter](result, dbRow.GetDecimal(j));
-        //}
+        return result;
+    } catch (Exception ex) {
+        throw ex;
     }
 
-
-
-    return result;
 }
 
 // public DBDeserializer(string[] queryColumns){
@@ -69,6 +72,28 @@ public T unpackRow(Row dbRow) {
 //         return;
 //     }
 // }
+
+private void determineTypeProperties(String[] queryColumns) {
+    val methods = qlass.getMethods();
+
+
+        // Method[] gettersAndSetters = object_a.getClass().getMethods();
+        // for (int i = 0; i < gettersAndSetters.length; i++) {
+        //     String methodName = gettersAndSetters[i].getName();
+        //     try {
+        //         if (methodName.startsWith("get")){
+        //             this.getClass().getMethod(methodName.replaceFirst("get", "set") , gettersAndSetters[i].getReturnType() ).invoke(this, gettersAndSetters[i].invoke(object_a, null));
+        //         }else if(methodName.startsWith("is") ){
+        //             this.getClass().getMethod(methodName.replaceFirst("is", "set") ,  gettersAndSetters[i].getReturnType()  ).invoke(this, gettersAndSetters[i].invoke(object_a, null));
+        //         }
+
+        //     } catch (NoSuchMethodException e) {
+        //         // TODO: handle exception
+        //     } catch (IllegalArgumentException e) {
+        //         // TODO: handle exception
+        //     }
+        // }
+}
 
 
 // private void determineTypeProperties(string[] queryColumns, out PropTarget[] propTargets,
