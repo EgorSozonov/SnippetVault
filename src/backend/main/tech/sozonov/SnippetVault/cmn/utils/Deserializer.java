@@ -1,6 +1,8 @@
 package tech.sozonov.SnippetVault.cmn.utils;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
 import io.r2dbc.spi.Row;
@@ -19,8 +21,9 @@ List<BiConsumer<T, Boolean>> settersBool;
 List<BiConsumer<T, LocalDateTime>> settersTS;
 public boolean isOK;
 
-public Deserializer(Class<T> _qlass) {
+public Deserializer(Class<T> _qlass, String[] queryColumns) {
     qlass = _qlass;
+    determineTypeProperties(queryColumns);
 }
 // private struct PropTarget {
 //     public ValueType propType;
@@ -76,6 +79,61 @@ public T unpackRow(Row dbRow) {
 
 private void determineTypeProperties(String[] queryColumns) {
     val methods = qlass.getMethods();
+
+    int numProps = queryColumns.length;
+
+    columnTargets = new PropTarget[numProps];
+    settersInt = new ArrayList<BiConsumer<T, Integer>>(numProps);
+    settersString = new ArrayList<BiConsumer<T, String>>(numProps);
+    settersDouble = new ArrayList<BiConsumer<T, Double>>(numProps);
+    //settersDecimal = new ArrayList<BiConsumer<T, decimal>>(numProps);
+    settersBool = new ArrayList<BiConsumer<T, Boolean>>(numProps);
+    settersTS = new ArrayList<BiConsumer<T, LocalDateTime>>(numProps);
+
+    var dictProps = new HashMap<String, Pair<String, Class<?>>>();
+    for (val prop : methods) {
+        String normalizedName = prop.getName().replace(" ", "").toLowerCase();
+        if (dictProps.ContainsKey(normalizedName)) {
+            errMsg = $"Target type must contain only case-insensitively unique field names. Name {normalizedName} is duplicate.";
+            return;
+        }
+        dictProps.Add(normalizedName, new Pair<string, Type>(prop.Name, prop.PropertyType));
+    }
+
+    for (int i = 0; i < numProps; ++i){
+        String nameCol = queryColumns[i].Replace(" ", "").ToLower();
+        if (!dictProps.TryGetValue(nameCol, out Pair<string, Type> tp)) {
+            errMsg = $"Column ${nameCol} not found among the properties of ${typeof(T)}";
+        }
+        if (tp.snd == typeof(int)) {
+            settersInt.Add((Action<T, int>) Delegate.CreateDelegate(typeof(Action<T, int>), null,
+                            typeof(T).GetProperty(tp.fst).GetSetMethod()));
+            propTargets[i] = new PropTarget() { indexSetter = settersInt.Count - 1, propType = ValueType.integr};
+        } else if (tp.snd == typeof(double)) {
+            settersDouble.Add((Action<T, double>) Delegate.CreateDelegate(typeof(Action<T, double>), null,
+                    typeof(T).GetProperty(tp.fst).GetSetMethod()));
+            propTargets[i] = new PropTarget() { indexSetter = settersDouble.Count - 1, propType = ValueType.doubl};
+        } else if (tp.snd == typeof(decimal)) {
+            settersDecimal.Add((Action<T, decimal>) Delegate.CreateDelegate(typeof(Action<T, decimal>), null,
+                    typeof(T).GetProperty(tp.fst).GetSetMethod()));
+            propTargets[i] = new PropTarget() { indexSetter = settersDecimal.Count - 1, propType = ValueType.deciml};
+        } else if (tp.snd == typeof(string)) {
+            settersString.Add((Action<T, string>) Delegate.CreateDelegate(typeof(Action<T, string>), null,
+                                typeof(T).GetProperty(tp.fst).GetSetMethod()));
+            propTargets[i] = new PropTarget() { indexSetter = settersString.Count - 1, propType = ValueType.strin};
+        } else if (tp.snd == typeof(bool)) {
+            settersBool.Add((Action<T, bool>) Delegate.CreateDelegate(typeof(Action<T, bool>), null,
+                                typeof(T).GetProperty(tp.fst).GetSetMethod()));
+            propTargets[i] = new PropTarget() { indexSetter = settersBool.Count - 1, propType = ValueType.boole};
+        } else if (tp.snd == typeof(DateTime)) {
+            settersTS.Add((Action<T, DateTime>) Delegate.CreateDelegate(typeof(Action<T, DateTime>), null,
+                                typeof(T).GetProperty(tp.fst).GetSetMethod()));
+            propTargets[i] = new PropTarget() { indexSetter = settersTS.Count - 1, propType = ValueType.timestampe};
+        }  else {
+            errMsg = $"Unsupported column type ${tp.snd}; only Int, Double, Decimal, Timestamp and String columns are supported!";
+            return;
+        }
+    }
 
 
         // Method[] gettersAndSetters = object_a.getClass().getMethods();
