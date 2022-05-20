@@ -26,10 +26,10 @@ private static final String userAuthentGetQ = """
     FROM sv.user WHERE name = :name;
 """;
 public Mono<AuthenticateIntern> userAuthentGet(String userName) {
-    val deserializer = new Deserializer<AuthenticateIntern>();
+    val deserializer = new Deserializer<>(AuthenticateIntern.class);
     return db.sql(userAuthentGetQ)
              .bind("name", userName)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .one();
 }
 
@@ -38,10 +38,10 @@ private static final String userAuthorizGetQ = """
     FROM sv.user WHERE id = :id;
 """;
 public Mono<AuthorizeIntern> userAuthorizGet(int userId) {
-    val deserializer = new Deserializer<AuthorizeIntern>();
+    val deserializer = new Deserializer<>(AuthorizeIntern.class);
     return db.sql(userAuthorizGetQ)
          .bind("id", userId)
-         .map((row, rowMetadata) -> deserializer.unpackRow(row))
+         .map(deserializer::unpackRow)
          .one();
 }
 
@@ -51,10 +51,10 @@ private static final String userAdminAuthorizQ = """
     FROM sv.user WHERE name = :name;
 """;
 public  Mono<AuthorizeIntern> userAdminAuthoriz() {
-    val deserializer = new Deserializer<AuthorizeIntern>();
+    val deserializer = new Deserializer<>(AuthorizeIntern.class);
     return db.sql(userAdminAuthorizQ)
              .bind("name", AdminPasswordChecker.adminName)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .one();
 }
 
@@ -113,10 +113,10 @@ private static final String commentsGetQ = """
 	WHERE c."snippetId" = :snId;
 """;
 public Flux<Comment> commentsGet(int snippetId) {
-    val deserializer = new Deserializer<Comment>();
+    val deserializer = new Deserializer<>(Comment.class);
     return db.sql(commentsGetQ)
              .bind("snId", snippetId)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -157,10 +157,10 @@ private static final String userProfileQ = """
     WHERE "authorId" = :userId;
 """;
 public  Mono<Profile> userProfile(int userId) {
-    val deserializer = new Deserializer<Profile>();
+    val deserializer = new Deserializer<>(Profile.class);
     return db.sql(userProfileQ)
              .bind("userId", userId)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .one();
 }
 
@@ -168,10 +168,10 @@ private static final String userDataQ = """
     SELECT name, "dateJoined" AS "tsJoined" FROM sv.user WHERE id = :userId;
 """;
 public Mono<User> userData(int userId) {
-    val deserializer = new Deserializer<User>();
+    val deserializer = new Deserializer<>(User.class);
     return db.sql(userDataQ)
              .bind("userId", userId)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .one();
 }
 

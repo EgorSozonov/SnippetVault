@@ -51,8 +51,9 @@ public T unpackRow(Row dbRow) {
         }
         return result;
     } catch (Exception ex) {
-        throw ex;
+        return null;
     }
+
 
 }
 

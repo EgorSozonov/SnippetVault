@@ -5,7 +5,6 @@ import org.springframework.r2dbc.core.DatabaseClient.GenericExecuteSpec;
 import lombok.val;
 import java.time.LocalDateTime;
 import java.util.function.BiFunction;
-
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import tech.sozonov.SnippetVault.admin.AdminDTO.*;
@@ -93,9 +92,9 @@ private static final String tasksAllQ = """
     JOIN sv."taskGroup" tg ON tg.id = t."taskGroupId";
 """;
 public Flux<TaskCUIntern> tasksAll() {
-    val deserializer = new Deserializer<TaskCUIntern>();
+    val deserializer = new Deserializer<>(TaskCUIntern.class);
     return db.sql(tasksAllQ)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -104,9 +103,9 @@ private static final String taskGroupsAllQ = """
     FROM sv."taskGroup";
 """;
 public Flux<TaskGroupCU> taskGroupsAll() {
-    val deserializer = new Deserializer<TaskGroupCU>();
+    val deserializer = new Deserializer<>(TaskGroupCU.class);
     return db.sql(taskGroupsAllQ)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -115,9 +114,9 @@ private static final String languagesAllQ = """
     FROM sv.language;
 """;
 public Flux<LanguageCU> languagesAll() {
-    val deserializer = new Deserializer<LanguageCU>();
+    val deserializer = new Deserializer<>(LanguageCU.class);
     return db.sql(languagesAllQ)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -150,7 +149,7 @@ public  Mono<Integer> languageCU(LanguageCU dto) {
                         .bind("code", dto.code)
                         .bind("sortingOrder", dto.sortingOrder)
                         .bind("isDeleted", dto.isDeleted);
-    return createOrUpdate(taskCreateQ, taskUpdateQ, binder, dto, db);
+    return createOrUpdate(languageCreateQ, languageUpdateQ, binder, dto, db);
 }
 
 private static final String taskGroupsForArrayLanguagesQ = """
@@ -163,7 +162,7 @@ private Flux<TaskGroup> taskGroupsForArrayLanguages(int[] langs) {
     val deserializer = new Deserializer<>(TaskGroup.class);
     return db.sql(taskGroupsForArrayLanguagesQ)
              .bind("ls", langs)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -176,9 +175,9 @@ private static final String statsForAdminQ = """
     LEFT JOIN sv."taskLanguage" tl ON tl."primarySnippetId"=s.id;
 """;
 public Mono<Stats> statsForAdmin() {
-    val deserializer = new Deserializer<Stats>();
+    val deserializer = new Deserializer<>(Stats.class);
     return db.sql(statsForAdminQ)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .one();
 }
 

@@ -1,4 +1,4 @@
-package tech.sozonov.SnippetVault.core.utils;
+package tech.sozonov.SnippetVault.cmn.utils;
 import java.util.List;
 
 import lombok.AllArgsConstructor;

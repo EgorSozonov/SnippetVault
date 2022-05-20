@@ -1,9 +1,7 @@
 package tech.sozonov.SnippetVault.snippet;
 import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
-
 import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,9 +27,9 @@ private static final String languagesGetQ = """
     WHERE l."isDeleted" = 0::bit;
 """;
 public Flux<Language> languagesGet() {
-    val deserializer = new Deserializer<Language>();
+    val deserializer = new Deserializer<>(Language.class);
     return db.sql(languagesGetQ)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -40,9 +38,9 @@ private static final String taskGroupsGetQ = """
     WHERE "isDeleted"=0::bit;
 """;
 public Flux<TaskGroup> taskGroupsGet() {
-    val deserializer = new Deserializer<TaskGroup>();
+    val deserializer = new Deserializer<>(TaskGroup.class);
     return db.sql(taskGroupsGetQ)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -60,12 +58,12 @@ private static final String snippetsQ = """
 	WHERE t."taskGroupId"=:tgId AND t."isDeleted"=0::bit;
 """;
 public Flux<Snippet> snippetsGet(int taskGroup, int lang1, int lang2) {
-    val deserializer = new Deserializer<Snippet>();
+    val deserializer = new Deserializer<>(Snippet.class);
     return db.sql(snippetsQ)
              .bind("l1", lang1)
              .bind("l2", lang1)
              .bind("tgId", taskGroup)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -94,12 +92,12 @@ private static final String snippetsGetByCodeQ = """
     WHERE t."isDeleted"=0::bit;
 """;
 public Flux<Snippet> snippetsGetByCode(String taskGroup, String lang1, String lang2) {
-    val deserializer = new Deserializer<Snippet>();
+    val deserializer = new Deserializer<>(Snippet.class);
     return db.sql(snippetsGetByCodeQ)
              .bind("l1Code", lang1)
              .bind("l2Code", lang1)
              .bind("tgId", taskGroup)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -109,10 +107,10 @@ private static final String snippetGetQ = """
 	WHERE id = :snId;
 """;
 public Mono<SnippetIntern> snippetGet(int snId) {
-    val deserializer = new Deserializer<SnippetIntern>();
+    val deserializer = new Deserializer<>(SnippetIntern.class);
     return db.sql(snippetGetQ)
              .bind("snId", snId)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .one();
 }
 
@@ -127,9 +125,10 @@ private static final String proposalsGetQ = """
 	WHERE sn.status=1 AND lang."isDeleted"=0::bit AND task."isDeleted"=0::bit;
 """;
 public Flux<Proposal> proposalsGet() {
-    val deserializer = new Deserializer<Proposal>();
+    val deserializer = new Deserializer<>(Proposal.class);
     return db.sql(proposalsGetQ)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             //.map(deserializer::unpackRow)
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -150,10 +149,10 @@ private static final String alternativesForTLGetQ = """
     GROUP BY sn.id, sn.content, sn."tsUpload", sn.score;
 """;
 public Flux<Alternative> alternativesForTLGet(int taskLanguageId) {
-    val deserializer = new Deserializer<Alternative>();
+    val deserializer = new Deserializer<>(Alternative.class);
     return db.sql(alternativesForTLGetQ)
              .bind("tlId", taskLanguageId)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -178,11 +177,11 @@ private static final String alternativesForUserGetQ = """
     GROUP BY sn.id, sn.content, sn."tsUpload", sn.score, "voteFlag";
 """;
 public Flux<Alternative> alternativesForUserGet(int taskLanguageId, int userId) {
-    val deserializer = new Deserializer<Alternative>();
+    val deserializer = new Deserializer<>(Alternative.class);
     return db.sql(alternativesForUserGetQ)
              .bind("tlId", taskLanguageId)
              .bind("userId", userId)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .all();
 }
 
@@ -192,10 +191,10 @@ private static final String taskGetQ = """
     WHERE t.id = :taskId;
 """;
 public Mono<Task> taskGet(int taskId) {
-    val deserializer = new Deserializer<Task>();
+    val deserializer = new Deserializer<>(Task.class);
     return db.sql(taskGetQ)
              .bind("taskId", taskId)
-             .map((row, rowMetadata) -> deserializer.unpackRow(row))
+             .map(deserializer::unpackRow)
              .one();
 }
 
@@ -206,10 +205,10 @@ private static final String taskForTLGetQ = """
     WHERE tl.id = :tlId AND t."isDeleted" = 0::bit;
 """;
 public Mono<Task> taskForTLGet(int tlId) {
-    val deserializer = new Deserializer<Task>();
+    val deserializer = new Deserializer<>(Task.class);
     return db.sql(taskForTLGetQ)
         .bind("tlId", tlId)
-        .map((row, rowMetadata) -> deserializer.unpackRow(row))
+        .map(deserializer::unpackRow)
         .one();
 }
 
