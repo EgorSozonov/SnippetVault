@@ -1,8 +1,11 @@
 package tech.sozonov.SnippetVault.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.r2dbc.core.DatabaseClient.GenericExecuteSpec;
 import lombok.val;
 import java.time.LocalDateTime;
+import java.util.function.BiFunction;
+
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import tech.sozonov.SnippetVault.admin.AdminDTO.*;
@@ -77,7 +80,11 @@ private static final String taskGroupUpdateQ = """
     WHERE id=:existingId;
 """;
 public Mono<Integer> taskGroupCU(TaskGroupCU dto) {
-    return createOrUpdate<TaskGroupCU>(taskGroupCreateQ, taskGroupUpdateQ, taskGroupParamAdder, dto);
+    BiFunction<GenericExecuteSpec, TaskGroupCU, GenericExecuteSpec> binder =
+        (cmd, x) -> cmd.bind("name", x.name)
+                       .bind("code", x.code)
+                       .bind("isDeleted", x.isDeleted);
+    return createOrUpdate(taskGroupCreateQ, taskGroupUpdateQ, binder, dto, db);
 }
 
 private static final String tasksAllQ = """
@@ -122,7 +129,11 @@ private static final String taskUpdateQ = """
     WHERE id=:existingId;
 """; // TODO check for isDeleted
 public Mono<Integer> taskCU(TaskCU dto) {
-    return createOrUpdate<TaskCU>(taskCreateQ, taskUpdateQ, taskParamAdder, dto);
+    BiFunction<GenericExecuteSpec, TaskCU, GenericExecuteSpec> binder =
+        (cmd, x) -> cmd.bind("name", x.name)
+                       .bind("description", x.description)
+                       .bind("taskId", x.taskGroup.id);
+    return createOrUpdate(taskCreateQ, taskUpdateQ, binder, dto, db);
 }
 
 private static final String languageCreateQ = """
@@ -134,7 +145,12 @@ private static final String languageUpdateQ = """
     WHERE id=:existingId;
 """;
 public  Mono<Integer> languageCU(LanguageCU dto) {
-    return createOrUpdate<LanguageCU>(languageCreateQ, languageUpdateQ, languageParamAdder, dto);
+    BiFunction<GenericExecuteSpec, LanguageCU, GenericExecuteSpec> binder =
+        (cmd, x) -> cmd.bind("name", dto.name)
+                        .bind("code", dto.code)
+                        .bind("sortingOrder", dto.sortingOrder)
+                        .bind("isDeleted", dto.isDeleted);
+    return createOrUpdate(taskCreateQ, taskUpdateQ, binder, dto, db);
 }
 
 private static final String taskGroupsForArrayLanguagesQ = """
@@ -203,25 +219,6 @@ public Mono<Long> userCount() {
              .fetch()
              .first()
              .map(r -> (long) r.get("cnt"));
-}
-
-private static void taskParamAdder(Statement cmd, TaskCU dto) {
-    return cmd.bind("name", dto.name)
-              .bind("description", dto.description)
-              .bind("tgId", dto.taskGroup.id);
-}
-
-private static void taskGroupParamAdder(Statement cmd, TaskGroupCU dto) {
-    return cmd.bind("name", dto.name)
-              .bind("code", dto.code)
-              .bind("isDeleted", dto.isDeleted);
-}
-
-private static void languageParamAdder(Statement cmd, LanguageCU dto) {
-    return cmd.bind("name", dto.name)
-              .bind("code", dto.code)
-              .bind("sortingOrder", dto.sortingOrder)
-              .bind("isDeleted", dto.isDeleted);
 }
 
 
