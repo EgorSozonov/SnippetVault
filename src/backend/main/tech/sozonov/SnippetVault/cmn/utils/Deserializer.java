@@ -2,6 +2,7 @@ package tech.sozonov.SnippetVault.cmn.utils;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 import tech.sozonov.SnippetVault.cmn.utils.Types.Pair;
 import java.lang.invoke.VarHandle;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+
 import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
 
 public class Deserializer<T> {
@@ -37,7 +41,6 @@ public Deserializer(Class<T> _qlass, String sqlSelectQuery) {
     }
 
     determineTypeProperties(queryColumns);
-
 }
 
 public T unpackRow(Row dbRow) {
@@ -74,7 +77,45 @@ public T unpackRow(Row dbRow) {
  * Uses the last occurrence of the SELECT ... FROM to extract the names of columns
  */
 private String[] parseColumnNames(String sqlSelectQuery) {
-    return new String[] {};
+    String inpNormalizedCase = sqlSelectQuery.toLowerCase();
+
+    // Find last SELECT ... FROM
+    val indsSelectFrom = parseSelectFrom(inpNormalizedCase);
+
+    // Trim innards and split them by comma
+    val substr = inpNormalizedCase.substring(indsSelectFrom.fst, indsSelectFrom.snd).trim();
+
+    // Trim every element and start backwards
+    val spl = substr.split(",");
+
+    return Arrays.stream(spl).map(x -> parseColumnName(x)).toArray(String[]::new);
+}
+
+private String parseColumnName(String trimmedClause) {
+    // Stop at start of string, dot or space
+
+    // Replace quote chars if any
+    return "";
+}
+
+private Pair<Integer, Integer> parseSelectFrom(String inpNormalizedCase) {
+    val iter = new StringCharacterIterator(inpNormalizedCase, inpNormalizedCase.length());
+
+    int levelParens = 0;
+    char ch = iter.last();
+    while (ch != CharacterIterator.DONE) {
+        if (ch == ')') {
+            ++levelParens;
+        } else if (ch == '(') {
+            --levelParens;
+        } else if (ch == 'm' && levelParens == 0) {
+
+        }
+
+        ch = iter.previous();
+
+    }
+    return new Pair<Integer,Integer>(0, 0);
 }
 
 private void determineTypeProperties(String[] queryColumns) {

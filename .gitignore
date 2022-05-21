@@ -26,6 +26,7 @@ src/**/creds.json
 src/.DS_Store
 .DS_Store
 Src/.DS_Store?
+.VSCodeCounter/*
 
 .gradle/*
 gradle/*
