@@ -92,7 +92,7 @@ private static final String tasksAllQ = """
     JOIN sv."taskGroup" tg ON tg.id = t."taskGroupId";
 """;
 public Flux<TaskCUIntern> tasksAll() {
-    val deserializer = new Deserializer<>(TaskCUIntern.class);
+    val deserializer = new Deserializer<>(TaskCUIntern.class, tasksAllQ);
     return db.sql(tasksAllQ)
              .map(deserializer::unpackRow)
              .all();
@@ -103,7 +103,7 @@ private static final String taskGroupsAllQ = """
     FROM sv."taskGroup";
 """;
 public Flux<TaskGroupCU> taskGroupsAll() {
-    val deserializer = new Deserializer<>(TaskGroupCU.class);
+    val deserializer = new Deserializer<>(TaskGroupCU.class, taskGroupsAllQ);
     return db.sql(taskGroupsAllQ)
              .map(deserializer::unpackRow)
              .all();
@@ -114,7 +114,7 @@ private static final String languagesAllQ = """
     FROM sv.language;
 """;
 public Flux<LanguageCU> languagesAll() {
-    val deserializer = new Deserializer<>(LanguageCU.class);
+    val deserializer = new Deserializer<>(LanguageCU.class, languagesAllQ);
     return db.sql(languagesAllQ)
              .map(deserializer::unpackRow)
              .all();
@@ -159,7 +159,7 @@ private static final String taskGroupsForArrayLanguagesQ = """
     WHERE tl."languageId" = ANY(:ls);
 """;
 private Flux<TaskGroup> taskGroupsForArrayLanguages(int[] langs) {
-    val deserializer = new Deserializer<>(TaskGroup.class);
+    val deserializer = new Deserializer<>(TaskGroup.class, taskGroupsForArrayLanguagesQ);
     return db.sql(taskGroupsForArrayLanguagesQ)
              .bind("ls", langs)
              .map(deserializer::unpackRow)
@@ -175,7 +175,7 @@ private static final String statsForAdminQ = """
     LEFT JOIN sv."taskLanguage" tl ON tl."primarySnippetId"=s.id;
 """;
 public Mono<Stats> statsForAdmin() {
-    val deserializer = new Deserializer<>(Stats.class);
+    val deserializer = new Deserializer<>(Stats.class, statsForAdminQ);
     return db.sql(statsForAdminQ)
              .map(deserializer::unpackRow)
              .one();
