@@ -76,7 +76,7 @@ public T unpackRow(Row dbRow) {
  * Parses column names from the SELECT query in order of appearance.
  * Uses the last occurrence of the SELECT ... FROM to extract the names of columns
  */
-private String[] parseColumnNames(String sqlSelectQuery) {
+public static String[] parseColumnNames(String sqlSelectQuery) {
     String inpNormalizedCase = sqlSelectQuery.toLowerCase();
 
     // Find last SELECT ... FROM
@@ -91,31 +91,74 @@ private String[] parseColumnNames(String sqlSelectQuery) {
     return Arrays.stream(spl).map(x -> parseColumnName(x)).toArray(String[]::new);
 }
 
-private String parseColumnName(String trimmedClause) {
-    // Stop at start of string, dot or space
+private static String parseColumnName(String trimmedClause) {
+    int indDot = trimmedClause.lastIndexOf('.');
+    if (indDot > -1) return trimmedClause.substring(indDot + 1).replace("\"", "");
 
-    // Replace quote chars if any
-    return "";
+    int indSpace = trimmedClause.lastIndexOf(' ');
+    if (indSpace > -1) return trimmedClause.substring(indSpace + 1).replace("\"", "");
+
+    return trimmedClause.replace("\"", "");
 }
 
-private Pair<Integer, Integer> parseSelectFrom(String inpNormalizedCase) {
-    val iter = new StringCharacterIterator(inpNormalizedCase, inpNormalizedCase.length());
+/**
+ * Finds the locations of the top-level SELECT and FROM in a select query.
+ * Correctly handles '--' comments and parentheses (i.e. chooses only the first
+ * occurrence not inside parens).
+ */
+public static Pair<Integer, Integer> parseSelectFrom(String inpNormalizedCase) {
+    val iter = new StringCharacterIterator(inpNormalizedCase);
+    val err = new Pair<>(-1, -1);
 
-    int levelParens = 0;
-    char ch = iter.last();
-    while (ch != CharacterIterator.DONE) {
+    val ctx = new ParseContext();
+
+    int foundSelect = -1;
+    int foundFrom = -1;
+    while (foundSelect < 0 || foundFrom < 0) {
+        if (foundSelect < 0) {
+            int indSelect = inpNormalizedCase.indexOf("select", ctx.index + 1);
+            if (indSelect < 0) return err;
+            parseWalkUpTo(iter, ctx, indSelect);
+            if (!ctx.inComments && ctx.levelParens == 0) foundSelect = indSelect;
+        } else {
+            int indFrom = inpNormalizedCase.indexOf("from", ctx.index + 1);
+            if (indFrom < 0) return err;
+            parseWalkUpTo(iter, ctx, indFrom);
+            if (!ctx.inComments && ctx.levelParens == 0) foundFrom = indFrom;
+        }
+    }
+
+    return foundFrom > -1 ? new Pair<Integer,Integer>(foundSelect, foundFrom) : err;
+}
+
+/**
+ * Returns
+ */
+private static void parseWalkUpTo(CharacterIterator iter, ParseContext ctx, int target) {
+    char ch = iter.next();
+    while (ctx.index < target) {
         if (ch == ')') {
-            ++levelParens;
+            --ctx.levelParens;
         } else if (ch == '(') {
-            --levelParens;
-        } else if (ch == 'm' && levelParens == 0) {
-
+            ++ctx.levelParens;
+        } else if (ch == '-') {
+            ch = iter.next();
+            ++ctx.index;
+            if (ch == '-') ctx.inComments = true;
+        } else if (ch == '\n' && ctx.inComments) {
+            ctx.inComments = false;
         }
 
-        ch = iter.previous();
+        ch = iter.next();
+        ++ctx.index;
 
     }
-    return new Pair<Integer,Integer>(0, 0);
+}
+
+private static class ParseContext {
+    public int index = -1;
+    public int levelParens = 0;
+    public boolean inComments = false;
 }
 
 private void determineTypeProperties(String[] queryColumns) {
