@@ -103,16 +103,16 @@ public Flux<Snippet> snippetsGetByCode(String taskGroup, String lang1, String la
 }
 
 private static final String snippetGetQ = """
-    SELECT "taskLanguageId", "status", content, score, libraries
-	FROM sv.snippet s
-	WHERE id = :snId;
+SELECT "taskLanguageId", "status", content, score, libraries
+FROM sv.snippet s
+WHERE id = :snId;
 """;
 public Mono<SnippetIntern> snippetGet(int snId) {
     val deserializer = new Deserializer<>(SnippetIntern.class, snippetGetQ);
     return db.sql(snippetGetQ)
              .bind("snId", snId)
              .map(deserializer::unpackRow)
-             .one();
+             .first();
 }
 
 private static final String proposalsGetQ = """

@@ -197,8 +197,8 @@ private static final String userCountQ = """
 public Mono<Long> userCount() {
     return db.sql(userCountQ)
              .fetch()
-             .first()
-             .map(r -> (long) r.get("cnt"));
+             .one()
+             .map(r -> (long) r.get("Cnt"));
 }
 
 

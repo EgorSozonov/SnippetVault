@@ -230,7 +230,7 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
         }
 
         val theType = field.getType();
-        if (theType == Integer.class) {
+        if (theType == Integer.class || theType == int.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.integr));
         } else if (theType == Double.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.doubl));
