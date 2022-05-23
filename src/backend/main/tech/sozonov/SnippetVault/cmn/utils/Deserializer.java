@@ -13,7 +13,6 @@ import tech.sozonov.SnippetVault.cmn.utils.Types.Pair;
 import java.lang.invoke.VarHandle;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-
 import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
 
 public class Deserializer<T> {
@@ -68,8 +67,6 @@ public T unpackRow(Row dbRow) {
     } catch (Exception ex) {
         return null;
     }
-
-
 }
 
 /**

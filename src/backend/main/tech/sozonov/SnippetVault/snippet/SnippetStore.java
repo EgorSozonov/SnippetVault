@@ -2,6 +2,7 @@ package tech.sozonov.SnippetVault.snippet;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.stereotype.Service;
 import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -10,7 +11,8 @@ import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
 import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
 import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 
-public class SnippetStore {
+@Service
+public class SnippetStore implements ISnippetStore {
 
 
 private DatabaseClient db;
@@ -127,6 +129,28 @@ public Flux<Proposal> proposalsGet() {
     val deserializer = new Deserializer<>(Proposal.class, proposalsGetQ);
     return db.sql(proposalsGetQ)
              //.map(deserializer::unpackRow)
+             .map(deserializer::unpackRow)
+             .all();
+}
+
+public Flux<TaskGroup> taskGroupsForLangGet(int langId) {
+    return taskGroupsForArrayLanguages(new int[] {langId});
+}
+
+public Flux<TaskGroup> taskGroupsForLangsGet(int lang1, int lang2) {
+    return taskGroupsForArrayLanguages(new int[] {lang1, lang2});
+}
+
+private static final String taskGroupsForArrayLanguagesQ = """
+    SELECT DISTINCT tg.id, tg.name, tg.code FROM sv.task t
+    JOIN sv."taskLanguage" tl ON tl."taskId"=t.id
+    JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId"
+    WHERE tl."languageId" = ANY(:ls);
+""";
+private Flux<TaskGroup> taskGroupsForArrayLanguages(int[] langs) {
+    val deserializer = new Deserializer<>(TaskGroup.class, taskGroupsForArrayLanguagesQ);
+    return db.sql(taskGroupsForArrayLanguagesQ)
+             .bind("ls", langs)
              .map(deserializer::unpackRow)
              .all();
 }

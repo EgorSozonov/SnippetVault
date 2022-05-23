@@ -25,14 +25,6 @@ public ConnectionFactory connectionFactory() {
     );
 }
 
-@Bean
-DatabaseClient databaseClient(ConnectionFactory connectionFactory) {
-    return DatabaseClient.builder()
-        .connectionFactory(connectionFactory)
-        //.bindMarkers(() -> BindMarkersFactory.named(":", "", 20).create())
-        .namedParameters(true)
-        .build();
-}
 
 
 }

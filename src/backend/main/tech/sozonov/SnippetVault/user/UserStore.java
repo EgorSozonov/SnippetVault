@@ -2,7 +2,7 @@ package tech.sozonov.SnippetVault.user;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
-
+import org.springframework.stereotype.Component;
 import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -11,6 +11,7 @@ import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.user.auth.AdminPasswordChecker;
 
+@Component
 public class UserStore implements IUserStore {
 
 

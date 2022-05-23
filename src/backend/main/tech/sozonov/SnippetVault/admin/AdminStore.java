@@ -2,6 +2,7 @@ package tech.sozonov.SnippetVault.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.DatabaseClient.GenericExecuteSpec;
+import org.springframework.stereotype.Component;
 import lombok.val;
 import java.time.LocalDateTime;
 import java.util.function.BiFunction;
@@ -9,10 +10,10 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import tech.sozonov.SnippetVault.admin.AdminDTO.*;
 import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
-import tech.sozonov.SnippetVault.cmn.dto.CommonDTO.*;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.TaskCUIntern;
 import static tech.sozonov.SnippetVault.cmn.utils.DB.*;
 
+@Component
 public class AdminStore implements IAdminStore {
 
 
@@ -63,13 +64,7 @@ public Mono<Integer> snippetMarkPrimary(int tlId, int snId) {
              .rowsUpdated();
 }
 
-public Flux<TaskGroup> taskGroupsForLangGet(int langId) {
-    return taskGroupsForArrayLanguages(new int[] {langId});
-}
 
-public Flux<TaskGroup> taskGroupsForLangsGet(int lang1, int lang2) {
-    return taskGroupsForArrayLanguages(new int[] {lang1, lang2});
-}
 
 private static final String taskGroupCreateQ = """
     INSERT INTO sv."taskGroup"(name, code, "isDeleted") VALUES (:name, :code, 0::bit);
@@ -150,20 +145,6 @@ public  Mono<Integer> languageCU(LanguageCU dto) {
                         .bind("sortingOrder", dto.sortingOrder)
                         .bind("isDeleted", dto.isDeleted);
     return createOrUpdate(languageCreateQ, languageUpdateQ, binder, dto, db);
-}
-
-private static final String taskGroupsForArrayLanguagesQ = """
-    SELECT DISTINCT tg.id, tg.name, tg.code FROM sv.task t
-    JOIN sv."taskLanguage" tl ON tl."taskId"=t.id
-    JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId"
-    WHERE tl."languageId" = ANY(:ls);
-""";
-private Flux<TaskGroup> taskGroupsForArrayLanguages(int[] langs) {
-    val deserializer = new Deserializer<>(TaskGroup.class, taskGroupsForArrayLanguagesQ);
-    return db.sql(taskGroupsForArrayLanguagesQ)
-             .bind("ls", langs)
-             .map(deserializer::unpackRow)
-             .all();
 }
 
 private static final String statsForAdminQ = """

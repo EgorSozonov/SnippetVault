@@ -5,12 +5,13 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import java.util.UUID;
 import java.time.LocalDateTime;
-import java.util.List;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import org.springframework.util.MultiValueMap;
 import org.springframework.http.HttpCookie;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserService {
 
 

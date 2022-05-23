@@ -7,7 +7,9 @@ import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetStatus;
 import tech.sozonov.SnippetVault.cmn.utils.Types.SelectChoice;
 import tech.sozonov.SnippetVault.snippet.SnippetService;
 import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AdminService {
 
 
