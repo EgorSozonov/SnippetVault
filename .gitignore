@@ -42,3 +42,4 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 src/backend/main/tech/sozonov/SnippetVault/user/auth/*
+src/backend/resources/application.properties
