@@ -22,8 +22,8 @@ public ConnectionFactory connectionFactory() {
                     .host(env.getProperty("db.host"))
                     .database(env.getProperty("db.dbname"))
                     .schema(env.getProperty("db.schema"))
-                    .username(env.getProperty("spring.r2dbc.username"))
-                    .password(env.getProperty("spring.r2dbc.password"))
+                    .username(env.getProperty("db.username"))
+                    .password(env.getProperty("db.password"))
                     .port(Integer.parseInt(env.getProperty("db.port")))
                     .build()
     );

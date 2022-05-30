@@ -18,8 +18,8 @@ import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
 public class Deserializer<T> {
 
 
-private Class<T> qlass;
-PropTarget[] columnTargets;
+private final Class<T> qlass;
+public PropTarget[] columnTargets;
 List<VarHandle> settersInt;
 List<VarHandle> settersDouble;
 //List<VarHandle> settersDecimal;
@@ -73,7 +73,7 @@ public T unpackRow(Row dbRow) {
  * Parses column names from the SELECT query in order of appearance.
  * Uses the last occurrence of the SELECT ... FROM to extract the names of columns
  */
-public static String[] parseColumnNames(String sqlSelectQuery) {
+public static String[] parseColumnNames(final String sqlSelectQuery) {
     String inpNormalizedCase = sqlSelectQuery.toLowerCase();
 
     // Find last SELECT ... FROM
@@ -88,12 +88,11 @@ public static String[] parseColumnNames(String sqlSelectQuery) {
     return Arrays.stream(spl).map(x -> parseColumnName(x)).toArray(String[]::new);
 }
 
-private static String parseColumnName(String trimmedClause) {
+private static String parseColumnName(final String trimmedClause) {
     int indDot = trimmedClause.lastIndexOf('.');
-    if (indDot > -1) return trimmedClause.substring(indDot + 1).replace("\"", "");
-
     int indSpace = trimmedClause.lastIndexOf(' ');
-    if (indSpace > -1) return trimmedClause.substring(indSpace + 1).replace("\"", "");
+    int indSepar = Math.max(indDot, indSpace);
+    if (indSepar > -1) return trimmedClause.substring(indSepar + 1).replace("\"", "");
 
     return trimmedClause.replace("\"", "");
 }
@@ -163,6 +162,7 @@ private void determineTypeProperties(String[] queryColumns) {
 
     int numProps = queryColumns.length;
     if (numProps != fieldsTypes.size()) {
+        System.out.println("Wrong number of fields " + fieldsTypes.size());
         isOK = false;
         return;
     }
@@ -180,6 +180,7 @@ private void determineTypeProperties(String[] queryColumns) {
         for (int i = 0; i < numProps; ++i){
             String nameCol = queryColumns[i];
             if (!fieldsTypes.containsKey(nameCol)) {
+                System.out.println("Col " + nameCol + " not found");
                 isOK = false;
                 return;
             }
@@ -225,6 +226,7 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
         String normalizedName = field.getName().toLowerCase();
         // Because SQL is case-insensitive, names of the fields must be unique up to letter casing
         if (result.containsKey(normalizedName)) {
+            System.out.println("Non-unique name");
             isOK = false;
             return result;
         }
@@ -249,7 +251,7 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
 }
 
 @AllArgsConstructor
-private static class PropTarget {
+public static class PropTarget {
     public int indexSetter;
     public ValueType propType;
 }
