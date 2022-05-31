@@ -137,6 +137,7 @@ class HttpClient implements IClient {
     }
 
     private async getRequest<T>(url: string, headers: SignInSuccessDTO): Promise<EitherMsg<T>> {
+        // TODO handle error responses
         try {
             const r = await this.client.get<T>(
                     url, { headers: { userId: headers.userId.toString() }, withCredentials: true, }

@@ -184,29 +184,31 @@ public Flux<Alternative> alternativesForTLGet(int taskLanguageId) {
 
 private static final String alternativesForUserGetQ = """
     SELECT sn.id, sn.content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount",
-           (CASE WHEN uv."snippetId" IS NULL THEN FALSE ELSE TRUE END) AS "voteFlag"
+           (CASE WHEN uv."snippetId" IS NULL THEN FALSE ELSE TRUE END) AS "voteFlag",
+           sn.libraries
     FROM sv."taskLanguage" tl
     JOIN sv.snippet sn ON sn.id=tl."primarySnippetId"
-    LEFT JOIN sv."userVote" uv ON uv."userId" = :userId AND uv."snippetId"=sn.id
+    LEFT JOIN sv."userVote" uv ON uv."userId" = $1 AND uv."snippetId" = sn.id
     LEFT JOIN sv.comment c ON c."snippetId" = sn.id
-    WHERE tl.id = :tlId
+    WHERE tl.id = $2
     GROUP BY sn.id, sn.content, sn."tsUpload", sn.score, "voteFlag"
 
     UNION ALL
 
     SELECT sn.id, sn.content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount",
-           (CASE WHEN uv."snippetId" IS NULL THEN FALSE ELSE TRUE END) AS "voteFlag"
+           (CASE WHEN uv."snippetId" IS NULL THEN FALSE ELSE TRUE END) AS "voteFlag",
+           sn.libraries
     FROM sv.snippet sn
     LEFT JOIN sv.comment c ON c."snippetId" = sn.id
-    LEFT JOIN sv."userVote" uv ON uv."userId" = :userId AND uv."snippetId" = sn.id
-    WHERE sn."taskLanguageId"=:tlId AND sn.status = 3
-    GROUP BY sn.id, sn.content, sn."tsUpload", sn.score, "voteFlag";
+    LEFT JOIN sv."userVote" uv ON uv."userId" = $1 AND uv."snippetId" = sn.id
+    WHERE sn."taskLanguageId" = $2 AND sn.status = 3
+    GROUP BY sn.id, sn.content, sn."tsUpload", sn.score, "voteFlag"
 """;
 public Flux<Alternative> alternativesForUserGet(int taskLanguageId, int userId) {
     val deserializer = new Deserializer<>(Alternative.class, alternativesForUserGetQ);
     return db.sql(alternativesForUserGetQ)
-             .bind("tlId", taskLanguageId)
-             .bind("userId", userId)
+             .bind("$2", taskLanguageId)
+             .bind("$1", userId)
              .map(deserializer::unpackRow)
              .all();
 }
@@ -243,11 +245,11 @@ private static final String taskLanguageCreateQ = """
     INSERT INTO sv."taskLanguage"("taskId", "languageId", "primarySnippetId")
     VALUES (:taskId, :langId, NULL)
     ON CONFLICT ("taskId", "languageId") DO UPDATE SET "languageId"=:langId
-    RETURNING id;
+    RETURNING id
 """;
 private static final String proposalCreateQ = """
     INSERT INTO sv.snippet("taskLanguageId", content, status, score, libraries, "tsUpload", "authorId")
-    VALUES (:tlId, :content, 1, 0, :libraries, :ts, :authorId);
+    VALUES (:tlId, :content, 1, 0, :libraries, :ts, :authorId)
 """;
 public Mono<Integer> proposalCreate(ProposalCreate dto, int authorId) {
     return db.sql(taskLanguageCreateQ)
