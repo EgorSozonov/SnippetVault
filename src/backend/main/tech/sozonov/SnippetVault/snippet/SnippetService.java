@@ -75,7 +75,7 @@ public Mono<Either<String, Alternatives>> alternativesForTLGet(int taskLanguageI
     val mbTask = snippetStore.taskForTLGet(taskLanguageId);
 
     return allAlternatives.zipWith(mbTask, (alts, task) -> {
-        val uniques = new HashSet<Integer>();
+            val uniques = new HashSet<Integer>();
             Alternative primary = null;
 
             for (val alt : alts) {
@@ -91,7 +91,6 @@ public Mono<Either<String, Alternatives>> alternativesForTLGet(int taskLanguageI
             } else {
                 return Either.left("Error: no primary alternative was found");
             }
-
         }
     );
 

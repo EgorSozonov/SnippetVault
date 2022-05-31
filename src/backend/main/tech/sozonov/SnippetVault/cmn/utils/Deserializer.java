@@ -201,7 +201,7 @@ private void determineTypeProperties(String[] queryColumns) {
                 settersString.add(lookup.findVarHandle(qlass, tp.fst, String.class));
                 columnTargets[i] = new PropTarget(settersString.size() - 1, ValueType.strin);
             } else if (tp.snd == ValueType.boole) {
-                settersBool.add(lookup.findVarHandle(qlass, tp.fst, Boolean.class));
+                settersBool.add(lookup.findVarHandle(qlass, tp.fst, boolean.class));
                 columnTargets[i] = new PropTarget(settersBool.size() - 1, ValueType.boole);
             } else if (tp.snd == ValueType.timestampe) {
                 settersTS.add(lookup.findVarHandle(qlass, tp.fst, LocalDateTime.class));
@@ -235,13 +235,13 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
         }
 
         val theType = field.getType();
-        if (theType == Integer.class || theType == int.class) {
+        if (theType == int.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.integr));
-        } else if (theType == Double.class || theType == double.class) {
+        } else if (theType == double.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.doubl));
         } else if (theType == String.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.strin));
-        } else if (theType == Boolean.class || theType == boolean.class) {
+        } else if (theType == boolean.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.boole));
         } else if (theType == LocalDateTime.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.timestampe));

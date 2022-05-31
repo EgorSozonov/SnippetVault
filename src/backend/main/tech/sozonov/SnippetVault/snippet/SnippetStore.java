@@ -156,7 +156,8 @@ private Flux<TaskGroup> taskGroupsForArrayLanguages(Integer[] langs) {
 }
 
 private static final String alternativesForTLGetQ = """
-    SELECT sn.id, sn.content AS content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount"
+    SELECT sn.id, sn.content AS content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount",
+    FALSE AS "voteFlag", sn.libraries
     FROM sv."taskLanguage" tl
     JOIN sv.snippet sn ON sn.id=tl."primarySnippetId"
     LEFT JOIN sv.comment c ON c."snippetId" = sn.id
@@ -165,11 +166,12 @@ private static final String alternativesForTLGetQ = """
 
     UNION ALL
 
-    SELECT sn.id, sn.content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount"
+    SELECT sn.id, sn.content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount",
+    FALSE AS "voteFlag", sn.libraries
     FROM sv.snippet sn
     LEFT JOIN sv.comment c ON c."snippetId" = sn.id
     WHERE sn."taskLanguageId" = $1 AND sn.status = 3
-    GROUP BY sn.id, sn.content, sn."tsUpload", sn.score;
+    GROUP BY sn.id, sn.content, sn."tsUpload", sn.score
 """;
 public Flux<Alternative> alternativesForTLGet(int taskLanguageId) {
     val deserializer = new Deserializer<>(Alternative.class, alternativesForTLGetQ);
@@ -222,24 +224,12 @@ public Mono<Task> taskGet(int taskId) {
              .map(deserializer::unpackRow)
              .first();
 }
-// private static final String snippetGetQ = """
-// SELECT "taskLanguageId", "status", content, score, libraries
-// FROM sv.snippet s
-// WHERE id = $1;
-// """;
-// public Mono<SnippetIntern> snippetGet(int snId) {
-//     val deserializer = new Deserializer<>(SnippetIntern.class, snippetGetQ);
-//     return db.sql(snippetGetQ)
-//              .bind("$1", snId)
-//              .map(deserializer::unpackRow)
-//              .first();
-// }
 
 private static final String taskForTLGetQ = """
     SELECT t.id, tg.name AS "taskGroupName", t.name, t.description FROM sv."taskLanguage" tl
     JOIN sv.task t ON t.id=tl."taskId"
     JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId"
-    WHERE tl.id = :tlId AND t."isDeleted" = 0::bit;
+    WHERE tl.id = :tlId AND t."isDeleted" = 0::bit
 """;
 public Mono<Task> taskForTLGet(int tlId) {
     val deserializer = new Deserializer<>(Task.class, taskForTLGetQ);
