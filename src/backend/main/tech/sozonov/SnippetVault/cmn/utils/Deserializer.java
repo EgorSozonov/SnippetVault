@@ -35,6 +35,7 @@ public Deserializer(Class<T> _qlass, String sqlSelectQuery) {
 
     val queryColumns = parseColumnNames(sqlSelectQuery);
     if (queryColumns.length == 0) {
+        System.out.println("No query columns");
         isOK = false;
         return;
     }
@@ -206,12 +207,14 @@ private void determineTypeProperties(String[] queryColumns) {
                 settersTS.add(lookup.findVarHandle(qlass, tp.fst, LocalDateTime.class));
                 columnTargets[i] = new PropTarget(settersTS.size() - 1, ValueType.timestampe);
             }  else {
+                // Should never happen
                 isOK = false;
                 return;
             }
         }
     }
     catch (Exception e) {
+        System.out.println(e.getMessage());
         isOK = false;
         return;
     }
@@ -234,16 +237,17 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
         val theType = field.getType();
         if (theType == Integer.class || theType == int.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.integr));
-        } else if (theType == Double.class) {
+        } else if (theType == Double.class || theType == double.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.doubl));
         } else if (theType == String.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.strin));
-        } else if (theType == Boolean.class) {
+        } else if (theType == Boolean.class || theType == boolean.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.boole));
         } else if (theType == LocalDateTime.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.timestampe));
         }  else {
             isOK = false;
+            System.out.println("Unknown type");
             return result;
         }
     }
@@ -251,7 +255,7 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
 }
 
 @AllArgsConstructor
-public static class PropTarget {
+private static class PropTarget {
     public int indexSetter;
     public ValueType propType;
 }

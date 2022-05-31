@@ -71,13 +71,13 @@ public Flux<Proposal> proposals() {
     return snippetService.proposalsGet();
 }
 
-@GetMapping("alternatives/{tlId:int}")
-public Mono<Either<String, Alternatives>> alternatives(@PathVariable int tlId) {
+@GetMapping("alternatives/{tlId}")
+public Mono<Either<String, Alternatives>> alternatives(@PathVariable("tlId") int tlId) {
     return snippetService.alternativesForTLGet(tlId, null);
 }
 
-@GetMapping("alternativesForUser/{tlId:int}/{userId:int}")
-public Mono<Either<String, Alternatives>> alternativesForUser(@PathVariable int tlId, @PathVariable int userId) {
+@GetMapping("alternativesForUser/{tlId}/{userId}")
+public Mono<Either<String, Alternatives>> alternativesForUser(@PathVariable("tlId") int tlId, @PathVariable("userId") int userId) {
     return snippetService.alternativesForTLGet(tlId, userId);
 }
 

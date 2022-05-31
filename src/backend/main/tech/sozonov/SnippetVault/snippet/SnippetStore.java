@@ -1,10 +1,5 @@
 package tech.sozonov.SnippetVault.snippet;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
@@ -55,20 +50,20 @@ private static final String snippetsQ = """
            t.id AS "taskId", t.name AS "taskName",
 	       sn2.id AS "rightId", sn2.content AS "rightCode", tl2.id AS "rightTlId", sn2.libraries as "rightLibraries"
 	FROM sv."task" AS t
-	LEFT JOIN sv."taskLanguage" tl1 ON tl1."taskId"=t.id AND tl1."languageId"=:l1
-	LEFT JOIN sv."taskLanguage" tl2 ON tl2."taskId"=t.id AND tl2."languageId"=:l2
+	LEFT JOIN sv."taskLanguage" tl1 ON tl1."taskId"=t.id AND tl1."languageId"=$1
+	LEFT JOIN sv."taskLanguage" tl2 ON tl2."taskId"=t.id AND tl2."languageId"=$2
 	LEFT JOIN sv.language l1 ON l1.id=tl1."languageId"
 	LEFT JOIN sv.language l2 ON l2.id=tl2."languageId"
 	LEFT JOIN sv.snippet sn1 ON sn1.id=tl1."primarySnippetId"
 	LEFT JOIN sv.snippet sn2 ON sn2.id=tl2."primarySnippetId"
-	WHERE t."taskGroupId"=:tgId AND t."isDeleted"=0::bit;
+	WHERE t."taskGroupId"=$3 AND t."isDeleted"=0::bit
 """;
 public Flux<Snippet> snippetsGet(int taskGroup, int lang1, int lang2) {
     val deserializer = new Deserializer<>(Snippet.class, snippetsQ);
     return db.sql(snippetsQ)
-             .bind("l1", lang1)
-             .bind("l2", lang1)
-             .bind("tgId", taskGroup)
+             .bind("$1", lang1)
+             .bind("$2", lang1)
+             .bind("$3", taskGroup)
              .map(deserializer::unpackRow)
              .all();
 }
@@ -78,31 +73,31 @@ private static final String snippetsGetByCodeQ = """
     	SELECT tl.id, tl."taskId", l.id AS "languageId", "primarySnippetId"
     	FROM sv."taskLanguage" tl
     	JOIN sv.language l ON l.id=tl."languageId"
-    	WHERE code=:l1Code
+    	WHERE code=$1
     ),
     taskLangs2 AS (
     	SELECT tl.id, tl."taskId", l.id AS "languageId", "primarySnippetId"
     	FROM sv."taskLanguage" tl
     	JOIN sv.language l ON l.id=tl."languageId"
-    	WHERE code=:l2Code
+    	WHERE code=$2
     )
     SELECT sn1.id as "leftId", sn1.content as "leftCode", tl1.id AS "leftTlId", sn1.libraries as "leftLibraries",
     	   t.id AS "taskId", t.name AS "taskName",
     	   sn2.id AS "rightId", sn2.content AS "rightCode", tl2.id AS "rightTlId", sn2.libraries as "rightLibraries"
     FROM sv."task" AS t
-    JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId" AND tg.code=:tgCode
+    JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId" AND tg.code=$3
     LEFT JOIN taskLangs1 tl1 ON tl1."taskId"=t.id
     LEFT JOIN taskLangs2 tl2 ON tl2."taskId"=t.id
     LEFT JOIN sv.snippet sn1 ON sn1.id=tl1."primarySnippetId"
     LEFT JOIN sv.snippet sn2 ON sn2.id=tl2."primarySnippetId"
-    WHERE t."isDeleted"=0::bit;
+    WHERE t."isDeleted"=0::bit
 """;
 public Flux<Snippet> snippetsGetByCode(String taskGroup, String lang1, String lang2) {
     val deserializer = new Deserializer<>(Snippet.class, snippetsGetByCodeQ);
     return db.sql(snippetsGetByCodeQ)
-             .bind("l1Code", lang1)
-             .bind("l2Code", lang1)
-             .bind("tgId", taskGroup)
+             .bind("$1", lang1)
+             .bind("$2", lang1)
+             .bind("$3", taskGroup)
              .map(deserializer::unpackRow)
              .all();
 }
@@ -121,66 +116,41 @@ public Mono<SnippetIntern> snippetGet(int snId) {
 }
 
 private static final String proposalsGetQ = """
-    SELECT lang.name AS "languageName", task.name AS "taskName",
-		   sn.id AS "proposalId", sn.content, sn."tsUpload", u.name AS author, u.id AS "authorId"
+    SELECT sn.id AS "proposalId", sn.content, u.id AS "authorId", u.name AS author,
+           task.name AS "taskName", lang.name AS "languageName",
+		   sn."tsUpload", sn.libraries
 	FROM sv.snippet sn
 	JOIN sv."taskLanguage" tl ON tl.id=sn."taskLanguageId"
 	JOIN sv.task task ON task.id=tl."taskId"
 	JOIN sv.language lang ON lang.id=tl."languageId"
     JOIN sv.user u ON u.id=sn."authorId"
-	WHERE sn.status=1 AND lang."isDeleted"=0::bit AND task."isDeleted"=0::bit;
+	WHERE sn.status=1 AND lang."isDeleted"=0::bit AND task."isDeleted"=0::bit
 """;
 public Flux<Proposal> proposalsGet() {
     val deserializer = new Deserializer<>(Proposal.class, proposalsGetQ);
     return db.sql(proposalsGetQ)
-             //.map(deserializer::unpackRow)
              .map(deserializer::unpackRow)
              .all();
 }
 
-private static final String taskGroupsForLangGetQ = """
-    SELECT DISTINCT tg.id, tg.name, tg.code FROM sv.task t
-    JOIN sv."taskLanguage" tl ON tl."taskId"=t.id
-    JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId"
-    WHERE tl."languageId" = $1;
-""";
 public Flux<TaskGroup> taskGroupsForLangGet(int langId) {
-    val deserializer = new Deserializer<>(TaskGroup.class, taskGroupsForLangGetQ);
-    return db.sql(taskGroupsForLangGetQ)
-             .bind("$1", langId)
-             .map(deserializer::unpackRow)
-             .all();
-    //return taskGroupsForArrayLanguages(new int[] {langId});
+    return taskGroupsForArrayLanguages(new Integer[] {langId});
 }
 
-private static final String taskGroupsForLangsGetQ = """
-    SELECT DISTINCT tg.id, tg.name, tg.code FROM sv.task t
-    JOIN sv."taskLanguage" tl ON tl."taskId"=t.id
-    JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId"
-    WHERE tl."languageId" IN ($1, $2);
-""";
 public Flux<TaskGroup> taskGroupsForLangsGet(int lang1, int lang2) {
-    val deserializer = new Deserializer<>(TaskGroup.class, taskGroupsForLangsGetQ);
-    return db.sql(taskGroupsForLangsGetQ)
-             .bind("1", lang1)
-             .bind("2", lang2)
-             .map(deserializer::unpackRow)
-             .all();
-    //return taskGroupsForArrayLanguages(new int[] {lang1, lang2});
+    return taskGroupsForArrayLanguages(new Integer[] {lang1, lang2});
 }
 
 private static final String taskGroupsForArrayLanguagesQ = """
     SELECT DISTINCT tg.id, tg.name, tg.code FROM sv.task t
     JOIN sv."taskLanguage" tl ON tl."taskId"=t.id
     JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId"
-    WHERE tl."languageId" IN ($1);
+    WHERE tl."languageId" = ANY($1)
 """;
-//WHERE tl."languageId" IN :lgs;
-private Flux<TaskGroup> taskGroupsForArrayLanguages(int[] langs) {
+private Flux<TaskGroup> taskGroupsForArrayLanguages(Integer[] langs) {
     val deserializer = new Deserializer<>(TaskGroup.class, taskGroupsForArrayLanguagesQ);
     return db.sql(taskGroupsForArrayLanguagesQ)
-             //
-             .bind("1", "1, 2")
+             .bind("$1", langs)
              .map(deserializer::unpackRow)
              .all();
 }
@@ -190,7 +160,7 @@ private static final String alternativesForTLGetQ = """
     FROM sv."taskLanguage" tl
     JOIN sv.snippet sn ON sn.id=tl."primarySnippetId"
     LEFT JOIN sv.comment c ON c."snippetId" = sn.id
-    WHERE tl.id=:tlId
+    WHERE tl.id=$1
     GROUP BY sn.id, sn.content, sn."tsUpload", sn.score
 
     UNION ALL
@@ -198,13 +168,14 @@ private static final String alternativesForTLGetQ = """
     SELECT sn.id, sn.content, sn."tsUpload", sn.score, COUNT(c.id) AS "commentCount"
     FROM sv.snippet sn
     LEFT JOIN sv.comment c ON c."snippetId" = sn.id
-    WHERE sn."taskLanguageId" = :tlId AND sn.status = 3
+    WHERE sn."taskLanguageId" = $1 AND sn.status = 3
     GROUP BY sn.id, sn.content, sn."tsUpload", sn.score;
 """;
 public Flux<Alternative> alternativesForTLGet(int taskLanguageId) {
     val deserializer = new Deserializer<>(Alternative.class, alternativesForTLGetQ);
+    System.out.println(deserializer.isOK);
     return db.sql(alternativesForTLGetQ)
-             .bind("tlId", taskLanguageId)
+             .bind("$1", taskLanguageId)
              .map(deserializer::unpackRow)
              .all();
 }
@@ -239,9 +210,9 @@ public Flux<Alternative> alternativesForUserGet(int taskLanguageId, int userId) 
 }
 
 private static final String taskGetQ = """
-    SELECT t.id, tg.name AS "taskGroupName", t.name, t.description FROM sv."task" t
-    JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId"
-    WHERE t.id = $1;
+    SELECT t.id AS "id", t.name AS "name", tg.name AS "taskGroupName", t.description AS "description" FROM sv."task" t
+    JOIN sv."taskGroup" tg ON tg.id = t."taskGroupId"
+    WHERE t.id = $1
 """;
 public Mono<Task> taskGet(int taskId) {
     val deserializer = new Deserializer<>(Task.class, taskGetQ);
@@ -249,8 +220,20 @@ public Mono<Task> taskGet(int taskId) {
     return db.sql(taskGetQ)
              .bind("$1", taskId)
              .map(deserializer::unpackRow)
-             .one();
+             .first();
 }
+// private static final String snippetGetQ = """
+// SELECT "taskLanguageId", "status", content, score, libraries
+// FROM sv.snippet s
+// WHERE id = $1;
+// """;
+// public Mono<SnippetIntern> snippetGet(int snId) {
+//     val deserializer = new Deserializer<>(SnippetIntern.class, snippetGetQ);
+//     return db.sql(snippetGetQ)
+//              .bind("$1", snId)
+//              .map(deserializer::unpackRow)
+//              .first();
+// }
 
 private static final String taskForTLGetQ = """
     SELECT t.id, tg.name AS "taskGroupName", t.name, t.description FROM sv."taskLanguage" tl
