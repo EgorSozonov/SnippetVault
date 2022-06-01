@@ -28,7 +28,7 @@ private static final String userAuthentGetQ = """
 """;
 public Mono<AuthenticateIntern> userAuthentGet(String userName) {
     val deserializer = new Deserializer<>(AuthenticateIntern.class, userAuthentGetQ);
-    return db.sql(userAuthentGetQ)
+    return db.sql(deserializer.sqlSelectQuery)
              .bind("name", userName)
              .map(deserializer::unpackRow)
              .one();
@@ -40,7 +40,7 @@ private static final String userAuthorizGetQ = """
 """;
 public Mono<AuthorizeIntern> userAuthorizGet(int userId) {
     val deserializer = new Deserializer<>(AuthorizeIntern.class, userAuthorizGetQ);
-    return db.sql(userAuthorizGetQ)
+    return db.sql(deserializer.sqlSelectQuery)
          .bind("id", userId)
          .map(deserializer::unpackRow)
          .one();
@@ -53,7 +53,7 @@ private static final String userAdminAuthorizQ = """
 """;
 public  Mono<AuthorizeIntern> userAdminAuthoriz() {
     val deserializer = new Deserializer<>(AuthorizeIntern.class, userAdminAuthorizQ);
-    return db.sql(userAdminAuthorizQ)
+    return db.sql(deserializer.sqlSelectQuery)
              .bind("name", AdminPasswordChecker.adminName)
              .map(deserializer::unpackRow)
              .one();
@@ -115,7 +115,7 @@ private static final String commentsGetQ = """
 """;
 public Flux<Comment> commentsGet(int snippetId) {
     val deserializer = new Deserializer<>(Comment.class, commentsGetQ);
-    return db.sql(commentsGetQ)
+    return db.sql(deserializer.sqlSelectQuery)
              .bind("$1", snippetId)
              .map(deserializer::unpackRow)
              .all();
@@ -152,14 +152,16 @@ private static final String userProfileQ = """
     SELECT
     	SUM(CASE WHEN s.status IN (1, 3) THEN 1 ELSE 0 END) AS "proposalCount",
     	SUM(CASE WHEN s.status = 3 THEN 1 ELSE 0 END) AS "approvedCount",
-    	SUM(CASE WHEN s.status = 3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS "primaryCount"
+    	SUM(CASE WHEN s.status = 3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS "primaryCount",
+        (SELECT "dateJoined" FROM sv.user WHERE id=24 LIMIT 1) AS "tsJoined"
     FROM sv.snippet s
     LEFT JOIN sv."taskLanguage" tl ON tl."primarySnippetId" = s.id
     WHERE "authorId" = :userId
 """;
 public  Mono<Profile> userProfile(int userId) {
     val deserializer = new Deserializer<>(Profile.class, userProfileQ);
-    return db.sql(userProfileQ)
+    System.out.println("deser " + deserializer.isOK);
+    return db.sql(deserializer.sqlSelectQuery)
              .bind("userId", userId)
              .map(deserializer::unpackRow)
              .one();
@@ -170,7 +172,7 @@ private static final String userDataQ = """
 """;
 public Mono<User> userData(int userId) {
     val deserializer = new Deserializer<>(User.class, userDataQ);
-    return db.sql(userDataQ)
+    return db.sql(deserializer.sqlSelectQuery)
              .bind("$1", userId)
              .map(deserializer::unpackRow)
              .one();

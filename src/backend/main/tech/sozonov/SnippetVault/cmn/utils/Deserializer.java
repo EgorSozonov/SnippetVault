@@ -2,7 +2,6 @@ package tech.sozonov.SnippetVault.cmn.utils;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,7 @@ public class Deserializer<T> {
 
 
 private final Class<T> qlass;
+public final String sqlSelectQuery;
 public PropTarget[] columnTargets;
 List<VarHandle> settersInt;
 List<VarHandle> settersDouble;
@@ -28,13 +28,13 @@ List<VarHandle> settersBool;
 List<VarHandle> settersTS;
 public boolean isOK;
 
-public Deserializer(Class<T> _qlass, String sqlSelectQuery) {
+public Deserializer(Class<T> _qlass, String _sqlSelectQuery) {
     qlass = _qlass;
-    isOK = true;
-    if (nullOrEmp(sqlSelectQuery)) isOK = false;
+    isOK = !(nullOrEmp(_sqlSelectQuery));
+    sqlSelectQuery = _sqlSelectQuery;
 
     val queryColumns = parseColumnNames(sqlSelectQuery);
-    if (queryColumns.length == 0) {
+    if (queryColumns.size() == 0) {
         System.out.println("No query columns");
         isOK = false;
         return;
@@ -74,19 +74,34 @@ public T unpackRow(Row dbRow) {
  * Parses column names from the SELECT query in order of appearance.
  * Uses the last occurrence of the SELECT ... FROM to extract the names of columns
  */
-public static String[] parseColumnNames(final String sqlSelectQuery) {
+public static List<String> parseColumnNames(final String sqlSelectQuery) {
     String inpNormalizedCase = sqlSelectQuery.toLowerCase();
 
     // Find last SELECT ... FROM
     val indsSelectFrom = parseSelectFrom(inpNormalizedCase);
 
     // Trim innards and split them by comma
-    val substr = inpNormalizedCase.substring(indsSelectFrom.fst, indsSelectFrom.snd).trim();
+    val selectFrom = inpNormalizedCase.substring(indsSelectFrom.fst, indsSelectFrom.snd).trim();
+    List<String> result = new ArrayList<>();
+    parseSelectFrom(selectFrom, result);
+    return result;
+}
 
-    // Trim every element and start backwards
-    val spl = substr.split(",");
+/**
+ * Walks over the SELECT ... FROM clause and splits it by top-level commas (i.e. the ones not inside parens)
+ */
+private static void parseSelectFrom(String selectFrom, List<String> result){
+    val iter = new StringCharacterIterator(selectFrom);
+    int prevInd = 0;
 
-    return Arrays.stream(spl).map(x -> parseColumnName(x)).toArray(String[]::new);
+    val ctx = new ParseContext();
+    while (prevInd < selectFrom.length()) {
+        parseWalkUpToComma(iter, ctx);
+
+        String clause = selectFrom.substring(prevInd, Math.min(selectFrom.length(), ctx.index + 1)).trim();
+        result.add(parseColumnName(clause));
+        prevInd = ctx.index + 2;
+    }
 }
 
 private static String parseColumnName(final String trimmedClause) {
@@ -129,10 +144,38 @@ public static Pair<Integer, Integer> parseSelectFrom(String inpNormalizedCase) {
 }
 
 /**
- * Returns
+ * Walks a string up to the next top-level comma.
+ */
+private static void parseWalkUpToComma(CharacterIterator iter, ParseContext ctx) {
+    char ch = iter.next();
+    ++ctx.index;
+    while (ch != CharacterIterator.DONE) {
+        if (ch == ')') {
+            --ctx.levelParens;
+        } else if (ch == '(') {
+            ++ctx.levelParens;
+        } else if (ch == '-') {
+            ch = iter.next();
+            ++ctx.index;
+            if (ch == CharacterIterator.DONE) return;
+            if (ch == '-') ctx.inComments = true;
+        } else if (ch == '\n' && ctx.inComments) {
+            ctx.inComments = false;
+        }
+        if (ch == ',' && !ctx.inComments && ctx.levelParens == 0) {
+            return;
+        }
+        ch = iter.next();
+        ++ctx.index;
+    }
+}
+
+/**
+ * Walks a string up to a target index to keep track of whether it's top-level.
  */
 private static void parseWalkUpTo(CharacterIterator iter, ParseContext ctx, int target) {
     char ch = iter.next();
+    ++ctx.index;
     while (ctx.index < target) {
         if (ch == ')') {
             --ctx.levelParens;
@@ -145,10 +188,8 @@ private static void parseWalkUpTo(CharacterIterator iter, ParseContext ctx, int 
         } else if (ch == '\n' && ctx.inComments) {
             ctx.inComments = false;
         }
-
         ch = iter.next();
         ++ctx.index;
-
     }
 }
 
@@ -158,12 +199,11 @@ private static class ParseContext {
     public boolean inComments = false;
 }
 
-private void determineTypeProperties(String[] queryColumns) {
+private void determineTypeProperties(List<String> queryColumns) {
     val fieldsTypes = readDTOFields();
 
-    int numProps = queryColumns.length;
+    int numProps = queryColumns.size();
     if (numProps != fieldsTypes.size()) {
-        System.out.println("Wrong number of fields " + fieldsTypes.size());
         isOK = false;
         return;
     }
@@ -179,7 +219,7 @@ private void determineTypeProperties(String[] queryColumns) {
     try {
         val lookup = MethodHandles.lookup().in(qlass);
         for (int i = 0; i < numProps; ++i){
-            String nameCol = queryColumns[i];
+            String nameCol = queryColumns.get(i);
             if (!fieldsTypes.containsKey(nameCol)) {
                 System.out.println("Col " + nameCol + " not found");
                 isOK = false;

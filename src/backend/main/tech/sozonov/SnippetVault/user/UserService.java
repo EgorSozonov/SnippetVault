@@ -128,6 +128,8 @@ public Mono<Either<String, SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto
 }
 
 public Mono<Boolean> userAuthorize(int userId, String accessToken) {
+    System.out.println(LocalDate.now());
+    System.out.println(accessToken);
     return userStore.userAuthorizGet(userId)
                     .map(x -> x != null
                               && x.expiration.toLocalDate().isEqual(LocalDate.now())
