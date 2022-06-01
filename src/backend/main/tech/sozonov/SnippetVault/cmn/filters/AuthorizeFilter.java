@@ -5,6 +5,8 @@ import org.springframework.web.server.WebFilterChain;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 import lombok.val;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -17,29 +19,32 @@ public class AuthorizeFilter implements WebFilter {
 private UserService userService;
 private final PathPattern pathPattern;
 
-public AuthorizeFilter() {
+@Autowired
+public AuthorizeFilter(UserService _userService) {
     pathPattern = new PathPatternParser().parse("/api/secure/**");
+    userService = _userService;
 }
 
 @Override
 public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterChain) {
-    boolean authorized = true;
     val requestPath = webExchange.getRequest().getPath().pathWithinApplication();
-    if (pathPattern.matches(requestPath)) {
-        val userIdStr = webExchange.getRequest().getHeaders().getFirst("userId");
-        val accessToken = webExchange.getRequest().getCookies().getFirst("accessToken");
-        try {
-            int userId = Integer.parseInt(userIdStr);
-            System.out.println("Filter userId = " + userId);
-            authorized = userService.userAuthorize(userId, accessToken.getValue()).block();
-        } catch (Exception e) {
-            authorized = false;
-        }
+    if (!pathPattern.matches(requestPath)) {
+        return filterChain.filter(webExchange);
     }
 
-    if (authorized) {
-        return filterChain.filter(webExchange);
-    } else {
+    val userIdStr = webExchange.getRequest().getHeaders().getFirst("userId");
+    val accessToken = webExchange.getRequest().getCookies().getFirst("accessToken");
+    try {
+        int userId = Integer.parseInt(userIdStr);
+        return userService.userAuthorize(userId, accessToken.getValue())
+            .flatMap(authorized -> {
+                if (authorized) return filterChain.filter(webExchange);
+                val response = webExchange.getResponse();
+                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                return response.setComplete();
+            });
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
         val response = webExchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         return response.setComplete();

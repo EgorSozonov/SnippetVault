@@ -4,6 +4,7 @@ import lombok.val;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import java.util.UUID;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
@@ -23,6 +24,10 @@ public UserService(IUserStore _userStore) {
     this.userStore = _userStore;
 }
 
+
+public Flux<Comment> commentsGet(int snippetId) {
+    return userStore.commentsGet(snippetId);
+}
 
 public Mono<Either<String, SignInSuccess>> userRegister(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
     // TODO
@@ -57,9 +62,6 @@ private boolean validatePasswordComplexity(String newPw) {
     return newPw != null && newPw.length() >= 8;
 }
 
-public Flux<Comment> commentsGet(int snippetId) {
-    return userStore.commentsGet(snippetId);
-}
 
 public Mono<Either<String, SignInSuccess>> userAuthenticate(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
     // TODO
@@ -126,16 +128,10 @@ public Mono<Either<String, SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto
 }
 
 public Mono<Boolean> userAuthorize(int userId, String accessToken) {
-    // TODO
-    return Mono.just(false);
-    // val mbUserAuthor = userStore.userAuthorizGet(userId);
-    // if (mbUserAuthor instanceof Success<AuthorizeIntern> userAuthors && userAuthors.vals.Count == 1) {
-    //     val userAuthor = userAuthors.vals[0];
-    //     boolean authorized = userAuthor.expiration.Date == DateTime.Today && userAuthor.accessToken == accessToken;
-    //     return authorized;
-    // } else {
-    //     return false;
-    // }
+    return userStore.userAuthorizGet(userId)
+                    .map(x -> x != null
+                              && x.expiration.toLocalDate().isEqual(LocalDate.now())
+                              && x.accessToken.equals(accessToken));
 }
 
 public Mono<Boolean> userAuthorizeAdmin(String accessToken) {

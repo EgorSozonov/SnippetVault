@@ -24,7 +24,7 @@ public UserStore(DatabaseClient _db) {
 
 private static final String userAuthentGetQ = """
     SELECT id AS "userId", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration, "accessToken"
-    FROM sv.user WHERE name = :name;
+    FROM sv.user WHERE name = :name
 """;
 public Mono<AuthenticateIntern> userAuthentGet(String userName) {
     val deserializer = new Deserializer<>(AuthenticateIntern.class, userAuthentGetQ);
@@ -36,7 +36,7 @@ public Mono<AuthenticateIntern> userAuthentGet(String userName) {
 
 private static final String userAuthorizGetQ = """
     SELECT "accessToken", expiration
-    FROM sv.user WHERE id = :id;
+    FROM sv.user WHERE id = :id
 """;
 public Mono<AuthorizeIntern> userAuthorizGet(int userId) {
     val deserializer = new Deserializer<>(AuthorizeIntern.class, userAuthorizGetQ);
@@ -49,7 +49,7 @@ public Mono<AuthorizeIntern> userAuthorizGet(int userId) {
 
 private static final String userAdminAuthorizQ = """
     SELECT "accessToken", expiration
-    FROM sv.user WHERE name = :name;
+    FROM sv.user WHERE name = :name
 """;
 public  Mono<AuthorizeIntern> userAdminAuthoriz() {
     val deserializer = new Deserializer<>(AuthorizeIntern.class, userAdminAuthorizQ);
@@ -61,7 +61,7 @@ public  Mono<AuthorizeIntern> userAdminAuthoriz() {
 
 private static final String userUpdateExpirationQ = """
     UPDATE sv."user" SET expiration=:newDate, "accessToken" = :newToken
-    WHERE id = :id;
+    WHERE id = :id
 """;
 public Mono<Integer> userUpdateExpiration(int userId, String newToken, LocalDateTime newDate) {
     return db.sql(userUpdateExpirationQ)
@@ -76,7 +76,7 @@ private static final String userRegisterQ = """
     INSERT INTO sv."user"(name, "dateJoined", expiration, "accessToken", hash, salt)
     VALUES (:name, :tsJoin, :dtExpiration, :accessToken,
             decode(:hash, 'base64'), decode(:salt, 'base64'))
-    ON CONFLICT DO NOTHING RETURNING id;
+    ON CONFLICT DO NOTHING RETURNING id
 """;
 public Mono<Integer> userRegister(UserNewIntern user) {
     return db.sql(userRegisterQ)
@@ -94,7 +94,7 @@ public Mono<Integer> userRegister(UserNewIntern user) {
 private static final String userUpdateQ = """
     UPDATE sv.user SET hash = decode(:hash, 'base64'), salt = decode(:salt, 'base64'),
                        expiration = :dtExpiration, "accessToken" = :accessToken
-    WHERE name = :name;
+    WHERE name = :name
 """;
 public Mono<Integer> userUpdate(UserNewIntern user) {
     return db.sql(userUpdateQ)
@@ -111,12 +111,12 @@ private static final String commentsGetQ = """
     SELECT c.content, c."tsUpload", c.id, u.name AS author
 	FROM sv.comment c
 	JOIN sv.user u ON u.id=c."userId"
-	WHERE c."snippetId" = :snId;
+	WHERE c."snippetId" = $1
 """;
 public Flux<Comment> commentsGet(int snippetId) {
     val deserializer = new Deserializer<>(Comment.class, commentsGetQ);
     return db.sql(commentsGetQ)
-             .bind("snId", snippetId)
+             .bind("$1", snippetId)
              .map(deserializer::unpackRow)
              .all();
 }
@@ -155,7 +155,7 @@ private static final String userProfileQ = """
     	SUM(CASE WHEN s.status = 3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS "primaryCount"
     FROM sv.snippet s
     LEFT JOIN sv."taskLanguage" tl ON tl."primarySnippetId" = s.id
-    WHERE "authorId" = :userId;
+    WHERE "authorId" = :userId
 """;
 public  Mono<Profile> userProfile(int userId) {
     val deserializer = new Deserializer<>(Profile.class, userProfileQ);
@@ -166,19 +166,19 @@ public  Mono<Profile> userProfile(int userId) {
 }
 
 private static final String userDataQ = """
-    SELECT name, "dateJoined" AS "tsJoined" FROM sv.user WHERE id = :userId;
+    SELECT name, "dateJoined" AS "tsJoined" FROM sv.user WHERE id = $1
 """;
 public Mono<User> userData(int userId) {
     val deserializer = new Deserializer<>(User.class, userDataQ);
     return db.sql(userDataQ)
-             .bind("userId", userId)
+             .bind("$1", userId)
              .map(deserializer::unpackRow)
              .one();
 }
 
 private static final String commentCreateQ = """
     INSERT INTO sv.comment("userId", "snippetId", content, "tsUpload")
-    VALUES (:userId, :snId, :content, :ts);
+    VALUES (:userId, :snId, :content, :ts)
 """;
 public Mono<Integer> commentCreate(int userId, int snId, String content, LocalDateTime ts) {
     return db.sql(commentCreateQ)
@@ -191,11 +191,11 @@ public Mono<Integer> commentCreate(int userId, int snId, String content, LocalDa
 }
 
 private static final String commentDeleteQ = """
-    DELETE FROM sv.comment WHERE id=:commentId;
+    DELETE FROM sv.comment WHERE id = $1
 """;
 public Mono<Integer> commentDelete(int commentId) {
     return db.sql(commentDeleteQ)
-             .bind("commentId", commentId)
+             .bind("$1", commentId)
              .fetch()
              .rowsUpdated();
 }
