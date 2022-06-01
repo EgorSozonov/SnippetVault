@@ -1,7 +1,9 @@
 package tech.sozonov.SnippetVault.user;
 import java.time.LocalDateTime;
+import java.util.function.BiFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.r2dbc.core.DatabaseClient.GenericExecuteSpec;
 import org.springframework.stereotype.Component;
 import lombok.val;
 import reactor.core.publisher.Flux;
@@ -10,6 +12,7 @@ import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.*;
 import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.user.auth.AdminPasswordChecker;
+import static tech.sozonov.SnippetVault.cmn.utils.DB.*;
 
 @Component
 public class UserStore implements IUserStore {
@@ -140,10 +143,15 @@ private static final String userVoteQ = """
     COMMIT;
 """;
 public Mono<Integer> userVote(int userId, int tlId, int snId) {
-    return db.sql(userVoteQ)
-             .bind("id", userId)
-             .bind("tlId", tlId)
-             .bind("snId", snId)
+    // We have to do this because the R2DBC driver for PostgresQL insists on making prepared statements,
+    // and Postgres doesn't support prepared statements with multiple SQL commands and bindings at the same time.
+    // Ideally I'd want an unprepared statement, but the library doesn't support that.
+    // We are safe against SQL injection, though, since the params are all numeric.
+    String sqlSubstituted = userVoteQ.replaceAll(":userId", Integer.toString(userId))
+                                     .replaceAll(":tlId", Integer.toString(tlId))
+                                     .replaceAll(":snId", Integer.toString(snId));
+
+    return db.sql(sqlSubstituted)
              .fetch()
              .rowsUpdated();
 }
@@ -182,14 +190,24 @@ private static final String commentCreateQ = """
     INSERT INTO sv.comment("userId", "snippetId", content, "tsUpload")
     VALUES (:userId, :snId, :content, :ts)
 """;
-public Mono<Integer> commentCreate(int userId, int snId, String content, LocalDateTime ts) {
-    return db.sql(commentCreateQ)
-             .bind("userId", userId)
-             .bind("content", content)
-             .bind("snId", snId)
-             .bind("ts", ts)
-             .fetch()
-             .rowsUpdated();
+private static final String commentUpdateQ = """
+    UPDATE sv.comment SET "userId" = :userId, "snippetId" = :snId, content = :content, "tsUpload" = :ts
+    WHERE id = :existingId
+""";
+public Mono<Integer> commentCU(CommentCU dto, int userId, LocalDateTime ts) {
+    BiFunction<GenericExecuteSpec, CommentCU, GenericExecuteSpec> binder =
+        (cmd, x) -> cmd.bind("userId", userId)
+                      .bind("content", dto.content)
+                      .bind("snId", dto.snId)
+                      .bind("ts", ts);
+    return createOrUpdate(commentCreateQ, commentUpdateQ, binder, dto, db);
+    // return db.sql(commentCreateQ)
+    //          .bind("userId", userId)
+    //          .bind("content", content)
+    //          .bind("snId", snId)
+    //          .bind("ts", ts)
+    //          .fetch()
+    //          .rowsUpdated();
 }
 
 private static final String commentDeleteQ = """

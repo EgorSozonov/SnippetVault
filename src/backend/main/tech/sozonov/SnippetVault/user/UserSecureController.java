@@ -38,8 +38,8 @@ public Mono<ResponseEntity<Void>> userVote(@RequestBody Vote dto, @RequestHeader
 }
 
 @PostMapping("comment/cu")
-public Mono<ResponseEntity<Void>> commentCreate(@RequestBody CommentCU dto, @RequestHeader("userId") int userId) {
-    return wrapCUResponse(userService.commentCreate(dto, userId));
+public Mono<ResponseEntity<Void>> commentCU(@RequestBody CommentCU dto, @RequestHeader("userId") int userId) {
+    return wrapCUResponse(userService.commentCU(dto, userId));
 }
 
 

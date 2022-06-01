@@ -128,8 +128,6 @@ public Mono<Either<String, SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto
 }
 
 public Mono<Boolean> userAuthorize(int userId, String accessToken) {
-    System.out.println(LocalDate.now());
-    System.out.println(accessToken);
     return userStore.userAuthorizGet(userId)
                     .map(x -> x != null
                               && x.expiration.toLocalDate().isEqual(LocalDate.now())
@@ -204,8 +202,8 @@ public Mono<Integer> userVote(Vote dto, int userId) {
     return userStore.userVote(userId, dto.tlId, dto.snId);
 }
 
-public Mono<Integer> commentCreate(CommentCU dto, int userId) {
-    return userStore.commentCreate(userId, dto.snId, dto.content, LocalDateTime.now());
+public Mono<Integer> commentCU(CommentCU dto, int userId) {
+    return userStore.commentCU(dto, userId, LocalDateTime.now());
 }
 
 private String makeAccessToken() {

@@ -17,7 +17,7 @@ Mono<Integer> userUpdate(UserNewIntern user);
 Mono<Integer> userVote(int userId, int tlId, int snId);
 Mono<Profile> userProfile(int userId);
 Mono<User> userData(int userId);
-Mono<Integer> commentCreate(int userId, int snId, String content, LocalDateTime ts);
+Mono<Integer> commentCU(CommentCU dto, int userId, LocalDateTime ts);
 Flux<Comment> commentsGet(int snippetId);
 
 
