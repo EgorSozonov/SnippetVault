@@ -25,7 +25,7 @@ public SnippetStore(DatabaseClient _db) {
 private static final String languagesGetQ = """
     SELECT l.id, l.name, l."sortingOrder", l.code
     FROM sv.language l
-    WHERE l."isDeleted" = 0::bit;
+    WHERE l."isDeleted" = false;
 """;
 public Flux<Language> languagesGet() {
     val deserializer = new Deserializer<>(Language.class, languagesGetQ);
@@ -36,7 +36,7 @@ public Flux<Language> languagesGet() {
 
 private static final String taskGroupsGetQ = """
     SELECT id, name, code FROM sv."taskGroup"
-    WHERE "isDeleted"=0::bit;
+    WHERE "isDeleted" = false;
 """;
 public Flux<TaskGroup> taskGroupsGet() {
     val deserializer = new Deserializer<>(TaskGroup.class, taskGroupsGetQ);
@@ -56,7 +56,7 @@ private static final String snippetsQ = """
 	LEFT JOIN sv.language l2 ON l2.id=tl2."languageId"
 	LEFT JOIN sv.snippet sn1 ON sn1.id=tl1."primarySnippetId"
 	LEFT JOIN sv.snippet sn2 ON sn2.id=tl2."primarySnippetId"
-	WHERE t."taskGroupId"=$3 AND t."isDeleted"=0::bit
+	WHERE t."taskGroupId"=$3 AND t."isDeleted" = false
 """;
 public Flux<Snippet> snippetsGet(int taskGroup, int lang1, int lang2) {
     val deserializer = new Deserializer<>(Snippet.class, snippetsQ);
@@ -90,7 +90,7 @@ private static final String snippetsGetByCodeQ = """
     LEFT JOIN taskLangs2 tl2 ON tl2."taskId"=t.id
     LEFT JOIN sv.snippet sn1 ON sn1.id=tl1."primarySnippetId"
     LEFT JOIN sv.snippet sn2 ON sn2.id=tl2."primarySnippetId"
-    WHERE t."isDeleted"=0::bit
+    WHERE t."isDeleted" = false
 """;
 public Flux<Snippet> snippetsGetByCode(String taskGroup, String lang1, String lang2) {
     val deserializer = new Deserializer<>(Snippet.class, snippetsGetByCodeQ);
@@ -124,7 +124,7 @@ private static final String proposalsGetQ = """
 	JOIN sv.task task ON task.id=tl."taskId"
 	JOIN sv.language lang ON lang.id=tl."languageId"
     JOIN sv.user u ON u.id=sn."authorId"
-	WHERE sn.status=1 AND lang."isDeleted"=0::bit AND task."isDeleted"=0::bit
+	WHERE sn.status=1 AND lang."isDeleted" = false AND task."isDeleted" = false
 """;
 public Flux<Proposal> proposalsGet() {
     val deserializer = new Deserializer<>(Proposal.class, proposalsGetQ);
@@ -231,7 +231,7 @@ private static final String taskForTLGetQ = """
     SELECT t.id, tg.name AS "taskGroupName", t.name, t.description FROM sv."taskLanguage" tl
     JOIN sv.task t ON t.id=tl."taskId"
     JOIN sv."taskGroup" tg ON tg.id=t."taskGroupId"
-    WHERE tl.id = :tlId AND t."isDeleted" = 0::bit
+    WHERE tl.id = :tlId AND t."isDeleted" = false
 """;
 public Mono<Task> taskForTLGet(int tlId) {
     val deserializer = new Deserializer<>(Task.class, taskForTLGetQ);

@@ -16,6 +16,7 @@ public static <T extends CreateUpdate> Mono<Integer> createOrUpdate(String sqlCr
         return stmt.fetch().rowsUpdated();
     } else {
         val stmt = paramsAdder.apply(db.sql(sqlUpdate), dto)
+                              .bind("isDeleted", dto.isDeleted)
                               .bind("existingId", dto.existingId);
         return stmt.fetch().rowsUpdated();
     }

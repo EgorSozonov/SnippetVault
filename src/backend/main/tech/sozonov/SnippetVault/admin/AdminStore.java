@@ -67,11 +67,11 @@ public Mono<Integer> snippetMarkPrimary(int tlId, int snId) {
 
 
 private static final String taskGroupCreateQ = """
-    INSERT INTO sv."taskGroup"(name, code, "isDeleted") VALUES (:name, :code, 0::bit);
+    INSERT INTO sv."taskGroup"(name, code, "isDeleted") VALUES (:name, :code, false)
 """;
 private static final String taskGroupUpdateQ = """
-    UPDATE sv."taskGroup" SET name=:name, "isDeleted" = :isDeleted
-    WHERE id=:existingId;
+    UPDATE sv."taskGroup" SET name=:name, code=:code, "isDeleted" = :isDeleted
+    WHERE id=:existingId
 """;
 public Mono<Integer> taskGroupCU(TaskGroupCU dto) {
     BiFunction<GenericExecuteSpec, TaskGroupCU, GenericExecuteSpec> binder =
@@ -123,27 +123,27 @@ public Flux<LanguageCU> languagesAll() {
 }
 
 private static final String taskCreateQ = """
-    INSERT INTO sv.task(name, "taskGroupId", description) VALUES (:name, :tgId, :description);
-"""; // TODO check for isDeleted
+    INSERT INTO sv.task(name, "taskGroupId", description) VALUES (:name, :tgId, :description)
+""";
 private static final String taskUpdateQ = """
-    UPDATE sv.task SET name=:name, "taskGroupId"=:tgId, description=:description
-    WHERE id=:existingId;
-"""; // TODO check for isDeleted
+    UPDATE sv.task SET name=:name, "taskGroupId"=:tgId, description=:description, "isDeleted"=:isDeleted
+    WHERE id=:existingId
+""";
 public Mono<Integer> taskCU(TaskCU dto) {
     BiFunction<GenericExecuteSpec, TaskCU, GenericExecuteSpec> binder =
         (cmd, x) -> cmd.bind("name", x.name)
                        .bind("description", x.description)
-                       .bind("taskId", x.taskGroup.id);
+                       .bind("tgId", x.taskGroup.id);
     return createOrUpdate(taskCreateQ, taskUpdateQ, binder, dto, db);
 }
 
 private static final String languageCreateQ = """
-    INSERT INTO sv.language(code, name, "isDeleted", "sortingOrder") VALUES (:code, :name, 0::bit, :sortingOrder);
+    INSERT INTO sv.language(code, name, "isDeleted", "sortingOrder") VALUES (:code, :name, false, :sortingOrder)
 """;
 private static final String languageUpdateQ = """
     UPDATE sv.language SET code=:code, name=:name,
                            "isDeleted"=:isDeleted, "sortingOrder"=:sortingOrder
-    WHERE id=:existingId;
+    WHERE id=:existingId
 """;
 public  Mono<Integer> languageCU(LanguageCU dto) {
     BiFunction<GenericExecuteSpec, LanguageCU, GenericExecuteSpec> binder =
@@ -189,7 +189,7 @@ public Mono<Integer> logMessage(LocalDateTime ts, int msgType, String code, Stri
 
 private static final String proposalUpdateQ = """
     UPDATE sv.snippet SET content = :content, libraries = :libraries
-    WHERE id = :snId;
+    WHERE id = :snId
 """;
 public Mono<Integer> proposalUpdate(ProposalUpdate dto) {
     val newLibraries = dto.libraries != null && dto.libraries.length() > 0 ? dto.libraries : null;

@@ -137,7 +137,7 @@ public Mono<Boolean> userAuthorize(int userId, String accessToken) {
 public Mono<Boolean> userAuthorizeAdmin(String accessToken) {
     val mbUserAuthor = userStore.userAdminAuthoriz();
     return mbUserAuthor.map(userAuthor -> ((userAuthor != null)
-                ? userAuthor.expiration.toLocalDate() == LocalDateTime.now().toLocalDate() && userAuthor.accessToken == accessToken
+                ? userAuthor.expiration.toLocalDate().isEqual(LocalDate.now()) && userAuthor.accessToken.equals(accessToken)
                 : false)
         );
 }

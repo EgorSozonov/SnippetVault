@@ -17,7 +17,7 @@ void parser1() {
     --SELECT l.bazaar, name, "sortingOrder", l.code
     SELECT l.id, name, "sortingOrder", l.code
     FROM sv.language l
-    WHERE l."isDeleted" = 0::bit;
+    WHERE l."isDeleted" = false
 """;
     List<String> queryColumns = Deserializer.parseColumnNames(input);
     assertTrue(queryColumns.size() == 4);
