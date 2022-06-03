@@ -36,9 +36,9 @@ public static class PostResponse {
 }
 
 public static class Stats {
-    public int primaryCount;
-    public int alternativeCount;
-    public int proposalCount;
+    public long primaryCount;
+    public long alternativeCount;
+    public long proposalCount;
     public long userCount;
 }
 

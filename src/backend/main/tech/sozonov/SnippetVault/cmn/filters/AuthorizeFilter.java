@@ -44,7 +44,6 @@ public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterCha
                 return response.setComplete();
             });
     } catch (Exception e) {
-        System.out.println(e.getMessage());
         val response = webExchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         return response.setComplete();

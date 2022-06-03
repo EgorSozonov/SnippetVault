@@ -20,7 +20,6 @@ Flux<LanguageCU> languagesAll();
 Mono<Integer> taskCU(TaskCU dto);
 Mono<Integer> languageCU(LanguageCU dto);
 Mono<Stats> statsForAdmin();
-Mono<Long> userCount();
 
 Mono<Integer> logMessage(LocalDateTime ts, int msgType, String code, String message);
 

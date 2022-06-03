@@ -34,7 +34,7 @@ public Flux<LanguageCU> languagesAll() {
     return adminService.languagesAll();
 }
 
-@GetMapping("admin/stats")
+@GetMapping("adminStats")
 public Mono<Stats> statsForAdmin() {
     return adminService.statsForAdmin();
 }

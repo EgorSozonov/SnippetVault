@@ -71,12 +71,7 @@ public Mono<Integer> snippetMarkPrimary(int tlId, int snId) {
 }
 
 public Mono<Stats> statsForAdmin() {
-    val result = adminStore.statsForAdmin();
-    val userCount = adminStore.userCount().block();
-    return result.map(x -> {
-            x.userCount = userCount;
-            return x;
-        });
+    return adminStore.statsForAdmin();
 }
 
 

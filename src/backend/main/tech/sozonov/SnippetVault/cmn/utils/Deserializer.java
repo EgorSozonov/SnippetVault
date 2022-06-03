@@ -21,6 +21,7 @@ private final Class<T> qlass;
 public final String sqlSelectQuery;
 public PropTarget[] columnTargets;
 List<VarHandle> settersInt;
+List<VarHandle> settersLong;
 List<VarHandle> settersDouble;
 //List<VarHandle> settersDecimal;
 List<VarHandle> settersString;
@@ -49,14 +50,17 @@ public T unpackRow(Row dbRow) {
         val result = qlass.getDeclaredConstructor().newInstance();
         for (int j = 0; j < columnTargets.length; ++j) {
             var tgt = columnTargets[j];
+
             if (tgt.propType == ValueType.doubl) {
                 settersDouble.get(tgt.indexSetter).set(result, (double)dbRow.get(j));
             } else if (tgt.propType == ValueType.integr) {
                 settersInt.get(tgt.indexSetter).set(result, dbRow.get(j, Integer.class));
+            } else if (tgt.propType == ValueType.lon) {
+                settersLong.get(tgt.indexSetter).set(result, dbRow.get(j, Long.class));
             } else if (tgt.propType == ValueType.strin) {
                 settersString.get(tgt.indexSetter).set(result, dbRow.get(j, String.class));
             } else if (tgt.propType == ValueType.boole) {
-                settersBool.get(tgt.indexSetter).set(result, dbRow.get(j, Boolean.class));
+                settersBool.get(tgt.indexSetter).set(result, (boolean)dbRow.get(j, Boolean.class));
             } else if (tgt.propType == ValueType.timestampe) {
                 settersTS.get(tgt.indexSetter).set(result, dbRow.get(j, LocalDateTime.class));
             }
@@ -66,6 +70,7 @@ public T unpackRow(Row dbRow) {
         }
         return result;
     } catch (Exception ex) {
+        System.out.println(ex.getMessage());
         return null;
     }
 }
@@ -82,8 +87,10 @@ public static List<String> parseColumnNames(final String sqlSelectQuery) {
 
     // Trim innards and split them by comma
     val selectFrom = inpNormalizedCase.substring(indsSelectFrom.fst, indsSelectFrom.snd).trim();
+
     List<String> result = new ArrayList<>();
     parseSelectFrom(selectFrom, result);
+
     return result;
 }
 
@@ -99,7 +106,10 @@ private static void parseSelectFrom(String selectFrom, List<String> result){
         parseWalkUpToComma(iter, ctx);
 
         String clause = selectFrom.substring(prevInd, Math.min(selectFrom.length(), ctx.index + 1)).trim();
-        result.add(parseColumnName(clause));
+        String newColName = parseColumnName(clause);
+
+        System.out.println(newColName);
+        result.add(newColName);
         prevInd = ctx.index + 2;
     }
 }
@@ -108,6 +118,8 @@ private static String parseColumnName(final String trimmedClause) {
     int indDot = trimmedClause.lastIndexOf('.');
     int indSpace = trimmedClause.lastIndexOf(' ');
     int indSepar = Math.max(indDot, indSpace);
+    System.out.println("indSepar " + indSepar);
+
     if (indSepar > -1) return trimmedClause.substring(indSepar + 1).replace("\"", "");
 
     return trimmedClause.replace("\"", "");
@@ -204,12 +216,14 @@ private void determineTypeProperties(List<String> queryColumns) {
 
     int numProps = queryColumns.size();
     if (numProps != fieldsTypes.size()) {
+        System.out.println("numProps " + numProps + ", dto = " + fieldsTypes.size());
         isOK = false;
         return;
     }
 
     columnTargets = new PropTarget[numProps];
     settersInt = new ArrayList<VarHandle>(numProps);
+    settersLong = new ArrayList<VarHandle>(numProps);
     settersString = new ArrayList<VarHandle>(numProps);
     settersDouble = new ArrayList<VarHandle>(numProps);
     //settersDecimal = new ArrayList<BiConsumer<T, decimal>>(numProps);
@@ -220,6 +234,7 @@ private void determineTypeProperties(List<String> queryColumns) {
         val lookup = MethodHandles.lookup().in(qlass);
         for (int i = 0; i < numProps; ++i){
             String nameCol = queryColumns.get(i);
+
             if (!fieldsTypes.containsKey(nameCol)) {
                 System.out.println("Col " + nameCol + " not found");
                 isOK = false;
@@ -230,6 +245,9 @@ private void determineTypeProperties(List<String> queryColumns) {
             if (tp.snd == ValueType.integr) {
                 settersInt.add(lookup.findVarHandle(qlass, tp.fst, int.class));
                 columnTargets[i] = new PropTarget(settersInt.size() - 1, ValueType.integr);
+            } else if (tp.snd == ValueType.lon) {
+                settersLong.add(lookup.findVarHandle(qlass, tp.fst, long.class));
+                columnTargets[i] = new PropTarget(settersLong.size() - 1, ValueType.lon);
             } else if (tp.snd == ValueType.doubl) {
                 settersDouble.add(lookup.findVarHandle(qlass, tp.fst, double.class));
                 columnTargets[i] = new PropTarget(settersDouble.size() - 1, ValueType.doubl);
@@ -277,6 +295,8 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
         val theType = field.getType();
         if (theType == int.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.integr));
+        } else if (theType == long.class) {
+            result.put(normalizedName, new Pair<>(field.getName(), ValueType.lon));
         } else if (theType == double.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.doubl));
         } else if (theType == String.class) {
@@ -287,7 +307,7 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.timestampe));
         }  else {
             isOK = false;
-            System.out.println("Unknown type");
+            System.out.println("Unknown type " + theType.getName());
             return result;
         }
     }
@@ -295,13 +315,14 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
 }
 
 @AllArgsConstructor
-private static class PropTarget {
+public static class PropTarget {
     public int indexSetter;
     public ValueType propType;
 }
 
 public static enum ValueType {
     integr,
+    lon,
     doubl,
     deciml,
     strin,

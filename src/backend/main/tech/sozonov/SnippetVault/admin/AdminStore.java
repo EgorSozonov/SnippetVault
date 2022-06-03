@@ -84,13 +84,20 @@ public Mono<Integer> taskGroupCU(TaskGroupCU dto) {
 private static final String tasksAllQ = """
     SELECT t.id AS "existingId", "taskGroupId", tg.name AS "taskGroupName", t.name, t.description, t."isDeleted"
     FROM sv.task t
-    JOIN sv."taskGroup" tg ON tg.id = t."taskGroupId";
+    JOIN sv."taskGroup" tg ON tg.id = t."taskGroupId"
 """;
 public Flux<TaskCUIntern> tasksAll() {
     val deserializer = new Deserializer<>(TaskCUIntern.class, tasksAllQ);
-    return db.sql(tasksAllQ)
+    System.out.println(deserializer.isOK);
+
+
+    return db.sql(deserializer.sqlSelectQuery)
              .map(deserializer::unpackRow)
-             .all();
+             .all()
+             .map(x -> {
+                 System.out.println(x.name);
+                 return x;
+             });
 }
 
 private static final String taskGroupsAllQ = """
@@ -151,13 +158,17 @@ private static final String statsForAdminQ = """
     SELECT
     	SUM(CASE WHEN s.status=3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS "primaryCount",
     	SUM(CASE WHEN s.status=3 AND tl.id IS NULL THEN 1 ELSE 0 END) AS "alternativeCount",
-    	SUM(CASE WHEN s.status != 1 THEN 1 ELSE 0 END) AS "proposalCount"
+    	SUM(CASE WHEN s.status != 1 THEN 1 ELSE 0 END) AS "proposalCount",
+        (SELECT COUNT(*) FROM sv.user WHERE "isDeleted" = false) AS "userCount"
     FROM sv.snippet s
     LEFT JOIN sv."taskLanguage" tl ON tl."primarySnippetId"=s.id;
 """;
+
 public Mono<Stats> statsForAdmin() {
     val deserializer = new Deserializer<>(Stats.class, statsForAdminQ);
-    return db.sql(statsForAdminQ)
+    System.out.println("statsForAdmin " + deserializer.isOK);
+
+    return db.sql(deserializer.sqlSelectQuery)
              .map(deserializer::unpackRow)
              .one();
 }
@@ -188,17 +199,6 @@ public Mono<Integer> proposalUpdate(ProposalUpdate dto) {
              .bind("libraries", newLibraries)
              .fetch()
              .rowsUpdated();
-}
-
-private static final String userCountQ = """
-    SELECT COUNT(*) AS Cnt
-    FROM sv.user WHERE "isDeleted" = 0::bit;
-""";
-public Mono<Long> userCount() {
-    return db.sql(userCountQ)
-             .fetch()
-             .one()
-             .map(r -> (long) r.get("Cnt"));
 }
 
 

@@ -18,30 +18,30 @@ private final PathPattern pathPattern;
 
 @Autowired
 public AuthorizeAdminFilter(UserService _userService) {
-    pathPattern = new PathPatternParser().parse("/api/admin.**");
+    pathPattern = new PathPatternParser().parse("/api/admin/**");
     userService = _userService;
 }
 
 @Override
 public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterChain) {
-    boolean authorized = true;
     val requestPath = webExchange.getRequest().getPath().pathWithinApplication();
-    if (pathPattern.matches(requestPath)) {
-        val accessToken = webExchange.getRequest().getCookies().getFirst("accessToken");
-        try {
-            authorized = userService.userAuthorizeAdmin(accessToken.getValue()).block();
-        } catch (Exception e) {
-            authorized = false;
-        }
-    }
-
-    if (authorized) {
+    if (!pathPattern.matches(requestPath)) {
         return filterChain.filter(webExchange);
-    } else {
+    }
+    val accessToken = webExchange.getRequest().getCookies().getFirst("accessToken");
+    try {
+        return userService.userAuthorizeAdmin(accessToken.getValue()).flatMap(authorized -> {
+            if (authorized) return filterChain.filter(webExchange);
+            val response = webExchange.getResponse();
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            return response.setComplete();
+        });
+    } catch (Exception e) {
         val response = webExchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         return response.setComplete();
     }
+
 }
 
 
