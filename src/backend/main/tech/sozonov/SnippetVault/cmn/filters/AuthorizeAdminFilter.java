@@ -7,9 +7,11 @@ import org.springframework.web.util.pattern.PathPatternParser;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.user.UserService;
 
+@Component
 public class AuthorizeAdminFilter implements WebFilter {
 
 
@@ -25,9 +27,11 @@ public AuthorizeAdminFilter(UserService _userService) {
 @Override
 public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterChain) {
     val requestPath = webExchange.getRequest().getPath().pathWithinApplication();
+
     if (!pathPattern.matches(requestPath)) {
         return filterChain.filter(webExchange);
     }
+
     val accessToken = webExchange.getRequest().getCookies().getFirst("accessToken");
     try {
         return userService.userAuthorizeAdmin(accessToken.getValue()).flatMap(authorized -> {

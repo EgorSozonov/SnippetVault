@@ -37,14 +37,13 @@ private static final String snippetApproveQ = """
     COMMIT;
 """;
 public Mono<Integer> snippetApprove(int snId) {
-    return db.sql(snippetApproveQ)
-             .bind("snId", snId)
+    return db.sql(snippetApproveQ.replace(":snId", Integer.toString(snId)))
              .fetch()
              .rowsUpdated();
 }
 
 private static final String snippetDeclineQ = """
-    UPDATE sv.snippet SET status=2 WHERE id = :snId;
+    UPDATE sv.snippet SET status = 2 WHERE id = :snId
 """;
 public Mono<Integer> snippetDecline(int snId) {
     return db.sql(snippetDeclineQ)
@@ -54,12 +53,12 @@ public Mono<Integer> snippetDecline(int snId) {
 }
 
 private static final String snippetMarkPrimaryQ = """
-    UPDATE sv."taskLanguage" SET "primarySnippetId" = :snId WHERE id=:tlId;
+    UPDATE sv."taskLanguage" SET "primarySnippetId" = $2 WHERE id = $1
 """;
 public Mono<Integer> snippetMarkPrimary(int tlId, int snId) {
     return db.sql(snippetMarkPrimaryQ)
-             .bind("tlId", tlId)
-             .bind("snId", snId)
+             .bind("$1", tlId)
+             .bind("$2", snId)
              .fetch()
              .rowsUpdated();
 }
@@ -70,8 +69,8 @@ private static final String taskGroupCreateQ = """
     INSERT INTO sv."taskGroup"(name, code, "isDeleted") VALUES (:name, :code, false)
 """;
 private static final String taskGroupUpdateQ = """
-    UPDATE sv."taskGroup" SET name=:name, code=:code, "isDeleted" = :isDeleted
-    WHERE id=:existingId
+    UPDATE sv."taskGroup" SET name = :name, code = :code, "isDeleted" = :isDeleted
+    WHERE id = :existingId
 """;
 public Mono<Integer> taskGroupCU(TaskGroupCU dto) {
     BiFunction<GenericExecuteSpec, TaskGroupCU, GenericExecuteSpec> binder =
@@ -88,16 +87,10 @@ private static final String tasksAllQ = """
 """;
 public Flux<TaskCUIntern> tasksAll() {
     val deserializer = new Deserializer<>(TaskCUIntern.class, tasksAllQ);
-    System.out.println(deserializer.isOK);
-
 
     return db.sql(deserializer.sqlSelectQuery)
              .map(deserializer::unpackRow)
-             .all()
-             .map(x -> {
-                 System.out.println(x.name);
-                 return x;
-             });
+             .all();
 }
 
 private static final String taskGroupsAllQ = """
@@ -166,8 +159,6 @@ private static final String statsForAdminQ = """
 
 public Mono<Stats> statsForAdmin() {
     val deserializer = new Deserializer<>(Stats.class, statsForAdminQ);
-    System.out.println("statsForAdmin " + deserializer.isOK);
-
     return db.sql(deserializer.sqlSelectQuery)
              .map(deserializer::unpackRow)
              .one();

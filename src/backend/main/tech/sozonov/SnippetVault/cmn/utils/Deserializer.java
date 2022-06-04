@@ -23,7 +23,6 @@ public PropTarget[] columnTargets;
 List<VarHandle> settersInt;
 List<VarHandle> settersLong;
 List<VarHandle> settersDouble;
-//List<VarHandle> settersDecimal;
 List<VarHandle> settersString;
 List<VarHandle> settersBool;
 List<VarHandle> settersTS;
@@ -36,7 +35,6 @@ public Deserializer(Class<T> _qlass, String _sqlSelectQuery) {
 
     val queryColumns = parseColumnNames(sqlSelectQuery);
     if (queryColumns.size() == 0) {
-        System.out.println("No query columns");
         isOK = false;
         return;
     }
@@ -107,8 +105,6 @@ private static void parseSelectFrom(String selectFrom, List<String> result){
 
         String clause = selectFrom.substring(prevInd, Math.min(selectFrom.length(), ctx.index + 1)).trim();
         String newColName = parseColumnName(clause);
-
-        System.out.println(newColName);
         result.add(newColName);
         prevInd = ctx.index + 2;
     }
@@ -118,7 +114,6 @@ private static String parseColumnName(final String trimmedClause) {
     int indDot = trimmedClause.lastIndexOf('.');
     int indSpace = trimmedClause.lastIndexOf(' ');
     int indSepar = Math.max(indDot, indSpace);
-    System.out.println("indSepar " + indSepar);
 
     if (indSepar > -1) return trimmedClause.substring(indSepar + 1).replace("\"", "");
 
@@ -216,7 +211,6 @@ private void determineTypeProperties(List<String> queryColumns) {
 
     int numProps = queryColumns.size();
     if (numProps != fieldsTypes.size()) {
-        System.out.println("numProps " + numProps + ", dto = " + fieldsTypes.size());
         isOK = false;
         return;
     }
@@ -236,7 +230,6 @@ private void determineTypeProperties(List<String> queryColumns) {
             String nameCol = queryColumns.get(i);
 
             if (!fieldsTypes.containsKey(nameCol)) {
-                System.out.println("Col " + nameCol + " not found");
                 isOK = false;
                 return;
             }
@@ -287,7 +280,6 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
         String normalizedName = field.getName().toLowerCase();
         // Because SQL is case-insensitive, names of the fields must be unique up to letter casing
         if (result.containsKey(normalizedName)) {
-            System.out.println("Non-unique name");
             isOK = false;
             return result;
         }
@@ -307,7 +299,6 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.timestampe));
         }  else {
             isOK = false;
-            System.out.println("Unknown type " + theType.getName());
             return result;
         }
     }
@@ -329,5 +320,6 @@ public static enum ValueType {
     boole,
     timestampe,
 }
+
 
 }

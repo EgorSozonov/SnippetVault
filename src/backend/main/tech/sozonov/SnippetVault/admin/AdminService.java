@@ -65,9 +65,10 @@ public Mono<Integer> snippetDecline(int snId) {
 }
 
 public Mono<Integer> snippetMarkPrimary(int tlId, int snId) {
-    val snippet = snippetService.snippetGet(snId);
-    return snippet.flatMap(x -> (x.status == SnippetStatus.Approved && x.taskLanguageId == tlId) ? adminStore.snippetMarkPrimary(tlId, snId) : Mono.just(-1));
-    //return snippet.map(x -> (x.status == SnippetStatus.Approved && existingSnip.taskLanguageId == tlId) ? adminStore.snippetMarkPrimary(tlId, snId) : -1);
+    return snippetService.snippetGet(snId)
+                         .flatMap(x -> (x.status == SnippetStatus.Approved && x.taskLanguageId == tlId)
+                                    ? adminStore.snippetMarkPrimary(tlId, snId)
+                                    : Mono.just(-1));
 }
 
 public Mono<Stats> statsForAdmin() {
