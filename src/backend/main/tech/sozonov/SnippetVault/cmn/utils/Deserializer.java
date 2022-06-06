@@ -26,6 +26,7 @@ List<VarHandle> settersDouble;
 List<VarHandle> settersString;
 List<VarHandle> settersBool;
 List<VarHandle> settersTS;
+List<VarHandle> settersBinary;
 public boolean isOK;
 
 public Deserializer(Class<T> _qlass, String _sqlSelectQuery) {
@@ -61,6 +62,8 @@ public T unpackRow(Row dbRow) {
                 settersBool.get(tgt.indexSetter).set(result, (boolean)dbRow.get(j, Boolean.class));
             } else if (tgt.propType == ValueType.timestampe) {
                 settersTS.get(tgt.indexSetter).set(result, dbRow.get(j, LocalDateTime.class));
+            } else if (tgt.propType == ValueType.binar) {
+                settersBinary.get(tgt.indexSetter).set(result, dbRow.get(j, byte[].class));
             }
             //else if (tgt.propType == ValueType.deciml) {
               //  settersDecimal[tgt.indexSetter](result, dbRow.GetDecimal(j));
@@ -257,7 +260,10 @@ private void determineTypeProperties(List<String> queryColumns) {
             } else if (tp.snd == ValueType.timestampe) {
                 settersTS.add(lookup.findVarHandle(qlass, tp.fst, LocalDateTime.class));
                 columnTargets[i] = new PropTarget(settersTS.size() - 1, ValueType.timestampe);
-            }  else {
+            } else if (tp.snd == ValueType.binar) {
+                settersBinary.add(lookup.findVarHandle(qlass, tp.fst, byte[].class));
+                columnTargets[i] = new PropTarget(settersBinary.size() - 1, ValueType.timestampe);
+            } else {
                 // Should never happen
                 isOK = false;
                 return;
@@ -297,7 +303,9 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.boole));
         } else if (theType == LocalDateTime.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.timestampe));
-        }  else {
+        } else if (theType == byte[].class) {
+            result.put(normalizedName, new Pair<>(field.getName(), ValueType.binar));
+        } else {
             isOK = false;
             return result;
         }
@@ -319,6 +327,7 @@ public static enum ValueType {
     strin,
     boole,
     timestampe,
+    binar,
 }
 
 

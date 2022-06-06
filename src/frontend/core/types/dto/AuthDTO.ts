@@ -1,10 +1,30 @@
+// deprecated
 export type SignInSuccessDTO = {
     userId: number,
 }
 
+export type RegisterDTO = {
+    userName: string;
+    salt: string;
+    verifier: string;
+}
+
+export type HandshakeDTO = {
+    userName: string;
+}
+
+export type HandshakeResponseDTO = {
+    salt: string;
+    B: string;
+}
+
 export type SignInDTO = {
-    userName: string,
-    password: string,
+    A: string,
+    M1: string,
+}
+
+export type SignInResponseDTO = {
+    M2: string;
 }
 
 export type ChangePwDTO = {

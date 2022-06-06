@@ -21,6 +21,7 @@ import SelectChoice from "../../types/SelectChoice"
 import SRPSession from "../../utils/SRPSession"
 import { rfc5054 } from "../../utils/Constants"
 import { cli } from "webpack"
+import { processSignIn } from "../../utils/User"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
@@ -104,11 +105,21 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
             const salt = await clientSRP.generateRandomSalt()
             const verifier = await clientSRP.generateVerifier(salt, userName, password)
             console.log("salt = " + salt)
-            const serverB = await state.client.userRegister(userName, salt, verifier)
-            const mbAM1 = await clientSRP.step1(userName, password, salt, serverB)
-            if (mbAM1.isOk === false) return
+
+            const handshakeResponse = await state.user.userRegister({ salt, verifier, userName })
+            if (!handshakeResponse) {
+                console.log("Handshake error")
+                return
+            }
+
+            const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.salt, handshakeResponse.B)
+            if (mbAM1.isOk === false) {
+                console.log("Handshake response was incorrect")
+                return
+            }
+
             const {A, M1} = mbAM1.value
-            const M2 = await state.client.userSignIn(A, M1)
+            const M2 = processSignIn(await state.user.userSignIn(A, M1), "user")
             const result2 = await clientSRP.step2(M2)
             if (result2.isOk === false) return
 
@@ -121,31 +132,31 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
 
     }
 
-    const fooSignin = async () => {
-        const userName = "Joe"
-        const password = "a6SWy$U8s7Y"
+    // const fooSignin = async () => {
+    //     const userName = "Joe"
+    //     const password = "a6SWy$U8s7Y"
 
-        // generate the client session class from the client session factory closure
-        const clientSRP = new SRPSession(rfc5054.N_base10, rfc5054.g_base10, rfc5054.k_base16)
-        try {
+    //     // generate the client session class from the client session factory closure
+    //     const clientSRP = new SRPSession(rfc5054.N_base10, rfc5054.g_base10, rfc5054.k_base16)
+    //     try {
 
-            const {salt, B} = await state.client.userHandshake(userName)
-            console.log(salt)
-            console.log("B = " + B)
-            const mbAM1 = await clientSRP.step1(userName, password, salt, serverB)
-            if (mbAM1.isOk === false) return
-            const {A, M1} = mbAM1.value
-            const M2 = await state.client.userSignIn(A, M1)
-            const result2 = await clientSRP.step2(M2)
-            if (result2.isOk === false) return
+    //         const {salt, B} = await state.client.userHandshake(userName)
+    //         console.log(salt)
+    //         console.log("B = " + B)
+    //         const mbAM1 = await clientSRP.step1(userName, password, salt, serverB)
+    //         if (mbAM1.isOk === false) return
+    //         const {A, M1} = mbAM1.value
+    //         const M2 = await state.client.userSignIn(A, M1)
+    //         const result2 = await clientSRP.step2(M2)
+    //         if (result2.isOk === false) return
 
-            const sessionKey = result2.value
-            console.log("Session Key = " + sessionKey)
-        } catch (e) {
-            console.log(e)
-        }
+    //         const sessionKey = result2.value
+    //         console.log("Session Key = " + sessionKey)
+    //     } catch (e) {
+    //         console.log(e)
+    //     }
 
-    }
+    // }
 
     return html`<div class="snippetsBody">
         <main class="snippetsContainer">

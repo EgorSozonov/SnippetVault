@@ -8,8 +8,8 @@ public class InternalTypes {
 
 public static class AuthenticateIntern {
     public int userId;
-    public String salt;
-    public String hash;
+    public byte[] salt;
+    public byte[] verifier;
     public LocalDateTime expiration;
     public String accessToken;
 }

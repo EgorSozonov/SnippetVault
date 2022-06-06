@@ -1,5 +1,7 @@
 package tech.sozonov.SnippetVault.user;
 import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
 import tech.sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
 
 public class UserDTO {
@@ -34,13 +36,37 @@ public static class Vote {
     public int tlId;
 }
 
+@AllArgsConstructor
 public static class SignInSuccess {
     public int userId;
 }
 
-public static class SignIn {
+@AllArgsConstructor
+public static class Register {
     public String userName;
-    public String password;
+    public String salt;
+    public String verifier;
+}
+
+@AllArgsConstructor
+public static class Handshake {
+    public String userName;
+}
+
+@AllArgsConstructor
+public static class HandshakeResponse {
+    public String salt;
+    public String B;
+}
+
+@AllArgsConstructor
+public static class SignIn {
+    public String A;
+    public String M1;
+}
+
+public static class SignInResponse {
+    public String M2;
 }
 
 public static class ChangePw {

@@ -1,11 +1,11 @@
 import { action, computed, makeAutoObservable } from "mobx"
 import IClient from "../../ports/IClient"
-import { ChangePwAdminDTO, ChangePwDTO, SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
+import { ChangePwAdminDTO, ChangePwDTO, RegisterDTO, SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
 import { ProfileDTO } from "../types/dto/UserDTO"
 import EitherMsg from "../types/EitherMsg"
 import { UserAccount } from "../types/UserAccount"
-import { dateOfTS, isSameDay } from "../utils/DateUtils"
-import { processSignIn } from "../utils/User"
+import { isSameDay } from "../utils/DateUtils"
+import { processHandshake, processSignIn } from "../utils/User"
 import { fetchFromClient } from "./Utils"
 
 
@@ -27,9 +27,16 @@ export default class UserState {
         return (this.acc !== null && this.acc.status === "admin")
     })
 
-    signInOrRegister = action(async (dto: SignInDTO, mode: "signIn" | "register") => {
-        const response = mode === "signIn" ? await this.client.userSignIn(dto) : await this.client.userRegister(dto)
-        this.applySignInResponse(response, "user", dto.userName)
+    userRegister = action(async (dto: RegisterDTO) => {
+        return processHandshake(await this.client.userRegister(dto), "user")
+    })
+
+    userHandshake = action(() => {
+
+    })
+
+    userSignIn = action(() => {
+
     })
 
     changePw = action(async (dto: ChangePwDTO, headers: SignInSuccessDTO) => {

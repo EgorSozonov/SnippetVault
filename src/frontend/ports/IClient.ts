@@ -1,5 +1,5 @@
 import EitherMsg from "../core/types/EitherMsg"
-import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO as ChangePwAdminDTO, ChangePwDTO as ChangePwDTO } from "../core/types/dto/AuthDTO"
+import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO, ChangePwDTO, RegisterDTO, HandshakeDTO, HandshakeResponseDTO } from "../core/types/dto/AuthDTO"
 import { LanguageCUDTO, LanguageDTO, PostResponseDTO, TaskCUDTO, TaskDTO, TaskGroupCUDTO, TaskGroupDTO } from "../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalUpdateDTO, BareSnippetDTO, ProposalCreateDTO } from "../core/types/dto/SnippetDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../core/types/dto/UserDTO"
@@ -29,13 +29,17 @@ type IClient = {
     taskGet: (taskId: number) => Promise<EitherMsg<TaskDTO[]>>
     taskGroupCU: (dto: TaskGroupCUDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
 
-    userRegister: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
-    userVote: (dto: VoteDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
+    userRegister: (dto: RegisterDTO) => Promise<EitherMsg<HandshakeResponseDTO[]>>
+    userHandshake: (dto: HandshakeDTO) => Promise<EitherMsg<HandshakeResponseDTO[]>>
     userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
+
     userSignInAdmin: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
-    userProfile: (headers: SignInSuccessDTO) => Promise<EitherMsg<ProfileDTO[]>>
     userChangePw: (dto: ChangePwDTO, headers: SignInSuccessDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     userChangeAdminPw: (dto: ChangePwAdminDTO, headers: SignInSuccessDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
+
+    userVote: (dto: VoteDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
+    userProfile: (headers: SignInSuccessDTO) => Promise<EitherMsg<ProfileDTO[]>>
+
 
     // Admin
     tasksAll: () => Promise<EitherMsg<TaskCUDTO[]>>

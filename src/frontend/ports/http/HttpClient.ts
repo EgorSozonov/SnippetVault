@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios"
 import createClient from "./HttpConfig"
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
-import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO, ChangePwDTO } from "../../core/types/dto/AuthDTO"
+import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO, ChangePwDTO, HandshakeDTO, RegisterDTO, HandshakeResponseDTO } from "../../core/types/dto/AuthDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageDTO, TaskGroupDTO,  TaskDTO, PostResponseDTO, LanguageCUDTO, TaskCUDTO, TaskGroupCUDTO } from "../../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO, BareSnippetDTO } from "../../core/types/dto/SnippetDTO"
@@ -90,16 +90,20 @@ class HttpClient implements IClient {
         return this.postRequest(`/admin/taskGroup/cu`, dto, headers)
     }
 
-    userRegister(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
+    userRegister(dto: RegisterDTO): Promise<EitherMsg<HandshakeResponseDTO[]>> {
         return this.postRequestNoHeaders("/user/register", dto)
     }
 
-    userVote(dto: VoteDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
-        return this.postRequest("/secure/user/vote", dto, headers)
+    userHandshake(dto: HandshakeDTO): Promise<EitherMsg<HandshakeResponseDTO[]>> {
+        return this.postRequestNoHeaders("/user/handshake", dto)
     }
 
     userSignIn(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
         return this.postRequestNoHeaders("/user/signIn", dto)
+    }
+
+    userVote(dto: VoteDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+        return this.postRequest("/secure/user/vote", dto, headers)
     }
 
     userSignInAdmin(dto: SignInAdminDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {

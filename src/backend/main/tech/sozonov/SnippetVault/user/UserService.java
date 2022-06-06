@@ -9,19 +9,26 @@ import java.time.LocalDateTime;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import org.springframework.util.MultiValueMap;
+
+import com.theicenet.cryptography.keyagreement.SRP6ServerService;
+import com.theicenet.cryptography.keyagreement.pake.srp.v6a.SRP6ServerValuesB;
+
 import org.springframework.http.HttpCookie;
 import org.springframework.stereotype.Service;
+import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
 
 @Service
 public class UserService {
 
 
 private final IUserStore userStore;
-private static final Mono<Either<String, SignInSuccess>> errResponse = Mono.just(Either.left("Authentication error"));
+private final SRP6ServerService srpService;
+private static final Mono<Either<String, HandshakeResponse>> errResponse = Mono.just(Either.left("Authentication error"));
 
 @Autowired
-public UserService(IUserStore _userStore) {
+public UserService(IUserStore _userStore, SRP6ServerService _srpService) {
     this.userStore = _userStore;
+    this.srpService = _srpService;
 }
 
 
@@ -29,7 +36,7 @@ public Flux<Comment> commentsGet(int snippetId) {
     return userStore.commentsGet(snippetId);
 }
 
-public Mono<Either<String, SignInSuccess>> userRegister(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
+public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
     // TODO
     return errResponse;
 
@@ -56,6 +63,23 @@ public Mono<Either<String, SignInSuccess>> userRegister(SignIn dto, MultiValueMa
     // } else {
     //     return new Err<SignInSuccessDTO>("Error registering user");
     // }
+}
+
+public Mono<Either<String, HandshakeResponse>> userHandshake(Register dto, MultiValueMap<String, HttpCookie> cookies) {
+    if (nullOrEmp(dto.userName)) return errResponse;
+    return userStore.userAuthentGet(dto.userName).flatMap(user -> {
+        String b = "asdf";
+        byte[] verifier = user.verifier;
+        String B = "basdfj";
+        final SRP6ServerValuesB serverValuesB = srpService.computeValuesB(verifier);
+        return userStore.userUpdateTempKey(user.userId, b).flatMap(updateResult -> {
+            if (updateResult < 1) Either.left("asdf");
+            return Either.right(new HandshakeResponse(dto.salt, B));
+        });
+    });
+    // get verifier & salt by username
+    // generate b and save to the DB
+    // send back B(b) and salt
 }
 
 private boolean validatePasswordComplexity(String newPw) {

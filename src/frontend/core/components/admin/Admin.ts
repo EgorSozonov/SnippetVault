@@ -100,7 +100,7 @@ const Admin: FunctionComponent = observer(({}: any) => {
         state.admin.proposalsGet()
 
         state.admin.statsGet()
-        state.user.trySignInFromLS(cookie.account)
+        state.user.trySignInFromLS()
     }, [state.user.acc])
 
     const [changeAdminPwMode, setChangeAdminPwMode] = useState(false)

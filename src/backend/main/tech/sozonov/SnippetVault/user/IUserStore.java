@@ -12,6 +12,7 @@ Mono<AuthenticateIntern> userAuthentGet(String userName);
 Mono<AuthorizeIntern> userAuthorizGet(int userId);
 Mono<AuthorizeIntern> userAdminAuthoriz();
 Mono<Integer> userUpdateExpiration(int userId, String newToken, LocalDateTime newDate);
+Mono<Integer> userUpdateTempKey(int userId, String b);
 Mono<Integer> userRegister(UserNewIntern user);
 Mono<Integer> userUpdate(UserNewIntern user);
 Mono<Integer> userVote(int userId, int tlId, int snId);

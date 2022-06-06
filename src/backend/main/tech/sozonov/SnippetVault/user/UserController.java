@@ -28,13 +28,18 @@ public Flux<Comment> comments(@PathVariable("snId") int snId) {
 }
 
 @PostMapping("user/register")
-public Mono<Either<String, SignInSuccess>> userRegister(@RequestBody SignIn dto, ServerHttpRequest req) {
-    return userService.userRegister(dto, req.getCookies());
+public Mono<Either<String, HandshakeResponse>> userRegister(@RequestBody Register dto) {
+    return userService.userRegister(dto);
+}
+
+@PostMapping("user/handshake")
+public Mono<Either<String, HandshakeResponse>> userHandshake(@RequestBody Handshake dto, ServerHttpRequest req) {
+    return userService.userHandshake(dto, req.getCookies());
 }
 
 @PostMapping("user/signIn")
-public Mono<Either<String, SignInSuccess>> userSignIn(@RequestBody SignIn dto, ServerHttpRequest req) {
-    return userService.userAuthenticate(dto, req.getCookies());
+public Mono<Either<String, SignInResponse>> userSignIn(@RequestBody SignIn dto, ServerHttpRequest req) {
+    return userService.userSignIn(dto, req.getCookies());
 }
 
 @PostMapping("user/signInAdmin")

@@ -29,6 +29,7 @@ private static final String userAuthentGetQ = """
     SELECT id AS "userId", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration, "accessToken"
     FROM sv.user WHERE name = :name
 """;
+// TODO update
 public Mono<AuthenticateIntern> userAuthentGet(String userName) {
     val deserializer = new Deserializer<>(AuthenticateIntern.class, userAuthentGetQ);
     return db.sql(deserializer.sqlSelectQuery)
@@ -71,6 +72,19 @@ public Mono<Integer> userUpdateExpiration(int userId, String newToken, LocalDate
              .bind("id", userId)
              .bind("newDate", newDate)
              .bind("newToken", newToken)
+             .fetch()
+             .rowsUpdated();
+}
+
+private static final String uuserUpdateTempKeyQ = """
+    UPDATE sv."user" SET b=$1
+    WHERE id = $2
+""";
+
+public Mono<Integer> userUpdateTempKey(int userId, String b) {
+    return db.sql(uuserUpdateTempKeyQ)
+             .bind("$1", b)
+             .bind("$2", userId)
              .fetch()
              .rowsUpdated();
 }
