@@ -3,7 +3,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
+
+import java.util.Base64;
 import java.util.UUID;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
@@ -67,15 +71,27 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
 
 public Mono<Either<String, HandshakeResponse>> userHandshake(Register dto, MultiValueMap<String, HttpCookie> cookies) {
     if (nullOrEmp(dto.userName)) return errResponse;
+    BiFunction<Integer, byte[], Either<String, HandshakeResponse>> ll = (Integer updateResult, byte[] B) -> {
+        if (updateResult < 1) {
+            return Either.left("asdf");
+        }
+        HandshakeResponse result = new HandshakeResponse(dto.salt, Base64.getEncoder().encodeToString(B));
+        Either<String, HandshakeResponse> res = Either.right(result);
+        return res;
+    };
     return userStore.userAuthentGet(dto.userName).flatMap(user -> {
-        String b = "asdf";
         byte[] verifier = user.verifier;
-        String B = "basdfj";
+
         final SRP6ServerValuesB serverValuesB = srpService.computeValuesB(verifier);
-        return userStore.userUpdateTempKey(user.userId, b).flatMap(updateResult -> {
-            if (updateResult < 1) Either.left("asdf");
-            return Either.right(new HandshakeResponse(dto.salt, B));
-        });
+        byte[] b = serverValuesB.getServerPrivateValueB();
+        byte[] B = serverValuesB.getServerPublicValueB();
+        HandshakeResponse result = new HandshakeResponse(dto.salt, Base64.getEncoder().encodeToString(B));
+        Either<String, HandshakeResponse> errRes = Either.left("asdf");
+        // return userStore.userUpdateTempKey(user.userId, b).flatMap(updateResult -> errResponse);
+
+        Mono<Integer> ax = userStore.userUpdateTempKey(user.userId, b);
+        Mono<Either<String, HandshakeResponse>> bx = ax.map(x -> ll.apply(x, B));
+        return bx;
     });
     // get verifier & salt by username
     // generate b and save to the DB

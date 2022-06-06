@@ -67,6 +67,7 @@ public static class SignIn {
 
 public static class SignInResponse {
     public String M2;
+    public int userId;
 }
 
 public static class ChangePw {

@@ -81,7 +81,7 @@ private static final String uuserUpdateTempKeyQ = """
     WHERE id = $2
 """;
 
-public Mono<Integer> userUpdateTempKey(int userId, String b) {
+public Mono<Integer> userUpdateTempKey(int userId, byte[] b) {
     return db.sql(uuserUpdateTempKeyQ)
              .bind("$1", b)
              .bind("$2", userId)

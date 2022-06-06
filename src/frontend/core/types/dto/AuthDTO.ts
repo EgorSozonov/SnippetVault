@@ -25,6 +25,7 @@ export type SignInDTO = {
 
 export type SignInResponseDTO = {
     M2: string;
+    userId: number;
 }
 
 export type ChangePwDTO = {

@@ -22,7 +22,7 @@ export function processSignIn(response: EitherMsg<SignInResponseDTO[]>, status: 
     } else if (response.value.length < 1) {
         console.log("Error: empty response")
         return null
-    } else if (response.value[0].userId < 0) {
+    } else if (response.value[0].M2 < 0) {
         console.log("Error: userId < 0")
     }
 
