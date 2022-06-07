@@ -19,6 +19,7 @@ export type HandshakeResponseDTO = {
 }
 
 export type SignInDTO = {
+    userName: string,
     A: string,
     M1: string,
 }

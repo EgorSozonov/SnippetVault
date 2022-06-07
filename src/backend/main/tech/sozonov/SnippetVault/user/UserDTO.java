@@ -61,10 +61,12 @@ public static class HandshakeResponse {
 
 @AllArgsConstructor
 public static class SignIn {
+    public String userName;
     public String A;
     public String M1;
 }
 
+@AllArgsConstructor
 public static class SignInResponse {
     public String M2;
     public int userId;

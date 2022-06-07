@@ -90,36 +90,50 @@ public Mono<Integer> userUpdateTempKey(int userId, byte[] b) {
 }
 
 private static final String userRegisterQ = """
-    INSERT INTO sv."user"(name, "dateJoined", expiration, "accessToken", hash, salt)
-    VALUES (:name, :tsJoin, :dtExpiration, :accessToken,
-            decode(:hash, 'base64'), decode(:salt, 'base64'))
+    INSERT INTO sv."user"(name, "dateJoined", expiration, "accessToken", salt, verifier, b)
+    VALUES (:name, :tsJoin, :dtExpiration, '',
+            :salt, :verifier, :b)
     ON CONFLICT DO NOTHING RETURNING id
 """;
 public Mono<Integer> userRegister(UserNewIntern user) {
     return db.sql(userRegisterQ)
              .bind("name", user.userName)
-             .bind("salt", user.salt)
-             .bind("hash", user.hash)
-             .bind("accessToken", user.accessToken)
              .bind("tsJoin", LocalDateTime.now())
              .bind("dtExpiration", user.dtExpiration)
+             .bind("salt", user.salt)
+             .bind("verifier", user.verifier)
+             .bind("b", user.b)
+             .fetch()
+             .first()
+             .map(r -> (int) r.get("id"));
+}
+
+private static final String userHandshakeQ = """
+    UPDATE sv.user SET b = :b
+    WHERE name = :name
+""";
+public Mono<Integer> userHandshake(Handshake hshake, byte[] b) {
+    return db.sql(userHandshakeQ)
+             .bind("name", hshake.userName)
+             .bind("b", b)
              .fetch()
              .first()
              .map(r -> (int) r.get("id"));
 }
 
 private static final String userUpdateQ = """
-    UPDATE sv.user SET hash = decode(:hash, 'base64'), salt = decode(:salt, 'base64'),
-                       expiration = :dtExpiration, "accessToken" = :accessToken
+    UPDATE sv.user SET salt = :salt, verifier = :verifier
+                       expiration = :dtExpiration, "accessToken" = :accessToken, b = :b
     WHERE name = :name
 """;
 public Mono<Integer> userUpdate(UserNewIntern user) {
     return db.sql(userUpdateQ)
              .bind("name", user.userName)
-             .bind("salt", user.salt)
-             .bind("hash", user.hash)
-             .bind("accessToken", user.accessToken)
              .bind("dtExpiration", user.dtExpiration)
+             .bind("salt", user.salt)
+             .bind("verifier", user.verifier)
+             .bind("b", user.b)
+             .bind("accessToken", user.accessToken)
              .fetch()
              .rowsUpdated();
 }

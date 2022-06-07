@@ -15,21 +15,14 @@ export function processHandshake(response: EitherMsg<HandshakeResponseDTO[]>, st
     return response.value[0]
 }
 
-export function processSignIn(response: EitherMsg<SignInResponseDTO[]>, status: "user" | "admin", userName: string): UserAccount | null {
+export function processSignIn(response: EitherMsg<SignInResponseDTO[]>, status: "user" | "admin", userName: string): SignInResponseDTO | null {
     if (response.isOK === false) {
         console.log(response.errMsg)
         return null
     } else if (response.value.length < 1) {
         console.log("Error: empty response")
         return null
-    } else if (response.value[0].M2 < 0) {
-        console.log("Error: userId < 0")
     }
 
-    const successDTO = response.value[0]
-    const expiration = dateOfTS(new Date())
-    const result: UserAccount = {
-        name: userName, expiration, userId: successDTO.userId, status,
-    }
-    return result
+    return response.value[0]
 }

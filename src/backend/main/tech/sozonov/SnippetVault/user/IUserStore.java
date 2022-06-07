@@ -11,8 +11,8 @@ public interface IUserStore {
 Mono<AuthenticateIntern> userAuthentGet(String userName);
 Mono<AuthorizeIntern> userAuthorizGet(int userId);
 Mono<AuthorizeIntern> userAdminAuthoriz();
+Mono<Integer> userHandshake(Handshake hshake, byte[] b);
 Mono<Integer> userUpdateExpiration(int userId, String newToken, LocalDateTime newDate);
-Mono<Integer> userUpdateTempKey(int userId, byte[] b);
 Mono<Integer> userRegister(UserNewIntern user);
 Mono<Integer> userUpdate(UserNewIntern user);
 Mono<Integer> userVote(int userId, int tlId, int snId);

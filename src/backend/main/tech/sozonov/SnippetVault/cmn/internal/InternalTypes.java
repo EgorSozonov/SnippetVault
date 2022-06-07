@@ -10,6 +10,7 @@ public static class AuthenticateIntern {
     public int userId;
     public byte[] salt;
     public byte[] verifier;
+    public byte[] b;
     public LocalDateTime expiration;
     public String accessToken;
 }
@@ -30,8 +31,9 @@ public static class SnippetIntern {
 @Builder
 public static class UserNewIntern {
     public String userName;
-    public String hash;
-    public String salt;
+    public byte[] verifier;
+    public byte[] salt;
+    public byte[] b;
     public String accessToken;
     public LocalDate dtExpiration;
 }

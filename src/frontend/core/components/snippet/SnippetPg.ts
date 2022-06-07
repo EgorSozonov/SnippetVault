@@ -20,7 +20,6 @@ import HoverSelectCompact from "../../commonComponents/hoverSelect/HoverCompact"
 import SelectChoice from "../../types/SelectChoice"
 import SRPSession from "../../utils/SRPSession"
 import { rfc5054 } from "../../utils/Constants"
-import { cli } from "webpack"
 import { processSignIn } from "../../utils/User"
 
 
@@ -119,11 +118,15 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
             }
 
             const {A, M1} = mbAM1.value
-            const M2 = processSignIn(await state.user.userSignIn(A, M1), "user")
-            const result2 = await clientSRP.step2(M2)
+            const M2 = processSignIn(await state.user.userSignIn(A, M1, userName), "user", userName)
+            if (M2 === null) return
+            const result2 = await clientSRP.step2(M2.M2)
             if (result2.isOk === false) return
 
+            const userId: number = M2.userId
+
             const sessionKey = result2.value
+            console.log("userId = " + userId)
             console.log("Session Key = " + sessionKey)
 
         } catch (e) {

@@ -3,20 +3,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
-
 import java.util.Base64;
 import java.util.UUID;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
+import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserNewIntern;
+import tech.sozonov.SnippetVault.cmn.utils.Constants;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import org.springframework.util.MultiValueMap;
-
-import com.theicenet.cryptography.keyagreement.SRP6ServerService;
-import com.theicenet.cryptography.keyagreement.pake.srp.v6a.SRP6ServerValuesB;
-
+import com.nimbusds.srp6.SRP6Routines;
+import com.nimbusds.srp6.SRP6ServerSession;
 import org.springframework.http.HttpCookie;
 import org.springframework.stereotype.Service;
 import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
@@ -26,13 +26,17 @@ public class UserService {
 
 
 private final IUserStore userStore;
-private final SRP6ServerService srpService;
+private final SRP6ServerSession srpService;
+private final SRP6Routines srp;
+private final SecureRandom secureRandom;
 private static final Mono<Either<String, HandshakeResponse>> errResponse = Mono.just(Either.left("Authentication error"));
 
 @Autowired
-public UserService(IUserStore _userStore, SRP6ServerService _srpService) {
+public UserService(IUserStore _userStore, SRP6ServerSession _srpService, SRP6Routines srp) {
     this.userStore = _userStore;
     this.srpService = _srpService;
+    this.srp = srp;
+    this.secureRandom = new SecureRandom();
 }
 
 
@@ -41,7 +45,8 @@ public Flux<Comment> commentsGet(int snippetId) {
 }
 
 public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
-    // TODO
+    // create b
+    // save to DB
     return errResponse;
 
     // if (!validatePasswordComplexity(dto.password)) {
@@ -69,33 +74,67 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
     // }
 }
 
-public Mono<Either<String, HandshakeResponse>> userHandshake(Register dto, MultiValueMap<String, HttpCookie> cookies) {
+public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, MultiValueMap<String, HttpCookie> cookies) {
     if (nullOrEmp(dto.userName)) return errResponse;
-    BiFunction<Integer, byte[], Either<String, HandshakeResponse>> ll = (Integer updateResult, byte[] B) -> {
-        if (updateResult < 1) {
-            return Either.left("asdf");
-        }
-        HandshakeResponse result = new HandshakeResponse(dto.salt, Base64.getEncoder().encodeToString(B));
-        Either<String, HandshakeResponse> res = Either.right(result);
-        return res;
-    };
+    val b64 = Base64.getEncoder();
+
     return userStore.userAuthentGet(dto.userName).flatMap(user -> {
-        byte[] verifier = user.verifier;
+        BigInteger verifier = new BigInteger(1, user.verifier);
+        BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
+        BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
 
-        final SRP6ServerValuesB serverValuesB = srpService.computeValuesB(verifier);
-        byte[] b = serverValuesB.getServerPrivateValueB();
-        byte[] B = serverValuesB.getServerPublicValueB();
-        HandshakeResponse result = new HandshakeResponse(dto.salt, Base64.getEncoder().encodeToString(B));
-        Either<String, HandshakeResponse> errRes = Either.left("asdf");
-        // return userStore.userUpdateTempKey(user.userId, b).flatMap(updateResult -> errResponse);
+        return userStore.userHandshake(dto, b.toByteArray())
+                        .map(rowsUpdated -> {
+            if (rowsUpdated < 1) return Either.left("Authentication error");
 
-        Mono<Integer> ax = userStore.userUpdateTempKey(user.userId, b);
-        Mono<Either<String, HandshakeResponse>> bx = ax.map(x -> ll.apply(x, B));
-        return bx;
+            HandshakeResponse handshakeResponse = new HandshakeResponse(b64.encodeToString(user.salt), b64.encodeToString(B.toByteArray()));
+            return Either.right(handshakeResponse);
+        });
     });
-    // get verifier & salt by username
-    // generate b and save to the DB
-    // send back B(b) and salt
+}
+
+public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
+
+    // check A, M1
+    // if correct, update the session key and date of expiration
+
+    if (nullOrEmp(dto.userName)) return Mono.just(Either.left("Sign in error"));
+    val b64 = Base64.getDecoder();
+
+    return userStore.userAuthentGet(dto.userName).flatMap(user -> {
+        BigInteger verifier = new BigInteger(user.verifier);
+        MessageDigest hasher = null;
+        try {
+            hasher = MessageDigest.getInstance("SHA-256");
+        } catch (Exception e) {
+        }
+
+        BigInteger ADecoded = new BigInteger(b64.decode(dto.A));
+        BigInteger M1Decoded = new BigInteger(b64.decode(dto.M1));
+        BigInteger b = new BigInteger(user.b);
+        BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
+        BigInteger u = srp.computeU(hasher, Constants.N, ADecoded, B);
+        BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
+
+        BigInteger serverM1 = srp.computeClientEvidence(hasher, ADecoded, B, S);
+        if (serverM1.equals(M1Decoded)) return Mono.just(Either.left("Authentication error"));
+        String inpM2 = ADecoded.toString(16) + serverM1.toString(16) + S.toString(16);
+        hasher.update(inpM2.getBytes());
+        BigInteger M2 = new BigInteger(hasher.digest());
+
+        UserNewIntern updatedUser = UserNewIntern.builder()
+            .userName(dto.userName)
+            .verifier(user.verifier)
+            .salt(user.salt)
+            .b(b.toByteArray())
+            .accessToken(S.toString())
+            .dtExpiration(LocalDate.now())
+            .build();
+        return userStore.userUpdate(updatedUser)
+                        .map(x -> {
+                            return Either.right(new SignInResponse(M2.toString(), user.userId));
+                        });
+    });
 }
 
 private boolean validatePasswordComplexity(String newPw) {
@@ -103,9 +142,9 @@ private boolean validatePasswordComplexity(String newPw) {
 }
 
 
-public Mono<Either<String, SignInSuccess>> userAuthenticate(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
+//public Mono<Either<String, SignInSuccess>> userAuthenticate(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
     // TODO
-    return Mono.just(Either.left("TODO userRegister"));
+    // return Mono.just(Either.left("TODO userRegister"));
     // val mbUserCreds = userStore.userAuthentGet(dto.userName).get();
     // if (mbUserCreds instanceof Success<AuthenticateIntern> userAuthents && userAuthents.vals.Count == 1) {
     //     val userAuthent = userAuthents.vals[0];
@@ -134,7 +173,7 @@ public Mono<Either<String, SignInSuccess>> userAuthenticate(SignIn dto, MultiVal
     // } else {
     //     return errResponse;
     // }
-}
+//}
 
 public Mono<Either<String, SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto, MultiValueMap<String, HttpCookie> cookies) {
     // TODO
