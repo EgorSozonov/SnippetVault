@@ -26,10 +26,9 @@ public UserStore(DatabaseClient _db) {
 }
 
 private static final String userAuthentGetQ = """
-    SELECT id AS "userId", encode(hash, 'base64') AS hash, encode(salt, 'base64') AS salt, expiration, "accessToken"
+    SELECT id AS "userId", salt, verifier, b, expiration, "accessToken"
     FROM sv.user WHERE name = :name
 """;
-// TODO update
 public Mono<AuthenticateIntern> userAuthentGet(String userName) {
     val deserializer = new Deserializer<>(AuthenticateIntern.class, userAuthentGetQ);
     return db.sql(deserializer.sqlSelectQuery)

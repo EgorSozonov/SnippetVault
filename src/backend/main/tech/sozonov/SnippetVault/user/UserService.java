@@ -1,5 +1,7 @@
 package tech.sozonov.SnippetVault.user;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
+
 import lombok.val;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
@@ -53,11 +55,19 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
-
-    Handshake hsh = new Handshake(dto.userName);
-    return userStore.userHandshake(hsh, b.toByteArray())
+    byte[] bArr = b.toByteArray();
+    System.out.println("length of b = " + bArr.length + ", length of salt = " + salt.length);
+    val newUser = UserNewIntern.builder()
+                        .userName(dto.userName)
+                        .verifier(verifier)
+                        .salt(salt)
+                        .b(bArr)
+                        .accessToken("")
+                        .dtExpiration(LocalDate.now())
+                        .build();
+    return userStore.userRegister(newUser)
                     .map(rowsUpdated -> {
-        if (rowsUpdated < 1) return Either.left("Authentication error");
+        if (rowsUpdated < 1) return Either.left("Registration error");
 
         HandshakeResponse handshakeResponse = new HandshakeResponse(enc.encodeToString(salt), enc.encodeToString(B.toByteArray()));
         return Either.right(handshakeResponse);

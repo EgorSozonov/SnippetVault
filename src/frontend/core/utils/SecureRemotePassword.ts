@@ -11,30 +11,22 @@ import { base64OfArray } from "./StringUtils"
 class SecureRemotePassword {
 
 
-private state: SessionState = SessionState.init
-
-/** Salted, hashed password */
-private x = ""
-
 /** Verifier */
 public v = ""
 
 /** User identity (login or email etc) */
 public I = ""
 
-
-
 /** Validation session key to compute K: S = ((A*(v^u % N)) ^ b) % N */
 private S = ""
-
-/** Validation hash which must match between client and server: K = H(S) */
-private K = ""
 
 /** Server public key */
 public B: BigInteger
 
 /** Password */
 public P = ""
+
+private K = ""
 
 private A = ""
 
@@ -91,10 +83,9 @@ public async generateVerifier(salt: string, identity: string, password: string) 
 }
 
 
-public async step1(identity: string, password: string, salt: string, serverB: string): Promise<ValResult<Step1>> {
+public async step1(identity: string, password: string, salt: string, serverB: string): Promise<ValResult<DataForSignIn>> {
     this.I = identity
     this.P = password
-    if (this.state != SessionState.step1) return {isOk: false, errMsg: "Illegal state  on step 2"}
 
     const B = this.fromHex(serverB)
     if (B.mod(this.N).equals(BigInteger.ZERO)) {
@@ -116,7 +107,6 @@ public async step1(identity: string, password: string, salt: string, serverB: st
 
     this.M1 = this.trimLeadingZeros(this.hexOfBuff(await this.hash(this.A + B + this.S)))
 
-    this.state = SessionState.step2
     return {isOk: true, value: {A: this.A, M1: this.M1, }}
 }
 
@@ -125,12 +115,10 @@ public async step1(identity: string, password: string, salt: string, serverB: st
  * (client-side validation of M2 received from server)
  */
 public async step2(serverM2: string): Promise<ValResult<string>> {
-    if (this.state != SessionState.step2) return {isOk: false, errMsg: "Illegal state on step 3"}
     const clientM2 = this.trimLeadingZeros(this.hexOfBuff(await this.hash(this.A + this.M1 + this.S)))
 
     if (serverM2 !== clientM2) return {isOk: false, errMsg: "Bad server credentials (M2)"}
 
-    this.state = SessionState.step3
     return {isOk: true, value: this.S}
 }
 
@@ -237,13 +225,6 @@ private validate(v: string): ValResult<boolean> {
 
 type ValResult<T> = {isOk: true, value: T} | {isOk: false, errMsg: string}
 
-type Step1 = {A: string, M1: string}
-
-const enum SessionState {
-    init = 0,
-    step1 = 1,
-    step2 = 2,
-    step3 = 3,
-}
+type DataForSignIn = {A: string, M1: string}
 
 export default SecureRemotePassword

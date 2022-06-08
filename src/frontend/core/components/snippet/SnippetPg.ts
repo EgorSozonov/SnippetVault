@@ -114,6 +114,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
 
             const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.salt, handshakeResponse.B)
             if (mbAM1.isOk === false) {
+                console.log(mbAM1.errMsg)
                 console.log("Handshake response was incorrect")
                 return
             }
