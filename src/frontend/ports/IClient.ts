@@ -3,6 +3,7 @@ import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO, ChangePw
 import { LanguageCUDTO, LanguageDTO, PostResponseDTO, TaskCUDTO, TaskDTO, TaskGroupCUDTO, TaskGroupDTO } from "../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalUpdateDTO, BareSnippetDTO, ProposalCreateDTO } from "../core/types/dto/SnippetDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../core/types/dto/UserDTO"
+import ServerEither from "../core/types/ServerEither"
 
 
 type IClient = {
@@ -29,9 +30,9 @@ type IClient = {
     taskGet: (taskId: number) => Promise<ServerResponse<TaskDTO[]>>
     taskGroupCU: (dto: TaskGroupCUDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
 
-    userRegister: (dto: RegisterDTO) => Promise<ServerResponse<HandshakeResponseDTO>>
-    userHandshake: (dto: HandshakeDTO) => Promise<ServerResponse<HandshakeResponseDTO>>
-    userSignIn: (dto: SignInDTO) => Promise<ServerResponse<SignInResponseDTO>>
+    userRegister: (dto: RegisterDTO) => Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>>
+    userHandshake: (dto: HandshakeDTO) => Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>>
+    userSignIn: (dto: SignInDTO) => Promise<ServerResponse<ServerEither<SignInResponseDTO>>>
 
     userSignInAdmin: (dto: SignInAdminDTO) => Promise<ServerResponse<SignInSuccessDTO[]>>
     userChangePw: (dto: ChangePwDTO, headers: SignInSuccessDTO) => Promise<ServerResponse<SignInSuccessDTO[]>>

@@ -107,12 +107,12 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
             console.log("verifier = " + verifier)
 
             const handshakeResponse = await state.user.userRegister({ salt, verifier, userName })
-            if (!handshakeResponse) {
-                console.log("Handshake error")
+            if (handshakeResponse.isOK === false) {
+                console.log("Handshake error " + handshakeResponse.errMsg)
                 return
             }
 
-            const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.salt, handshakeResponse.B)
+            const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.salt, handshakeResponse.value.B)
             if (mbAM1.isOk === false) {
                 console.log(mbAM1.errMsg)
                 console.log("Handshake response was incorrect")
@@ -120,17 +120,17 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
             }
 
             const {A, M1} = mbAM1.value
-            const M2 = processSignIn(await state.user.userSignIn(A, M1, userName), "user", userName)
+            const M2Response = processSignIn(await state.user.userSignIn(A, M1, userName), "user")
             console.log("M2")
-            console.log(M2)
-            if (M2 === null) return
+            console.log(M2Response)
+            if (M2Response.isOK === false) return
 
-            const result2 = await clientSRP.step2(M2.M2)
+            const result2 = await clientSRP.step2(M2Response.value.M2)
             if (result2.isOk === false) {
                 return
             }
 
-            const userId: number = M2.userId
+            const userId: number = M2Response.value.userId
 
             const sessionKey = result2.value
             console.log("userId = " + userId)

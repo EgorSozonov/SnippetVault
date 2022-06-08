@@ -93,10 +93,11 @@ public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, Mult
     });
 }
 
+/**
+ * Validate A, M1
+ * If correct, update the session key and date of expiration
+ */
 public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
-
-    // check A, M1
-    // if correct, update the session key and date of expiration
 
     if (nullOrEmp(dto.userName)) return Mono.just(Either.left("Sign in error"));
     val b64 = Base64.getDecoder();
@@ -139,9 +140,12 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
             .accessToken(S.toString())
             .dtExpiration(LocalDate.now())
             .build();
+
         return userStore.userUpdate(updatedUser)
                         .map(x -> {
-                            return Either.right(new SignInResponse(M2.toString(16), user.userId));
+                            val result = new SignInResponse(M2.toString(16), user.userId);
+                            System.out.println("M2 server = " + result.M2);
+                            return Either.right(result);
                         });
     });
 }

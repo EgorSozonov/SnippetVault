@@ -1,7 +1,8 @@
 import { action, computed, makeAutoObservable } from "mobx"
 import IClient from "../../ports/IClient"
-import { ChangePwAdminDTO, ChangePwDTO, RegisterDTO, SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
+import { ChangePwAdminDTO, ChangePwDTO, RegisterDTO, SignInAdminDTO, SignInDTO, SignInResponseDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
 import { ProfileDTO } from "../types/dto/UserDTO"
+import ServerEither from "../types/ServerEither"
 import ServerResponse from "../types/ServerResponse"
 import { UserAccount } from "../types/UserAccount"
 import { isSameDay } from "../utils/DateUtils"
@@ -54,8 +55,8 @@ export default class UserState {
         this.applySignInResponse(response, "admin", dto.signIn.userName)
     })
 
-    applySignInResponse = action((response: ServerResponse<SignInSuccessDTO[]>, status: "user" | "admin", userName: string) => {
-        const mbAccount = processSignIn(response, status, userName)
+    applySignInResponse = action((response: ServerResponse<ServerEither<SignInResponseDTO>>, status: "user" | "admin", userName: string) => {
+        const mbAccount = processSignIn(response, status)
 
         if (mbAccount !== null) {
             this.acc = mbAccount

@@ -6,6 +6,7 @@ import { SignInAdminDTO, SignInDTO, SignInSuccessDTO as AuthorizeDTO, ChangePwAd
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageDTO, TaskGroupDTO,  TaskDTO, PostResponseDTO, LanguageCUDTO, TaskCUDTO, TaskGroupCUDTO } from "../../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO, BareSnippetDTO } from "../../core/types/dto/SnippetDTO"
+import ServerEither from "../../core/types/ServerEither"
 
 
 class HttpClient implements IClient {
@@ -90,15 +91,15 @@ class HttpClient implements IClient {
         return this.postRequest(`/admin/taskGroup/cu`, dto, headers)
     }
 
-    userRegister(dto: RegisterDTO): Promise<ServerResponse<HandshakeResponseDTO>> {
+    userRegister(dto: RegisterDTO): Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>> {
         return this.postRequestNoHeaders("/user/register", dto)
     }
 
-    userHandshake(dto: HandshakeDTO): Promise<ServerResponse<HandshakeResponseDTO>> {
+    userHandshake(dto: HandshakeDTO): Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>> {
         return this.postRequestNoHeaders("/user/handshake", dto)
     }
 
-    userSignIn(dto: SignInDTO): Promise<ServerResponse<SignInResponseDTO>> {
+    userSignIn(dto: SignInDTO): Promise<ServerResponse<ServerEither<SignInResponseDTO>>> {
         return this.postRequestNoHeaders("/user/signIn", dto)
     }
 

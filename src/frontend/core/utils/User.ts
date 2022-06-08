@@ -1,31 +1,28 @@
 import { HandshakeResponseDTO, SignInResponseDTO } from "../types/dto/AuthDTO"
+import ServerEither from "../types/ServerEither"
 import ServerResponse from "../types/ServerResponse"
 import { UserAccount } from "../types/UserAccount"
 import { dateOfTS } from "./DateUtils"
 
 
-export function processHandshake(response: ServerResponse<HandshakeResponseDTO>, status: "user" | "admin"): HandshakeResponseDTO | null {
+export function processHandshake(response: ServerResponse<ServerEither<HandshakeResponseDTO>>, status: "user" | "admin"): ServerResponse<HandshakeResponseDTO> {
     if (response.isOK === false) {
-        console.log(response.errMsg)
-        return null
-    } else if (!response.value ) {
-        console.log("Error: empty response")
-        return null
+        return response
     }
-    console.log("response:")
-    console.log(response)
+    if (response.value.isRight === false) {
+        return {isOK: false, errMsg: response.value.errMsg}
+    }
 
-    return response.value
+    return {isOK: true, value: response.value.value}
 }
 
-export function processSignIn(response: ServerResponse<SignInResponseDTO>, status: "user" | "admin", userName: string): SignInResponseDTO | null {
+export function processSignIn(response: ServerResponse<ServerEither<SignInResponseDTO>>, status: "user" | "admin"): ServerResponse<SignInResponseDTO> {
     if (response.isOK === false) {
-        console.log(response.errMsg)
-        return null
-    } else if (!response.value) {
-        console.log("Error: empty response")
-        return null
+        return response
+    }
+    if (response.value.isRight === false) {
+        return {isOK: false, errMsg: response.value.errMsg}
     }
 
-    return response.value
+    return {isOK: true, value: response.value.value}
 }
