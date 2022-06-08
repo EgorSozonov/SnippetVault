@@ -6,7 +6,7 @@ import { FunctionComponent, useContext, useEffect, useState,} from "react"
 import { NavLink, useSearchParams } from "react-router-dom"
 import MainState from "../../mobX/AllState"
 import { observer } from "mobx-react-lite"
-import { checkNonempty } from "../../utils/StringUtils"
+import { base64OfArray, checkNonempty } from "../../utils/StringUtils"
 import { idOf, isStateOK, stringOf } from "./utils/SnippetState"
 import { SnippetDTO } from "../../types/dto/SnippetDTO"
 import Dialog from "../../commonComponents/dialog/Dialog"
@@ -18,7 +18,7 @@ import KeyButton from "../../commonComponents/login/KeyButton"
 import UserButton from "../../commonComponents/login/UserButton"
 import HoverSelectCompact from "../../commonComponents/hoverSelect/HoverCompact"
 import SelectChoice from "../../types/SelectChoice"
-import SRPSession from "../../utils/SRPSession"
+import SecureRemotePassword from "../../utils/SecureRemotePassword"
 import { rfc5054 } from "../../utils/Constants"
 import { processSignIn } from "../../utils/User"
 
@@ -98,12 +98,13 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         const userName = "Joe"
         const password = "a6SWy$U8s7Y"
 
-        // generate the client session class from the client session factory closure
-        const clientSRP = new SRPSession(rfc5054.N_base10, rfc5054.g_base10, rfc5054.k_base16)
+
+        const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
         try {
             const salt = await clientSRP.generateRandomSalt()
             const verifier = await clientSRP.generateVerifier(salt, userName, password)
-            console.log("salt = " + salt)
+            console.log("salt result = " + salt)
+            console.log("verifier = " + verifier)
 
             const handshakeResponse = await state.user.userRegister({ salt, verifier, userName })
             if (!handshakeResponse) {
@@ -165,7 +166,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         <main class="snippetsContainer">
             <div class="snippetsHeader">
                 <div class="snippetLeftHeader">
-                    <button onClick=${foo}>Testing</button>
+                    <button onClick=${fooRegister}>Testing</button>
                     <div class="snippetHeading">
                         <span>${stringOf(lang1)}</span>
                         <span>

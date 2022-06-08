@@ -1,6 +1,7 @@
-// deprecated
+
 export type SignInSuccessDTO = {
     userId: number,
+    sessionKey: string,
 }
 
 export type RegisterDTO = {

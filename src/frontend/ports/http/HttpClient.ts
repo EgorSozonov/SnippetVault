@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios"
 import createClient from "./HttpConfig"
 import IClient from "../IClient"
 import EitherMsg from "../../core/types/EitherMsg"
-import { SignInAdminDTO, SignInDTO, SignInSuccessDTO, ChangePwAdminDTO, ChangePwDTO, HandshakeDTO, RegisterDTO, HandshakeResponseDTO } from "../../core/types/dto/AuthDTO"
+import { SignInAdminDTO, SignInDTO, SignInSuccessDTO as AuthorizeDTO, ChangePwAdminDTO, ChangePwDTO, HandshakeDTO, RegisterDTO, HandshakeResponseDTO, SignInResponseDTO } from "../../core/types/dto/AuthDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageDTO, TaskGroupDTO,  TaskDTO, PostResponseDTO, LanguageCUDTO, TaskCUDTO, TaskGroupCUDTO } from "../../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO, BareSnippetDTO } from "../../core/types/dto/SnippetDTO"
@@ -42,7 +42,7 @@ class HttpClient implements IClient {
         return this.getRequestNoCreds<AlternativesDTO[]>(`/alternativesForUser/${tlId}/${userId}`)
     }
 
-    proposalCreate(dto: ProposalCreateDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    proposalCreate(dto: ProposalCreateDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         return this.postRequest<ProposalCreateDTO>(`/secure/proposal/create`, dto, headers)
     }
 
@@ -50,19 +50,19 @@ class HttpClient implements IClient {
         return this.getRequestNoCreds<BareSnippetDTO[]>(`/snippet/${snId}`)
     }
 
-    proposalUpdate(dto: ProposalUpdateDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    proposalUpdate(dto: ProposalUpdateDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         return this.postRequest<ProposalUpdateDTO>(`/admin/proposal/update`, dto, headers)
     }
 
-    proposalApprove(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    proposalApprove(snId: number, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         return this.postRequestNoPayload(`/admin/snippet/approve/${snId}`, headers)
     }
 
-    proposalDecline(snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    proposalDecline(snId: number, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         return this.postRequestNoPayload(`/admin/snippet/decline/${snId}`, headers)
     }
 
-    snippetMarkPrimary(tlId: number, snId: number, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    snippetMarkPrimary(tlId: number, snId: number, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         return this.postRequestNoPayload(`/admin/snippet/markPrimary/${tlId}/${snId}`, headers)
     }
 
@@ -70,15 +70,15 @@ class HttpClient implements IClient {
         return this.getRequestNoCreds<CommentDTO[]>(`/comments/${snId}`)
     }
 
-    commentCreate(dto: CommentCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    commentCreate(dto: CommentCUDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         return this.postRequest("/secure/comment/cu", dto, headers)
     }
 
-    languageCU(dto: LanguageCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    languageCU(dto: LanguageCUDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         return this.postRequest(`/admin/language/cu`, dto, headers)
     }
 
-    taskCU(dto: TaskCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    taskCU(dto: TaskCUDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         return this.postRequest(`/admin/task/cu`, dto, headers)
     }
 
@@ -86,7 +86,7 @@ class HttpClient implements IClient {
         return this.getRequestNoCreds(`/admin/task/${taskId}`)
     }
 
-    taskGroupCU(dto: TaskGroupCUDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    taskGroupCU(dto: TaskGroupCUDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         return this.postRequest(`/admin/taskGroup/cu`, dto, headers)
     }
 
@@ -98,27 +98,27 @@ class HttpClient implements IClient {
         return this.postRequestNoHeaders("/user/handshake", dto)
     }
 
-    userSignIn(dto: SignInDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
+    userSignIn(dto: SignInDTO): Promise<EitherMsg<SignInResponseDTO[]>> {
         return this.postRequestNoHeaders("/user/signIn", dto)
     }
 
-    userVote(dto: VoteDTO, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    userVote(dto: VoteDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         return this.postRequest("/secure/user/vote", dto, headers)
     }
 
-    userSignInAdmin(dto: SignInAdminDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
+    userSignInAdmin(dto: SignInAdminDTO): Promise<EitherMsg<AuthorizeDTO[]>> {
         return this.postRequestNoHeaders("/user/signInAdmin", dto)
     }
 
-    userProfile(headers: SignInSuccessDTO): Promise<EitherMsg<ProfileDTO[]>> {
+    userProfile(headers: AuthorizeDTO): Promise<EitherMsg<ProfileDTO[]>> {
         return this.getRequest("/secure/user/profile", headers)
     }
 
-    userChangePw(dto: ChangePwDTO, headers: SignInSuccessDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
+    userChangePw(dto: ChangePwDTO, headers: AuthorizeDTO): Promise<EitherMsg<AuthorizeDTO[]>> {
         return this.postRequestWithResult("/secure/user/changePw", dto, headers)
     }
 
-    userChangeAdminPw(dto: ChangePwAdminDTO, headers: SignInSuccessDTO): Promise<EitherMsg<SignInSuccessDTO[]>> {
+    userChangeAdminPw(dto: ChangePwAdminDTO, headers: AuthorizeDTO): Promise<EitherMsg<AuthorizeDTO[]>> {
         return this.postRequestWithResult("/admin/changeAdminPw", dto, headers)
     }
 
@@ -140,7 +140,7 @@ class HttpClient implements IClient {
         return this.getRequestNoCreds<StatsDTO[]>(`/admin/stats`)
     }
 
-    private async getRequest<T>(url: string, headers: SignInSuccessDTO): Promise<EitherMsg<T>> {
+    private async getRequest<T>(url: string, headers: AuthorizeDTO): Promise<EitherMsg<T>> {
         // TODO handle error responses
         try {
             const r = await this.client.get<T>(
@@ -156,7 +156,7 @@ class HttpClient implements IClient {
         }
     }
 
-    private async getRequestNoCreds<T>(url: string, headers?: SignInSuccessDTO): Promise<EitherMsg<T>> {
+    private async getRequestNoCreds<T>(url: string, headers?: AuthorizeDTO): Promise<EitherMsg<T>> {
         try {
             const r = await this.client.get<T>(url);
             if (r.data) {
@@ -168,7 +168,7 @@ class HttpClient implements IClient {
             return { isOK: false, errMsg: e.toString() }
         }
     }
-    private async postRequest<T>(url: string, payload: T, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    private async postRequest<T>(url: string, payload: T, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         try {
             const r = await this.client.post<PostResponseDTO>(url, payload,
                 { headers: { userId: headers.userId.toString() }, withCredentials: true, }
@@ -183,7 +183,7 @@ class HttpClient implements IClient {
         }
     }
 
-    private async postRequestNoPayload(url: string, headers: SignInSuccessDTO): Promise<PostResponseDTO> {
+    private async postRequestNoPayload(url: string, headers: AuthorizeDTO): Promise<PostResponseDTO> {
         try {
             const r = await this.client.post<PostResponseDTO>(url, undefined,
                                                     { headers: { userId: headers.userId.toString() }, withCredentials: true, })
@@ -197,7 +197,7 @@ class HttpClient implements IClient {
         }
     }
 
-    private async postRequestWithResult<T, U>(url: string, payload: T, headers: SignInSuccessDTO): Promise<EitherMsg<U>> {
+    private async postRequestWithResult<T, U>(url: string, payload: T, headers: AuthorizeDTO): Promise<EitherMsg<U>> {
         try {
             const r = await this.client.post<U>(
                 url, payload, { headers: { userId: headers.userId.toString() }, withCredentials: true,

@@ -16,7 +16,6 @@ import tech.sozonov.SnippetVault.cmn.utils.Constants;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import org.springframework.util.MultiValueMap;
 import com.nimbusds.srp6.SRP6Routines;
-import com.nimbusds.srp6.SRP6ServerSession;
 import org.springframework.http.HttpCookie;
 import org.springframework.stereotype.Service;
 import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
@@ -26,52 +25,43 @@ public class UserService {
 
 
 private final IUserStore userStore;
-private final SRP6ServerSession srpService;
 private final SRP6Routines srp;
 private final SecureRandom secureRandom;
 private static final Mono<Either<String, HandshakeResponse>> errResponse = Mono.just(Either.left("Authentication error"));
 
 @Autowired
-public UserService(IUserStore _userStore, SRP6ServerSession _srpService, SRP6Routines srp) {
+public UserService(IUserStore _userStore) {
     this.userStore = _userStore;
-    this.srpService = _srpService;
-    this.srp = srp;
+    this.srp = new SRP6Routines();
     this.secureRandom = new SecureRandom();
 }
-
 
 public Flux<Comment> commentsGet(int snippetId) {
     return userStore.commentsGet(snippetId);
 }
 
+// a0c8ed419183c689f81af014abe4dc880f9bc2051b1574343070e8a56ae9729ef26e30d54c7d3bd505d64eedb13829a9af5da89a5c85cb7c15e047bc77f92b6730679d2977f6730286593ffef7142ec60df61f7ac2ef634becf9c561df1fab82367146471cd3f77a1e5f05763afd17be20fe2c731a34d4fd2b000c8d5b1428c7fbb5e5ce9cc3c40ac99333c613f5b6224eca9d6f26638a88d1a1cb496abcc1bd2adeb7a65ca150b7ad7a71bc2d297749a63db8dab5f354c804944db6b28d4fae09bb655d21916fe54cde34193651986ad248a771a60025805237440ce769b504341dd311f9cd444d94477f382a8162d10ccb02f92cac04ffc004e051426087df
+
 public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
-    // create b
-    // save to DB
-    return errResponse;
+    if (nullOrEmp(dto.userName)) return errResponse;
+    val b64 = Base64.getDecoder();
+    val enc = Base64.getEncoder();
 
-    // if (!validatePasswordComplexity(dto.password)) {
-    //     return Mono.just(Either.left("Error! Password length must be at least 8 symbols"));
-    // }
+    val verifier = b64.decode(dto.verifier);
+    BigInteger verifierNum = new BigInteger(1, verifier);
+    val salt = b64.decode(dto.salt);
 
-    // String newSalt = "";
-    // val newHashSalt = (dto.userName != AdminPasswordChecker.adminName)
-    //     ? PasswordChecker.makeHash(dto.password) : AdminPasswordChecker.makeHash(dto.password);
-    // val newAccessToken = makeAccessToken();
-    // val user = UserNewIntern.builder()
-    //     .userName(dto.userName).hash(newHash).salt(newSalt)
-    //     .accessToken(newAccessToken)
-    //     .dtExpiration(DateOnly.FromDateTime(DateTime.Today))
-    // .build();
-    // val newUserId = userStore.userRegister(user).get();
-    // if (newUserId > 0) {
-    //     val successList =  List.of(new SignInSuccess(newUserId));
-    //     // TODO Secure
-    //     cookies.Append("accessToken", newAccessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
+    BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
+    BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
 
-    //     return new Success<SignInSuccessDTO>(successList);
-    // } else {
-    //     return new Err<SignInSuccessDTO>("Error registering user");
-    // }
+    Handshake hsh = new Handshake(dto.userName);
+    return userStore.userHandshake(hsh, b.toByteArray())
+                    .map(rowsUpdated -> {
+        if (rowsUpdated < 1) return Either.left("Authentication error");
+
+        HandshakeResponse handshakeResponse = new HandshakeResponse(enc.encodeToString(salt), enc.encodeToString(B.toByteArray()));
+        return Either.right(handshakeResponse);
+    });
 }
 
 public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, MultiValueMap<String, HttpCookie> cookies) {
