@@ -2,7 +2,7 @@
 import { BigInteger } from "jsbn"
 import { SHA256 } from "crypto-js"
 import { HEX_DIGITS } from "./Constants"
-import { base64OfArray } from "./StringUtils"
+import { arrayOfBase64, base64OfArray } from "./StringUtils"
 
 /**
  * Implementation of client-side SRP because thinbus-srp is unuseable/not Typescript.
@@ -86,8 +86,10 @@ public async generateVerifier(salt: string, identity: string, password: string) 
 public async step1(identity: string, password: string, salt: string, serverB: string): Promise<ValResult<DataForSignIn>> {
     this.I = identity
     this.P = password
-    console.log("B raw = " + serverB)
-    const B = this.fromHex(serverB)
+
+    console.log("serverB = " + serverB)
+    const B = new BigInteger(this.hexOf(arrayOfBase64(serverB)))
+    console.log("B from server raw = " + B)
     if (B.mod(this.N).equals(BigInteger.ZERO)) {
         return {isOk: false, errMsg: "Bad server public value B = 0"}
     }

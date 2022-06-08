@@ -12,14 +12,14 @@ public void serialize(Either<String, R> value, JsonGenerator jgen, SerializerPro
      throws IOException, JsonProcessingException {
    if (value.isLeft()) {
        jgen.writeStartObject();
-       jgen.writeFieldName("isOK");
+       jgen.writeFieldName("isRight");
        jgen.writeBoolean(false);
        jgen.writeFieldName("errMsg");
        jgen.writeString(value.getLeft());
        jgen.writeEndObject();
    } else {
        jgen.writeStartObject();
-       jgen.writeFieldName("isOK");
+       jgen.writeFieldName("isRight");
        jgen.writeBoolean(true);
        jgen.writeFieldName("value");
        jgen.writeObject(value.get());

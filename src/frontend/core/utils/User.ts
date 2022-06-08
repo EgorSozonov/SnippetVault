@@ -1,10 +1,10 @@
 import { HandshakeResponseDTO, SignInResponseDTO } from "../types/dto/AuthDTO"
-import EitherMsg from "../types/EitherMsg"
+import ServerResponse from "../types/ServerResponse"
 import { UserAccount } from "../types/UserAccount"
 import { dateOfTS } from "./DateUtils"
 
 
-export function processHandshake(response: EitherMsg<HandshakeResponseDTO>, status: "user" | "admin"): HandshakeResponseDTO | null {
+export function processHandshake(response: ServerResponse<HandshakeResponseDTO>, status: "user" | "admin"): HandshakeResponseDTO | null {
     if (response.isOK === false) {
         console.log(response.errMsg)
         return null
@@ -12,11 +12,13 @@ export function processHandshake(response: EitherMsg<HandshakeResponseDTO>, stat
         console.log("Error: empty response")
         return null
     }
-    console.log(response.value)
+    console.log("response:")
+    console.log(response)
+
     return response.value
 }
 
-export function processSignIn(response: EitherMsg<SignInResponseDTO>, status: "user" | "admin", userName: string): SignInResponseDTO | null {
+export function processSignIn(response: ServerResponse<SignInResponseDTO>, status: "user" | "admin", userName: string): SignInResponseDTO | null {
     if (response.isOK === false) {
         console.log(response.errMsg)
         return null

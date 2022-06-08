@@ -1,7 +1,7 @@
 import { AxiosInstance } from "axios"
 import createClient from "./HttpConfig"
 import IClient from "../IClient"
-import EitherMsg from "../../core/types/EitherMsg"
+import ServerResponse from "../../core/types/ServerResponse"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO as AuthorizeDTO, ChangePwAdminDTO, ChangePwDTO, HandshakeDTO, RegisterDTO, HandshakeResponseDTO, SignInResponseDTO } from "../../core/types/dto/AuthDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageDTO, TaskGroupDTO,  TaskDTO, PostResponseDTO, LanguageCUDTO, TaskCUDTO, TaskGroupCUDTO } from "../../core/types/dto/AuxDTO"
@@ -14,31 +14,31 @@ class HttpClient implements IClient {
         this.client = createClient();
     }
 
-    snippetsGet(taskGroup: number, lang1: number, lang2: number): Promise<EitherMsg<SnippetDTO[]>> {
+    snippetsGet(taskGroup: number, lang1: number, lang2: number): Promise<ServerResponse<SnippetDTO[]>> {
         return this.getRequestNoCreds<SnippetDTO[]>(`/snippets/${taskGroup}/${lang1}/${lang2}`)
     }
 
-    snippetsByCode(taskGroup: string, lang1: string, lang2: string): Promise<EitherMsg<SnippetDTO[]>> {
+    snippetsByCode(taskGroup: string, lang1: string, lang2: string): Promise<ServerResponse<SnippetDTO[]>> {
         return this.getRequestNoCreds<SnippetDTO[]>(`/snippets/byCode?taskGroup=${taskGroup}&lang1=${lang1}&lang2=${lang2}`)
     }
 
-    languagesGet(): Promise<EitherMsg<LanguageDTO[]>> {
+    languagesGet(): Promise<ServerResponse<LanguageDTO[]>> {
         return this.getRequestNoCreds<LanguageDTO[]>(`/languages`)
     }
 
-    taskGroupsGet(): Promise<EitherMsg<TaskGroupDTO[]>> {
+    taskGroupsGet(): Promise<ServerResponse<TaskGroupDTO[]>> {
         return this.getRequestNoCreds<TaskGroupDTO[]>(`/taskGroups`)
     }
 
-    proposalsGet(): Promise<EitherMsg<ProposalDTO[]>> {
+    proposalsGet(): Promise<ServerResponse<ProposalDTO[]>> {
         return this.getRequestNoCreds<ProposalDTO[]>(`/proposals`)
     }
 
-    alternativesGet(tlId: number): Promise<EitherMsg<AlternativesDTO[]>> {
+    alternativesGet(tlId: number): Promise<ServerResponse<AlternativesDTO[]>> {
         return this.getRequestNoCreds<AlternativesDTO[]>(`/alternatives/${tlId}`)
     }
 
-    alternativesForUserGet(tlId: number, userId: number): Promise<EitherMsg<AlternativesDTO[]>> {
+    alternativesForUserGet(tlId: number, userId: number): Promise<ServerResponse<AlternativesDTO[]>> {
         return this.getRequestNoCreds<AlternativesDTO[]>(`/alternativesForUser/${tlId}/${userId}`)
     }
 
@@ -46,7 +46,7 @@ class HttpClient implements IClient {
         return this.postRequest<ProposalCreateDTO>(`/secure/proposal/create`, dto, headers)
     }
 
-    proposalGet(snId: number): Promise<EitherMsg<BareSnippetDTO[]>> {
+    proposalGet(snId: number): Promise<ServerResponse<BareSnippetDTO[]>> {
         return this.getRequestNoCreds<BareSnippetDTO[]>(`/snippet/${snId}`)
     }
 
@@ -66,7 +66,7 @@ class HttpClient implements IClient {
         return this.postRequestNoPayload(`/admin/snippet/markPrimary/${tlId}/${snId}`, headers)
     }
 
-    commentsGet(snId: number): Promise<EitherMsg<CommentDTO[]>> {
+    commentsGet(snId: number): Promise<ServerResponse<CommentDTO[]>> {
         return this.getRequestNoCreds<CommentDTO[]>(`/comments/${snId}`)
     }
 
@@ -82,7 +82,7 @@ class HttpClient implements IClient {
         return this.postRequest(`/admin/task/cu`, dto, headers)
     }
 
-    taskGet(taskId: number): Promise<EitherMsg<TaskDTO[]>> {
+    taskGet(taskId: number): Promise<ServerResponse<TaskDTO[]>> {
         return this.getRequestNoCreds(`/admin/task/${taskId}`)
     }
 
@@ -90,15 +90,15 @@ class HttpClient implements IClient {
         return this.postRequest(`/admin/taskGroup/cu`, dto, headers)
     }
 
-    userRegister(dto: RegisterDTO): Promise<EitherMsg<HandshakeResponseDTO[]>> {
+    userRegister(dto: RegisterDTO): Promise<ServerResponse<HandshakeResponseDTO>> {
         return this.postRequestNoHeaders("/user/register", dto)
     }
 
-    userHandshake(dto: HandshakeDTO): Promise<EitherMsg<HandshakeResponseDTO[]>> {
+    userHandshake(dto: HandshakeDTO): Promise<ServerResponse<HandshakeResponseDTO>> {
         return this.postRequestNoHeaders("/user/handshake", dto)
     }
 
-    userSignIn(dto: SignInDTO): Promise<EitherMsg<SignInResponseDTO[]>> {
+    userSignIn(dto: SignInDTO): Promise<ServerResponse<SignInResponseDTO>> {
         return this.postRequestNoHeaders("/user/signIn", dto)
     }
 
@@ -106,41 +106,41 @@ class HttpClient implements IClient {
         return this.postRequest("/secure/user/vote", dto, headers)
     }
 
-    userSignInAdmin(dto: SignInAdminDTO): Promise<EitherMsg<AuthorizeDTO[]>> {
+    userSignInAdmin(dto: SignInAdminDTO): Promise<ServerResponse<AuthorizeDTO[]>> {
         return this.postRequestNoHeaders("/user/signInAdmin", dto)
     }
 
-    userProfile(headers: AuthorizeDTO): Promise<EitherMsg<ProfileDTO[]>> {
+    userProfile(headers: AuthorizeDTO): Promise<ServerResponse<ProfileDTO[]>> {
         return this.getRequest("/secure/user/profile", headers)
     }
 
-    userChangePw(dto: ChangePwDTO, headers: AuthorizeDTO): Promise<EitherMsg<AuthorizeDTO[]>> {
+    userChangePw(dto: ChangePwDTO, headers: AuthorizeDTO): Promise<ServerResponse<AuthorizeDTO[]>> {
         return this.postRequestWithResult("/secure/user/changePw", dto, headers)
     }
 
-    userChangeAdminPw(dto: ChangePwAdminDTO, headers: AuthorizeDTO): Promise<EitherMsg<AuthorizeDTO[]>> {
+    userChangeAdminPw(dto: ChangePwAdminDTO, headers: AuthorizeDTO): Promise<ServerResponse<AuthorizeDTO[]>> {
         return this.postRequestWithResult("/admin/changeAdminPw", dto, headers)
     }
 
     // Admin
 
-    tasksAll(): Promise<EitherMsg<TaskCUDTO[]>> {
+    tasksAll(): Promise<ServerResponse<TaskCUDTO[]>> {
         return this.getRequestNoCreds<TaskCUDTO[]>(`/task/all`)
     }
 
-    taskGroupsAll(): Promise<EitherMsg<TaskGroupCUDTO[]>> {
+    taskGroupsAll(): Promise<ServerResponse<TaskGroupCUDTO[]>> {
         return this.getRequestNoCreds<TaskGroupCUDTO[]>(`/taskGroup/all`)
     }
 
-    languagesAll(): Promise<EitherMsg<LanguageCUDTO[]>> {
+    languagesAll(): Promise<ServerResponse<LanguageCUDTO[]>> {
         return this.getRequestNoCreds<LanguageCUDTO[]>(`/language/all`)
     }
 
-    adminStatsGet(): Promise<EitherMsg<StatsDTO[]>> {
+    adminStatsGet(): Promise<ServerResponse<StatsDTO[]>> {
         return this.getRequestNoCreds<StatsDTO[]>(`/admin/stats`)
     }
 
-    private async getRequest<T>(url: string, headers: AuthorizeDTO): Promise<EitherMsg<T>> {
+    private async getRequest<T>(url: string, headers: AuthorizeDTO): Promise<ServerResponse<T>> {
         // TODO handle error responses
         try {
             const r = await this.client.get<T>(
@@ -156,7 +156,7 @@ class HttpClient implements IClient {
         }
     }
 
-    private async getRequestNoCreds<T>(url: string, headers?: AuthorizeDTO): Promise<EitherMsg<T>> {
+    private async getRequestNoCreds<T>(url: string, headers?: AuthorizeDTO): Promise<ServerResponse<T>> {
         try {
             const r = await this.client.get<T>(url);
             if (r.data) {
@@ -197,7 +197,7 @@ class HttpClient implements IClient {
         }
     }
 
-    private async postRequestWithResult<T, U>(url: string, payload: T, headers: AuthorizeDTO): Promise<EitherMsg<U>> {
+    private async postRequestWithResult<T, U>(url: string, payload: T, headers: AuthorizeDTO): Promise<ServerResponse<U>> {
         try {
             const r = await this.client.post<U>(
                 url, payload, { headers: { userId: headers.userId.toString() }, withCredentials: true,
@@ -208,7 +208,15 @@ class HttpClient implements IClient {
         }
     }
 
-    private async postRequestNoHeaders<T, U>(url: string, payload: T): Promise<EitherMsg<U>> {
+    private async postRequestNoHeaders<T, U>(url: string, payload: T): Promise<ServerResponse<U>> {
+        try {
+            const r = await this.client.post<U>(url, payload)
+            return {isOK: true, value: r.data, }
+        } catch(e: any) {
+            return {isOK: false, errMsg: e, }
+        }
+    }
+    private async postRequestNoHeadersNoWrap<T, U>(url: string, payload: T): Promise<ServerResponse<U>> {
         try {
             const r = await this.client.post<U>(url, payload)
             return {isOK: true, value: r.data, }

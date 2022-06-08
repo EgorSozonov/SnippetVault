@@ -1,7 +1,7 @@
-import EitherMsg from "../types/EitherMsg"
+import ServerResponse from "../types/ServerResponse"
 
 
-export async function fetchFromClient<T>(response: Promise<EitherMsg<T>>, actionOK: (v: T) => void) {
+export async function fetchFromClient<T>(response: Promise<ServerResponse<T>>, actionOK: (v: T) => void) {
     const result = await response
     if (result.isOK === true) {
         actionOK(result.value)
@@ -11,7 +11,7 @@ export async function fetchFromClient<T>(response: Promise<EitherMsg<T>>, action
 }
 
 
-export async function fetchFromClientTransform<T, U>(response: Promise<EitherMsg<T>>, transform: (a: T) => U, actionOK: (v: U) => void) {
+export async function fetchFromClientTransform<T, U>(response: Promise<ServerResponse<T>>, transform: (a: T) => U, actionOK: (v: U) => void) {
     const result = await response
     if (result.isOK === true) {
         actionOK(transform(result.value))

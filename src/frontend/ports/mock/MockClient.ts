@@ -1,6 +1,6 @@
 
 import IClient from "../IClient"
-import EitherMsg from "../../core/types/EitherMsg"
+import ServerResponse from "../../core/types/ServerResponse"
 import {mockData, getMockTasks, getMockAlternatives, getMockSnippets, getMockSnippetsByCode} from "./MockData"
 import { SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../../core/types/dto/AuthDTO"
 import { LanguageGroupedDTO, LanguageDTO, TaskGroupDTO, LanguageGroupDTO, TaskDTO } from "../../core/types/dto/AuxDTO"
@@ -9,39 +9,39 @@ import { StatsDTO } from "../../core/types/dto/UserDTO"
 
 
 class MockClient implements IClient {
-    snippetsGet(taskGroup: number, lang1: number, lang2: number): Promise<EitherMsg<SnippetDTO[]>> {
+    snippetsGet(taskGroup: number, lang1: number, lang2: number): Promise<ServerResponse<SnippetDTO[]>> {
         return this.wrapOK(getMockSnippets(taskGroup, lang1, lang2))
     }
 
-    snippetsByCode(taskGroup: string, lang1: string, lang2: string): Promise<EitherMsg<SnippetDTO[]>> {
+    snippetsByCode(taskGroup: string, lang1: string, lang2: string): Promise<ServerResponse<SnippetDTO[]>> {
         return this.wrapOK(getMockSnippetsByCode(taskGroup, lang1, lang2))
     }
 
-    languagesGet(): Promise<EitherMsg<LanguageGroupedDTO[]>> {
+    languagesGet(): Promise<ServerResponse<LanguageGroupedDTO[]>> {
         return this.wrapOK(mockData.languages)
     }
 
-    languagesReqGet(): Promise<EitherMsg<LanguageDTO[]>> {
+    languagesReqGet(): Promise<ServerResponse<LanguageDTO[]>> {
         return this.wrapOK(mockData.languagesReq)
     }
 
-    taskGroupsGet(): Promise<EitherMsg<TaskGroupDTO[]>> {
+    taskGroupsGet(): Promise<ServerResponse<TaskGroupDTO[]>> {
         return this.wrapOK(mockData.taskGroups)
     }
 
-    languageGroupsGet(): Promise<EitherMsg<LanguageGroupDTO[]>> {
+    languageGroupsGet(): Promise<ServerResponse<LanguageGroupDTO[]>> {
         return this.wrapOK(mockData.languageGroups)
     }
 
-    proposalsGet(): Promise<EitherMsg<ProposalDTO[]>> {
+    proposalsGet(): Promise<ServerResponse<ProposalDTO[]>> {
         return this.wrapOK(mockData.proposals)
     }
 
-    alternativesGet(tlId: number): Promise<EitherMsg<AlternativesDTO[]>> {
+    alternativesGet(tlId: number): Promise<ServerResponse<AlternativesDTO[]>> {
         return this.wrapOK(getMockAlternatives(tlId))
     }
 
-    adminStatsGet(): Promise<EitherMsg<StatsDTO[]>> {
+    adminStatsGet(): Promise<ServerResponse<StatsDTO[]>> {
         return this.wrapOK([])
     }
 
@@ -77,7 +77,7 @@ class MockClient implements IClient {
         return this.wrapOK([mockData.userProfile])
     }
 
-    private wrapOK<T>(val: T): Promise<EitherMsg<T>> {
+    private wrapOK<T>(val: T): Promise<ServerResponse<T>> {
         return new Promise((resolve) => resolve({isOK: true, value: val}))
     }
 

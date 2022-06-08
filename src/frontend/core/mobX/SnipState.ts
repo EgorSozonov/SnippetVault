@@ -7,7 +7,7 @@ import { SnippetDTO, AlternativesDTO, ProposalCreateDTO, } from "../types/dto/Sn
 import { CommentCUDTO, CommentDTO, StatsDTO, VoteDTO } from "../types/dto/UserDTO"
 import { AlternativesSort } from "../components/alternative/utils/Types"
 import { sortLanguages } from "../utils/Language"
-import EitherMsg from "../types/EitherMsg"
+import ServerResponse from "../types/ServerResponse"
 import { fetchFromClient } from "./Utils"
 import { SignInSuccessDTO } from "../types/dto/AuthDTO"
 
@@ -46,7 +46,7 @@ export default class SnipState {
     })
 
     languagesGet = action(async () => {
-        const resultLangs: EitherMsg<LanguageDTO[]> = await this.client.languagesGet()
+        const resultLangs: ServerResponse<LanguageDTO[]> = await this.client.languagesGet()
         if (resultLangs.isOK === true) {
             this.languagesSet(resultLangs.value)
             const langList = sortLanguages(resultLangs.value)

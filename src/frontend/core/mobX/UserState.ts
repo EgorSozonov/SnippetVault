@@ -2,7 +2,7 @@ import { action, computed, makeAutoObservable } from "mobx"
 import IClient from "../../ports/IClient"
 import { ChangePwAdminDTO, ChangePwDTO, RegisterDTO, SignInAdminDTO, SignInDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
 import { ProfileDTO } from "../types/dto/UserDTO"
-import EitherMsg from "../types/EitherMsg"
+import ServerResponse from "../types/ServerResponse"
 import { UserAccount } from "../types/UserAccount"
 import { isSameDay } from "../utils/DateUtils"
 import { processHandshake, processSignIn } from "../utils/User"
@@ -54,7 +54,7 @@ export default class UserState {
         this.applySignInResponse(response, "admin", dto.signIn.userName)
     })
 
-    applySignInResponse = action((response: EitherMsg<SignInSuccessDTO[]>, status: "user" | "admin", userName: string) => {
+    applySignInResponse = action((response: ServerResponse<SignInSuccessDTO[]>, status: "user" | "admin", userName: string) => {
         const mbAccount = processSignIn(response, status, userName)
 
         if (mbAccount !== null) {
