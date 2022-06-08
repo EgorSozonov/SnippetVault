@@ -1,5 +1,6 @@
 package tech.sozonov.SnippetVault.cmn.utils;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,13 +21,7 @@ public class Deserializer<T> {
 private final Class<T> qlass;
 public final String sqlSelectQuery;
 public PropTarget[] columnTargets;
-List<VarHandle> settersInt;
-List<VarHandle> settersLong;
-List<VarHandle> settersDouble;
-List<VarHandle> settersString;
-List<VarHandle> settersBool;
-List<VarHandle> settersTS;
-List<VarHandle> settersBinary;
+List<VarHandle> setters;
 public boolean isOK;
 
 public Deserializer(Class<T> _qlass, String _sqlSelectQuery) {
@@ -51,23 +46,22 @@ public T unpackRow(Row dbRow) {
             var tgt = columnTargets[j];
 
             if (tgt.propType == ValueType.doubl) {
-                settersDouble.get(tgt.indexSetter).set(result, (double)dbRow.get(j));
+                setters.get(tgt.indexSetter).set(result, (double)dbRow.get(j));
             } else if (tgt.propType == ValueType.integr) {
-                settersInt.get(tgt.indexSetter).set(result, dbRow.get(j, Integer.class));
+                setters.get(tgt.indexSetter).set(result, dbRow.get(j, Integer.class));
             } else if (tgt.propType == ValueType.lon) {
-                settersLong.get(tgt.indexSetter).set(result, dbRow.get(j, Long.class));
+                setters.get(tgt.indexSetter).set(result, dbRow.get(j, Long.class));
             } else if (tgt.propType == ValueType.strin) {
-                settersString.get(tgt.indexSetter).set(result, dbRow.get(j, String.class));
+                setters.get(tgt.indexSetter).set(result, dbRow.get(j, String.class));
             } else if (tgt.propType == ValueType.boole) {
-                settersBool.get(tgt.indexSetter).set(result, (boolean)dbRow.get(j, Boolean.class));
+                setters.get(tgt.indexSetter).set(result, (boolean)dbRow.get(j, Boolean.class));
+            } else if (tgt.propType == ValueType.datee) {
+                setters.get(tgt.indexSetter).set(result, dbRow.get(j, LocalDate.class));
             } else if (tgt.propType == ValueType.timestampe) {
-                settersTS.get(tgt.indexSetter).set(result, dbRow.get(j, LocalDateTime.class));
+                setters.get(tgt.indexSetter).set(result, dbRow.get(j, LocalDateTime.class));
             } else if (tgt.propType == ValueType.binar) {
-                settersBinary.get(tgt.indexSetter).set(result, dbRow.get(j, byte[].class));
+                setters.get(tgt.indexSetter).set(result, dbRow.get(j, byte[].class));
             }
-            //else if (tgt.propType == ValueType.deciml) {
-              //  settersDecimal[tgt.indexSetter](result, dbRow.GetDecimal(j));
-            //}
         }
         return result;
     } catch (Exception ex) {
@@ -219,13 +213,7 @@ private void determineTypeProperties(List<String> queryColumns) {
     }
 
     columnTargets = new PropTarget[numProps];
-    settersInt = new ArrayList<VarHandle>(numProps);
-    settersLong = new ArrayList<VarHandle>(numProps);
-    settersString = new ArrayList<VarHandle>(numProps);
-    settersDouble = new ArrayList<VarHandle>(numProps);
-    //settersDecimal = new ArrayList<BiConsumer<T, decimal>>(numProps);
-    settersBool = new ArrayList<VarHandle>(numProps);
-    settersTS = new ArrayList<VarHandle>(numProps);
+    setters = new ArrayList<VarHandle>(numProps);
 
     try {
         val lookup = MethodHandles.lookup().in(qlass);
@@ -239,30 +227,30 @@ private void determineTypeProperties(List<String> queryColumns) {
 
             val tp = fieldsTypes.get(nameCol);
             if (tp.snd == ValueType.integr) {
-                settersInt.add(lookup.findVarHandle(qlass, tp.fst, int.class));
-                columnTargets[i] = new PropTarget(settersInt.size() - 1, ValueType.integr);
+                setters.add(lookup.findVarHandle(qlass, tp.fst, int.class));
+                columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.integr);
             } else if (tp.snd == ValueType.lon) {
-                settersLong.add(lookup.findVarHandle(qlass, tp.fst, long.class));
-                columnTargets[i] = new PropTarget(settersLong.size() - 1, ValueType.lon);
+                setters.add(lookup.findVarHandle(qlass, tp.fst, long.class));
+                columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.lon);
             } else if (tp.snd == ValueType.doubl) {
-                settersDouble.add(lookup.findVarHandle(qlass, tp.fst, double.class));
-                columnTargets[i] = new PropTarget(settersDouble.size() - 1, ValueType.doubl);
-            } /*else if (tp.snd == typeof(decimal)) {
-                settersDecimal.Add((BiConsumer<T, decimal>) Delegate.CreateDelegate(typeof(BiConsumer<T, decimal>), null,
-                        typeof(T).GetProperty(tp.fst).GetSetMethod()));
-                columnTargets[i] = new PropTarget() { indexSetter = settersDecimal.size() - 1, propType = ValueType.deciml};
-            } */else if (tp.snd == ValueType.strin) {
-                settersString.add(lookup.findVarHandle(qlass, tp.fst, String.class));
-                columnTargets[i] = new PropTarget(settersString.size() - 1, ValueType.strin);
+                setters.add(lookup.findVarHandle(qlass, tp.fst, double.class));
+                columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.doubl);
+            } else if (tp.snd == ValueType.strin) {
+                setters.add(lookup.findVarHandle(qlass, tp.fst, String.class));
+                columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.strin);
             } else if (tp.snd == ValueType.boole) {
-                settersBool.add(lookup.findVarHandle(qlass, tp.fst, boolean.class));
-                columnTargets[i] = new PropTarget(settersBool.size() - 1, ValueType.boole);
+                setters.add(lookup.findVarHandle(qlass, tp.fst, boolean.class));
+                columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.boole);
+            } else if (tp.snd == ValueType.datee) {
+                System.out.println("Adding setter");
+                setters.add(lookup.findVarHandle(qlass, tp.fst, LocalDate.class));
+                columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.datee);
             } else if (tp.snd == ValueType.timestampe) {
-                settersTS.add(lookup.findVarHandle(qlass, tp.fst, LocalDateTime.class));
-                columnTargets[i] = new PropTarget(settersTS.size() - 1, ValueType.timestampe);
+                setters.add(lookup.findVarHandle(qlass, tp.fst, LocalDateTime.class));
+                columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.timestampe);
             } else if (tp.snd == ValueType.binar) {
-                settersBinary.add(lookup.findVarHandle(qlass, tp.fst, byte[].class));
-                columnTargets[i] = new PropTarget(settersBinary.size() - 1, ValueType.timestampe);
+                setters.add(lookup.findVarHandle(qlass, tp.fst, byte[].class));
+                columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.binar);
             } else {
                 // Should never happen
                 isOK = false;
@@ -301,6 +289,8 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.strin));
         } else if (theType == boolean.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.boole));
+        } else if (theType == LocalDate.class) {
+            result.put(normalizedName, new Pair<>(field.getName(), ValueType.datee));
         } else if (theType == LocalDateTime.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.timestampe));
         } else if (theType == byte[].class) {
@@ -326,6 +316,7 @@ public static enum ValueType {
     deciml,
     strin,
     boole,
+    datee,
     timestampe,
     binar,
 }

@@ -31,6 +31,7 @@ private static final String userAuthentGetQ = """
 """;
 public Mono<AuthenticateIntern> userAuthentGet(String userName) {
     val deserializer = new Deserializer<>(AuthenticateIntern.class, userAuthentGetQ);
+    System.out.println("userAuthentGet");
     return db.sql(deserializer.sqlSelectQuery)
              .bind("name", userName)
              .map(deserializer::unpackRow)
@@ -90,7 +91,7 @@ public Mono<Integer> userUpdateTempKey(int userId, byte[] b) {
 
 private static final String userRegisterQ = """
     INSERT INTO sv."user"(name, "dateJoined", expiration, "accessToken", salt, verifier, b)
-    VALUES (:name, :tsJoin, :dtExpiration, '',
+    VALUES (:name, :tsJoin, :dtExpiration, 'f',
             :salt, :verifier, :b)
     ON CONFLICT DO NOTHING RETURNING id
 """;
@@ -121,7 +122,7 @@ public Mono<Integer> userHandshake(Handshake hshake, byte[] b) {
 }
 
 private static final String userUpdateQ = """
-    UPDATE sv.user SET salt = :salt, verifier = :verifier
+    UPDATE sv.user SET salt = :salt, verifier = :verifier,
                        expiration = :dtExpiration, "accessToken" = :accessToken, b = :b
     WHERE name = :name
 """;

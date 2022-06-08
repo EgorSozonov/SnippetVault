@@ -11,7 +11,7 @@ public static class AuthenticateIntern {
     public byte[] salt;
     public byte[] verifier;
     public byte[] b;
-    public LocalDateTime expiration;
+    public LocalDate expiration;
     public String accessToken;
 }
 

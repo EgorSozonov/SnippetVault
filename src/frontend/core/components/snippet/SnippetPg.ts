@@ -121,16 +121,20 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
 
             const {A, M1} = mbAM1.value
             const M2 = processSignIn(await state.user.userSignIn(A, M1, userName), "user", userName)
+            console.log("M2")
+            console.log(M2)
             if (M2 === null) return
+
             const result2 = await clientSRP.step2(M2.M2)
-            if (result2.isOk === false) return
+            if (result2.isOk === false) {
+                return
+            }
 
             const userId: number = M2.userId
 
             const sessionKey = result2.value
             console.log("userId = " + userId)
             console.log("Session Key = " + sessionKey)
-
         } catch (e) {
             console.log(e)
         }

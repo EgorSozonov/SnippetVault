@@ -62,7 +62,7 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
                         .verifier(verifier)
                         .salt(salt)
                         .b(bArr)
-                        .accessToken("")
+                        .accessToken("f")
                         .dtExpiration(LocalDate.now())
                         .build();
     return userStore.userRegister(newUser)
@@ -111,16 +111,25 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
 
         BigInteger ADecoded = new BigInteger(b64.decode(dto.A));
         BigInteger M1Decoded = new BigInteger(b64.decode(dto.M1));
+        System.out.println("M1 cl");
+        System.out.println(M1Decoded);
         BigInteger b = new BigInteger(user.b);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
+        System.out.println("B server");
+        System.out.println(B.toString(16));
         BigInteger u = srp.computeU(hasher, Constants.N, ADecoded, B);
         BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
 
         BigInteger serverM1 = srp.computeClientEvidence(hasher, ADecoded, B, S);
-        if (serverM1.equals(M1Decoded)) return Mono.just(Either.left("Authentication error"));
+
+        System.out.println("M1 server");
+        System.out.println(M1Decoded);
+        if (!serverM1.equals(M1Decoded)) return Mono.just(Either.left("Authentication error"));
         String inpM2 = ADecoded.toString(16) + serverM1.toString(16) + S.toString(16);
         hasher.update(inpM2.getBytes());
         BigInteger M2 = new BigInteger(hasher.digest());
+
+        System.out.println("Session key = " + S.toString());
 
         UserNewIntern updatedUser = UserNewIntern.builder()
             .userName(dto.userName)
@@ -132,11 +141,10 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
             .build();
         return userStore.userUpdate(updatedUser)
                         .map(x -> {
-                            return Either.right(new SignInResponse(M2.toString(), user.userId));
+                            return Either.right(new SignInResponse(M2.toString(16), user.userId));
                         });
     });
 }
-
 private boolean validatePasswordComplexity(String newPw) {
     return newPw != null && newPw.length() >= 8;
 }

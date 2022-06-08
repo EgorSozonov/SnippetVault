@@ -86,7 +86,7 @@ public async generateVerifier(salt: string, identity: string, password: string) 
 public async step1(identity: string, password: string, salt: string, serverB: string): Promise<ValResult<DataForSignIn>> {
     this.I = identity
     this.P = password
-
+    console.log("B raw = " + serverB)
     const B = this.fromHex(serverB)
     if (B.mod(this.N).equals(BigInteger.ZERO)) {
         return {isOk: false, errMsg: "Bad server public value B = 0"}
@@ -116,6 +116,8 @@ public async step1(identity: string, password: string, salt: string, serverB: st
  */
 public async step2(serverM2: string): Promise<ValResult<string>> {
     const clientM2 = this.trimLeadingZeros(this.hexOfBuff(await this.hash(this.A + this.M1 + this.S)))
+    console.log("client M2")
+    console.log(clientM2)
 
     if (serverM2 !== clientM2) return {isOk: false, errMsg: "Bad server credentials (M2)"}
 
@@ -210,9 +212,7 @@ private async hash(x: string): Promise<ArrayBuffer> {
     //return SHA256(x).toString().toLowerCase();
     const dec = new TextDecoder()
     const encoded = new TextEncoder().encode(x)
-    console.log("encoded input array length = " + encoded.length)
     const resultArr = await crypto.subtle.digest('SHA-256', encoded)
-    console.log("hash output array length = " + resultArr.byteLength)
     return resultArr;
 }
 

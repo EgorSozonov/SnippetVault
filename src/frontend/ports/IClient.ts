@@ -29,9 +29,9 @@ type IClient = {
     taskGet: (taskId: number) => Promise<EitherMsg<TaskDTO[]>>
     taskGroupCU: (dto: TaskGroupCUDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
 
-    userRegister: (dto: RegisterDTO) => Promise<EitherMsg<HandshakeResponseDTO[]>>
-    userHandshake: (dto: HandshakeDTO) => Promise<EitherMsg<HandshakeResponseDTO[]>>
-    userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInResponseDTO[]>>
+    userRegister: (dto: RegisterDTO) => Promise<EitherMsg<HandshakeResponseDTO>>
+    userHandshake: (dto: HandshakeDTO) => Promise<EitherMsg<HandshakeResponseDTO>>
+    userSignIn: (dto: SignInDTO) => Promise<EitherMsg<SignInResponseDTO>>
 
     userSignInAdmin: (dto: SignInAdminDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>
     userChangePw: (dto: ChangePwDTO, headers: SignInSuccessDTO) => Promise<EitherMsg<SignInSuccessDTO[]>>

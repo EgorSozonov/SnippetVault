@@ -16,14 +16,14 @@ export function processHandshake(response: EitherMsg<HandshakeResponseDTO>, stat
     return response.value
 }
 
-export function processSignIn(response: EitherMsg<SignInResponseDTO[]>, status: "user" | "admin", userName: string): SignInResponseDTO | null {
+export function processSignIn(response: EitherMsg<SignInResponseDTO>, status: "user" | "admin", userName: string): SignInResponseDTO | null {
     if (response.isOK === false) {
         console.log(response.errMsg)
         return null
-    } else if (response.value.length < 1) {
+    } else if (!response.value) {
         console.log("Error: empty response")
         return null
     }
 
-    return response.value[0]
+    return response.value
 }
