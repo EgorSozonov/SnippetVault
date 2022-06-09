@@ -55,6 +55,7 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
+    System.out.println(B.toString());
     byte[] bArr = b.toByteArray();
     System.out.println("length of b = " + bArr.length + ", length of salt = " + salt.length);
     val newUser = UserNewIntern.builder()
@@ -116,8 +117,6 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
         System.out.println(M1Decoded);
         BigInteger b = new BigInteger(user.b);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
-        System.out.println("B server");
-        System.out.println(B.toString(16));
         BigInteger u = srp.computeU(hasher, Constants.N, ADecoded, B);
         BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
 

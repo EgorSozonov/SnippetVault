@@ -21,7 +21,8 @@ import SelectChoice from "../../types/SelectChoice"
 import SecureRemotePassword from "../../utils/SecureRemotePassword"
 import { rfc5054 } from "../../utils/Constants"
 import { processSignIn } from "../../utils/User"
-
+import BI from "jsbi"
+import { modPow } from "../../utils/ModularArithmetic"
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
@@ -98,46 +99,47 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         const userName = "Joe"
         const password = "a6SWy$U8s7Y"
 
+        const foo = modPow(BI.BigInt("5"), BI.BigInt("2"), BI.BigInt("19"))
+        console.log(foo)
+        // const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
+        // try {
+        //     const salt = await clientSRP.generateRandomSalt()
+        //     const verifier = await clientSRP.generateVerifier(salt, userName, password)
+        //     console.log("salt result = " + salt)
+        //     console.log("verifier = " + verifier)
 
-        const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
-        try {
-            const salt = await clientSRP.generateRandomSalt()
-            const verifier = await clientSRP.generateVerifier(salt, userName, password)
-            console.log("salt result = " + salt)
-            console.log("verifier = " + verifier)
+        //     const handshakeResponse = await state.user.userRegister({ salt, verifier, userName })
+        //     if (handshakeResponse.isOK === false) {
+        //         console.log("Handshake error " + handshakeResponse.errMsg)
+        //         return
+        //     }
 
-            const handshakeResponse = await state.user.userRegister({ salt, verifier, userName })
-            if (handshakeResponse.isOK === false) {
-                console.log("Handshake error " + handshakeResponse.errMsg)
-                return
-            }
+        //     const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.salt, handshakeResponse.value.B)
+        //     if (mbAM1.isOk === false) {
+        //         console.log(mbAM1.errMsg)
+        //         console.log("Handshake response was incorrect")
+        //         return
+        //     }
 
-            const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.salt, handshakeResponse.value.B)
-            if (mbAM1.isOk === false) {
-                console.log(mbAM1.errMsg)
-                console.log("Handshake response was incorrect")
-                return
-            }
+        //     const {A, M1} = mbAM1.value
+        //     const M2Response = processSignIn(await state.user.userSignIn(A, M1, userName), "user")
+        //     console.log("M2")
+        //     console.log(M2Response)
+        //     if (M2Response.isOK === false) return
 
-            const {A, M1} = mbAM1.value
-            const M2Response = processSignIn(await state.user.userSignIn(A, M1, userName), "user")
-            console.log("M2")
-            console.log(M2Response)
-            if (M2Response.isOK === false) return
+        //     const result2 = await clientSRP.step2(M2Response.value.M2)
+        //     if (result2.isOk === false) {
+        //         return
+        //     }
 
-            const result2 = await clientSRP.step2(M2Response.value.M2)
-            if (result2.isOk === false) {
-                return
-            }
+        //     const userId: number = M2Response.value.userId
 
-            const userId: number = M2Response.value.userId
-
-            const sessionKey = result2.value
-            console.log("userId = " + userId)
-            console.log("Session Key = " + sessionKey)
-        } catch (e) {
-            console.log(e)
-        }
+        //     const sessionKey = result2.value
+        //     console.log("userId = " + userId)
+        //     console.log("Session Key = " + sessionKey)
+        // } catch (e) {
+        //     console.log(e)
+        // }
 
     }
 
