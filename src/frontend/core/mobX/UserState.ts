@@ -36,8 +36,8 @@ export default class UserState {
 
     })
 
-    userSignIn = action((A: string, M1: string, userName: string) => {
-        return this.client.userSignIn({ userName, A, M1 })
+    userSignIn = action((AB64: string, M1B64: string, userName: string) => {
+        return this.client.userSignIn({ userName, AB64, M1B64 })
     })
 
     changePw = action(async (dto: ChangePwDTO, headers: SignInSuccessDTO) => {

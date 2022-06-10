@@ -31,7 +31,6 @@ private static final String userAuthentGetQ = """
 """;
 public Mono<AuthenticateIntern> userAuthentGet(String userName) {
     val deserializer = new Deserializer<>(AuthenticateIntern.class, userAuthentGetQ);
-    System.out.println("userAuthentGet");
     return db.sql(deserializer.sqlSelectQuery)
              .bind("name", userName)
              .map(deserializer::unpackRow)

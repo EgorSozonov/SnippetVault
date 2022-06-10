@@ -2,7 +2,8 @@
 import BI from "jsbi"
 import { SHA256 } from "crypto-js"
 import { HEX_DIGITS } from "./Constants"
-import { arrayOfBase64, base64OfArray } from "./StringUtils"
+import { arrayOfBase64, base64OfArray, bigintOfBase64, hexOfArray as nonprefixedHexOfArray, hexOfBase64, nonprefixedHexOfPositiveBI, prefixedHexOfArray } from "./StringUtils"
+import { modPow, ONE, ZERO } from "./ModularArithmetic"
 
 /**
  * Implementation of client-side SRP because thinbus-srp is unuseable/not Typescript.
@@ -18,10 +19,10 @@ public v = ""
 public I = ""
 
 /** Validation session key to compute K: S = ((A*(v^u % N)) ^ b) % N */
-private S = ""
+private S: BI = ZERO
 
 /** Server public key */
-public B: BI
+public B: BI = ZERO
 
 /** Password */
 public P = ""
@@ -46,20 +47,7 @@ constructor(NStr: string, gStr: string, kHexStr: string) {
     this.N = BI.BigInt(NStr)
     this.g = BI.BigInt(gStr)
     this.k = BI.BigInt(kHexStr)
-    this.B = BI.BigInt("0")
-    //this.Nbase10 = _Nbase10
 }
-
-// public async run(userName: string, password: string) {
-//     try {
-//         const {salt, serverB} = await getResponse1(userName)
-//         const {A, M1} = this.step1(userName, password, salt, serverB)
-//         const M2 = await getResponse2(A, M1)
-//         const result2 = this.step2(M2)
-
-//     } catch (e) {
-//     }
-// }
 
 /**
  * Returns a randomly-generated salt in Base-64 format.
@@ -68,88 +56,107 @@ constructor(NStr: string, gStr: string, kHexStr: string) {
 public async generateRandomSalt(optionalServerSalt?: string): Promise<string> {
     const serverSalt = optionalServerSalt ?? "serverSalt"
     const s = this.randomHex(32);
-    console.log("random hex in generateRandomSalt")
-    console.log(s)
     const inp = (new Date()) + ":" + serverSalt + ":" + s
-    console.log("inp = " + inp)
     const resultBuffer: ArrayBuffer = await this.hash(inp)
-    return base64OfArray(new Uint8Array(resultBuffer))
+    return nonprefixedHexOfArray(new Uint8Array(resultBuffer))
 }
 
-public async generateVerifier(salt: string, identity: string, password: string) {
-    const x = await this.generateX(salt, identity, password)
-    const v = this.g.modPow(x, this.N)
-    return v.toString(16)
+public async generateVerifier(saltHex: string, identity: string, password: string) {
+    const x = await this.generateX(saltHex, identity, password)
+    const verifier = modPow(this.g, x, this.N)
+    console.log("Original verifier = " + verifier.toString())
+    return nonprefixedHexOfPositiveBI(verifier)
 }
 
+//Original verifier = 13554379927498243673524519972601432856476658191157275102779636041562240401186963506899857920489844711620813773053513648407270292513826886266400379619773431302560658488970455479072743211517549434379379736455682832040482191659233401172904296498122564637923703855583548472640062392506434941448663637941540196692549573582049187854538376051155966217981040826906790413799771492628297709669986177189521359588208291589470778759934908395613975307632163126162467507496915737302518472399057777723787995345583526762341895612497593753391583631760873796899329602156375555131998272849580446789596105273682726210597314614983497819528
 
-public async step1(identity: string, password: string, salt: string, serverB: string): Promise<ValResult<DataForSignIn>> {
+
+/**
+ * Generate data for sign-in using the handshake response
+ */
+public async step1(identity: string, password: string, saltB64: string, serverBB64: string): Promise<ValResult<DataForSignIn>> {
     this.I = identity
     this.P = password
 
-    console.log("serverB = " + serverB)
-    const B = new BigInteger(this.hexOf(arrayOfBase64(serverB)))
-    console.log("B from server raw = " + B)
-    if (B.mod(this.N).equals(BigInteger.ZERO)) {
+    // B64 -> Hex -> BI
+    const B = bigintOfBase64(serverBB64)
+
+    if (BI.equal(BI.remainder(B, this.N), ZERO)) {
         return {isOk: false, errMsg: "Bad server public value B = 0"}
     }
-    const x = await this.generateX(salt, this.I, this.P)
-    // No reason to keep the password anymore
+    const x = await this.generateX(hexOfBase64(saltB64), this.I, this.P)
+    // No reason to keep the password around anymore
     this.P = ""
 
-    // client B 62425524965426014912896352494250516563660080036344791459121550578918264705645052152173553723364610304233159311508573094255051762304324031469142426164963366341334050840566440880522531336562774151927135252329090660547737363393122908326012313007427338842458765747541040853320152823172060517343654963551268244950044449614112644701636646595254245251877305230933030415687355161353650825394137047945123351149471904844083562753334235223928073112340111591020064423912283200283471320946863390643431444085141825439375524081
-    // server B 12400907751054855477594447713719660449555462953005703464917281768740134162839977201005187063586139921859847474730446201128338778099316627582810573893726711219923230434806926246232893076745899129701055505870412559331776347084462544110667810939710810933587276590069513062631979091175933818021005162136454743983649111138722449260270200656701322714375313268540446390378833724580632071978513845347473286653290129374560267359656217360139568227120738748105719241773219027243542024493619964298157381756434459372987430073287328473493594203063073634425985207461014488918276642537860694622538334488863975298385175656325337725563
     const a = await this.randomA()
 
-    const ANum = this.g.modPow(a, this.N)
-    this.A = ANum.toString(16)
-    const u = await this.computeU(this.A, serverB)
+    const ANum = modPow(this.g, a, this.N)
+    console.log("client-side A = " + ANum.toString())
+
+    this.A = nonprefixedHexOfPositiveBI(ANum)
+    const u = await this.computeU(this.A, hexOfBase64(serverBB64))
     if (!u) return {isOk: false, errMsg: "Bad client value u"}
 
-    this.S = this.computeSessionKey(this.k, x, u, a, this.B).toString(16)
-    this.K = this.hexOfBuff(await this.hash(this.S))
+    this.S = this.computeSessionKey(this.k, x, u, a, this.B)
+    console.log("client-side S = " + this.S.toString())
+    const sStr = this.S.toString(16)
+    this.K = this.hexOfBuff(await this.hash(sStr))
 
-    this.M1 = this.trimLeadingZeros(this.hexOfBuff(await this.hash(this.A + B + this.S)))
-
-    return {isOk: true, value: {A: this.A, M1: this.M1, }}
+    this.M1 = this.hexOfBuff(await this.hash(this.A + B.toString() + sStr))
+    console.log("client-side M1 = " + BI.BigInt(this.M1).toString())
+    return {isOk: true, value: {AB64: this.A, M1B64: this.M1, }}
 }
 
 /**
  * Second step of the login process
  * (client-side validation of M2 received from server)
  */
-public async step2(serverM2: string): Promise<ValResult<string>> {
-    const clientM2 = this.trimLeadingZeros(this.hexOfBuff(await this.hash(this.A + this.M1 + this.S)))
+public async step2(serverM2B64: string): Promise<ValResult<string>> {
+    const SString = nonprefixedHexOfPositiveBI(this.S)
+    const clientM2 = this.hexOfBuff(await this.hash(this.A + this.M1 + SString))
+    const serverM2 = hexOfBase64(serverM2B64)
     console.log("client M2")
     console.log(clientM2)
 
     if (serverM2 !== clientM2) return {isOk: false, errMsg: "Bad server credentials (M2)"}
 
-    return {isOk: true, value: this.S}
+    return {isOk: true, value: SString}
 }
 
-private async randomA(): Promise<BigInteger> {
-    const hexLength = this.N.toString(16).length
-    const ZERO = new BigInteger("0", 10)
-    const ONE = new BigInteger("1", 10)
+
+/**
+ * Generation of the client private key, "a"
+ */
+private async randomA(): Promise<BI> {
     let r = ZERO
-    while (r.equals(ZERO)) {
-        const rstr = this.randomHex(hexLength)
-        const rBi = new BigInteger(rstr, 16)
-        const oneTimeBi = new BigInteger(this.hexOfBuff(await this.hash(this.I + ":" + this.salt + ":" + (new Date()).getTime())), 16)
-        r = oneTimeBi.add(rBi).modPow(ONE, this.N)
+    while (BI.equal(r, ZERO)) {
+        const rstr = this.randomHex(512)
+        const rBi = BI.BigInt(rstr)
+        const oneTimeBi = BI.BigInt(this.hexOfBuff(await this.hash(this.I + ":" + this.salt + ":" + (new Date()).getTime())))
+        r = BI.remainder(BI.add(oneTimeBi, rBi), this.N)
     }
     return r
 }
+
+// final int minBits = Math.max(256, N.bitLength());
+
+// BigInteger r = BigInteger.ZERO;
+
+// while( BigInteger.ZERO.equals(r)){
+// 	r = (new BigInteger(minBits, random)).mod(N);
+// }
+
+// return r;
+
 
 // Server columns: salt (64 bytes), verifier (256 bytes), b (256 bytes)
 /**
  * Compute the scrambler value. If it's zero, process is aborted
  */
-private async computeU(A: string, B: string): Promise<BigInteger | undefined> {
+private async computeU(A: string, B: string): Promise<BI | undefined> {
     const output = this.hexOfBuff(await this.hash(A + B))
-    const result = new BigInteger(output, 16)
-    if (result.equals(BigInteger.ZERO)) {
+    const result = BI.BigInt(output)
+    if (BI.equal(result, ZERO)) {
         return undefined
     }
     return result
@@ -161,21 +168,17 @@ private async computeU(A: string, B: string): Promise<BigInteger | undefined> {
 private randomHex(l: number): string {
     const arr = new Uint8Array(l)
     const result = crypto.getRandomValues(arr)
-	//return Math.random().toString(16).substring(0, l)
-    return this.hexOf(result);
+    return prefixedHexOfArray(result);
 }
 
-private hexOf(inp: Uint8Array): string {
-    return Array.from(inp)
-                .map((b) => HEX_DIGITS[b >> 4] + HEX_DIGITS[b & 15])
-                .join("");
-}
+
 
 private hexOfBuff(inp: ArrayBuffer): string {
-    return (Array.from(new Uint8Array(inp)))
+    return "0x" + (Array.from(new Uint8Array(inp)))
                 .map((b) => HEX_DIGITS[b >> 4] + HEX_DIGITS[b & 15])
                 .join("");
 }
+
 
 // var hash = CryptoJS.SHA256("Message");
 // ​
@@ -185,31 +188,22 @@ private hexOfBuff(inp: ArrayBuffer): string {
 // hash.toString(CryptoJS.enc.Hex)
 // > "2f77668a9dfbf8d5848b9eeb4a7145ca94c6ed9236e4a773f6dcafa5132b2f91";
 
-private async generateX(salt: string, identity: string, pw: string): Promise<BigInteger> {
-    const hash1 = this.trimLeadingZeros(this.hexOfBuff(await this.hash(identity + ":" + pw)))
+private async generateX(saltHex: string, identity: string, pw: string): Promise<BI> {
+    const hash1 = this.hexOfBuff(await this.hash(identity + ":" + pw))
 
-    const concat = (salt + hash1).toUpperCase()
-    const hash = this.trimLeadingZeros(this.hexOfBuff(await this.hash(concat)))
+    const concat = (saltHex + hash1).toUpperCase()
+    const hashHex = this.hexOfBuff(await this.hash(concat))
 
-    return this.fromHex(hash).mod(this.N)
+    return BI.remainder(BI.BigInt(hashHex), this.N)
 }
 
-public computeSessionKey(k: BigInteger, x: BigInteger, u: BigInteger, a: BigInteger, B: BigInteger): BigInteger {
-    const exp = u.multiply(x).add(a)
-    const tmp = this.g.modPow(x, this.N).multiply(k)
-    return B.subtract(tmp).modPow(exp, this.N)
-}
-
-private trimLeadingZeros(x: string): string {
-    let result = x
-    while (result.substring(0, 1) === '0') {
-        result = result.substring(1)
-    }
-    return result
-}
-
-private fromHex(s: string): BigInteger {
-    return new BigInteger(s, 16)
+/**
+ * Client's session key S = (B - kg^x)^(a + ux)
+ */
+public computeSessionKey(k: BI, x: BI, u: BI, a: BI, B: BI): BI {
+    const exp = BI.add(BI.multiply(u, x), a)
+    const kgx = BI.multiply(modPow(this.g, x, this.N), k)
+    return modPow(BI.subtract(B, kgx), exp, this.N)
 }
 
 private async hash(x: string): Promise<ArrayBuffer> {
@@ -229,6 +223,6 @@ private validate(v: string): ValResult<boolean> {
 
 type ValResult<T> = {isOk: true, value: T} | {isOk: false, errMsg: string}
 
-type DataForSignIn = {A: string, M1: string}
+type DataForSignIn = {AB64: string, M1B64: string}
 
 export default SecureRemotePassword

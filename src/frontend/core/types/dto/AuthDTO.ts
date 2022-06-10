@@ -6,8 +6,8 @@ export type SignInSuccessDTO = {
 
 export type RegisterDTO = {
     userName: string;
-    salt: string;
-    verifier: string;
+    saltB64: string;
+    verifierB64: string;
 }
 
 export type HandshakeDTO = {
@@ -15,18 +15,18 @@ export type HandshakeDTO = {
 }
 
 export type HandshakeResponseDTO = {
-    salt: string;
-    B: string;
+    saltB64: string;
+    BB64: string;
 }
 
 export type SignInDTO = {
     userName: string,
-    A: string,
-    M1: string,
+    AB64: string,
+    M1B64: string,
 }
 
 export type SignInResponseDTO = {
-    M2: string;
+    M2B64: string;
     userId: number;
 }
 

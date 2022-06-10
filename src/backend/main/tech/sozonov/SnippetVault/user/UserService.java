@@ -6,6 +6,7 @@ import lombok.val;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import java.util.Base64;
+import java.util.HexFormat;
 import java.util.UUID;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -46,18 +47,23 @@ public Flux<Comment> commentsGet(int snippetId) {
 
 public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
     if (nullOrEmp(dto.userName)) return errResponse;
-    val b64 = Base64.getDecoder();
     val enc = Base64.getEncoder();
+    val dec = Base64.getDecoder();
 
-    val verifier = b64.decode(dto.verifier);
+
+    byte[] verifier = dec.decode(dto.verifierB64);
+    byte[] salt = dec.decode(dto.saltB64);
     BigInteger verifierNum = new BigInteger(1, verifier);
-    val salt = b64.decode(dto.salt);
+
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
-    System.out.println(B.toString());
+
+    System.out.println("v handshake = " + verifierNum.toString());
+    System.out.println("b handshake = " + b.toString());
+    System.out.println("B handshake = " + B.toString());
+
     byte[] bArr = b.toByteArray();
-    System.out.println("length of b = " + bArr.length + ", length of salt = " + salt.length);
     val newUser = UserNewIntern.builder()
                         .userName(dto.userName)
                         .verifier(verifier)
@@ -84,9 +90,10 @@ public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, Mult
         BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
 
+
         return userStore.userHandshake(dto, b.toByteArray())
                         .map(rowsUpdated -> {
-            if (rowsUpdated < 1) return Either.left("Authentication error");
+            if (rowsUpdated < 1) return Either.left("Rows not updated Authentication error");
 
             HandshakeResponse handshakeResponse = new HandshakeResponse(b64.encodeToString(user.salt), b64.encodeToString(B.toByteArray()));
             return Either.right(handshakeResponse);
@@ -99,35 +106,54 @@ public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, Mult
  * If correct, update the session key and date of expiration
  */
 public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
-
-    if (nullOrEmp(dto.userName)) return Mono.just(Either.left("Sign in error"));
-    val b64 = Base64.getDecoder();
+    if (nullOrEmp(dto.userName)) {
+        System.out.println("Here 1");
+        return Mono.just(Either.left("Sign in error"));
+    }
 
     return userStore.userAuthentGet(dto.userName).flatMap(user -> {
-        BigInteger verifier = new BigInteger(user.verifier);
+        BigInteger verifier = new BigInteger(1, user.verifier);
+        val dec = Base64.getDecoder();
         MessageDigest hasher = null;
         try {
             hasher = MessageDigest.getInstance("SHA-256");
         } catch (Exception e) {
         }
 
-        BigInteger ADecoded = new BigInteger(b64.decode(dto.A));
-        BigInteger M1Decoded = new BigInteger(b64.decode(dto.M1));
-        System.out.println("M1 cl");
+        BigInteger ADecoded = new BigInteger(dec.decode(dto.AB64));
+        BigInteger M1Decoded = new BigInteger(dec.decode(dto.M1B64));
+
+        System.out.println("A from client, decoded");
+        System.out.println(ADecoded);
+        System.out.println("M1 from client, decoded");
         System.out.println(M1Decoded);
+
         BigInteger b = new BigInteger(user.b);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
+
+        System.out.println("v sign-in = " + verifier.toString());
+        System.out.println("b sign-in = " + b.toString());
+        System.out.println("B sign-in = " + B.toString());
+
         BigInteger u = srp.computeU(hasher, Constants.N, ADecoded, B);
         BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
+        System.out.println("S server = " + S.toString());
 
         BigInteger serverM1 = srp.computeClientEvidence(hasher, ADecoded, B, S);
 
-        System.out.println("M1 server");
-        System.out.println(M1Decoded);
-        if (!serverM1.equals(M1Decoded)) return Mono.just(Either.left("Authentication error"));
+        if (!serverM1.equals(M1Decoded)) {
+            System.out.println("Server M1");
+            System.out.println(serverM1.toString());
+            System.out.println("M1 from client");
+            System.out.println(M1Decoded.toString());
+            return Mono.just(Either.left("Authentication error"));
+        }
         String inpM2 = ADecoded.toString(16) + serverM1.toString(16) + S.toString(16);
         hasher.update(inpM2.getBytes());
         BigInteger M2 = new BigInteger(hasher.digest());
+        System.out.println("Server M2");
+        System.out.println(M2);
+        String M2B64 = Base64.getEncoder().encodeToString(M2.toByteArray());
 
         System.out.println("Session key = " + S.toString());
 
@@ -141,11 +167,7 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
             .build();
 
         return userStore.userUpdate(updatedUser)
-                        .map(x -> {
-                            val result = new SignInResponse(M2.toString(16), user.userId);
-                            System.out.println("M2 server = " + result.M2);
-                            return Either.right(result);
-                        });
+                        .map(x -> Either.right(new SignInResponse(M2B64, user.userId)));
     });
 }
 private boolean validatePasswordComplexity(String newPw) {

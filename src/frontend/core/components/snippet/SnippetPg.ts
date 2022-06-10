@@ -6,7 +6,7 @@ import { FunctionComponent, useContext, useEffect, useState,} from "react"
 import { NavLink, useSearchParams } from "react-router-dom"
 import MainState from "../../mobX/AllState"
 import { observer } from "mobx-react-lite"
-import { arrayOfBase64, base64OfArray, checkNonempty, determineResultLength } from "../../utils/StringUtils"
+import { arrayOfBase64, base64OfArray, base64OfHex, bigintOfHex, checkNonempty, determineResultLength } from "../../utils/StringUtils"
 import { idOf, isStateOK, stringOf } from "./utils/SnippetState"
 import { SnippetDTO } from "../../types/dto/SnippetDTO"
 import Dialog from "../../commonComponents/dialog/Dialog"
@@ -99,47 +99,47 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         const userName = "Joe"
         const password = "a6SWy$U8s7Y"
 
-        const foo = modPow(BI.BigInt("5"), BI.BigInt("2"), BI.BigInt("19"))
-        console.log(foo)
-        // const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
-        // try {
-        //     const salt = await clientSRP.generateRandomSalt()
-        //     const verifier = await clientSRP.generateVerifier(salt, userName, password)
-        //     console.log("salt result = " + salt)
-        //     console.log("verifier = " + verifier)
+        const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
+        try {
+            const saltHex = await clientSRP.generateRandomSalt()
+            const verifierHex = await clientSRP.generateVerifier(saltHex, userName, password)
+            console.log("salt result = " + bigintOfHex(saltHex).toString())
+            console.log("verifier = " + bigintOfHex(verifierHex).toString())
 
-        //     const handshakeResponse = await state.user.userRegister({ salt, verifier, userName })
-        //     if (handshakeResponse.isOK === false) {
-        //         console.log("Handshake error " + handshakeResponse.errMsg)
-        //         return
-        //     }
+            // base64
+            const handshakeResponse = await state.user.userRegister({ saltB64: base64OfHex(saltHex), verifierB64: base64OfHex(verifierHex), userName })
+            if (handshakeResponse.isOK === false) {
+                console.log("Handshake error " + handshakeResponse.errMsg)
+                return
+            }
 
-        //     const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.salt, handshakeResponse.value.B)
-        //     if (mbAM1.isOk === false) {
-        //         console.log(mbAM1.errMsg)
-        //         console.log("Handshake response was incorrect")
-        //         return
-        //     }
+            const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
+            if (mbAM1.isOk === false) {
+                console.log(mbAM1.errMsg)
+                console.log("Handshake response was incorrect")
+                return
+            }
 
-        //     const {A, M1} = mbAM1.value
-        //     const M2Response = processSignIn(await state.user.userSignIn(A, M1, userName), "user")
-        //     console.log("M2")
-        //     console.log(M2Response)
-        //     if (M2Response.isOK === false) return
+            const {AB64, M1B64} = mbAM1.value
 
-        //     const result2 = await clientSRP.step2(M2Response.value.M2)
-        //     if (result2.isOk === false) {
-        //         return
-        //     }
+            const M2Response = processSignIn(await state.user.userSignIn(AB64, M1B64, userName), "user")
+            console.log("M2")
+            console.log(M2Response)
+            if (M2Response.isOK === false) return
 
-        //     const userId: number = M2Response.value.userId
+            const result2 = await clientSRP.step2(M2Response.value.M2B64)
+            if (result2.isOk === false) {
+                return
+            }
 
-        //     const sessionKey = result2.value
-        //     console.log("userId = " + userId)
-        //     console.log("Session Key = " + sessionKey)
-        // } catch (e) {
-        //     console.log(e)
-        // }
+            const userId: number = M2Response.value.userId
+
+            const sessionKey = result2.value
+            console.log("userId = " + userId)
+            console.log("Session Key = " + sessionKey)
+        } catch (e) {
+            console.log(e)
+        }
 
     }
 

@@ -242,7 +242,6 @@ private void determineTypeProperties(List<String> queryColumns) {
                 setters.add(lookup.findVarHandle(qlass, tp.fst, boolean.class));
                 columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.boole);
             } else if (tp.snd == ValueType.datee) {
-                System.out.println("Adding setter");
                 setters.add(lookup.findVarHandle(qlass, tp.fst, LocalDate.class));
                 columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.datee);
             } else if (tp.snd == ValueType.timestampe) {

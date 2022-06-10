@@ -44,8 +44,8 @@ public static class SignInSuccess {
 @AllArgsConstructor
 public static class Register {
     public String userName;
-    public String salt;
-    public String verifier;
+    public String saltB64;
+    public String verifierB64;
 }
 
 @AllArgsConstructor
@@ -55,20 +55,20 @@ public static class Handshake {
 
 @AllArgsConstructor
 public static class HandshakeResponse {
-    public String salt;
-    public String B;
+    public String saltB64;
+    public String BB64;
 }
 
 @AllArgsConstructor
 public static class SignIn {
     public String userName;
-    public String A;
-    public String M1;
+    public String AB64;
+    public String M1B64;
 }
 
 @AllArgsConstructor
 public static class SignInResponse {
-    public String M2;
+    public String M2B64;
     public int userId;
 }
 

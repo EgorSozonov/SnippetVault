@@ -96,26 +96,26 @@ export function toZn (x: BI, N: BI): BI {
  * @param N modulus
  *
  * @throws {RangeError}
- * Excpeption thrown when N is not at least 1
+ * Exception thrown when N is not at least 1
  *
  * @returns x**y (mod N)
  */
 export function modPow(x: BI, y: BI, N: BI): BI {
-    if (BI.LE(N, ONE)) throw new RangeError('n must be > 1')
+    if (BI.LE(N, ONE)) throw new RangeError("n must be > 1")
 
-    let minimal = toZn(x, N)
+    let base = toZn(x, N)
 
-    if (BI.LE(y, ZERO)) return modInv(modPow(minimal, abs(y), N), N)
+    if (BI.LE(y, ZERO)) return modInv(modPow(base, abs(y), N), N)
 
     let result = ONE
 
     let currExp = y
     while (BI.GT(currExp, ZERO)) {
         if (BI.equal(BI.remainder(currExp, TWO), ONE)) {
-            result = BI.remainder(BI.multiply(result, x), N)
+            result = BI.remainder(BI.multiply(result, base), N)
         }
         currExp = BI.divide(currExp, TWO)
-        minimal = BI.remainder(BI.exponentiate(minimal, TWO), N)
+        base = BI.remainder(BI.exponentiate(base, TWO), N)
     }
     return result
 }
