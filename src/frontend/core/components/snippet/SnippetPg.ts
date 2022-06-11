@@ -6,7 +6,7 @@ import { FunctionComponent, useContext, useEffect, useState,} from "react"
 import { NavLink, useSearchParams } from "react-router-dom"
 import MainState from "../../mobX/AllState"
 import { observer } from "mobx-react-lite"
-import { arrayOfBase64, base64OfArray, base64OfHex, bigintOfHex, checkNonempty, determinePadding, hexOfBase64, nonprefixedHexOfPositiveBI } from "../../utils/StringUtils"
+import { arrayOfBase64, base64OfArray, base64OfHex, bigintOfBase64, bigintOfHex, checkNonempty, determinePadding, hexOfBase64, nonprefixedHexOfPositiveBI } from "../../utils/StringUtils"
 import { idOf, isStateOK, stringOf } from "./utils/SnippetState"
 import { SnippetDTO } from "../../types/dto/SnippetDTO"
 import Dialog from "../../commonComponents/dialog/Dialog"
@@ -124,6 +124,8 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
 
             const {AB64, M1B64} = mbAM1.value
 
+            console.log("M1")
+            console.log(bigintOfBase64(M1B64).toString())
             const M2Response = processSignIn(await state.user.userSignIn(AB64, M1B64, userName), "user")
             console.log("M2")
             console.log(M2Response)

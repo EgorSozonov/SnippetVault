@@ -153,33 +153,16 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
         BigInteger u = BigIntegerUtils.bigIntegerFromBytes(uBytes);
         System.out.println("u server = " + u.toString());
 
-        val vu = verifier.modPow(u, Constants.N);
-        val Avu = vu.multiply(ADecoded);
-        System.out.println("vu = " + vu.toString());
-        System.out.println("Avu = " + Avu.toString());
-
-        val Bminkv = B.subtract(Constants.k.multiply(verifier));
-        val kv = Constants.k.multiply(verifier);
-        System.out.println("B = " + B.toString());
-        System.out.println("kv = " + kv.toString());
-        System.out.println("B - kv = " + Bminkv.toString());
-
-        val BminkvMod = Bminkv.mod(Constants.N);
-        System.out.println("B - kv mod N = " + BminkvMod.toString());
-
-        System.out.println("vu = " + vu.toString());
-        System.out.println("Avu = " + Avu.toString());
-
         BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
         System.out.println("S server = " + S.toString());
 
-        BigInteger serverM1 = srp.computeClientEvidence(hasher, ADecoded, B, S);
+        BigInteger serverM1 = computeM1(hasher, ADecoded, B, S); //srp.computeClientEvidence(hasher, ADecoded, B, S);
 
+        System.out.println("Server M1");
+        System.out.println(serverM1.toString());
+        System.out.println("M1 from client");
+        System.out.println(M1Decoded.toString());
         if (!serverM1.equals(M1Decoded)) {
-            System.out.println("Server M1");
-            System.out.println(serverM1.toString());
-            System.out.println("M1 from client");
-            System.out.println(M1Decoded.toString());
             return Mono.just(Either.left("Authentication error"));
         }
         String inpM2 = ADecoded.toString(16) + serverM1.toString(16) + S.toString(16);
@@ -205,7 +188,15 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
     });
 }
 
-private String prependZeroToHex(String hex) {
+private static BigInteger computeM1(MessageDigest hasher, BigInteger A, BigInteger B, BigInteger S) {
+    String inp = prependZeroToHex(A.toString(16)) + prependZeroToHex(B.toString(16)) + prependZeroToHex(S.toString(16));
+    hasher.reset();
+    hasher.update(inp.getBytes());
+    val result = hasher.digest();
+    return new BigInteger(result);
+}
+
+private static String prependZeroToHex(String hex) {
     return hex.length() % 2 == 0 ? hex : "0" + hex;
 }
 

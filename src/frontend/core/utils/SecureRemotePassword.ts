@@ -29,9 +29,9 @@ public P = ""
 
 private K = ""
 
-private A = ""
+private AHex = ""
 
-private M1 = ""
+private M1Hex = ""
 
 /** Salt computed here on the client */
 public salt = ""
@@ -47,7 +47,6 @@ constructor(NStr: string, gStr: string, kHexStr: string) {
     this.N = BI.BigInt(NStr)
     this.g = BI.BigInt(gStr)
     this.k = BI.BigInt(kHexStr)
-    console.log("k client = " + this.k.toString())
 }
 
 /**
@@ -91,28 +90,25 @@ public async step1(identity: string, password: string, saltB64: string, serverBB
     const ANum = modPow(this.g, a, this.N)
     console.log("client-side A = " + ANum.toString())
 
-    this.A = nonprefixedHexOfPositiveBI(ANum)
-    const u = await this.computeU(this.A, hexOfBase64(serverBB64))
+    this.AHex = nonprefixedHexOfPositiveBI(ANum)
+    const u = await this.computeU(this.AHex, hexOfBase64(serverBB64))
 
     if (!u) return {isOk: false, errMsg: "Bad client value u"}
-    console.log("client u = " + u.toString())
 
     const vu = modPow(this.verifier, u, this.N);
     const Avu = BI.multiply(vu, ANum);
-    console.log("vu = " + vu.toString());
-    console.log("Avu = " + Avu.toString());
 
     this.S = this.computeSessionKey(x, u, a)
     console.log("client-side S = " + this.S.toString())
 
-    const sStr = this.S.toString(16)
+    const sStr = nonprefixedHexOfPositiveBI(this.S)
     this.K = hexOfBuff(await this.hash(sStr))
 
-    const M1Buff = await this.hash(this.A + this.B.toString() + sStr)
-    this.M1 = hexOfBuff(M1Buff)
+    const M1Buff = await this.hash(this.AHex + nonprefixedHexOfPositiveBI(this.B) + sStr)
+    this.M1Hex = hexOfBuff(M1Buff)
 
-    const AB64 = base64OfHex(this.A)
-    const M1B64 = base64OfHex(this.M1)
+    const AB64 = base64OfHex(this.AHex)
+    const M1B64 = base64OfHex(this.M1Hex)
     return {isOk: true, value: {AB64, M1B64, }}
 }
 
@@ -121,16 +117,19 @@ public async step1(identity: string, password: string, saltB64: string, serverBB
  * (client-side validation of M2 received from server)
  */
 public async step2(serverM2B64: string): Promise<ValResult<string>> {
-    const SString = nonprefixedHexOfPositiveBI(this.S)
-    const M2Buff = await this.hash(this.A + this.M1 + SString)
+    const SHex = nonprefixedHexOfPositiveBI(this.S)
+    const M2Buff = await this.hash(this.AHex + this.M1Hex + SHex)
     const clientM2Hex = hexOfBuff(M2Buff)
     const serverM2Hex = hexOfBase64(serverM2B64)
     console.log("client M2")
     console.log(BI.BigInt(M2Buff).toString())
 
+    console.log("server M2")
+    console.log(bigintOfBase64(serverM2B64).toString())
+
     if (clientM2Hex !== serverM2Hex) return {isOk: false, errMsg: "Bad server credentials (M2)"}
 
-    return {isOk: true, value: SString}
+    return {isOk: true, value: SHex}
 }
 
 
@@ -164,12 +163,7 @@ private async randomA(): Promise<BI> {
  * Compute the scrambler value. If it's zero, process is aborted
  */
 private async computeU(AHex: string, BHex: string): Promise<BI | undefined> {
-    console.log("AHex")
-    console.log(AHex)
-    console.log("BHex")
-    console.log(BHex)
     const output = prefixedHexOfBuff(await this.hash(AHex + BHex))
-    console.log("client input for hash for u = " + AHex + BHex)
     const result = BI.BigInt(output)
     if (BI.equal(result, ZERO)) {
         return undefined
@@ -202,11 +196,7 @@ private async generateX(saltHex: string, identity: string, pw: string): Promise<
 public computeSessionKey(x: BI, u: BI, a: BI): BI {
     const exp = BI.add(a, BI.multiply(u, x))
     const kv = BI.multiply(this.k, this.verifier)
-    console.log("B = " + this.B.toString())
-    console.log("kv = " + kv.toString())
-    console.log("B - kv = " + (BI.subtract(this.B, kv)).toString())
     const diff = this.posMod(BI.subtract(this.B, kv), this.N)
-    console.log("B - kv mod N = " + diff.toString())
     return modPow(diff, exp, this.N)
 }
 
@@ -220,7 +210,7 @@ private posMod(inp: BI, N: BI): BI {
 
 private async hash(x: string): Promise<ArrayBuffer> {
     const encoded = new TextEncoder().encode(x)
-    const resultArr = await crypto.subtle.digest('SHA-256', encoded)
+    const resultArr = await crypto.subtle.digest("SHA-256", encoded)
     return resultArr;
 }
 
