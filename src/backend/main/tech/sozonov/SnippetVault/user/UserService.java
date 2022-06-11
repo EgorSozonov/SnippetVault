@@ -18,6 +18,8 @@ import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserNewIntern;
 import tech.sozonov.SnippetVault.cmn.utils.Constants;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import org.springframework.util.MultiValueMap;
+
+import com.nimbusds.srp6.BigIntegerUtils;
 import com.nimbusds.srp6.SRP6Routines;
 import org.springframework.http.HttpCookie;
 import org.springframework.stereotype.Service;
@@ -54,6 +56,7 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
     byte[] verifier = dec.decode(dto.verifierB64);
     byte[] salt = dec.decode(dto.saltB64);
     BigInteger verifierNum = new BigInteger(1, verifier);
+    BigInteger saltNum = new BigInteger(1, salt);
 
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
@@ -62,6 +65,7 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
     System.out.println("v handshake = " + verifierNum.toString());
     System.out.println("b handshake = " + b.toString());
     System.out.println("B handshake = " + B.toString());
+    System.out.println("salt handshake = " + saltNum.toString());
 
     byte[] bArr = b.toByteArray();
     val newUser = UserNewIntern.builder()
@@ -120,8 +124,8 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
         } catch (Exception e) {
         }
 
-        BigInteger ADecoded = new BigInteger(dec.decode(dto.AB64));
-        BigInteger M1Decoded = new BigInteger(dec.decode(dto.M1B64));
+        BigInteger ADecoded = new BigInteger(1, dec.decode(dto.AB64));
+        BigInteger M1Decoded = new BigInteger(1, dec.decode(dto.M1B64));
 
         System.out.println("A from client, decoded");
         System.out.println(ADecoded);
@@ -131,11 +135,23 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
         BigInteger b = new BigInteger(user.b);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
 
+
+
         System.out.println("v sign-in = " + verifier.toString());
         System.out.println("b sign-in = " + b.toString());
         System.out.println("B sign-in = " + B.toString());
 
-        BigInteger u = srp.computeU(hasher, Constants.N, ADecoded, B);
+        System.out.println("A for u = " + ADecoded.toString(16));
+        System.out.println("B for u = " + B.toString(16));
+        System.out.println("Server input to hash function for u");
+        System.out.println(ADecoded.toString(16) + B.toString(16));
+        hasher.reset();
+        hasher.update((ADecoded.toString(16) + B.toString(16)).getBytes());
+        val uBytes = hasher.digest();
+
+        BigInteger u = BigIntegerUtils.bigIntegerFromBytes(uBytes);// srp.computeU(hasher, Constants.N, ADecoded, B);
+        System.out.println("u server = " + u.toString());
+        System.out.println("u server hex = " + u.toString(16));
         BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
         System.out.println("S server = " + S.toString());
 

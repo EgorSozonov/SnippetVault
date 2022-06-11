@@ -2,7 +2,7 @@
 import BI from "jsbi"
 import { SHA256 } from "crypto-js"
 import { HEX_DIGITS } from "./Constants"
-import { arrayOfBase64, base64OfArray, bigintOfBase64, hexOfArray as nonprefixedHexOfArray, hexOfBase64, nonprefixedHexOfPositiveBI, prefixedHexOfArray } from "./StringUtils"
+import { arrayOfBase64, base64OfArray, base64OfHex, bigintOfBase64, hexOfArray as nonprefixedHexOfArray, hexOfBase64, hexOfBuff, nonprefixedHexOfPositiveBI, prefixedHexOfArray, prefixedHexOfBuff } from "./StringUtils"
 import { modPow, ONE, ZERO } from "./ModularArithmetic"
 
 /**
@@ -50,7 +50,7 @@ constructor(NStr: string, gStr: string, kHexStr: string) {
 }
 
 /**
- * Returns a randomly-generated salt in Base-64 format.
+ * Returns a randomly-generated salt in non-prefixed hex format.
  * The length of the salt is the same as the hashing algo H
  */
 public async generateRandomSalt(optionalServerSalt?: string): Promise<string> {
@@ -68,9 +68,6 @@ public async generateVerifier(saltHex: string, identity: string, password: strin
     return nonprefixedHexOfPositiveBI(verifier)
 }
 
-//Original verifier = 13554379927498243673524519972601432856476658191157275102779636041562240401186963506899857920489844711620813773053513648407270292513826886266400379619773431302560658488970455479072743211517549434379379736455682832040482191659233401172904296498122564637923703855583548472640062392506434941448663637941540196692549573582049187854538376051155966217981040826906790413799771492628297709669986177189521359588208291589470778759934908395613975307632163126162467507496915737302518472399057777723787995345583526762341895612497593753391583631760873796899329602156375555131998272849580446789596105273682726210597314614983497819528
-
-
 /**
  * Generate data for sign-in using the handshake response
  */
@@ -80,6 +77,7 @@ public async step1(identity: string, password: string, saltB64: string, serverBB
 
     // B64 -> Hex -> BI
     const B = bigintOfBase64(serverBB64)
+    console.log("B on client: " + B.toString())
 
     if (BI.equal(BI.remainder(B, this.N), ZERO)) {
         return {isOk: false, errMsg: "Bad server public value B = 0"}
@@ -95,16 +93,22 @@ public async step1(identity: string, password: string, saltB64: string, serverBB
 
     this.A = nonprefixedHexOfPositiveBI(ANum)
     const u = await this.computeU(this.A, hexOfBase64(serverBB64))
+
     if (!u) return {isOk: false, errMsg: "Bad client value u"}
+    console.log("client u = " + u.toString())
 
     this.S = this.computeSessionKey(this.k, x, u, a, this.B)
     console.log("client-side S = " + this.S.toString())
     const sStr = this.S.toString(16)
-    this.K = this.hexOfBuff(await this.hash(sStr))
+    this.K = hexOfBuff(await this.hash(sStr))
 
-    this.M1 = this.hexOfBuff(await this.hash(this.A + B.toString() + sStr))
-    console.log("client-side M1 = " + BI.BigInt(this.M1).toString())
-    return {isOk: true, value: {AB64: this.A, M1B64: this.M1, }}
+    const M1Buff = await this.hash(this.A + B.toString() + sStr)
+    this.M1 = hexOfBuff(M1Buff)
+    console.log("client-side M1 = " + BI.BigInt(prefixedHexOfBuff(M1Buff)).toString())
+
+    const AB64 = base64OfHex(this.A)
+    const M1B64 = base64OfHex(this.M1)
+    return {isOk: true, value: {AB64, M1B64, }}
 }
 
 /**
@@ -113,12 +117,13 @@ public async step1(identity: string, password: string, saltB64: string, serverBB
  */
 public async step2(serverM2B64: string): Promise<ValResult<string>> {
     const SString = nonprefixedHexOfPositiveBI(this.S)
-    const clientM2 = this.hexOfBuff(await this.hash(this.A + this.M1 + SString))
-    const serverM2 = hexOfBase64(serverM2B64)
+    const M2Buff = await this.hash(this.A + this.M1 + SString)
+    const clientM2Hex = hexOfBuff(M2Buff)
+    const serverM2Hex = hexOfBase64(serverM2B64)
     console.log("client M2")
-    console.log(clientM2)
+    console.log(BI.BigInt(M2Buff).toString())
 
-    if (serverM2 !== clientM2) return {isOk: false, errMsg: "Bad server credentials (M2)"}
+    if (clientM2Hex !== serverM2Hex) return {isOk: false, errMsg: "Bad server credentials (M2)"}
 
     return {isOk: true, value: SString}
 }
@@ -132,7 +137,7 @@ private async randomA(): Promise<BI> {
     while (BI.equal(r, ZERO)) {
         const rstr = this.randomHex(512)
         const rBi = BI.BigInt(rstr)
-        const oneTimeBi = BI.BigInt(this.hexOfBuff(await this.hash(this.I + ":" + this.salt + ":" + (new Date()).getTime())))
+        const oneTimeBi = BI.BigInt(prefixedHexOfBuff(await this.hash(this.I + ":" + this.salt + ":" + (new Date()).getTime())))
         r = BI.remainder(BI.add(oneTimeBi, rBi), this.N)
     }
     return r
@@ -153,8 +158,13 @@ private async randomA(): Promise<BI> {
 /**
  * Compute the scrambler value. If it's zero, process is aborted
  */
-private async computeU(A: string, B: string): Promise<BI | undefined> {
-    const output = this.hexOfBuff(await this.hash(A + B))
+private async computeU(AHex: string, BHex: string): Promise<BI | undefined> {
+    console.log("AHex")
+    console.log(AHex)
+    console.log("BHex")
+    console.log(BHex)
+    const output = prefixedHexOfBuff(await this.hash(AHex + BHex))
+    console.log("client input for hash for u = " + AHex + BHex)
     const result = BI.BigInt(output)
     if (BI.equal(result, ZERO)) {
         return undefined
@@ -172,27 +182,11 @@ private randomHex(l: number): string {
 }
 
 
-
-private hexOfBuff(inp: ArrayBuffer): string {
-    return "0x" + (Array.from(new Uint8Array(inp)))
-                .map((b) => HEX_DIGITS[b >> 4] + HEX_DIGITS[b & 15])
-                .join("");
-}
-
-
-// var hash = CryptoJS.SHA256("Message");
-// ​
-// hash.toString(CryptoJS.enc.Base64)
-// > "L3dmip37+NWEi57rSnFFypTG7ZI25Kdz9tyvpRMrL5E=";
-// ​
-// hash.toString(CryptoJS.enc.Hex)
-// > "2f77668a9dfbf8d5848b9eeb4a7145ca94c6ed9236e4a773f6dcafa5132b2f91";
-
 private async generateX(saltHex: string, identity: string, pw: string): Promise<BI> {
-    const hash1 = this.hexOfBuff(await this.hash(identity + ":" + pw))
+    const hash1 = hexOfBuff(await this.hash(identity + ":" + pw))
 
     const concat = (saltHex + hash1).toUpperCase()
-    const hashHex = this.hexOfBuff(await this.hash(concat))
+    const hashHex = prefixedHexOfBuff(await this.hash(concat))
 
     return BI.remainder(BI.BigInt(hashHex), this.N)
 }
