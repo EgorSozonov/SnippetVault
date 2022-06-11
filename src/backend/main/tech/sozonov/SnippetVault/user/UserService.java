@@ -61,11 +61,14 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
-
+    System.out.println("k server = " + Constants.k.toString());
+    System.out.println("g server = " + Constants.g.toString());
+    System.out.println("N server = " + Constants.N.toString());
     System.out.println("v handshake = " + verifierNum.toString());
     System.out.println("b handshake = " + b.toString());
     System.out.println("B handshake = " + B.toString());
     System.out.println("salt handshake = " + saltNum.toString());
+
 
     byte[] bArr = b.toByteArray();
     val newUser = UserNewIntern.builder()
@@ -111,7 +114,6 @@ public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, Mult
  */
 public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
     if (nullOrEmp(dto.userName)) {
-        System.out.println("Here 1");
         return Mono.just(Either.left("Sign in error"));
     }
 
@@ -131,27 +133,43 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
         System.out.println(ADecoded);
         System.out.println("M1 from client, decoded");
         System.out.println(M1Decoded);
+        System.out.println("verifier");
+        System.out.println(verifier.toString());
 
         BigInteger b = new BigInteger(user.b);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
-
-
 
         System.out.println("v sign-in = " + verifier.toString());
         System.out.println("b sign-in = " + b.toString());
         System.out.println("B sign-in = " + B.toString());
 
-        System.out.println("A for u = " + ADecoded.toString(16));
-        System.out.println("B for u = " + B.toString(16));
-        System.out.println("Server input to hash function for u");
-        System.out.println(ADecoded.toString(16) + B.toString(16));
+
+        String AConcatB = prependZeroToHex(ADecoded.toString(16)) + prependZeroToHex(B.toString(16));
+        System.out.println("Input for u = " + AConcatB);
         hasher.reset();
-        hasher.update((ADecoded.toString(16) + B.toString(16)).getBytes());
+        hasher.update(AConcatB.getBytes());
         val uBytes = hasher.digest();
 
-        BigInteger u = BigIntegerUtils.bigIntegerFromBytes(uBytes);// srp.computeU(hasher, Constants.N, ADecoded, B);
+        BigInteger u = BigIntegerUtils.bigIntegerFromBytes(uBytes);
         System.out.println("u server = " + u.toString());
-        System.out.println("u server hex = " + u.toString(16));
+
+        val vu = verifier.modPow(u, Constants.N);
+        val Avu = vu.multiply(ADecoded);
+        System.out.println("vu = " + vu.toString());
+        System.out.println("Avu = " + Avu.toString());
+
+        val Bminkv = B.subtract(Constants.k.multiply(verifier));
+        val kv = Constants.k.multiply(verifier);
+        System.out.println("B = " + B.toString());
+        System.out.println("kv = " + kv.toString());
+        System.out.println("B - kv = " + Bminkv.toString());
+
+        val BminkvMod = Bminkv.mod(Constants.N);
+        System.out.println("B - kv mod N = " + BminkvMod.toString());
+
+        System.out.println("vu = " + vu.toString());
+        System.out.println("Avu = " + Avu.toString());
+
         BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
         System.out.println("S server = " + S.toString());
 
@@ -186,6 +204,11 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
                         .map(x -> Either.right(new SignInResponse(M2B64, user.userId)));
     });
 }
+
+private String prependZeroToHex(String hex) {
+    return hex.length() % 2 == 0 ? hex : "0" + hex;
+}
+
 private boolean validatePasswordComplexity(String newPw) {
     return newPw != null && newPw.length() >= 8;
 }

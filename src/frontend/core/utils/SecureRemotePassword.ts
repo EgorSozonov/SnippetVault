@@ -13,7 +13,7 @@ class SecureRemotePassword {
 
 
 /** Verifier */
-public v = ""
+public verifier = ZERO
 
 /** User identity (login or email etc) */
 public I = ""
@@ -47,6 +47,7 @@ constructor(NStr: string, gStr: string, kHexStr: string) {
     this.N = BI.BigInt(NStr)
     this.g = BI.BigInt(gStr)
     this.k = BI.BigInt(kHexStr)
+    console.log("k client = " + this.k.toString())
 }
 
 /**
@@ -61,11 +62,10 @@ public async generateRandomSalt(optionalServerSalt?: string): Promise<string> {
     return nonprefixedHexOfArray(new Uint8Array(resultBuffer))
 }
 
-public async generateVerifier(saltHex: string, identity: string, password: string) {
+public async generateVerifier(saltHex: string, identity: string, password: string): Promise<BI> {
     const x = await this.generateX(saltHex, identity, password)
-    const verifier = modPow(this.g, x, this.N)
-    console.log("Original verifier = " + verifier.toString())
-    return nonprefixedHexOfPositiveBI(verifier)
+    this.verifier = modPow(this.g, x, this.N)
+    return this.verifier
 }
 
 /**
@@ -76,10 +76,10 @@ public async step1(identity: string, password: string, saltB64: string, serverBB
     this.P = password
 
     // B64 -> Hex -> BI
-    const B = bigintOfBase64(serverBB64)
-    console.log("B on client: " + B.toString())
+    this.B = bigintOfBase64(serverBB64)
+    console.log("B on client: " + this.B.toString())
 
-    if (BI.equal(BI.remainder(B, this.N), ZERO)) {
+    if (BI.equal(BI.remainder(this.B, this.N), ZERO)) {
         return {isOk: false, errMsg: "Bad server public value B = 0"}
     }
     const x = await this.generateX(hexOfBase64(saltB64), this.I, this.P)
@@ -97,14 +97,19 @@ public async step1(identity: string, password: string, saltB64: string, serverBB
     if (!u) return {isOk: false, errMsg: "Bad client value u"}
     console.log("client u = " + u.toString())
 
-    this.S = this.computeSessionKey(this.k, x, u, a, this.B)
+    const vu = modPow(this.verifier, u, this.N);
+    const Avu = BI.multiply(vu, ANum);
+    console.log("vu = " + vu.toString());
+    console.log("Avu = " + Avu.toString());
+
+    this.S = this.computeSessionKey(x, u, a)
     console.log("client-side S = " + this.S.toString())
+
     const sStr = this.S.toString(16)
     this.K = hexOfBuff(await this.hash(sStr))
 
-    const M1Buff = await this.hash(this.A + B.toString() + sStr)
+    const M1Buff = await this.hash(this.A + this.B.toString() + sStr)
     this.M1 = hexOfBuff(M1Buff)
-    console.log("client-side M1 = " + BI.BigInt(prefixedHexOfBuff(M1Buff)).toString())
 
     const AB64 = base64OfHex(this.A)
     const M1B64 = base64OfHex(this.M1)
@@ -192,24 +197,31 @@ private async generateX(saltHex: string, identity: string, pw: string): Promise<
 }
 
 /**
- * Client's session key S = (B - kg^x)^(a + ux)
+ * Client's session key S = (B - kv)^(a + ux)
  */
-public computeSessionKey(k: BI, x: BI, u: BI, a: BI, B: BI): BI {
-    const exp = BI.add(BI.multiply(u, x), a)
-    const kgx = BI.multiply(modPow(this.g, x, this.N), k)
-    return modPow(BI.subtract(B, kgx), exp, this.N)
+public computeSessionKey(x: BI, u: BI, a: BI): BI {
+    const exp = BI.add(a, BI.multiply(u, x))
+    const kv = BI.multiply(this.k, this.verifier)
+    console.log("B = " + this.B.toString())
+    console.log("kv = " + kv.toString())
+    console.log("B - kv = " + (BI.subtract(this.B, kv)).toString())
+    const diff = this.posMod(BI.subtract(this.B, kv), this.N)
+    console.log("B - kv mod N = " + diff.toString())
+    return modPow(diff, exp, this.N)
+}
+
+/**
+ * Returns the smallest non-negative remainder modulo N
+ */
+private posMod(inp: BI, N: BI): BI {
+    const rem = BI.remainder(inp, N)
+    return BI.GE(rem, ZERO) ? rem : BI.add(rem, N)
 }
 
 private async hash(x: string): Promise<ArrayBuffer> {
-    //return SHA256(x).toString().toLowerCase();
-    const dec = new TextDecoder()
     const encoded = new TextEncoder().encode(x)
     const resultArr = await crypto.subtle.digest('SHA-256', encoded)
     return resultArr;
-}
-
-private validate(v: string): ValResult<boolean> {
-    return {isOk: true, value: true}
 }
 
 }

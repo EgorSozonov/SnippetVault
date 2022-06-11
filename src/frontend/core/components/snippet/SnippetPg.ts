@@ -6,7 +6,7 @@ import { FunctionComponent, useContext, useEffect, useState,} from "react"
 import { NavLink, useSearchParams } from "react-router-dom"
 import MainState from "../../mobX/AllState"
 import { observer } from "mobx-react-lite"
-import { arrayOfBase64, base64OfArray, base64OfHex, bigintOfHex, checkNonempty, determinePadding, hexOfBase64 } from "../../utils/StringUtils"
+import { arrayOfBase64, base64OfArray, base64OfHex, bigintOfHex, checkNonempty, determinePadding, hexOfBase64, nonprefixedHexOfPositiveBI } from "../../utils/StringUtils"
 import { idOf, isStateOK, stringOf } from "./utils/SnippetState"
 import { SnippetDTO } from "../../types/dto/SnippetDTO"
 import Dialog from "../../commonComponents/dialog/Dialog"
@@ -102,9 +102,11 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
         try {
             const saltHex = await clientSRP.generateRandomSalt()
-            const verifierHex = await clientSRP.generateVerifier(saltHex, userName, password)
+            const verifier = await clientSRP.generateVerifier(saltHex, userName, password)
+            const verifierHex = nonprefixedHexOfPositiveBI(verifier)
             console.log("salt result = " + bigintOfHex(saltHex).toString())
-            console.log("verifier = " + bigintOfHex(verifierHex).toString())
+            console.log("verifier = " + verifier.toString())
+            console.log("g = " + rfc5054.g_base10.toString())
 
             // base64
             const handshakeResponse = await state.user.userRegister({ saltB64: base64OfHex(saltHex), verifierB64: base64OfHex(verifierHex), userName })
