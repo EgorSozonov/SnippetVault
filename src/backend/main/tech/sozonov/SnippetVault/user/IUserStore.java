@@ -9,9 +9,11 @@ public interface IUserStore {
 
 
 Mono<AuthenticateIntern> userAuthentGet(String userName);
+
 Mono<AuthorizeIntern> userAuthorizGet(int userId);
 Mono<AuthorizeIntern> userAdminAuthoriz();
 Mono<Integer> userHandshake(Handshake hshake, byte[] b);
+Mono<HandshakeIntern> userHandshakeGet(String userName);
 Mono<Integer> userUpdateExpiration(int userId, String newToken, LocalDateTime newDate);
 Mono<Integer> userRegister(UserNewIntern user);
 Mono<Integer> userUpdate(UserNewIntern user);

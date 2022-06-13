@@ -18,7 +18,6 @@ import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserNewIntern;
 import tech.sozonov.SnippetVault.cmn.utils.Constants;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import org.springframework.util.MultiValueMap;
-
 import com.nimbusds.srp6.BigIntegerUtils;
 import com.nimbusds.srp6.SRP6Routines;
 import org.springframework.http.HttpCookie;
@@ -45,19 +44,15 @@ public Flux<Comment> commentsGet(int snippetId) {
     return userStore.commentsGet(snippetId);
 }
 
-// a0c8ed419183c689f81af014abe4dc880f9bc2051b1574343070e8a56ae9729ef26e30d54c7d3bd505d64eedb13829a9af5da89a5c85cb7c15e047bc77f92b6730679d2977f6730286593ffef7142ec60df61f7ac2ef634becf9c561df1fab82367146471cd3f77a1e5f05763afd17be20fe2c731a34d4fd2b000c8d5b1428c7fbb5e5ce9cc3c40ac99333c613f5b6224eca9d6f26638a88d1a1cb496abcc1bd2adeb7a65ca150b7ad7a71bc2d297749a63db8dab5f354c804944db6b28d4fae09bb655d21916fe54cde34193651986ad248a771a60025805237440ce769b504341dd311f9cd444d94477f382a8162d10ccb02f92cac04ffc004e051426087df
-
 public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
     if (nullOrEmp(dto.userName)) return errResponse;
     val enc = Base64.getEncoder();
     val dec = Base64.getDecoder();
 
-
     byte[] verifier = dec.decode(dto.verifierB64);
     byte[] salt = dec.decode(dto.saltB64);
     BigInteger verifierNum = new BigInteger(1, verifier);
     BigInteger saltNum = new BigInteger(1, salt);
-
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
@@ -90,19 +85,20 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
 
 public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, MultiValueMap<String, HttpCookie> cookies) {
     if (nullOrEmp(dto.userName)) return errResponse;
-    val b64 = Base64.getEncoder();
+    val enc = Base64.getEncoder();
 
+    BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
+
+    byte[] bArr = b.toByteArray();
     return userStore.userAuthentGet(dto.userName).flatMap(user -> {
-        BigInteger verifier = new BigInteger(1, user.verifier);
-        BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
-        BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
+        BigInteger verifierNum = new BigInteger(1, user.verifier);
+        BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
 
-
-        return userStore.userHandshake(dto, b.toByteArray())
+        return userStore.userHandshake(dto, bArr)
                         .map(rowsUpdated -> {
-            if (rowsUpdated < 1) return Either.left("Rows not updated Authentication error");
+            if (rowsUpdated < 1) return Either.left("Handshake error");
 
-            HandshakeResponse handshakeResponse = new HandshakeResponse(b64.encodeToString(user.salt), b64.encodeToString(B.toByteArray()));
+            HandshakeResponse handshakeResponse = new HandshakeResponse(enc.encodeToString(user.salt), enc.encodeToString(B.toByteArray()));
             return Either.right(handshakeResponse);
         });
     });

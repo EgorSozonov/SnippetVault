@@ -132,9 +132,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
             if (M2Response.isOK === false) return
 
             const result2 = await clientSRP.step2(M2Response.value.M2B64)
-            if (result2.isOk === false) {
-                return
-            }
+            if (result2.isOk === false) return
 
             const userId: number = M2Response.value.userId
 
@@ -147,37 +145,91 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
 
     }
 
-    // const fooSignin = async () => {
-    //     const userName = "Joe"
-    //     const password = "a6SWy$U8s7Y"
+    const fooSignin = async () => {
+        const userName = "Joe"
+        const password = "a6SWy$U8s7Y"
 
-    //     // generate the client session class from the client session factory closure
-    //     const clientSRP = new SRPSession(rfc5054.N_base10, rfc5054.g_base10, rfc5054.k_base16)
-    //     try {
+        const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
+        try {
 
-    //         const {salt, B} = await state.client.userHandshake(userName)
-    //         console.log(salt)
-    //         console.log("B = " + B)
-    //         const mbAM1 = await clientSRP.step1(userName, password, salt, serverB)
-    //         if (mbAM1.isOk === false) return
-    //         const {A, M1} = mbAM1.value
-    //         const M2 = await state.client.userSignIn(A, M1)
-    //         const result2 = await clientSRP.step2(M2)
-    //         if (result2.isOk === false) return
+            const handshakeResponse = await state.user.userHandshake({ userName })
+            if (handshakeResponse.isOK === false) {
+                console.log("Handshake error " + handshakeResponse.errMsg)
+                return
+            }
 
-    //         const sessionKey = result2.value
-    //         console.log("Session Key = " + sessionKey)
-    //     } catch (e) {
-    //         console.log(e)
-    //     }
+            const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
+            if (mbAM1.isOk === false) {
+                console.log(mbAM1.errMsg)
+                console.log("Handshake response was incorrect")
+                return
+            }
 
-    // }
+            const {AB64, M1B64} = mbAM1.value
+
+            const M2Response = processSignIn(await state.user.userSignIn(AB64, M1B64, userName), "user")
+            if (M2Response.isOK === false) return
+
+            const result2 = await clientSRP.step2(M2Response.value.M2B64)
+            if (result2.isOk === false) return
+
+            const userId: number = M2Response.value.userId
+
+            const sessionKey = result2.value
+            console.log("userId = " + userId)
+            console.log("Session Key = " + sessionKey)
+        } catch (e) {
+            console.log(e)
+        }
+
+    }
+
+    const fooSigninFail = async () => {
+        const userName = "Joe"
+        const password = "a6SWy$U8s7Z"
+
+        const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
+        try {
+
+            const handshakeResponse = await state.user.userHandshake({ userName })
+            if (handshakeResponse.isOK === false) {
+                console.log("Handshake error " + handshakeResponse.errMsg)
+                return
+            }
+
+            const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
+            if (mbAM1.isOk === false) {
+                console.log(mbAM1.errMsg)
+                console.log("Handshake response was incorrect")
+                return
+            }
+
+            const {AB64, M1B64} = mbAM1.value
+
+            const M2Response = processSignIn(await state.user.userSignIn(AB64, M1B64, userName), "user")
+            if (M2Response.isOK === false) return
+
+            const result2 = await clientSRP.step2(M2Response.value.M2B64)
+            if (result2.isOk === false) return
+
+            const userId: number = M2Response.value.userId
+
+            const sessionKey = result2.value
+            console.log("userId = " + userId)
+            console.log("Session Key = " + sessionKey)
+        } catch (e) {
+            console.log(e)
+        }
+
+    }
 
     return html`<div class="snippetsBody">
         <main class="snippetsContainer">
             <div class="snippetsHeader">
                 <div class="snippetLeftHeader">
-                    <button onClick=${fooRegister}>Testing</button>
+                    <button onClick=${fooRegister}>Register</button>
+                    <button onClick=${fooSignin}>Sign-in</button>
+                    <button onClick=${fooSigninFail}>Fail signing in</button>
                     <div class="snippetHeading">
                         <span>${stringOf(lang1)}</span>
                         <span>

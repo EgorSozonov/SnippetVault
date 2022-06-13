@@ -1,6 +1,6 @@
 import { action, computed, makeAutoObservable } from "mobx"
 import IClient from "../../ports/IClient"
-import { ChangePwAdminDTO, ChangePwDTO, RegisterDTO, SignInAdminDTO, SignInDTO, SignInResponseDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
+import { ChangePwAdminDTO, ChangePwDTO, HandshakeDTO, RegisterDTO, SignInAdminDTO, SignInDTO, SignInResponseDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
 import { ProfileDTO } from "../types/dto/UserDTO"
 import ServerEither from "../types/ServerEither"
 import ServerResponse from "../types/ServerResponse"
@@ -32,8 +32,8 @@ export default class UserState {
         return processHandshake(await this.client.userRegister(dto), "user")
     })
 
-    userHandshake = action(() => {
-
+    userHandshake = action(async (dto: HandshakeDTO) => {
+        return processHandshake(await this.client.userHandshake(dto), "user")
     })
 
     userSignIn = action((AB64: string, M1B64: string, userName: string) => {

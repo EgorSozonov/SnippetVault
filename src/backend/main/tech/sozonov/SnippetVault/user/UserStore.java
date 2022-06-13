@@ -120,6 +120,18 @@ public Mono<Integer> userHandshake(Handshake hshake, byte[] b) {
              .map(r -> (int) r.get("id"));
 }
 
+private static final String userHandshakeGetQ = """
+    SELECT id AS "userId", salt, verifier
+    FROM sv.user WHERE name = :name
+""";
+public Mono<HandshakeIntern> userHandshakeGet(String userName) {
+    val deserializer = new Deserializer<>(HandshakeIntern.class, userHandshakeGetQ);
+    return db.sql(deserializer.sqlSelectQuery)
+             .bind("name", userName)
+             .map(deserializer::unpackRow)
+             .one();
+}
+
 private static final String userUpdateQ = """
     UPDATE sv.user SET salt = :salt, verifier = :verifier,
                        expiration = :dtExpiration, "accessToken" = :accessToken, b = :b

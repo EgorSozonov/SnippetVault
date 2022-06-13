@@ -122,7 +122,7 @@ public async step2(serverM2B64: string): Promise<ValResult<string>> {
     const clientM2Hex = hexOfBuff(M2Buff)
     const serverM2Hex = hexOfBase64(serverM2B64)
     console.log("client M2")
-    console.log(BI.BigInt(M2Buff).toString())
+    console.log(BI.BigInt(prefixedHexOfBuff(M2Buff)).toString())
 
     console.log("server M2")
     console.log(bigintOfBase64(serverM2B64).toString())
