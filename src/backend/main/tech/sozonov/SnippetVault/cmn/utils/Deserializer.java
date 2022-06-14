@@ -48,7 +48,14 @@ public T unpackRow(Row dbRow) {
             if (tgt.propType == ValueType.doubl) {
                 setters.get(tgt.indexSetter).set(result, (double)dbRow.get(j));
             } else if (tgt.propType == ValueType.integr) {
-                setters.get(tgt.indexSetter).set(result, dbRow.get(j, Integer.class));
+                val intVal = dbRow.get(j, Integer.class);
+                if (intVal == null) {
+                    System.out.println("Before setter");
+                }
+                setters.get(tgt.indexSetter).set(result, intVal);
+                if (intVal == null) {
+                    System.out.println("After setter");
+                }
             } else if (tgt.propType == ValueType.lon) {
                 setters.get(tgt.indexSetter).set(result, dbRow.get(j, Long.class));
             } else if (tgt.propType == ValueType.strin) {

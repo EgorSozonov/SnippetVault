@@ -20,7 +20,7 @@ class HttpClient implements IClient {
     }
 
     snippetsByCode(taskGroup: string, lang1: string, lang2: string): Promise<ServerResponse<SnippetDTO[]>> {
-        return this.getRequestNoCreds<SnippetDTO[]>(`/snippets/byCode?taskGroup=${taskGroup}&lang1=${lang1}&lang2=${lang2}`)
+        return this.getRequestNoCreds<SnippetDTO[]>(`/snippets/byCode?task=${taskGroup}&lang1=${lang1}&lang2=${lang2}`)
     }
 
     languagesGet(): Promise<ServerResponse<LanguageDTO[]>> {

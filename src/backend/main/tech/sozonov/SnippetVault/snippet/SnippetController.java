@@ -57,8 +57,8 @@ public Flux<Snippet> snippets(@PathVariable("taskGroup") int taskGroup,
 }
 
 @GetMapping("snippets/byCode")
-public Flux<Snippet> snippetsByCode(@RequestParam String taskGroup, @RequestParam String lang1, @RequestParam String lang2) {
-    return snippetService.snippetsGetByCode(taskGroup, lang1, lang2);
+public Flux<Snippet> snippetsByCode(@RequestParam String task, @RequestParam String lang1, @RequestParam String lang2) {
+    return snippetService.snippetsGetByCode(task, lang1, lang2);
 }
 
 @GetMapping("snippet/{snId}")

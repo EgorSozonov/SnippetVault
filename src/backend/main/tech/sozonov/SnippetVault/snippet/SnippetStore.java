@@ -62,7 +62,7 @@ public Flux<Snippet> snippetsGet(int taskGroup, int lang1, int lang2) {
     val deserializer = new Deserializer<>(Snippet.class, snippetsQ);
     return db.sql(snippetsQ)
              .bind("$1", lang1)
-             .bind("$2", lang1)
+             .bind("$2", lang2)
              .bind("$3", taskGroup)
              .map(deserializer::unpackRow)
              .all();
@@ -96,7 +96,7 @@ public Flux<Snippet> snippetsGetByCode(String taskGroup, String lang1, String la
     val deserializer = new Deserializer<>(Snippet.class, snippetsGetByCodeQ);
     return db.sql(snippetsGetByCodeQ)
              .bind("$1", lang1)
-             .bind("$2", lang1)
+             .bind("$2", lang2)
              .bind("$3", taskGroup)
              .map(deserializer::unpackRow)
              .all();
