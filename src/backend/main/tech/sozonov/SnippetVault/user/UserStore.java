@@ -62,32 +62,6 @@ public  Mono<AuthorizeIntern> userAdminAuthoriz() {
              .one();
 }
 
-private static final String userUpdateExpirationQ = """
-    UPDATE sv."user" SET expiration=:newDate, "accessToken" = :newToken
-    WHERE id = :id
-""";
-public Mono<Integer> userUpdateExpiration(int userId, String newToken, LocalDateTime newDate) {
-    return db.sql(userUpdateExpirationQ)
-             .bind("id", userId)
-             .bind("newDate", newDate)
-             .bind("newToken", newToken)
-             .fetch()
-             .rowsUpdated();
-}
-
-private static final String uuserUpdateTempKeyQ = """
-    UPDATE sv."user" SET b=$1
-    WHERE id = $2
-""";
-
-public Mono<Integer> userUpdateTempKey(int userId, byte[] b) {
-    return db.sql(uuserUpdateTempKeyQ)
-             .bind("$1", b)
-             .bind("$2", userId)
-             .fetch()
-             .rowsUpdated();
-}
-
 private static final String userRegisterQ = """
     INSERT INTO sv."user"(name, "dateJoined", expiration, "accessToken", salt, verifier, b)
     VALUES (:name, :tsJoin, :dtExpiration, 'f',
@@ -116,8 +90,7 @@ public Mono<Integer> userHandshake(Handshake hshake, byte[] b) {
              .bind("name", hshake.userName)
              .bind("b", b)
              .fetch()
-             .first()
-             .map(r -> (int) r.get("id"));
+             .rowsUpdated();
 }
 
 private static final String userHandshakeGetQ = """
@@ -133,18 +106,15 @@ public Mono<HandshakeIntern> userHandshakeGet(String userName) {
 }
 
 private static final String userUpdateQ = """
-    UPDATE sv.user SET salt = :salt, verifier = :verifier,
-                       expiration = :dtExpiration, "accessToken" = :accessToken, b = :b
-    WHERE name = :name
+    UPDATE sv.user SET expiration = :dtExpiration, "accessToken" = :accessToken, b = :b
+    WHERE id = :userId
 """;
-public Mono<Integer> userUpdate(UserNewIntern user) {
+public Mono<Integer> userUpdate(UserSignInIntern user) {
     return db.sql(userUpdateQ)
-             .bind("name", user.userName)
              .bind("dtExpiration", user.dtExpiration)
-             .bind("salt", user.salt)
-             .bind("verifier", user.verifier)
              .bind("b", user.b)
              .bind("accessToken", user.accessToken)
+             .bind("userId", user.userId)
              .fetch()
              .rowsUpdated();
 }

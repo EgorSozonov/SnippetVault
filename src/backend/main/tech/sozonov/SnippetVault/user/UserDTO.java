@@ -2,6 +2,7 @@ package tech.sozonov.SnippetVault.user;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import tech.sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
 
 public class UserDTO {
@@ -49,6 +50,7 @@ public static class Register {
 }
 
 @AllArgsConstructor
+@NoArgsConstructor
 public static class Handshake {
     public String userName;
 }

@@ -74,32 +74,29 @@ public async step1(identity: string, password: string, saltB64: string, serverBB
     this.I = identity
     this.P = password
 
+    const a = await this.randomA()
+
+    const ANum = modPow(this.g, a, this.N)
+
     // B64 -> Hex -> BI
     this.B = bigintOfBase64(serverBB64)
-    console.log("B on client: " + this.B.toString())
 
     if (BI.equal(BI.remainder(this.B, this.N), ZERO)) {
         return {isOk: false, errMsg: "Bad server public value B = 0"}
     }
     const x = await this.generateX(hexOfBase64(saltB64), this.I, this.P)
-    // No reason to keep the password around anymore
-    this.P = ""
-
-    const a = await this.randomA()
-
-    const ANum = modPow(this.g, a, this.N)
-    console.log("client-side A = " + ANum.toString())
 
     this.AHex = nonprefixedHexOfPositiveBI(ANum)
     const u = await this.computeU(this.AHex, hexOfBase64(serverBB64))
 
     if (!u) return {isOk: false, errMsg: "Bad client value u"}
 
+    this.verifier = modPow(this.g, x, this.N)
+
     const vu = modPow(this.verifier, u, this.N);
     const Avu = BI.multiply(vu, ANum);
 
     this.S = this.computeSessionKey(x, u, a)
-    console.log("client-side S = " + this.S.toString())
 
     const sStr = nonprefixedHexOfPositiveBI(this.S)
     this.K = hexOfBuff(await this.hash(sStr))

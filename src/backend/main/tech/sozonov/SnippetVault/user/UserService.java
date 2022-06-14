@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserNewIntern;
+import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserSignInIntern;
 import tech.sozonov.SnippetVault.cmn.utils.Constants;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import org.springframework.util.MultiValueMap;
@@ -56,9 +57,7 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
-    System.out.println("k server = " + Constants.k.toString());
-    System.out.println("g server = " + Constants.g.toString());
-    System.out.println("N server = " + Constants.N.toString());
+
     System.out.println("v handshake = " + verifierNum.toString());
     System.out.println("b handshake = " + b.toString());
     System.out.println("B handshake = " + B.toString());
@@ -91,8 +90,12 @@ public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, Mult
 
     byte[] bArr = b.toByteArray();
     return userStore.userAuthentGet(dto.userName).flatMap(user -> {
+        System.out.println("=== handshake ===");
         BigInteger verifierNum = new BigInteger(1, user.verifier);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
+        System.out.println("b = " + LocalDateTime.now() + " " + b.toString());
+        System.out.println("verifier = " + verifierNum.toString());
+        System.out.println("=== /handshake ===");
 
         return userStore.userHandshake(dto, bArr)
                         .map(rowsUpdated -> {
@@ -109,13 +112,12 @@ public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, Mult
  * If correct, update the session key and date of expiration
  */
 public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
-    if (nullOrEmp(dto.userName)) {
-        return Mono.just(Either.left("Sign in error"));
-    }
+    if (nullOrEmp(dto.userName)) return Mono.just(Either.left("Sign in error"));
 
     return userStore.userAuthentGet(dto.userName).flatMap(user -> {
         BigInteger verifier = new BigInteger(1, user.verifier);
         val dec = Base64.getDecoder();
+        val enc = Base64.getEncoder();
         MessageDigest hasher = null;
         try {
             hasher = MessageDigest.getInstance("SHA-256");
@@ -129,19 +131,19 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
         System.out.println(ADecoded);
         System.out.println("M1 from client, decoded");
         System.out.println(M1Decoded);
-        System.out.println("verifier");
-        System.out.println(verifier.toString());
+
 
         BigInteger b = new BigInteger(user.b);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
-
-        System.out.println("v sign-in = " + verifier.toString());
-        System.out.println("b sign-in = " + b.toString());
-        System.out.println("B sign-in = " + B.toString());
+        System.out.println("=== sign-in ===");
+        System.out.println("verifier = " + verifier.toString());
+        System.out.println("b = " + LocalDateTime.now() + " " + b.toString());
+        System.out.println("B = " + B.toString());
+        System.out.println("=== /sign-in ===");
 
 
         String AConcatB = prependZeroToHex(ADecoded.toString(16)) + prependZeroToHex(B.toString(16));
-        System.out.println("Input for u = " + AConcatB);
+
         hasher.reset();
         hasher.update(AConcatB.getBytes());
         val uBytes = hasher.digest();
@@ -151,6 +153,9 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
 
         BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
         System.out.println("S server = " + S.toString());
+        val vu = verifier.modPow(u, Constants.N);
+        val Avu = vu.multiply(ADecoded);
+        System.out.println("Avu = " + Avu.toString());
 
         BigInteger serverM1 = computeM1(hasher, ADecoded, B, S); //srp.computeClientEvidence(hasher, ADecoded, B, S);
 
@@ -170,26 +175,29 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
 
         System.out.println("Session key = " + S.toString());
 
-        UserNewIntern updatedUser = UserNewIntern.builder()
-            .userName(dto.userName)
-            .verifier(user.verifier)
-            .salt(user.salt)
+        UserSignInIntern updateUser = UserSignInIntern
+            .builder()
+            .userId(user.userId)
             .b(b.toByteArray())
-            .accessToken(S.toString())
+            .accessToken(enc.encodeToString(S.toByteArray()))
             .dtExpiration(LocalDate.now())
             .build();
 
-        return userStore.userUpdate(updatedUser)
-                        .map(x -> Either.right(new SignInResponse(M2B64, user.userId)));
+        return userStore.userUpdate(updateUser)
+                        .map(x -> {
+                            if (x < 1) return Either.left("DB update error");
+                            return Either.right(new SignInResponse(M2B64, user.userId));
+                        });
     });
 }
+
 
 private static BigInteger computeM1(MessageDigest hasher, BigInteger A, BigInteger B, BigInteger S) {
     String inp = prependZeroToHex(A.toString(16)) + prependZeroToHex(B.toString(16)) + prependZeroToHex(S.toString(16));
     hasher.reset();
     hasher.update(inp.getBytes());
     val result = hasher.digest();
-    return new BigInteger(result);
+    return new BigInteger(1, result);
 }
 
 private static String prependZeroToHex(String hex) {
