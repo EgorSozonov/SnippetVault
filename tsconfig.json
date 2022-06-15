@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "jsx": "react",
         "experimentalDecorators": true,
         "target": "es6",
         "lib": [
@@ -32,5 +33,5 @@
         "webpack.backend.ts",
         "webpack.frontend.ts",
         "webpack.d.ts"
-    ]
+, "src/frontend/core/components/snippet/SnippetCode.tsx", "src/frontend/core/components/content/Content.tsx", "src/frontend/core/App.tsx", "src/frontend/core/components/snippet/SnippetPg.tsx", "src/frontend/core/components/admin/Admin.tsx", "src/frontend/core/components/admin/NewProposal.tsx", "src/frontend/core/components/admin/EditProposalDialog.tsx", "src/frontend/core/components/admin/AdminLogin.tsx", "src/frontend/core/components/admin/AdminChangePw.tsx"    ]
 }
