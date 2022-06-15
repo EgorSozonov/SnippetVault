@@ -51,40 +51,41 @@ const NewProposal: FunctionComponent = observer(() => {
     const proposals = state.admin.proposals.slice()
 
     return ((proposalDialog.isOpen === false)
-        ?
-            <div className="newProposals">
-                <div className="newProposalsTitle">
-                    <h3>New proposals</h3>
-                </div>
-                ${proposals.map((proposal: ProposalDTO, idx: number ) => {
-                    return
-                        <div className="proposalContainer" key=${idx}>
-                            <div className=${"proposalHeaderContainer"}>
-                                <div>
-                                    ${proposal.taskName} | ${proposal.languageName} | ${proposal.author}
-                                </div>
+        ? (
+            <DialogConfirm state={confirmationDialog} okHandler={okDialog} cancelHandler={cancelDialog}>
+                <div className="newProposals">
+                    <div className="newProposalsTitle">
+                        <h3>New proposals</h3>
+                    </div>
+                    {proposals.map((proposal: ProposalDTO, idx: number ) => {
+                        return (
+                            <div className="proposalContainer" key={idx}>
+                                <div className={"proposalHeaderContainer"}>
+                                    <div>
+                                        {proposal.taskName} | {proposal.languageName} | {proposal.author}
+                                    </div>
 
-                                <div className="proposalHeaderRight" title="Accept">
-                                    <div className="proposalHeaderButton" onClick=${declineHandler(proposal.proposalId)} title="Decline proposal">
-                                        X
-                                    </div>
-                                    <div className="proposalHeaderButton" onClick=${openProposalDialog(proposal.proposalId)} title="Edit proposal">
-                                        E
-                                    </div>
-                                    <div className="proposalHeaderButton" onClick=${approveHandler(proposal.proposalId)} title="Approve proposal">
-                                        A
+                                    <div className="proposalHeaderRight" title="Accept">
+                                        <div className="proposalHeaderButton" onClick={declineHandler(proposal.proposalId)} title="Decline proposal">
+                                            X
+                                        </div>
+                                        <div className="proposalHeaderButton" onClick={openProposalDialog(proposal.proposalId)} title="Edit proposal">
+                                            E
+                                        </div>
+                                        <div className="proposalHeaderButton" onClick={approveHandler(proposal.proposalId)} title="Approve proposal">
+                                            A
+                                        </div>
                                     </div>
                                 </div>
+                                <pre className={"proposalBody"}>{proposal.content}</pre>
                             </div>
-                            <pre className=${"proposalBody"}>${proposal.content}</div>
-                        </div>`
-                })}
-            </div>
-            <${DialogConfirm} state=${confirmationDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />
-        `
-        :
-            <${EditProposalDialog} dialogState=${proposalDialog} closeCallback=${closeProposalDialog} />
-        `
+                        )
+                    })}
+                </div>
+            </DialogConfirm>
+        )
+        : <EditProposalDialog dialogState={proposalDialog} closeCallback={closeProposalDialog} />
+
     )
 })
 

@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react"
-import { html } from "htm/react"
 import "./dialog.css"
 import DialogState from "./DialogState"
 
@@ -12,8 +11,8 @@ type Props = {
 }
 
 const DialogConfirm: React.FunctionComponent<Props> = ({state, okHandler, cancelHandler, children, }: Props) => {
-    return
-        <div className=${"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
+    return (
+        <div className={"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
             <div className="dialogContainer">
                 <div className="dialogBody">
                     ${state.title}
@@ -22,16 +21,16 @@ const DialogConfirm: React.FunctionComponent<Props> = ({state, okHandler, cancel
                     ${children}
                 </div>
                 <div className="dialogButtons">
-                    <div className="dialogButton" onClick=${cancelHandler}>
+                    <div className="dialogButton" onClick={cancelHandler}>
                         Cancel
                     </div>
-                    <div className="dialogButton" onClick=${okHandler}>
+                    <div className="dialogButton" onClick={okHandler}>
                         OK
                     </div>
                 </div>
             </div>
         </div>
-    `
+    )
 }
 
 export default DialogConfirm

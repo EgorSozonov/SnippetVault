@@ -1,6 +1,6 @@
+import React from "react"
 import { useState } from "react"
 import "./toggler.css"
-import { html } from "htm/react"
 
 
 type Props = {
@@ -23,22 +23,22 @@ const Toggler: React.FunctionComponent<Props> = ({leftChoice, rightChoice, initC
         }
     }
 
-    return
-        <div className="togglerContainer" onClick=${changeHandler}>
-            <span className=${"togglerLeftRect " + (currValue ? "togglerLeftRectInactive" : "togglerLeftRectActive")}></span>
-            <span className=${"togglerChoice" + (currValue ? " inactiveChoice" : " activeChoiceLeft")}>
-                ${leftChoice}
+    return (
+        <div className="togglerContainer" onClick={changeHandler}>
+            <span className={"togglerLeftRect " + (currValue ? "togglerLeftRectInactive" : "togglerLeftRectActive")}></span>
+            <span className={"togglerChoice" + (currValue ? " inactiveChoice" : " activeChoiceLeft")}>
+                {leftChoice}
             </span>
-            <span className=${"toggleSwitch " + (currValue ? "on" : "off")}>
+            <span className={"toggleSwitch " + (currValue ? "on" : "off")}>
                 <div ></div>
             </span>
 
-            <span className=${"togglerChoice" + (currValue ? " activeChoiceRight" : " inactiveChoice")}>
-                ${rightChoice}
+            <span className={"togglerChoice" + (currValue ? " activeChoiceRight" : " inactiveChoice")}>
+                {rightChoice}
             </span>
-            <span className=${"togglerRightRect " + (currValue ? " togglerRightRectActive" : "togglerRightRectInactive")}></span>
+            <span className={"togglerRightRect " + (currValue ? " togglerRightRectActive" : "togglerRightRectInactive")}></span>
         </div>
-    `
+    )
 }
 
 export default Toggler

@@ -1,5 +1,5 @@
 import "./Alternative.css"
-import { html } from "htm/react"
+import React from "react"
 import { FunctionComponent, useContext } from "react"
 import { observer } from "mobx-react-lite"
 import MainState from "../../mobX/AllState"
@@ -35,47 +35,48 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
 
     const isSignedIn = state.user.isUser.get()
     const isAdmin = state.user.isAdmin.get()
-    return
+    return (
         <div className="alternativeItem">
             <div className="alternativeItemCode">
-                ${alternative.content}
+                {alternative.content}
             </div>
             <div className="alternativeItemHeader">
                 <span>
-                    Upload date: ${fmtDt(alternative.tsUpload)}
+                    Upload date: {fmtDt(alternative.tsUpload)}
                 </span>
                 <span>
-                    Votes: ${alternative.score}
+                    Votes: {alternative.score}
                 </span>
                 ${alternative.voteFlag
                     ?
-                            <span className="alternativeFooterVoted">
-                                Voted!
-                            </span>
-                        `
-                    : (isSignedIn === true &&
+                        <span className="alternativeFooterVoted">
+                            Voted!
+                        </span>
+
+                    :
+                        (isSignedIn === true &&
 
                            <span className="alternativeFooterVote">
-                                <span className="alternativeItemButton" onClick=${voteHandler(alternative.id)}>V</span>Vote
+                                <span className="alternativeItemButton" onClick={voteHandler(alternative.id)}>V</span>Vote
                             </span>
-                        `)
+                        )
                 }
                 ${isAdmin &&
-                    <span className="alternativeFooterPrimary" onClick=${setPrimaryHandler(tlId, alternative.id)} title="Set as primary snippet">
+                    <span className="alternativeFooterPrimary" onClick={setPrimaryHandler(tlId, alternative.id)} title="Set as primary snippet">
                         <span className="alternativeItemButton">P</span>Primary
-                    </span>`
+                    </span>
                 }
             </div>
             <div className="alternativeItemFooter">
-                <span className="alternativeItemFooterComments" onClick=${openDialog(alternative.id, tlId, alternative.content)}>
+                <span className="alternativeItemFooterComments" onClick={openDialog(alternative.id, tlId, alternative.content)}>
                     <span className="alternativeItemButton" title="Comment">C</span>
-                    ${alternative.commentCount > 0 &&
-                        (alternative.commentCount > 1 ? ${alternative.commentCount} comments` : 1 comment`)
+                    {alternative.commentCount > 0 &&
+                        (alternative.commentCount > 1 ? `${alternative.commentCount} comments` : `1 comment`)
                     }
                 </span>
             </div>
         </div>
-    `
+    )
 })
 
 export default Alternative

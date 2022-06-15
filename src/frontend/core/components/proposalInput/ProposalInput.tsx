@@ -1,5 +1,5 @@
+import React from "react"
 import "./proposalInput.css"
-import { html } from "htm/react"
 import { FunctionComponent, useContext, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import MainState from "../../mobX/AllState"
@@ -73,46 +73,45 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
         closeCallback()
     }
     if (needData === true && mbTask === null) return empty
-    return
+    return (
         <div className="proposalInputContainer">
-            ${((mbTask !== null)
-                ?
-                    <div className="proposalInputBlock">Propose a <span className="proposalInputLang">${lang !== null && lang.name}</span> solution for <span className="proposalInputTask">${mbTask.name}</span>
-                    </div>
-                    <div className="proposalInputBlock">Task description: ${mbTask.description}</div>
-                    <div className="proposalInputBlockText">
-                        <textarea className="proposalInputTextArea" ref=${inputRef}></textarea>
-                    </div>
-                    ${isLibOpen === true
-                        ?
-                            <div className="proposalInputBlockLib">
-                                <p>Specify necessary libraries for this snippet:
-                                    <span onClick=${() => setIsLibOpen(false)} className="proposalInputLibTurnOff" title="Cancel specifying libraries">
-                                        x
-                                    </span>
-                                </p>
-                                <textarea className="proposalInputTextArea" ref=${inputLibRef}></textarea>
+            {((mbTask !== null)
+                ?   <>
+                        <div className="proposalInputBlock">Propose a <span className="proposalInputLang">${lang !== null && lang.name}</span> solution for <span className="proposalInputTask">{mbTask.name}</span>
+                        </div>
+                        <div className="proposalInputBlock">Task description: {mbTask.description}</div>
+                        <div className="proposalInputBlockText">
+                            <textarea className="proposalInputTextArea" ref={inputRef}></textarea>
+                        </div>
+                        {isLibOpen === true
+                            ?
+                                <div className="proposalInputBlockLib">
+                                    <p>Specify necessary libraries for this snippet:
+                                        <span onClick={() => setIsLibOpen(false)} className="proposalInputLibTurnOff" title="Cancel specifying libraries">
+                                            x
+                                        </span>
+                                    </p>
+                                    <textarea className="proposalInputTextArea" ref={inputLibRef}></textarea>
 
-                            </div>
-                        `
-                        :
-                            <div onClick=${() => setIsLibOpen(true)} className="proposalInputLibTurnOn">
-                                Optional: specify necessary libraries
-                            </div>
-                        `
-                    }
+                                </div>
 
-                    <div className="proposalInputButtons">
-                        <div className="proposalInputButton" onClick=${closeHandler}>Cancel</div>
-                        <div className="proposalInputButton" onClick=${saveProposalHandler}>Save</div>
-                    </div>
-                `
-                : html `
-                    <${Login} closeCallback=${closeCallback} />
-                `)
-            }
+                            :
+                                <div onClick={() => setIsLibOpen(true)} className="proposalInputLibTurnOn">
+                                    Optional: specify necessary libraries
+                                </div>
+
+                        }
+
+                        <div className="proposalInputButtons">
+                            <div className="proposalInputButton" onClick={closeHandler}>Cancel</div>
+                            <div className="proposalInputButton" onClick={saveProposalHandler}>Save</div>
+                        </div>
+                    </>
+                : <Login closeCallback={closeCallback} />
+
+            )}
         </div>
-    `
+    )
 })
 
 export default ProposalInput

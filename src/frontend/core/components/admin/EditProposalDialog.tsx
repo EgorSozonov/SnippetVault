@@ -48,31 +48,31 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
     }
 
     return (
-        <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>
-            ${(state.user.isAdmin() === true && proposal !== null) &&
-
-                <div>
+        <DialogFullscreen closeCallback={closeCallback} state={dialogState}>
+            {(state.user.isAdmin.get() === true && proposal !== null) &&
+                <>
+                    <div>
+                        <div className="adminProposalDialogTextareaContainer">
+                            <textarea className="adminProposalDialogTextarea" ref={inputRef} />
+                        </div>
+                    </div>
                     <div className="adminProposalDialogTextareaContainer">
-                        <textarea className="adminProposalDialogTextarea" ref=${inputRef} />
+                        Libraries
+                        <div className="adminProposalDialogTextareaContainer">
+                            <textarea className="adminProposalDialogTextarea" ref={inputLibRef} />
+                        </div>
                     </div>
-                </div>
-                <div className="adminProposalDialogTextareaContainer">
-                    Libraries
-                    <div className="adminProposalDialogTextareaContainer">
-                        <textarea className="adminProposalDialogTextarea" ref=${inputLibRef} />
+                    <div className="adminProposalDialogButtons">
+                        <div className="adminProposalDialogButton" onClick={closeCallback}>
+                            Cancel
+                        </div>
+                        <div className="adminProposalDialogButton" onClick={saveCommentHandler}>
+                            OK
+                        </div>
                     </div>
-                </div>
-                <div className="adminProposalDialogButtons">
-                    <div className="adminProposalDialogButton" onClick=${closeCallback}>
-                        Cancel
-                    </div>
-                    <div className="adminProposalDialogButton" onClick=${saveCommentHandler}>
-                        OK
-                    </div>
-                </div>
-                `
+                </>
             }
-        <//>
+        </DialogFullscreen>
     )
 })
 

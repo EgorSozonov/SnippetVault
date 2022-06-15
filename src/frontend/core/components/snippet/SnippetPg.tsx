@@ -1,5 +1,5 @@
-import "./snippet.css"
 import React from "react"
+import "./snippet.css"
 import SnippetCode from "./SnippetCode"
 import { StoreContext } from "../../App"
 import { FunctionComponent, useContext, useEffect, useState,} from "react"

@@ -1,5 +1,5 @@
 import "./Alternative.css"
-import { html } from "htm/react"
+import React from "react"
 import { FunctionComponent, useContext, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import { fmtDt } from "../../utils/DateUtils";
@@ -40,46 +40,46 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
         closeCallback()
     }
 
-    return
-        <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>
+    return (
+        <DialogFullscreen closeCallback={closeCallback} state={dialogState}>
             <div className="alternativeItemCode">${dialogState.text}</div>
             <ol>
-                ${state.snip.comments.map((comm: CommentDTO, idx: number) => {
-                    return <li key=${idx} className="alternativeItemCommentsComment">
+                {state.snip.comments.map((comm: CommentDTO, idx: number) => {
+                    return <li key={idx} className="alternativeItemCommentsComment">
                         <div className="alternativeItemCommentsHeader">
                             <span>
-                                [${fmtDt(comm.tsUpload)}] <span className="alternativeItemCommentsSmall">by</span> <span className="alternativeDialogUsername">${comm.author}</span>
+                                [{fmtDt(comm.tsUpload)}] <span className="alternativeItemCommentsSmall">by</span> <span className="alternativeDialogUsername">{comm.author}</span>
                             </span>
                         </div>
                         <div className="alternativeItemCommentsText">${comm.content}</div>
                     </li>
-                    `
+
                 })}
             </ol>
-            ${state.user.isUser.get() === true &&
-
+            {state.user.isUser.get() === true &&
+                <>
                     <div>
-                        <div>Enter comment as <span className="alternativeDialogUsername">${state.user.acc!.name}</span>:
+                        <div>Enter comment as <span className="alternativeDialogUsername">{state.user.acc!.name}</span>:
                         </div>
                         <div className="alternativeDialogTextareaContainer">
-                            <textarea className="alternativeDialogTextarea" ref=${inputRef} />
+                            <textarea className="alternativeDialogTextarea" ref={inputRef} />
                         </div>
                     </div>
                     <div className="alternativeDialogButtons">
-                        <div className="alternativeDialogButton" onClick=${closeCallback}>
+                        <div className="alternativeDialogButton" onClick={closeCallback}>
                             Cancel
                         </div>
-                        <div className="alternativeDialogButton" onClick=${saveCommentHandler}>
+                        <div className="alternativeDialogButton" onClick={saveCommentHandler}>
                             OK
                         </div>
                     </div>
-                `
+                </>
             }
-            ${state.user.isUser.get() === false &&
-                <${Login} />`
+            {state.user.isUser.get() === false &&
+                <Login />
             }
-        <//>
-    `
+        </DialogFullscreen>
+    )
 })
 
 export default CommentDialog

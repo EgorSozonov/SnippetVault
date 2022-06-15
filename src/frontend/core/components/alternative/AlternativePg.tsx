@@ -1,5 +1,5 @@
 import "./Alternative.css"
-import { html } from "htm/react"
+import React from "react"
 import { useParams } from "react-router";
 import { FunctionComponent, useContext, useEffect, useState } from "react"
 import MainState from "../../mobX/AllState"
@@ -57,24 +57,25 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     const nonPrimaryAlternatives = alternatives.rows
 
     return commentDialog.isOpen === false
-        ?
-            <div className="alternativeMargin" />
-            <div className="alternativeBody">
-                <div className="alternativeHeaderTitle">
-                    <span>Alternatives</span>
-                    ${state.user.acc === null ? <${NavLink} title="Sign in" exact="true" to=${PATHS["profile"].url}><${KeyButton} /><//>`
-                                              : <${NavLink} title="Profile" exact="true" to=${PATHS["profile"].url}><${UserButton} /><//>` }
-                </div>
-                <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} openDialog=${openDialog} />
-                ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
-                    return <${Alternative} key=${idx} alternative=${alt} tlId=${tlIdNum} openDialog=${openDialog} />`
-                })}
+        ?   <>
+                <div className="alternativeMargin" />
+                <div className="alternativeBody">
+                    <div className="alternativeHeaderTitle">
+                        <span>Alternatives</span>
+                        {state.user.acc === null ? <NavLink title="Sign in" to={PATHS["profile"].url}><KeyButton /></NavLink>
+                                                  : <NavLink title="Profile" to={PATHS["profile"].url}><UserButton /></NavLink> }
+                    </div>
+                    <AlternativePrimary primaryAlternative={primaryAlternative} task={alternatives.task} tlId={tlIdNum} key={0} lang={lang} openDialog={openDialog} />
+                    {nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
+                        return <Alternative key={idx} alternative={alt} tlId={tlIdNum} openDialog={openDialog} />
+                    })}
 
-            </div>
-        `
+                </div>
+            </>
+
         :
-            <${CommentDialog} dialogState=${commentDialog} closeCallback=${closeDialog} />
-        `
+            <CommentDialog dialogState={commentDialog} closeCallback={closeDialog} />
+
 })
 
 export default AlternativePg

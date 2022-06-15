@@ -1,5 +1,5 @@
+import React from "react"
 import "./profile.css"
-import { html } from "htm/react"
 import { useContext, useEffect, useRef, useState } from "react"
 import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
@@ -56,43 +56,43 @@ const Profile: React.FunctionComponent = observer(() => {
     const changePwMenu =
         <div>
             <div>Old password:</div>
-            <div><input type="password" ref=${oldPwRef} /></div>
+            <div><input type="password" ref={oldPwRef} /></div>
             <div>New password:</div>
-            <div><input type="password" ref=${newPwRef} /></div>
+            <div><input type="password" ref={newPwRef} /></div>
             <div className="profileButtons">
-                <div className="clickable" onClick=${closeChangePwHandler}>Cancel</div>
-                <div className="clickable" onClick=${saveChangePwHandler}>Save</div>
+                <div className="clickable" onClick={closeChangePwHandler}>Cancel</div>
+                <div className="clickable" onClick={saveChangePwHandler}>Save</div>
             </div>
         </div>
-    `
-    return
+
+    return (
         <div className="profileBackground">
             <div className="profileContainer">
                 ${(profile !== null && isUser === true && changePwMode === false)
-                    ?
-                        <div className="profileHeader">
-                            <div>
-                                <h2>${state.user.acc !== null && state.user.acc.name}</h2>
+                    ?   <>
+                            <div className="profileHeader">
+                                <div>
+                                    <h2>${state.user.acc !== null && state.user.acc.name}</h2>
+                                </div>
+                                <div className="profileHeaderSubscript">
+                                    <h5>User Profile</h5>
+                                </div>
+                                <div className="profileChangePasswordButton clickable" title="Change password" onClick={openChangePwHandler}>Pw
+                                </div>
                             </div>
-                            <div className="profileHeaderSubscript">
-                                <h5>User Profile</h5>
-                            </div>
-                            <div className="profileChangePasswordButton clickable" title="Change password" onClick=${openChangePwHandler}>Pw
-                            </div>
-                        </div>
-                        <div>Registration date: ${fmtDt(profile.tsJoined)}</div>
-                        <div>Total number of proposals: ${profile.proposalCount}</div>
-                        <div>Approved proposals: ${profile.approvedCount}</div>
-                        <div>Approved proposals selected as primary: ${profile.primaryCount}</div>
-                        <div onClick=${signOutHandler} className="profileSignOut">Sign out</div>
-                    `
+                            <div>Registration date: {fmtDt(profile.tsJoined)}</div>
+                            <div>Total number of proposals: {profile.proposalCount}</div>
+                            <div>Approved proposals: {profile.approvedCount}</div>
+                            <div>Approved proposals selected as primary: {profile.primaryCount}</div>
+                            <div onClick={signOutHandler} className="profileSignOut">Sign out</div>
+                        </>
                     : (changePwMode === true
                         ? changePwMenu
-                        : html `<${Login} />`)
+                        : <Login />)
                 }
             </div>
         </div>
-    `
+    )
 })
 
 export default Profile

@@ -1,5 +1,5 @@
+import React from "react"
 import "./termsOfService.css"
-import { html } from "htm/react"
 import { StoreContext } from "../../App"
 import { FunctionComponent, useContext, } from "react"
 import MainState from "../../mobX/AllState"
@@ -10,7 +10,8 @@ const TermsOfService: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
 
 
-    return <div className="termsContainer">
+    return (
+        <div className="termsContainer">
         <div>
             <h1>Terms of Use</h1>
         </div>
@@ -316,7 +317,7 @@ const TermsOfService: FunctionComponent = observer(({}: any) => {
             </section>
         </div>
     </div>
-    `
+    )
 })
 
 

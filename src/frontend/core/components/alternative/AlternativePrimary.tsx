@@ -1,5 +1,5 @@
 import "./Alternative.css"
-import { html } from "htm/react"
+import React from "react"
 import { FunctionComponent, useContext, useRef, useState } from "react"
 import Toggler from "../../commonComponents/toggler/Toggler"
 import { observer } from "mobx-react-lite"
@@ -38,7 +38,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
 
     const taskOrId = {type: "task", payload: task, }
 
-    return
+    return (
         <div className="alternativeHeader">
             <div className="alternativeHeaderMain">
                 <div className="alternativeHeaderMainLeft">
@@ -70,35 +70,33 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
                 <span>Score: ${primaryAlternative !== null && primaryAlternative.score}</span>
                 ${primaryAlternative.voteFlag
                     ?
-                            <span className="alternativeFooterVoted">
-                                Voted!
-                            </span>
-
-                        `
+                        <span className="alternativeFooterVoted">
+                            Voted!
+                        </span>
                     : (isSignedIn === true &&
 
-                           <span className="alternativeFooterVote" onClick=${voteHandler(primaryAlternative.id)}>
+                           <span className="alternativeFooterVote" onClick={voteHandler(primaryAlternative.id)}>
                                 <span className="alternativeItemButton">V</span>Vote
                             </span>
-                        `)
+                        )
                 }
-                ${(lang !== null && isSignedIn === true) && <span className="clickable alternativeOpenProposal" onClick=${openProposalDialog}>
+                ${(lang !== null && isSignedIn === true) && <span className="clickable alternativeOpenProposal" onClick={openProposalDialog}>
                     Propose a new snippet
-                </span>`
+                </span>
                 }
                 <span>
-                    <${Toggler} leftChoice=${"By date"} rightChoice=${"By votes"} initChosen=${false}
-                                leftCallback=${() => state.snip.alternativesResort("byDate")} rightCallback=${() => state.snip.alternativesResort("byScore")} />
+                    <Toggler leftChoice={"By date"} rightChoice={"By votes"} initChosen={false}
+                                leftCallback={() => state.snip.alternativesResort("byDate")} rightCallback={() => state.snip.alternativesResort("byScore")} />
                 </span>
             </div>
             ${ lang !== null &&
-                    <${Dialog} state=${proposalDialog} closeCallback=${closeProposalDialog}>
-                        <${ProposalInput} lang=${{id: lang.id, name: lang.name, }} taskOrId=${taskOrId} closeCallback=${closeProposalDialog} />
-                    <//>
-                `
+                    <Dialog state={proposalDialog} closeCallback={closeProposalDialog}>
+                        <ProposalInput lang={{id: lang.id, name: lang.name, }} taskOrId={taskOrId} closeCallback={closeProposalDialog} />
+                    </Dialog>
+
             }
         </div>
-    `
+    )
 
 })
 

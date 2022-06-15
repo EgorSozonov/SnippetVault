@@ -1,4 +1,5 @@
-import { html } from "htm/react"
+import React from "react"
+
 
 function KeyButton() {
   return (
@@ -12,7 +13,7 @@ function KeyButton() {
                    C 20 20 22 22 15 25
                    C 8 22 10 20 10 15 "/>
         </svg>
-    `
+
   );
 }
 

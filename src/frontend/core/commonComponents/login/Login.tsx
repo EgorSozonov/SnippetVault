@@ -1,6 +1,6 @@
+import React from "react"
 import { useContext, useRef, } from "react"
 import "./Login.css"
-import { html } from "htm/react"
 import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
 import {observer} from "mobx-react-lite"
@@ -22,12 +22,12 @@ const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
         if (!unameRef.current || !pwRef.current) return
         const uName: string = unameRef.current.value
         const pw: string = pwRef.current.value
-        const dto: SignInDTO = {userName: uName, password: pw, }
+        const dto: SignInDTO = {userName: uName, }
 
         state.user.signInOrRegister(dto, mode)
     }
 
-    return
+    return (
         <div className="loginForm">
             <div className="loginTitle">
                 Log in
@@ -36,22 +36,22 @@ const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
                 <p>
                 This website uses cookies for identification of signed in users.
                 </p>
-                <p>By signing in you are consenting to our <${NavLink} to=${PATHS["termsOfService"].url} title="Terms of Service" exact="true">Terms of Service<//> and cookie usage policy.
+                <p>By signing in you are consenting to our <NavLink to={PATHS["termsOfService"].url} title="Terms of Service" >Terms of Service<//> and cookie usage policy.
                 </p>
             </div>
             <div className="loginFormLabel">Username</div>
-            <input className="loginFormInput" ref=${unameRef} type="text" />
+            <input className="loginFormInput" ref={unameRef} type="text" />
 
             <div className="loginFormLabel">Password</div>
-            <input className="loginFormInput" type="password" ref=${pwRef} />
+            <input className="loginFormInput" type="password" ref={pwRef} />
 
             <div className="loginFormButtons">
-                ${closeCallback && <div className="loginFormButton" onClick=${closeCallback}>Cancel</div>`}
-                <div className="loginFormButton" onClick=${signInOrRegisterHandler("signIn")}>Sign in</button>
-                <div className="loginFormButton" onClick=${signInOrRegisterHandler("register")}>Register</button>
+                {closeCallback && <div className="loginFormButton" onClick={closeCallback}>Cancel</div>}
+                <div className="loginFormButton" onClick={signInOrRegisterHandler("signIn")}>Sign in</div>
+                <div className="loginFormButton" onClick={signInOrRegisterHandler("register")}>Register</div>
             </div>
         </div>
-    `
+    )
 })
 
 

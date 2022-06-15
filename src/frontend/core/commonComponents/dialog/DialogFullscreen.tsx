@@ -1,5 +1,4 @@
 import React, { ReactNode, useEffect } from "react"
-import { html } from "htm/react"
 import "./dialog.css"
 import DialogState from "./DialogState"
 
@@ -10,7 +9,7 @@ type Props = {
     children: ReactNode,
 }
 
-const Dialog: React.FunctionComponent<Props> = ({state, closeCallback, children, }: Props) => {
+const DialogFullscreen: React.FunctionComponent<Props> = ({state, closeCallback, children, }: Props) => {
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
@@ -26,23 +25,16 @@ const Dialog: React.FunctionComponent<Props> = ({state, closeCallback, children,
             document.removeEventListener("keydown", handleKeyDown)
         }
     }, [])
-
-    return
-        <div className=${"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
-            <div className="dialogContainer">
-                <div className="dialogHeader">
-                    <span>
-                        <h4>${state.title}</h4>
-                    </span>
-                    <span className="dialogHeaderRight" onClick=${closeCallback}>[X]
-                    </span>
-                </div>
-
+    return (
+        <div className={"dialogContainerFullscreen" + (state.isOpen === true ? " dialogActive" : " dialogInactive")} onKeyDown>
+            <div className="dialogTitle">
+                <h3>${state.title}</h3>
+            </div>
+            <div className="dialogFullscreenChildren">
                 ${children}
-
             </div>
         </div>
-    `
+    )
 }
 
-export default Dialog
+export default DialogFullscreen
