@@ -40,43 +40,43 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
         closeCallback()
     }
 
-    return html`
+    return
         <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>
-            <div class="alternativeItemCode">${dialogState.text}</div>
+            <div className="alternativeItemCode">${dialogState.text}</div>
             <ol>
                 ${state.snip.comments.map((comm: CommentDTO, idx: number) => {
-                    return html`<li key=${idx} class="alternativeItemCommentsComment">
-                        <div class="alternativeItemCommentsHeader">
+                    return <li key=${idx} className="alternativeItemCommentsComment">
+                        <div className="alternativeItemCommentsHeader">
                             <span>
-                                [${fmtDt(comm.tsUpload)}] <span class="alternativeItemCommentsSmall">by</span> <span class="alternativeDialogUsername">${comm.author}</span>
+                                [${fmtDt(comm.tsUpload)}] <span className="alternativeItemCommentsSmall">by</span> <span className="alternativeDialogUsername">${comm.author}</span>
                             </span>
                         </div>
-                        <div class="alternativeItemCommentsText">${comm.content}</div>
+                        <div className="alternativeItemCommentsText">${comm.content}</div>
                     </li>
                     `
                 })}
             </ol>
             ${state.user.isUser.get() === true &&
-                html`
+
                     <div>
-                        <div>Enter comment as <span class="alternativeDialogUsername">${state.user.acc!.name}</span>:
+                        <div>Enter comment as <span className="alternativeDialogUsername">${state.user.acc!.name}</span>:
                         </div>
-                        <div class="alternativeDialogTextareaContainer">
-                            <textarea class="alternativeDialogTextarea" ref=${inputRef} />
+                        <div className="alternativeDialogTextareaContainer">
+                            <textarea className="alternativeDialogTextarea" ref=${inputRef} />
                         </div>
                     </div>
-                    <div class="alternativeDialogButtons">
-                        <div class="alternativeDialogButton" onClick=${closeCallback}>
+                    <div className="alternativeDialogButtons">
+                        <div className="alternativeDialogButton" onClick=${closeCallback}>
                             Cancel
                         </div>
-                        <div class="alternativeDialogButton" onClick=${saveCommentHandler}>
+                        <div className="alternativeDialogButton" onClick=${saveCommentHandler}>
                             OK
                         </div>
                     </div>
                 `
             }
             ${state.user.isUser.get() === false &&
-                html`<${Login} />`
+                <${Login} />`
             }
         <//>
     `

@@ -16,7 +16,7 @@ const webpackFrontend = (args: any): Configuration => {
 
 	const config: Configuration = {
 		entry: {
-			"snippetVault": path.resolve("./src/frontend/core/App.ts"),
+			"snippetVault": path.resolve("./src/frontend/core/App.tsx"),
 		},
 		output: {
 			path: path.resolve("./target/frontend/sv"),
@@ -39,7 +39,7 @@ const webpackFrontend = (args: any): Configuration => {
 			},
 		},
 		resolve: {
-			extensions: [".ts", ".js", ".html", ".json"],
+			extensions: [".tsx", ".ts", ".js", ".html", ".json"],
 		},
 		module: {
 			rules: [

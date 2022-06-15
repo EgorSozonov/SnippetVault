@@ -17,7 +17,7 @@ type Props<T extends IStringKeyed & IHasName> = {
 }
 
 const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabilities, cuCallback, }: Props<T>) => {
-    if (!values || values.length < 1) return html`<div></div>`
+    if (!values || values.length < 1) return <div></div>`
     const [openIdx, setOpenIdx] = useState(-1)
     const [isOpenNew, setOpenNew] = useState(false)
 
@@ -52,19 +52,19 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     }
 
     const editableInputs = (v: T) => {
-        return html`${editabilities.filter(x => x.field in v).map((x: Editability<T>, idx: number) => {
-            return html`
-                <li key=${idx} class="editableListEdit">
-                    <span class="editableListColumn">
+        return ${editabilities.filter(x => x.field in v).map((x: Editability<T>, idx: number) => {
+            return
+                <li key=${idx} className="editableListEdit">
+                    <span className="editableListColumn">
                         <label>${x.field}</label>
                     </span>
-                    <span class="editableListColumn">
+                    <span className="editableListColumn">
                         ${x.fieldType === "choice"
-                            ? html`<${HoverSelectInput} inputName=${x.field} choices=${x.choices} initValue=${v[x.field]}
+                            ? <${HoverSelectInput} inputName=${x.field} choices=${x.choices} initValue=${v[x.field]}
                                         uniqueName=${"unique" + x.field + idx} />`
                             : (x.fieldType === "bool"
-                                ? html`<input type="checkbox" class="svCheckbox" name=${x.field} defaultChecked=${v[x.field]}/>`
-                                : html`<input type="text" name=${x.field} defaultValue=${v[x.field]}
+                                ? <input type="checkbox" className="svCheckbox" name=${x.field} defaultChecked=${v[x.field]}/>`
+                                : <input type="text" name=${x.field} defaultValue=${v[x.field]}
                                 onFocus=${inputFocusHandler} />`)
                 }
                     </span>
@@ -72,21 +72,21 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
             })}
             `
     }
-    return html`
-        <div class="editableListContainer">
-            <div class="editableListHeader">
-                <div class="editableListTitle">
+    return
+        <div className="editableListContainer">
+            <div className="editableListHeader">
+                <div className="editableListTitle">
                     <h5>${title}</h5>
                 </div>
-                <div class="editableListHeaderButton" onClick=${newHandler}>+</div>
+                <div className="editableListHeaderButton" onClick=${newHandler}>+</div>
             </div>
-            <div class="editableListAddForm">
-                ${isOpenNew === true && html`
+            <div className="editableListAddForm">
+                ${isOpenNew === true &&
                     <form onSubmit=${newSaveHandler}>
                         <ul>
                             ${editableInputs(values[0])}
                         </ul>
-                        <div class="editableListAddButton">
+                        <div className="editableListAddButton">
                             <input type="submit" value="Save new" />
                         </div>
                     </form>
@@ -95,12 +95,12 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
             <div>
                 <ul>
                     ${values.map((v: T, idx: number) => {
-                        return html`
-                            <li key=${idx} id=${"elem" + idx} class="editableListRow">
-                                <div onClick=${rowClickHandler(idx)} class=${(openIdx === idx ? "editableListRowActive" : "")}>
-                                    <span class="editableListCell">${v.name}</span>
+                        return
+                            <li key=${idx} id=${"elem" + idx} className="editableListRow">
+                                <div onClick=${rowClickHandler(idx)} className=${(openIdx === idx ? "editableListRowActive" : "")}>
+                                    <span className="editableListCell">${v.name}</span>
                                 </div>
-                                ${openIdx === idx && html`
+                                ${openIdx === idx &&
                                     <form onSubmit=${editSaveHandler(idx)}>
                                         <ul>
                                             ${editableInputs(v)}

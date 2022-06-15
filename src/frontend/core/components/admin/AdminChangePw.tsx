@@ -1,13 +1,15 @@
 import { FunctionComponent, useContext, useRef } from "react"
-import { html } from "htm/react"
+import React from "react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
 import MainState from "../../mobX/AllState"
 import { ChangePwAdminDTO, SignInAdminDTO } from "../../types/dto/AuthDTO"
 
+
 type Props = {
     closeChangeAdminPwHandler: () => void,
 }
+
 const AdminLogin: FunctionComponent<Props> = observer(({closeChangeAdminPwHandler,  }: Props) => {
     const state = useContext<MainState>(StoreContext)
 
@@ -32,24 +34,24 @@ const AdminLogin: FunctionComponent<Props> = observer(({closeChangeAdminPwHandle
         closeChangeAdminPwHandler()
     }
 
-    return html`
-        <div class="adminChangePw">
-            <div class="adminChangePwBlock">
+    return (
+        <div className="adminChangePw">
+            <div className="adminChangePwBlock">
                 <div>Old password 1:</div>
-                <div><input type="password" ref=${oldPw1Ref} /></div>
+                <div><input type="password" ref={oldPw1Ref} /></div>
                 <div>Old password 2:</div>
-                <div><input type="password" ref=${oldPw2Ref} /></div>
+                <div><input type="password" ref={oldPw2Ref} /></div>
             </div>
-            <div class="adminChangePwBlock">
+            <div className="adminChangePwBlock">
                 <div>New password:</div>
-                <div><input type="password" ref=${newPwRef} /></div>
+                <div><input type="password" ref={newPwRef} /></div>
             </div>
-            <div class="adminChangePwButtons">
-                <div class="clickable" onClick=${closeChangeAdminPwHandler}>Cancel</div>
-                <div class="clickable" onClick=${saveChangeAdminPwHandler}>Save</div>
+            <div className="adminChangePwButtons">
+                <div className="clickable" onClick={closeChangeAdminPwHandler}>Cancel</div>
+                <div className="clickable" onClick={saveChangeAdminPwHandler}>Save</div>
             </div>
         </div>
-    `
+    )
 })
 
 export default AdminLogin

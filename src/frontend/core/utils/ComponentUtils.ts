@@ -4,4 +4,4 @@ export function inputFocusHandler(event: any) {
     event.target.select()
 }
 
-export const empty = html`<div></div>`
+export const empty = <div></div>`

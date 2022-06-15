@@ -12,20 +12,20 @@ type Props = {
 }
 
 const DialogConfirm: React.FunctionComponent<Props> = ({state, okHandler, cancelHandler, children, }: Props) => {
-    return html`
-        <div class=${"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
-            <div class="dialogContainer">
-                <div class="dialogBody">
+    return
+        <div className=${"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
+            <div className="dialogContainer">
+                <div className="dialogBody">
                     ${state.title}
                 </div>
                 <div>
                     ${children}
                 </div>
-                <div class="dialogButtons">
-                    <div class="dialogButton" onClick=${cancelHandler}>
+                <div className="dialogButtons">
+                    <div className="dialogButton" onClick=${cancelHandler}>
                         Cancel
                     </div>
-                    <div class="dialogButton" onClick=${okHandler}>
+                    <div className="dialogButton" onClick=${okHandler}>
                         OK
                     </div>
                 </div>

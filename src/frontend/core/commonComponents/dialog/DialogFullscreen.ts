@@ -21,20 +21,20 @@ const DialogFullscreen: React.FunctionComponent<Props> = ({state, closeCallback,
         }
 
         document.addEventListener("keydown", handleKeyDown)
-        
+
         return function cleanup() {
             document.removeEventListener("keydown", handleKeyDown)
         }
     }, [])
-    return html`        
-        <div class=${"dialogContainerFullscreen" + (state.isOpen === true ? " dialogActive" : " dialogInactive")} onKeyDown>
-            <div class="dialogTitle">
+    return
+        <div className=${"dialogContainerFullscreen" + (state.isOpen === true ? " dialogActive" : " dialogInactive")} onKeyDown>
+            <div className="dialogTitle">
                 <h3>${state.title}</h3>
             </div>
-            <div class="dialogFullscreenChildren">
+            <div className="dialogFullscreenChildren">
                 ${children}
             </div>
-        </div>        
+        </div>
     `
 }
 

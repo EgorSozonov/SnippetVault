@@ -35,12 +35,12 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
 
     const isSignedIn = state.user.isUser.get()
     const isAdmin = state.user.isAdmin.get()
-    return html`
-        <div class="alternativeItem">
-            <div class="alternativeItemCode">
+    return
+        <div className="alternativeItem">
+            <div className="alternativeItemCode">
                 ${alternative.content}
             </div>
-            <div class="alternativeItemHeader">
+            <div className="alternativeItemHeader">
                 <span>
                     Upload date: ${fmtDt(alternative.tsUpload)}
                 </span>
@@ -48,29 +48,29 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
                     Votes: ${alternative.score}
                 </span>
                 ${alternative.voteFlag
-                    ? html`
-                            <span class="alternativeFooterVoted">
+                    ?
+                            <span className="alternativeFooterVoted">
                                 Voted!
                             </span>
                         `
                     : (isSignedIn === true &&
-                        html`
-                           <span class="alternativeFooterVote">
-                                <span class="alternativeItemButton" onClick=${voteHandler(alternative.id)}>V</span>Vote
+
+                           <span className="alternativeFooterVote">
+                                <span className="alternativeItemButton" onClick=${voteHandler(alternative.id)}>V</span>Vote
                             </span>
                         `)
                 }
                 ${isAdmin &&
-                    html`<span class="alternativeFooterPrimary" onClick=${setPrimaryHandler(tlId, alternative.id)} title="Set as primary snippet">
-                        <span class="alternativeItemButton">P</span>Primary
+                    <span className="alternativeFooterPrimary" onClick=${setPrimaryHandler(tlId, alternative.id)} title="Set as primary snippet">
+                        <span className="alternativeItemButton">P</span>Primary
                     </span>`
                 }
             </div>
-            <div class="alternativeItemFooter">
-                <span class="alternativeItemFooterComments" onClick=${openDialog(alternative.id, tlId, alternative.content)}>
-                    <span class="alternativeItemButton" title="Comment">C</span>
+            <div className="alternativeItemFooter">
+                <span className="alternativeItemFooterComments" onClick=${openDialog(alternative.id, tlId, alternative.content)}>
+                    <span className="alternativeItemButton" title="Comment">C</span>
                     ${alternative.commentCount > 0 &&
-                        (alternative.commentCount > 1 ? html`${alternative.commentCount} comments` : html`1 comment`)
+                        (alternative.commentCount > 1 ? ${alternative.commentCount} comments` : 1 comment`)
                     }
                 </span>
             </div>

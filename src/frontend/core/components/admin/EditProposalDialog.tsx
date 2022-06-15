@@ -1,5 +1,5 @@
 import "./admin.css"
-import { html } from "htm/react"
+import React from "react"
 import { FunctionComponent, useContext, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import DialogState from "../../commonComponents/dialog/DialogState";
@@ -47,33 +47,33 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
         closeCallback()
     }
 
-    return html`
+    return (
         <${DialogFullscreen} closeCallback=${closeCallback} state=${dialogState}>
             ${(state.user.isAdmin() === true && proposal !== null) &&
-                html`
+
                 <div>
-                    <div class="adminProposalDialogTextareaContainer">
-                        <textarea class="adminProposalDialogTextarea" ref=${inputRef} />
+                    <div className="adminProposalDialogTextareaContainer">
+                        <textarea className="adminProposalDialogTextarea" ref=${inputRef} />
                     </div>
                 </div>
-                <div class="adminProposalDialogTextareaContainer">
+                <div className="adminProposalDialogTextareaContainer">
                     Libraries
-                    <div class="adminProposalDialogTextareaContainer">
-                        <textarea class="adminProposalDialogTextarea" ref=${inputLibRef} />
+                    <div className="adminProposalDialogTextareaContainer">
+                        <textarea className="adminProposalDialogTextarea" ref=${inputLibRef} />
                     </div>
                 </div>
-                <div class="adminProposalDialogButtons">
-                    <div class="adminProposalDialogButton" onClick=${closeCallback}>
+                <div className="adminProposalDialogButtons">
+                    <div className="adminProposalDialogButton" onClick=${closeCallback}>
                         Cancel
                     </div>
-                    <div class="adminProposalDialogButton" onClick=${saveCommentHandler}>
+                    <div className="adminProposalDialogButton" onClick=${saveCommentHandler}>
                         OK
                     </div>
                 </div>
                 `
             }
         <//>
-    `
+    )
 })
 
 export default EditProposalDialog

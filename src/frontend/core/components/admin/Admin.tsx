@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom"
 import EditableList from "../../commonComponents/editableList/EditableList"
 import PATHS from "../../Path"
 import NewProposals from "./NewProposal"
-import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
 import MainState from "../../mobX/AllState"
@@ -12,6 +11,7 @@ import AdminLogin from "./AdminLogin"
 import { LanguageCUDTO, TaskCUDTO, TaskGroupCUDTO,  } from "../../types/dto/AuxDTO"
 import AdminChangePw from "./AdminChangePw"
 import { useCookies } from "react-cookie"
+import React from "react"
 
 
 const ListTasks = (props: any) => EditableList<TaskCUDTO>(props)
@@ -112,45 +112,43 @@ const Admin: FunctionComponent = observer(({}: any) => {
         setChangeAdminPwMode(false)
     }
 
-    return html`
-        <div class="adminContainer">
-            ${state.user.isAdmin.get() === false
-                ? html`
-                        <${AdminLogin} />
-                    `
+    return (
+        <div className="adminContainer">
+            {state.user.isAdmin.get() === false
+                ? <AdminLogin />
+
                 : (changeAdminPwMode === false
-                    ? html`
-                        <div class="adminHeaderPanel">
+                    ? (<>
+                        <div className="adminHeaderPanel">
+                            {state.admin.stats !== null &&
+                                <div>
+                                    <div>Total proposals: {state.admin.stats.proposalCount}</div>
+                                    <div>Of those proposals, approved primary snippets: {state.admin.stats.primaryCount}</div>
+                                    <div>Approved alternatives: {state.admin.stats.alternativeCount}</div>
+                                    <div>Active users count: {state.admin.stats.userCount}</div>
+                                </div>
+                            }
                             <div>
-                                ${state.admin.stats !== null &&
-                                    html`
-                                        <div>Total proposals: ${state.admin.stats.proposalCount}</div>
-                                        <div>Of those proposals, approved primary snippets: ${state.admin.stats.primaryCount}</div>
-                                        <div>Approved alternatives: ${state.admin.stats.alternativeCount}</div>
-                                        <div>Active users count: ${state.admin.stats.userCount}</div>
-                                    `}
+                                <NavLink to={PATHS["snippet"].url}>
+                                    <div className="adminHeaderButton">Back to snippets</div>
+                                </NavLink>
                             </div>
-                            <div>
-                                <${NavLink} to=${PATHS["snippet"].url}>
-                                    <div class="adminHeaderButton">Back to snippets</div>
-                                <//>
-                            </div>
-                            <div class="adminHeaderButton" onClick=${state.user.signOut}>(sign out)</div>
-                            <div class="adminHeaderButton" onClick=${changeAdminPwHandler}>Change password</div>
+                            <div className="adminHeaderButton" onClick={state.user.signOut}>(sign out)</div>
+                            <div className="adminHeaderButton" onClick={changeAdminPwHandler}>Change password</div>
                         </div>
-                        <${NewProposals} />
-                        <${ListTasks} values=${state.admin.tasks} editabilities=${editabilityTask} title="Tasks"
-                            cuCallback=${cuTaskCallback} />
-                        <${ListTaskGroups} values=${state.admin.taskGroups} editabilities=${editabilityTaskGroup} title="Task groups"
-                            cuCallback=${cuTaskGroupCallback} />
-                        <${ListLanguages} values=${state.admin.languages} editabilities=${editabilityLanguage} title="Languages"
-                            cuCallback=${cuLanguageCallback} />
-                        `
-                    : html`<${AdminChangePw} closeChangeAdminPwHandler=${closeChangeAdminPwHandler} />`
+                        <NewProposals />
+                        <ListTasks values={state.admin.tasks} editabilities={editabilityTask} title="Tasks"
+                            cuCallback={cuTaskCallback} />
+                        <ListTaskGroups values={state.admin.taskGroups} editabilities={editabilityTaskGroup} title="Task groups"
+                            cuCallback={cuTaskGroupCallback} />
+                        <ListLanguages values={state.admin.languages} editabilities={editabilityLanguage} title="Languages"
+                            cuCallback={cuLanguageCallback} />
+                        </>)
+                    : <AdminChangePw closeChangeAdminPwHandler={closeChangeAdminPwHandler} />
                     )
             }
         </div>
-    `
+    )
 })
 
 export default Admin

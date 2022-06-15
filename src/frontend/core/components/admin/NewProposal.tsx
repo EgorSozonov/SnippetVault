@@ -1,6 +1,6 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react"
+import React from "react"
 import "./admin.css"
-import { html } from "htm/react"
 import { observer } from "mobx-react-lite"
 import MainState from "../../mobX/AllState"
 import { StoreContext } from "../../App"
@@ -51,38 +51,38 @@ const NewProposal: FunctionComponent = observer(() => {
     const proposals = state.admin.proposals.slice()
 
     return ((proposalDialog.isOpen === false)
-        ?  html`
-            <div class="newProposals">
-                <div class="newProposalsTitle">
+        ?
+            <div className="newProposals">
+                <div className="newProposalsTitle">
                     <h3>New proposals</h3>
                 </div>
                 ${proposals.map((proposal: ProposalDTO, idx: number ) => {
-                    return html`
-                        <div class="proposalContainer" key=${idx}>
-                            <div class=${"proposalHeaderContainer"}>
+                    return
+                        <div className="proposalContainer" key=${idx}>
+                            <div className=${"proposalHeaderContainer"}>
                                 <div>
                                     ${proposal.taskName} | ${proposal.languageName} | ${proposal.author}
                                 </div>
 
-                                <div class="proposalHeaderRight" title="Accept">
-                                    <div class="proposalHeaderButton" onClick=${declineHandler(proposal.proposalId)} title="Decline proposal">
+                                <div className="proposalHeaderRight" title="Accept">
+                                    <div className="proposalHeaderButton" onClick=${declineHandler(proposal.proposalId)} title="Decline proposal">
                                         X
                                     </div>
-                                    <div class="proposalHeaderButton" onClick=${openProposalDialog(proposal.proposalId)} title="Edit proposal">
+                                    <div className="proposalHeaderButton" onClick=${openProposalDialog(proposal.proposalId)} title="Edit proposal">
                                         E
                                     </div>
-                                    <div class="proposalHeaderButton" onClick=${approveHandler(proposal.proposalId)} title="Approve proposal">
+                                    <div className="proposalHeaderButton" onClick=${approveHandler(proposal.proposalId)} title="Approve proposal">
                                         A
                                     </div>
                                 </div>
                             </div>
-                            <pre class=${"proposalBody"}>${proposal.content}</div>
+                            <pre className=${"proposalBody"}>${proposal.content}</div>
                         </div>`
                 })}
             </div>
             <${DialogConfirm} state=${confirmationDialog} okHandler=${okDialog} cancelHandler=${cancelDialog} />
         `
-        : html`
+        :
             <${EditProposalDialog} dialogState=${proposalDialog} closeCallback=${closeProposalDialog} />
         `
     )

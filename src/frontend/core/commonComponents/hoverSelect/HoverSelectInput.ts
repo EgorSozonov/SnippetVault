@@ -44,20 +44,20 @@ const HoverSelectInput: React.FunctionComponent<Props> = observer(({choices, ini
         mainState.snip.openSelectSet(uniqueName)
     }
 
-    return html`
-        <div key=${inputName} onMouseLeave=${() => mainState.snip.openSelectSet("")} class=${"hoverSelectInputContainer"}>
-            <input type="text" name=${inputName} readOnly value=${currValue.name} class="hoverSelectSmall"
+    return
+        <div key=${inputName} onMouseLeave=${() => mainState.snip.openSelectSet("")} className=${"hoverSelectInputContainer"}>
+            <input type="text" name=${inputName} readOnly value=${currValue.name} className="hoverSelectSmall"
                 onMouseEnter=${onMouseEnterH}
                 />
-            <span class="search" onClick=${onClickHeader}>
+            <span className="search" onClick=${onClickHeader}>
             </span>
 
             ${isOpen === true &&
                 html `
-                    <div class=${(isOpen ? "hoverSelectInputMenuActive" : "hoverSelectInputMenu")}>
-                        <ul class=${"hoverSelectInputFields"}>
+                    <div className=${(isOpen ? "hoverSelectInputMenuActive" : "hoverSelectInputMenu")}>
+                        <ul className=${"hoverSelectInputFields"}>
                             ${choices.map((c: SelectChoice, idx: number) => {
-                                    return html`<li key=${idx} onClick=${() => onSelect(c)} class="hoverSelectInputField">${c.name}</li>`
+                                    return <li key=${idx} onClick=${() => onSelect(c)} className="hoverSelectInputField">${c.name}</li>`
                                 }
                             )}
                         </ul>

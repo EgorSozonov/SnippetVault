@@ -10,7 +10,7 @@ const TermsOfService: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
 
 
-    return html`<div class="termsContainer">
+    return <div className="termsContainer">
         <div>
             <h1>Terms of Use</h1>
         </div>

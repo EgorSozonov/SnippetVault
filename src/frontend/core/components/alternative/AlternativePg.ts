@@ -57,22 +57,22 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     const nonPrimaryAlternatives = alternatives.rows
 
     return commentDialog.isOpen === false
-        ? html`
-            <div class="alternativeMargin" />
-            <div class="alternativeBody">
-                <div class="alternativeHeaderTitle">
+        ?
+            <div className="alternativeMargin" />
+            <div className="alternativeBody">
+                <div className="alternativeHeaderTitle">
                     <span>Alternatives</span>
-                    ${state.user.acc === null ? html`<${NavLink} title="Sign in" exact="true" to=${PATHS["profile"].url}><${KeyButton} /><//>`
-                                              : html`<${NavLink} title="Profile" exact="true" to=${PATHS["profile"].url}><${UserButton} /><//>` }
+                    ${state.user.acc === null ? <${NavLink} title="Sign in" exact="true" to=${PATHS["profile"].url}><${KeyButton} /><//>`
+                                              : <${NavLink} title="Profile" exact="true" to=${PATHS["profile"].url}><${UserButton} /><//>` }
                 </div>
                 <${AlternativePrimary} primaryAlternative=${primaryAlternative} task=${alternatives.task} tlId=${tlIdNum} key=${0} lang=${lang} openDialog=${openDialog} />
                 ${nonPrimaryAlternatives.map((alt: AlternativeDTO, idx: number ) => {
-                    return html`<${Alternative} key=${idx} alternative=${alt} tlId=${tlIdNum} openDialog=${openDialog} />`
+                    return <${Alternative} key=${idx} alternative=${alt} tlId=${tlIdNum} openDialog=${openDialog} />`
                 })}
 
             </div>
         `
-        : html`
+        :
             <${CommentDialog} dialogState=${commentDialog} closeCallback=${closeDialog} />
         `
 })

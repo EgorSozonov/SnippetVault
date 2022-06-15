@@ -24,12 +24,12 @@ class ErrorBoundary extends React.Component<Props, State> {
         console.error("Uncaught error:", error, errorInfo);
     }
 
-    public static getDerivedStateFromError(error: Error) {  
+    public static getDerivedStateFromError(error: Error) {
         return { hasError: true };
     }
     public render() {
         if (this.state.hasError) {
-            return html`<h1>Sorry.. there was an error</h1>`
+            return <h1>Sorry.. there was an error</h1>`
         }
 
         return this.props.children;

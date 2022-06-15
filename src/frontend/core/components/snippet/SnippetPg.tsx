@@ -1,12 +1,12 @@
 import "./snippet.css"
+import React from "react"
 import SnippetCode from "./SnippetCode"
-import { html } from "htm/react"
 import { StoreContext } from "../../App"
 import { FunctionComponent, useContext, useEffect, useState,} from "react"
 import { NavLink, useSearchParams } from "react-router-dom"
 import MainState from "../../mobX/AllState"
 import { observer } from "mobx-react-lite"
-import { arrayOfBase64, base64OfArray, base64OfHex, bigintOfBase64, bigintOfHex, checkNonempty, determinePadding, hexOfBase64, nonprefixedHexOfPositiveBI } from "../../utils/StringUtils"
+import { base64OfHex, bigintOfBase64, bigintOfHex, checkNonempty, nonprefixedHexOfPositiveBI } from "../../utils/StringUtils"
 import { idOf, isStateOK, stringOf } from "./utils/SnippetState"
 import { SnippetDTO } from "../../types/dto/SnippetDTO"
 import Dialog from "../../commonComponents/dialog/Dialog"
@@ -21,8 +21,7 @@ import SelectChoice from "../../types/SelectChoice"
 import SecureRemotePassword from "../../utils/SecureRemotePassword"
 import { rfc5054 } from "../../utils/Constants"
 import { processSignIn } from "../../utils/User"
-import BI from "jsbi"
-import { modPow } from "../../utils/ModularArithmetic"
+
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(StoreContext)
@@ -55,7 +54,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         const indLang = state.snip.languageChoices.findIndex(x => x.id === newValue.id)
         if (indLang < 0) return
 
-        setSearchParams(`lang1=${state.snip.languageChoices[indLang].code}&lang2=${lang2Code}&task=${taskCode}`)
+        setSearchParams(`lang1={state.snip.languageChoices[indLang].code}&lang2={lang2Code}&task={taskCode}`)
         state.snip.language1Chosen(newValue)
     }
 
@@ -63,7 +62,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         const indLang = state.snip.languageChoices.findIndex(x => x.id === newValue.id)
         if (indLang < 0) return
 
-        setSearchParams(`lang1=${lang1Code}&lang2=${state.snip.languageChoices[indLang].code}&task=${taskCode}`)
+        setSearchParams(`lang1={lang1Code}&lang2={state.snip.languageChoices[indLang].code}&task={taskCode}`)
         state.snip.language2Chosen(newValue)
     }
 
@@ -71,12 +70,12 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         const indTg = state.snip.taskGroups.findIndex(x => x.id === newValue.id)
         if (indTg < 0) return
 
-        setSearchParams(`lang1=${lang1Code}&lang2=${lang2Code}&task=${state.snip.taskGroups[indTg].code}`)
+        setSearchParams(`lang1={lang1Code}&lang2={lang2Code}&task={state.snip.taskGroups[indTg].code}`)
         state.snip.taskGroupChosen(newValue)
     }
 
     if (nonEmptyParams.length < 3 && isStateOK([tg, lang1, lang2]) === true) {
-        setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
+        setSearchParams(`lang1={lang1.code}&lang2={lang2.code}&task={tg.code}`)
     }
     useEffect(() => {
         (async () => {
@@ -223,81 +222,79 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
 
     }
 
-    return html`<div class="snippetsBody">
-        <main class="snippetsContainer">
-            <div class="snippetsHeader">
-                <div class="snippetLeftHeader">
-                    <button onClick=${fooRegister}>Register</button>
-                    <button onClick=${fooSignin}>Sign-in</button>
-                    <button onClick=${fooSigninFail}>Fail signing in</button>
-                    <div class="snippetHeading">
-                        <span>${stringOf(lang1)}</span>
+    return (
+    <div className="snippetsBody">
+        <main className="snippetsContainer">
+            <div className="snippetsHeader">
+                <div className="snippetLeftHeader">
+                    <button onClick={fooRegister}>Register</button>
+                    <button onClick={fooSignin}>Sign-in</button>
+                    <button onClick={fooSigninFail}>Fail signing in</button>
+                    <div className="snippetHeading">
+                        <span>{stringOf(lang1)}</span>
                         <span>
-                            ${state.snip.l1.type === "ChoicesLoaded" &&
-                                html`<${HoverSelectCompact} currValue=${state.snip.l1} choices=${state.snip.l1.choices} uniqueName="Lang1Choice"
-                                selectCallback=${language1Handler}><//>`
+                            {state.snip.l1.type === "ChoicesLoaded" &&
+                                <HoverSelectCompact currValue={state.snip.l1} choices={state.snip.l1.choices} uniqueName="Lang1Choice"
+                                selectCallback={language1Handler} />
                             }
                         </span>
                     </div>
                 </div>
-                <div class="taskForHeader">${stringOf(tg)}
-                    <div class="snippetHeading">
-                        ${state.snip.tg.type === "ChoicesLoaded" &&
-                            html`<${HoverSelectCompact} currValue=${state.snip.tg} choices=${state.snip.tg.choices} uniqueName="TaskGroupChoice"
-                            selectCallback=${taskGroupHandler}><//>`
+                <div className="taskForHeader">{stringOf(tg)}
+                    <div className="snippetHeading">
+                        {state.snip.tg.type === "ChoicesLoaded" &&
+                            <HoverSelectCompact currValue={state.snip.tg} choices={state.snip.tg.choices} uniqueName="TaskGroupChoice"
+                            selectCallback={taskGroupHandler} />
                         }
                     </div>
                 </div>
-                <div class="snippetRightHeader">
-                    <div class="snippetHeading">
-                        <span>${stringOf(lang2)}</span>
-                        ${state.snip.l2.type === "ChoicesLoaded" &&
-                            html`<${HoverSelectCompact} currValue=${state.snip.l2} choices=${state.snip.l2.choices} uniqueName="Lang2Choice"
-                            selectCallback=${language2Handler}><//>`
+                <div className="snippetRightHeader">
+                    <div className="snippetHeading">
+                        <span>{stringOf(lang2)}</span>
+                        {state.snip.l2.type === "ChoicesLoaded" &&
+                            <HoverSelectCompact currValue={state.snip.l2} choices={state.snip.l2.choices} uniqueName="Lang2Choice"
+                            selectCallback={language2Handler} />
                         }
                     </div>
-                    <${NavLink} exact="true" title=${isSignedIn === true ? "Profile" : "Sign in"} to=${PATHS["profile"].url}>
-                        ${isSignedIn === true ? html`<${UserButton} />` : html`<${KeyButton} />` }
-                    <//>
+                    <NavLink title={isSignedIn === true ? "Profile" : "Sign in"} to={PATHS["profile"].url}>
+                        {isSignedIn === true ? <UserButton /> : <KeyButton /> }
+                    </NavLink>
                 </div>
             </div>
-            <div>
-
-
-            </div>
-            ${snippets && snippets.map((snippet: SnippetDTO, idx: number ) => {
+            {snippets && snippets.map((snippet: SnippetDTO, idx: number ) => {
                 const evenClass = (idx%2 === 0 ? " evenRow" : "")
-                return html`
-                    <div class="snippetRow" key=${idx}>
-                        <div class=${"snippetContent leftSide" + evenClass}>
-                            ${snippet.leftCode.length > 0
-                                ? html`<${SnippetCode} content=${snippet.leftCode} isRight=${false} langId=${idOf(lang1)} libraries=${snippet.leftLibraries} tlId=${snippet.leftTlId}><//>`
-                                : html`<div class="snippetProposalButtonContainer"><div class="snippetProposalButton" onClick=${proposalHandler(snippet, false)}>Create proposal</div></div>`
+                return (
+                    <div className="snippetRow" key={idx}>
+                        <div className={"snippetContent leftSide" + evenClass}>
+                            {snippet.leftCode.length > 0
+                                ? <SnippetCode content={snippet.leftCode} isRight={false} langId={idOf(lang1)} libraries={snippet.leftLibraries} tlId={snippet.leftTlId} />
+                                : <div className="snippetProposalButtonContainer"><div className="snippetProposalButton" onClick={proposalHandler(snippet, false)}>Create proposal</div></div>
                             }
                         </div>
-                        <div class=${"taskContainer" + evenClass}>
-                            ${snippet.taskName}
+                        <div className={"taskContainer" + evenClass}>
+                            {snippet.taskName}
                         </div>
-                        <div class=${"snippetContent rightSide" + evenClass}>
-                            ${snippet.rightCode.length > 0
-                                ? html`<${SnippetCode} content=${snippet.rightCode} isRight=${true} langId=${idOf(lang2)} libraries=${snippet.rightLibraries} tlId=${snippet.rightTlId}><//>`
-                                : html`<div class="snippetProposalButtonContainer"><div class="snippetProposalButton" onClick=${proposalHandler(snippet, true)}>Create proposal</div></div>`
+                        <div className={"snippetContent rightSide" + evenClass}>
+                            {snippet.rightCode.length > 0
+                                ? <SnippetCode content={snippet.rightCode} isRight={true} langId={idOf(lang2)} libraries={snippet.rightLibraries} tlId={snippet.rightTlId} />
+                                : <div className="snippetProposalButtonContainer"><div className="snippetProposalButton" onClick={proposalHandler(snippet, true)}>Create proposal</div></div>
                             }
                         </div>
-                    </div>`
+                    </div>
+                )
             })}
-            <div class="snippetFooter"> </div>
-            ${currLanguage !== null &&
-                html`
-                    <${Dialog} state=${proposalDialog} closeCallback=${closeProposalDialog}>
-                        <${ProposalInput} lang=${currLanguage.lang} taskOrId=${{ type: "taskId", payload: currLanguage.taskId, }}
-                                        closeCallback=${closeProposalDialog} />
-                    <//>
-                `
+            <div className="snippetFooter"> </div>
+            {currLanguage !== null &&
+
+                    <Dialog state={proposalDialog} closeCallback={closeProposalDialog}>
+                        <ProposalInput lang={currLanguage.lang} taskOrId={{ type: "taskId", payload: currLanguage.taskId, }}
+                                        closeCallback={closeProposalDialog} />
+                    </Dialog>
+
             }
         </main>
     </div>
-    `
+    )
 })
 
 

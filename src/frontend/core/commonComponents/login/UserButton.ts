@@ -2,7 +2,7 @@ import { html } from "htm/react"
 
 function KeyButton() {
   return (
-    html`
+
         <svg width="30" scale="0.8" height="30" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <circle cx="15" cy="15" r="14" stroke="white" fill="transparent" stroke-width="1" />
             <circle cx="15" cy="8" r="4" stroke="white" fill="transparent" stroke-width="1" />

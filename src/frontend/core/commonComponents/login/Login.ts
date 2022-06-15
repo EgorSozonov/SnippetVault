@@ -27,28 +27,28 @@ const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
         state.user.signInOrRegister(dto, mode)
     }
 
-    return html`
-        <div class="loginForm">
-            <div class="loginTitle">
+    return
+        <div className="loginForm">
+            <div className="loginTitle">
                 Log in
             </div>
-            <div class="loginCookieInfo">
+            <div className="loginCookieInfo">
                 <p>
                 This website uses cookies for identification of signed in users.
                 </p>
                 <p>By signing in you are consenting to our <${NavLink} to=${PATHS["termsOfService"].url} title="Terms of Service" exact="true">Terms of Service<//> and cookie usage policy.
                 </p>
             </div>
-            <div class="loginFormLabel">Username</div>
-            <input class="loginFormInput" ref=${unameRef} type="text" />
+            <div className="loginFormLabel">Username</div>
+            <input className="loginFormInput" ref=${unameRef} type="text" />
 
-            <div class="loginFormLabel">Password</div>
-            <input class="loginFormInput" type="password" ref=${pwRef} />
+            <div className="loginFormLabel">Password</div>
+            <input className="loginFormInput" type="password" ref=${pwRef} />
 
-            <div class="loginFormButtons">
-                ${closeCallback && html`<div class="loginFormButton" onClick=${closeCallback}>Cancel</div>`}
-                <div class="loginFormButton" onClick=${signInOrRegisterHandler("signIn")}>Sign in</button>
-                <div class="loginFormButton" onClick=${signInOrRegisterHandler("register")}>Register</button>
+            <div className="loginFormButtons">
+                ${closeCallback && <div className="loginFormButton" onClick=${closeCallback}>Cancel</div>`}
+                <div className="loginFormButton" onClick=${signInOrRegisterHandler("signIn")}>Sign in</button>
+                <div className="loginFormButton" onClick=${signInOrRegisterHandler("register")}>Register</button>
             </div>
         </div>
     `

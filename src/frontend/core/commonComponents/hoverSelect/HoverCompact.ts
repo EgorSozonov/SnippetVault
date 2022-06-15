@@ -31,10 +31,10 @@ const HoverSelectCompact: React.FunctionComponent<Props> = observer(({choices, c
             mainState.snip.openSelectSet(uniqueName)
         }
     }
-    return html`
-        <span class="hoverSelectCompact" onMouseEnter=${() => mainState.snip.openSelectSet(uniqueName)}
+    return
+        <span className="hoverSelectCompact" onMouseEnter=${() => mainState.snip.openSelectSet(uniqueName)}
                 onMouseLeave=${() => mainState.snip.openSelectSet("")}>
-            <span class="searchCompact" onClick=${onClickHeader}>
+            <span className="searchCompact" onClick=${onClickHeader}>
                 <svg width="30" height="30" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="15" cy="15" r="14" fill="transparent" stroke-width="1" />
                     <path d="M 8 13 L 15 22 L 22 13" stroke="hsl(0, 0%, 80%)" />
@@ -42,10 +42,10 @@ const HoverSelectCompact: React.FunctionComponent<Props> = observer(({choices, c
                 </svg>
             </span>
 
-            <div class=${(isOpen ? "hoverSelectCompactActive" : "hoverCompactMenu")}>
-                <ul class="hoverCompactMenuList">
+            <div className=${(isOpen ? "hoverSelectCompactActive" : "hoverCompactMenu")}>
+                <ul className="hoverCompactMenuList">
                     ${choices.map((c: SelectChoice, idx: number) => {
-                        return html`<li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
+                        return <li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
                     })}
                 </ul>
             </div>

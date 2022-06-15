@@ -23,20 +23,20 @@ const Toggler: React.FunctionComponent<Props> = ({leftChoice, rightChoice, initC
         }
     }
 
-    return html`
-        <div class="togglerContainer" onClick=${changeHandler}>
-            <span class=${"togglerLeftRect " + (currValue ? "togglerLeftRectInactive" : "togglerLeftRectActive")}></span>
-            <span class=${"togglerChoice" + (currValue ? " inactiveChoice" : " activeChoiceLeft")}>
+    return
+        <div className="togglerContainer" onClick=${changeHandler}>
+            <span className=${"togglerLeftRect " + (currValue ? "togglerLeftRectInactive" : "togglerLeftRectActive")}></span>
+            <span className=${"togglerChoice" + (currValue ? " inactiveChoice" : " activeChoiceLeft")}>
                 ${leftChoice}
             </span>
-            <span class=${"toggleSwitch " + (currValue ? "on" : "off")}>
+            <span className=${"toggleSwitch " + (currValue ? "on" : "off")}>
                 <div ></div>
             </span>
 
-            <span class=${"togglerChoice" + (currValue ? " activeChoiceRight" : " inactiveChoice")}>
+            <span className=${"togglerChoice" + (currValue ? " activeChoiceRight" : " inactiveChoice")}>
                 ${rightChoice}
             </span>
-            <span class=${"togglerRightRect " + (currValue ? " togglerRightRectActive" : "togglerRightRectInactive")}></span>
+            <span className=${"togglerRightRect " + (currValue ? " togglerRightRectActive" : "togglerRightRectInactive")}></span>
         </div>
     `
 }

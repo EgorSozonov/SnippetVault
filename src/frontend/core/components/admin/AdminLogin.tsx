@@ -1,5 +1,5 @@
 import { FunctionComponent, useContext, useEffect, useRef } from "react"
-import { html } from "htm/react"
+import React from "react"
 import { observer } from "mobx-react-lite"
 import { StoreContext } from "../../App"
 import MainState from "../../mobX/AllState"
@@ -27,8 +27,8 @@ const AdminLogin: FunctionComponent = observer(({}: any) => {
         }
     }
 
-    return html`
-        <div class="adminLoginForm">
+    return (
+        <div className="adminLoginForm">
             <div>
                 Log in as an administrator:
             </div>
@@ -36,20 +36,20 @@ const AdminLogin: FunctionComponent = observer(({}: any) => {
                 This website uses cookies for identification of signed in users. By signing in you are consenting to our cookie use policy.
             </div>
 
-            <div class="adminLoginLabel">Username</div>
-            <input class="loginFormInput" ref=${unameRef} type="text" />
+            <div className="adminLoginLabel">Username</div>
+            <input className="loginFormInput" ref={unameRef} type="text" />
 
-            <div class="adminLoginLabel">Password 1</div>
-            <input class="loginFormInput" type="password" ref=${pw1Ref} />
+            <div className="adminLoginLabel">Password 1</div>
+            <input className="loginFormInput" type="password" ref={pw1Ref} />
 
-            <div class="adminLoginLabel">Password 2</div>
-            <input class="loginFormInput" type="password" ref=${pw2Ref} />
+            <div className="adminLoginLabel">Password 2</div>
+            <input className="loginFormInput" type="password" ref={pw2Ref} />
 
-            <div class="adminLoginButtons">
-                <button onClick=${signInOrRegisterHandler}>Sign in</button>
+            <div className="adminLoginButtons">
+                <button onClick={signInOrRegisterHandler}>Sign in</button>
             </div>
         </div>
-    `
+    )
 })
 
 export default AdminLogin

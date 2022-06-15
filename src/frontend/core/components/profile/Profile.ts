@@ -53,38 +53,38 @@ const Profile: React.FunctionComponent = observer(() => {
     const oldPwRef = useRef<HTMLInputElement>(null)
     const newPwRef = useRef<HTMLInputElement>(null)
 
-    const changePwMenu = html`
+    const changePwMenu =
         <div>
             <div>Old password:</div>
             <div><input type="password" ref=${oldPwRef} /></div>
             <div>New password:</div>
             <div><input type="password" ref=${newPwRef} /></div>
-            <div class="profileButtons">
-                <div class="clickable" onClick=${closeChangePwHandler}>Cancel</div>
-                <div class="clickable" onClick=${saveChangePwHandler}>Save</div>
+            <div className="profileButtons">
+                <div className="clickable" onClick=${closeChangePwHandler}>Cancel</div>
+                <div className="clickable" onClick=${saveChangePwHandler}>Save</div>
             </div>
         </div>
     `
-    return html`
-        <div class="profileBackground">
-            <div class="profileContainer">
+    return
+        <div className="profileBackground">
+            <div className="profileContainer">
                 ${(profile !== null && isUser === true && changePwMode === false)
-                    ? html`
-                        <div class="profileHeader">
+                    ?
+                        <div className="profileHeader">
                             <div>
                                 <h2>${state.user.acc !== null && state.user.acc.name}</h2>
                             </div>
-                            <div class="profileHeaderSubscript">
+                            <div className="profileHeaderSubscript">
                                 <h5>User Profile</h5>
                             </div>
-                            <div class="profileChangePasswordButton clickable" title="Change password" onClick=${openChangePwHandler}>Pw
+                            <div className="profileChangePasswordButton clickable" title="Change password" onClick=${openChangePwHandler}>Pw
                             </div>
                         </div>
                         <div>Registration date: ${fmtDt(profile.tsJoined)}</div>
                         <div>Total number of proposals: ${profile.proposalCount}</div>
                         <div>Approved proposals: ${profile.approvedCount}</div>
                         <div>Approved proposals selected as primary: ${profile.primaryCount}</div>
-                        <div onClick=${signOutHandler} class="profileSignOut">Sign out</div>
+                        <div onClick=${signOutHandler} className="profileSignOut">Sign out</div>
                     `
                     : (changePwMode === true
                         ? changePwMenu

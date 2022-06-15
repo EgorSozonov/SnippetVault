@@ -27,14 +27,14 @@ const Dialog: React.FunctionComponent<Props> = ({state, closeCallback, children,
         }
     }, [])
 
-    return html`
-        <div class=${"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
-            <div class="dialogContainer">
-                <div class="dialogHeader">
+    return
+        <div className=${"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
+            <div className="dialogContainer">
+                <div className="dialogHeader">
                     <span>
                         <h4>${state.title}</h4>
                     </span>
-                    <span class="dialogHeaderRight" onClick=${closeCallback}>[X]
+                    <span className="dialogHeaderRight" onClick=${closeCallback}>[X]
                     </span>
                 </div>
 

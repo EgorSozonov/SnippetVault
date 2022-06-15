@@ -46,28 +46,29 @@ public T unpackRow(Row dbRow) {
             var tgt = columnTargets[j];
 
             if (tgt.propType == ValueType.doubl) {
-                setters.get(tgt.indexSetter).set(result, (double)dbRow.get(j));
+                val newVal = (double)dbRow.get(j);
+                setters.get(tgt.indexSetter).set(result, newVal);
             } else if (tgt.propType == ValueType.integr) {
-                val intVal = dbRow.get(j, Integer.class);
-                if (intVal == null) {
-                    System.out.println("Before setter");
-                }
-                setters.get(tgt.indexSetter).set(result, intVal);
-                if (intVal == null) {
-                    System.out.println("After setter");
-                }
+                val newVal = dbRow.get(j, Integer.class);
+                if (newVal != null) setters.get(tgt.indexSetter).set(result, newVal);
             } else if (tgt.propType == ValueType.lon) {
-                setters.get(tgt.indexSetter).set(result, dbRow.get(j, Long.class));
+                val newVal = dbRow.get(j, Long.class);
+                if (newVal != null) setters.get(tgt.indexSetter).set(result, newVal);
             } else if (tgt.propType == ValueType.strin) {
-                setters.get(tgt.indexSetter).set(result, dbRow.get(j, String.class));
+                val newVal = dbRow.get(j, String.class);
+                setters.get(tgt.indexSetter).set(result, newVal != null ? newVal : "");
             } else if (tgt.propType == ValueType.boole) {
-                setters.get(tgt.indexSetter).set(result, (boolean)dbRow.get(j, Boolean.class));
+                val newVal = dbRow.get(j, Boolean.class);
+                if (newVal != null) setters.get(tgt.indexSetter).set(result, newVal);
             } else if (tgt.propType == ValueType.datee) {
-                setters.get(tgt.indexSetter).set(result, dbRow.get(j, LocalDate.class));
+                val newVal = dbRow.get(j, LocalDate.class);
+                if (newVal != null) setters.get(tgt.indexSetter).set(result, newVal);
             } else if (tgt.propType == ValueType.timestampe) {
-                setters.get(tgt.indexSetter).set(result, dbRow.get(j, LocalDateTime.class));
+                val newVal = dbRow.get(j, LocalDateTime.class);
+                if (newVal != null) setters.get(tgt.indexSetter).set(result, newVal);
             } else if (tgt.propType == ValueType.binar) {
-                setters.get(tgt.indexSetter).set(result, dbRow.get(j, byte[].class));
+                val newVal = dbRow.get(j, byte[].class);
+                if (newVal != null) setters.get(tgt.indexSetter).set(result, newVal);
             }
         }
         return result;

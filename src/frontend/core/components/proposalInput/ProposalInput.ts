@@ -73,38 +73,38 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
         closeCallback()
     }
     if (needData === true && mbTask === null) return empty
-    return html`
-        <div class="proposalInputContainer">
+    return
+        <div className="proposalInputContainer">
             ${((mbTask !== null)
-                ? html`
-                    <div class="proposalInputBlock">Propose a <span class="proposalInputLang">${lang !== null && lang.name}</span> solution for <span class="proposalInputTask">${mbTask.name}</span>
+                ?
+                    <div className="proposalInputBlock">Propose a <span className="proposalInputLang">${lang !== null && lang.name}</span> solution for <span className="proposalInputTask">${mbTask.name}</span>
                     </div>
-                    <div class="proposalInputBlock">Task description: ${mbTask.description}</div>
-                    <div class="proposalInputBlockText">
-                        <textarea class="proposalInputTextArea" ref=${inputRef}></textarea>
+                    <div className="proposalInputBlock">Task description: ${mbTask.description}</div>
+                    <div className="proposalInputBlockText">
+                        <textarea className="proposalInputTextArea" ref=${inputRef}></textarea>
                     </div>
                     ${isLibOpen === true
-                        ? html`
-                            <div class="proposalInputBlockLib">
+                        ?
+                            <div className="proposalInputBlockLib">
                                 <p>Specify necessary libraries for this snippet:
-                                    <span onClick=${() => setIsLibOpen(false)} class="proposalInputLibTurnOff" title="Cancel specifying libraries">
+                                    <span onClick=${() => setIsLibOpen(false)} className="proposalInputLibTurnOff" title="Cancel specifying libraries">
                                         x
                                     </span>
                                 </p>
-                                <textarea class="proposalInputTextArea" ref=${inputLibRef}></textarea>
+                                <textarea className="proposalInputTextArea" ref=${inputLibRef}></textarea>
 
                             </div>
                         `
-                        : html`
-                            <div onClick=${() => setIsLibOpen(true)} class="proposalInputLibTurnOn">
+                        :
+                            <div onClick=${() => setIsLibOpen(true)} className="proposalInputLibTurnOn">
                                 Optional: specify necessary libraries
                             </div>
                         `
                     }
 
-                    <div class="proposalInputButtons">
-                        <div class="proposalInputButton" onClick=${closeHandler}>Cancel</div>
-                        <div class="proposalInputButton" onClick=${saveProposalHandler}>Save</div>
+                    <div className="proposalInputButtons">
+                        <div className="proposalInputButton" onClick=${closeHandler}>Cancel</div>
+                        <div className="proposalInputButton" onClick=${saveProposalHandler}>Save</div>
                     </div>
                 `
                 : html `

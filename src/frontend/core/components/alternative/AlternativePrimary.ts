@@ -38,51 +38,51 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
 
     const taskOrId = {type: "task", payload: task, }
 
-    return html`
-        <div class="alternativeHeader">
-            <div class="alternativeHeaderMain">
-                <div class="alternativeHeaderMainLeft">
-                    <div class="alternativeHeaderGridLeft"> Language:
+    return
+        <div className="alternativeHeader">
+            <div className="alternativeHeaderMain">
+                <div className="alternativeHeaderMainLeft">
+                    <div className="alternativeHeaderGridLeft"> Language:
                     </div>
-                    <div class="alternativeHeaderGridRight"> ${lang !== null && lang.name}
+                    <div className="alternativeHeaderGridRight"> ${lang !== null && lang.name}
                     </div>
-                    <div class="alternativeHeaderGridLeft">
+                    <div className="alternativeHeaderGridLeft">
                         Task:
                     </div>
-                    <div class="alternativeHeaderGridRight">
+                    <div className="alternativeHeaderGridRight">
                         ${task.taskGroupName} / ${task.name}
                     </div>
-                    <div class="alternativeHeaderGridLeft">
+                    <div className="alternativeHeaderGridLeft">
                         Description:
                     </div>
-                    <div class="alternativeHeaderGridRight">
+                    <div className="alternativeHeaderGridRight">
                         ${task.description}
                     </div>
                 </div>
-                <div class="alternativeHeaderMainRight">
-                    <div class="alternativeHeaderMainRightCode">
+                <div className="alternativeHeaderMainRight">
+                    <div className="alternativeHeaderMainRightCode">
                         ${primaryAlternative !== null && primaryAlternative.content}
                     </div>
                 </div>
             </div>
-            <div class="alternativeHeaderMainFooter">
+            <div className="alternativeHeaderMainFooter">
                 <span>Upload date: ${primaryAlternative !== null && fmtDt(primaryAlternative.tsUpload)}</span>
                 <span>Score: ${primaryAlternative !== null && primaryAlternative.score}</span>
                 ${primaryAlternative.voteFlag
-                    ? html`
-                            <span class="alternativeFooterVoted">
+                    ?
+                            <span className="alternativeFooterVoted">
                                 Voted!
                             </span>
 
                         `
                     : (isSignedIn === true &&
-                        html`
-                           <span class="alternativeFooterVote" onClick=${voteHandler(primaryAlternative.id)}>
-                                <span class="alternativeItemButton">V</span>Vote
+
+                           <span className="alternativeFooterVote" onClick=${voteHandler(primaryAlternative.id)}>
+                                <span className="alternativeItemButton">V</span>Vote
                             </span>
                         `)
                 }
-                ${(lang !== null && isSignedIn === true) && html`<span class="clickable alternativeOpenProposal" onClick=${openProposalDialog}>
+                ${(lang !== null && isSignedIn === true) && <span className="clickable alternativeOpenProposal" onClick=${openProposalDialog}>
                     Propose a new snippet
                 </span>`
                 }
@@ -91,7 +91,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
                                 leftCallback=${() => state.snip.alternativesResort("byDate")} rightCallback=${() => state.snip.alternativesResort("byScore")} />
                 </span>
             </div>
-            ${ lang !== null && html`
+            ${ lang !== null &&
                     <${Dialog} state=${proposalDialog} closeCallback=${closeProposalDialog}>
                         <${ProposalInput} lang=${{id: lang.id, name: lang.name, }} taskOrId=${taskOrId} closeCallback=${closeProposalDialog} />
                     <//>

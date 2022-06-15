@@ -50,34 +50,34 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
         setGroupSelectMode(false)
     }
 
-    return html`
-        <div class="hoverSelect" onMouseEnter=${() => mainState.snip.openSelectSet(uniqueName)}
+    return
+        <div className="hoverSelect" onMouseEnter=${() => mainState.snip.openSelectSet(uniqueName)}
                 onMouseLeave=${() => mainState.snip.openSelectSet("")}>
-            <span class="search" onClick=${onClickHeader}>
-                <span class="leftButton"></span>
-                <span class="rightLabel">${currValue.name}</span>
+            <span className="search" onClick=${onClickHeader}>
+                <span className="leftButton"></span>
+                <span className="rightLabel">${currValue.name}</span>
             </span>
 
-            <div class=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
-                <div class=${"groupName" + (groupSelectMode === true ? " groupNameSelectMode": "")}
+            <div className=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
+                <div className=${"groupName" + (groupSelectMode === true ? " groupNameSelectMode": "")}
                     onClick=${onClickGroup}>[${selectedGroup.name}]</div>
                 ${groupSelectMode === true &&
-                    html`<ul class="list">
+                    <ul className="list">
                         <li>
-                            <ul class="optgroup">
+                            <ul className="optgroup">
                                 ${choiceGroups.map((c: SelectGroup, idx: number) => {
-                                    return html`<li key=${idx} onClick=${() => onSelectGroup(idx)}>${c.name}</li>`
+                                    return <li key=${idx} onClick=${() => onSelectGroup(idx)}>${c.name}</li>`
                                 })}
                             </ul>
                         </li>
                     </ul>`
                 }
                 ${groupSelectMode === false &&
-                    html`<ul class="list">
+                    <ul className="list">
                         <li>
-                            <ul class="optgroup">
+                            <ul className="optgroup">
                                 ${selectedGroup.choices.map((c: SelectChoice, idx: number) => {
-                                    return html`<li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
+                                    return <li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
                                 })}
                             </ul>
                         </li>
