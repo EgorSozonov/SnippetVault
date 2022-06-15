@@ -1,8 +1,7 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import IHasName from "../../types/IHasName"
 import IStringKeyed from "../../types/IStringKeyed"
 import "./editableList.css"
-import { html } from "htm/react"
 import { Editability } from "./utils/Editability"
 import HoverSelectInput from "../hoverSelect/HoverSelectInput"
 import { inputFocusHandler } from "../../utils/ComponentUtils"
@@ -17,7 +16,7 @@ type Props<T extends IStringKeyed & IHasName> = {
 }
 
 const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabilities, cuCallback, }: Props<T>) => {
-    if (!values || values.length < 1) return <div></div>`
+    if (!values || values.length < 1) return <div></div>
     const [openIdx, setOpenIdx] = useState(-1)
     const [isOpenNew, setOpenNew] = useState(false)
 
@@ -52,37 +51,39 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
     }
 
     const editableInputs = (v: T) => {
-        return ${editabilities.filter(x => x.field in v).map((x: Editability<T>, idx: number) => {
-            return
-                <li key=${idx} className="editableListEdit">
-                    <span className="editableListColumn">
-                        <label>${x.field}</label>
-                    </span>
-                    <span className="editableListColumn">
-                        ${x.fieldType === "choice"
-                            ? <${HoverSelectInput} inputName=${x.field} choices=${x.choices} initValue=${v[x.field]}
-                                        uniqueName=${"unique" + x.field + idx} />`
-                            : (x.fieldType === "bool"
-                                ? <input type="checkbox" className="svCheckbox" name=${x.field} defaultChecked=${v[x.field]}/>`
-                                : <input type="text" name=${x.field} defaultValue=${v[x.field]}
-                                onFocus=${inputFocusHandler} />`)
-                }
-                    </span>
-                </li>`
-            })}
-            `
+        return (
+            editabilities.filter((x: any) => x.field in v)
+                         .map((x: Editability<T>, idx: number) =>
+                            <li key={idx} className="editableListEdit">
+                                <span className="editableListColumn">
+                                    <label>${x.field}</label>
+                                </span>
+                                <span className="editableListColumn">
+                                    {x.fieldType === "choice"
+                                        ? <HoverSelectInput inputName={x.field.toString()} choices={x.choices} initValue={v[x.field]}
+                                                    uniqueName={"unique" + x.field + idx} />
+                                        : (x.fieldType === "bool"
+                                            ? <input type="checkbox" className="svCheckbox" name={x.field.toString()} defaultChecked={v[x.field]}/>
+                                            : <input type="text" name={x.field.toString()} defaultValue={v[x.field]}
+                                            onFocus={inputFocusHandler} />)
+                                    }
+                                </span>
+                            </li>
+                         )
+
+        )
     }
-    return
+    return (
         <div className="editableListContainer">
             <div className="editableListHeader">
                 <div className="editableListTitle">
-                    <h5>${title}</h5>
+                    <h5>{title}</h5>
                 </div>
-                <div className="editableListHeaderButton" onClick=${newHandler}>+</div>
+                <div className="editableListHeaderButton" onClick={newHandler}>+</div>
             </div>
             <div className="editableListAddForm">
-                ${isOpenNew === true &&
-                    <form onSubmit=${newSaveHandler}>
+                {isOpenNew === true &&
+                    <form onSubmit={newSaveHandler}>
                         <ul>
                             ${editableInputs(values[0])}
                         </ul>
@@ -90,18 +91,18 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                             <input type="submit" value="Save new" />
                         </div>
                     </form>
-                `}
+                }
             </div>
             <div>
                 <ul>
-                    ${values.map((v: T, idx: number) => {
-                        return
-                            <li key=${idx} id=${"elem" + idx} className="editableListRow">
-                                <div onClick=${rowClickHandler(idx)} className=${(openIdx === idx ? "editableListRowActive" : "")}>
+                    {values.map((v: T, idx: number) => {
+                        return (
+                            <li key={idx} id={"elem" + idx} className="editableListRow">
+                                <div onClick={rowClickHandler(idx)} className={(openIdx === idx ? "editableListRowActive" : "")}>
                                     <span className="editableListCell">${v.name}</span>
                                 </div>
                                 ${openIdx === idx &&
-                                    <form onSubmit=${editSaveHandler(idx)}>
+                                    <form onSubmit={editSaveHandler(idx)}>
                                         <ul>
                                             ${editableInputs(v)}
                                         </ul>
@@ -109,15 +110,15 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                                             <input type="submit" value="Save" />
                                         </div>
                                     </form>
-                                `}
+                                }
 
                             </li>
-                        `}
+                        )}
                     )}
                 </ul>
             </div>
         </div>
-    `
+    )
 }
 
 

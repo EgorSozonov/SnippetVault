@@ -7,13 +7,13 @@ import { render } from "react-dom"
 import { CookiesProvider } from "react-cookie"
 
 
-export const StoreContext = createContext<MainState>(new MainState())
+export const storeContext = createContext<MainState>(new MainState())
 
 export const StoreProvider: FunctionComponent<{children: any}> = ({ children, }) => {
     return (
-        <StoreContext.Provider value={new MainState()}>
+        <storeContext.Provider value={new MainState()}>
             {children}
-        </StoreContext.Provider>
+        </storeContext.Provider>
     )
 }
 

@@ -1,7 +1,7 @@
-import { html } from "htm/react"
+import React from "react"
 
 export function inputFocusHandler(event: any) {
     event.target.select()
 }
 
-export const empty = <div></div>`
+export const empty = <div></div>

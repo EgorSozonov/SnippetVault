@@ -1,8 +1,8 @@
+import React from "react"
 import { useContext, useEffect, useState } from "react"
 import "./hoverSelect.css"
-import { html } from 'htm/react'
 import MainState from "../../mobX/AllState"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import {observer} from 'mobx-react-lite'
 import SelectChoice from "../../types/SelectChoice"
 import SelectGroup from "../../types/SelectGroup"
@@ -16,7 +16,7 @@ type Props = {
 }
 
 const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups, currValue, uniqueName, selectCallback, }) => {
-    const mainState = useContext<MainState>(StoreContext)
+    const mainState = useContext<MainState>(storeContext)
     const currentlyOpen = mainState.snip.openSelect
     const isOpen = currentlyOpen === uniqueName
     const [selectedGroup, setSelectedGroup] = useState<SelectGroup>(choiceGroups.length > 0 ? choiceGroups[0] : {id: -1, name: "", choices: [], })
@@ -50,42 +50,42 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
         setGroupSelectMode(false)
     }
 
-    return
-        <div className="hoverSelect" onMouseEnter=${() => mainState.snip.openSelectSet(uniqueName)}
-                onMouseLeave=${() => mainState.snip.openSelectSet("")}>
-            <span className="search" onClick=${onClickHeader}>
+    return (
+        <div className="hoverSelect" onMouseEnter={() => mainState.snip.openSelectSet(uniqueName)}
+                onMouseLeave={() => mainState.snip.openSelectSet("")}>
+            <span className="search" onClick={onClickHeader}>
                 <span className="leftButton"></span>
                 <span className="rightLabel">${currValue.name}</span>
             </span>
 
-            <div className=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
-                <div className=${"groupName" + (groupSelectMode === true ? " groupNameSelectMode": "")}
-                    onClick=${onClickGroup}>[${selectedGroup.name}]</div>
-                ${groupSelectMode === true &&
+            <div className={(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
+                <div className={"groupName" + (groupSelectMode === true ? " groupNameSelectMode": "")}
+                    onClick={onClickGroup}>[${selectedGroup.name}]</div>
+                {groupSelectMode === true &&
                     <ul className="list">
                         <li>
                             <ul className="optgroup">
-                                ${choiceGroups.map((c: SelectGroup, idx: number) => {
-                                    return <li key=${idx} onClick=${() => onSelectGroup(idx)}>${c.name}</li>`
+                                {choiceGroups.map((c: SelectGroup, idx: number) => {
+                                    return <li key={idx} onClick={() => onSelectGroup(idx)}>${c.name}</li>
                                 })}
                             </ul>
                         </li>
-                    </ul>`
+                    </ul>
                 }
-                ${groupSelectMode === false &&
+                {groupSelectMode === false &&
                     <ul className="list">
                         <li>
                             <ul className="optgroup">
-                                ${selectedGroup.choices.map((c: SelectChoice, idx: number) => {
-                                    return <li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
+                                {selectedGroup.choices.map((c: SelectChoice, idx: number) => {
+                                    return <li key={idx} onClick={() => onSelect(c)}>{c.name}</li>
                                 })}
                             </ul>
                         </li>
-                    </ul>`
+                    </ul>
                 }
             </div>
         </div>
-    `
+    )
 })
 
 

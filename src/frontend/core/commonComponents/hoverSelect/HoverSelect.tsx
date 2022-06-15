@@ -1,8 +1,8 @@
+import React from "react"
 import { useContext } from "react"
 import "./hoverSelect.css"
-import { html } from 'htm/react'
 import MainState from "../../mobX/AllState"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import {observer} from 'mobx-react-lite'
 import SelectChoice from "../../types/SelectChoice"
 
@@ -15,7 +15,7 @@ type Props = {
 }
 
 const HoverSelect: React.FunctionComponent<Props> = observer(({choices, currValue, uniqueName, selectCallback, }) => {
-    const mainState = useContext<MainState>(StoreContext)
+    const mainState = useContext<MainState>(storeContext)
     const currentlyOpen = mainState.snip.openSelect
     const isOpen = currentlyOpen === uniqueName
 
@@ -31,27 +31,27 @@ const HoverSelect: React.FunctionComponent<Props> = observer(({choices, currValu
             mainState.snip.openSelectSet(uniqueName)
         }
     }
-    return
-        <div className="hoverSelect" onMouseEnter=${() => mainState.snip.openSelectSet(uniqueName)}
-                onMouseLeave=${() => mainState.snip.openSelectSet("")}>
-            <span className="search" onClick=${onClickHeader}>
+    return (
+        <div className="hoverSelect" onMouseEnter={() => mainState.snip.openSelectSet(uniqueName)}
+                onMouseLeave={() => mainState.snip.openSelectSet("")}>
+            <span className="search" onClick={onClickHeader}>
                 <span className="leftButton"></span>
                 <span className="rightLabel">${currValue.name}</span>
             </span>
 
-            <div className=${(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
+            <div className={(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
                 <ul className="list">
                     <li>
                         <ul className="optgroup">
-                            ${choices.map((c: SelectChoice, idx: number) => {
-                                return <li key=${idx} onClick=${() => onSelect(c)}>${c.name}</li>`
+                            {choices.map((c: SelectChoice, idx: number) => {
+                                return <li key={idx} onClick={() => onSelect(c)}>{c.name}</li>
                             })}
                         </ul>
                     </li>
                 </ul>
             </div>
         </div>
-    `
+    )
 })
 
 

@@ -1,8 +1,8 @@
+import React from "react"
 import { useContext, useEffect, useState } from "react"
 import "./hoverSelect.css"
-import { html } from 'htm/react'
 import MainState from "../../mobX/AllState"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import {observer} from 'mobx-react-lite'
 import SelectChoice from "../../types/SelectChoice"
 
@@ -18,7 +18,7 @@ type Props = {
  * Hover select build upon an <input> element, good for <form>s
  */
 const HoverSelectInput: React.FunctionComponent<Props> = observer(({choices, initValue, uniqueName, inputName, }) => {
-    const mainState = useContext<MainState>(StoreContext)
+    const mainState = useContext<MainState>(storeContext)
     const currentlyOpen = mainState.snip.openSelect
     const isOpen = currentlyOpen === uniqueName
     const [currValue, setCurrValue] = useState<SelectChoice>(initValue)
@@ -44,29 +44,29 @@ const HoverSelectInput: React.FunctionComponent<Props> = observer(({choices, ini
         mainState.snip.openSelectSet(uniqueName)
     }
 
-    return
-        <div key=${inputName} onMouseLeave=${() => mainState.snip.openSelectSet("")} className=${"hoverSelectInputContainer"}>
-            <input type="text" name=${inputName} readOnly value=${currValue.name} className="hoverSelectSmall"
-                onMouseEnter=${onMouseEnterH}
+    return (
+        <div key={inputName} onMouseLeave={() => mainState.snip.openSelectSet("")} className={"hoverSelectInputContainer"}>
+            <input type="text" name={inputName} readOnly value={currValue.name} className="hoverSelectSmall"
+                onMouseEnter={onMouseEnterH}
                 />
-            <span className="search" onClick=${onClickHeader}>
+            <span className="search" onClick={onClickHeader}>
             </span>
 
-            ${isOpen === true &&
-                html `
-                    <div className=${(isOpen ? "hoverSelectInputMenuActive" : "hoverSelectInputMenu")}>
-                        <ul className=${"hoverSelectInputFields"}>
-                            ${choices.map((c: SelectChoice, idx: number) => {
-                                    return <li key=${idx} onClick=${() => onSelect(c)} className="hoverSelectInputField">${c.name}</li>`
+            {isOpen === true && (
+
+                    <div className={(isOpen ? "hoverSelectInputMenuActive" : "hoverSelectInputMenu")}>
+                        <ul className={"hoverSelectInputFields"}>
+                            {choices.map((c: SelectChoice, idx: number) => {
+                                    return <li key={idx} onClick={() => onSelect(c)} className="hoverSelectInputField">${c.name}</li>
                                 }
                             )}
                         </ul>
                     </div>
-                `
+                )
             }
         </div>
 
-    `
+    )
 })
 
 

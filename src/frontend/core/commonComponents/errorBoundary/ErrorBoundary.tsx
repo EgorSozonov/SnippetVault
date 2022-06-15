@@ -1,6 +1,5 @@
-import { html } from "htm/react";
 import React, { ErrorInfo, ReactNode } from "react";
-import ProposalInput from "../../components/proposalInput/ProposalInput";
+
 
 interface Props {
   children: ReactNode;
@@ -29,7 +28,7 @@ class ErrorBoundary extends React.Component<Props, State> {
     }
     public render() {
         if (this.state.hasError) {
-            return <h1>Sorry.. there was an error</h1>`
+            return <h1>Sorry.. there was an error</h1>
         }
 
         return this.props.children;

@@ -44,7 +44,7 @@ const webpackFrontend = (args: any): Configuration => {
 		module: {
 			rules: [
 				{
-					test: /\.ts?$/,
+					test: /\.tsx?$/,
 					exclude: /node_modules/,
 					use: [{
 						loader: "ts-loader",
