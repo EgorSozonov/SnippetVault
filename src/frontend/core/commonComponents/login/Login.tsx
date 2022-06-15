@@ -2,7 +2,7 @@ import React from "react"
 import { useContext, useRef, } from "react"
 import "./Login.css"
 import MainState from "../../mobX/AllState"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import {observer} from "mobx-react-lite"
 import { SignInDTO } from "../../types/dto/AuthDTO"
 import { NavLink } from "react-router-dom"
@@ -13,8 +13,9 @@ type Props = {
     closeCallback?: () => void,
 }
 
+
 const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
 
     const unameRef = useRef<HTMLInputElement>(null)
     const pwRef = useRef<HTMLInputElement>(null)
@@ -22,9 +23,12 @@ const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
         if (!unameRef.current || !pwRef.current) return
         const uName: string = unameRef.current.value
         const pw: string = pwRef.current.value
-        const dto: SignInDTO = {userName: uName, }
 
-        state.user.signInOrRegister(dto, mode)
+        if (mode === "signIn") {
+            state.user.userSignIn(uName, pw)
+        } else {
+            state.user.userRegister(uName, pw)
+        }
     }
 
     return (
@@ -36,7 +40,7 @@ const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
                 <p>
                 This website uses cookies for identification of signed in users.
                 </p>
-                <p>By signing in you are consenting to our <NavLink to={PATHS["termsOfService"].url} title="Terms of Service" >Terms of Service<//> and cookie usage policy.
+                <p>By signing in you are consenting to our <NavLink to={PATHS["termsOfService"].url} title="Terms of Service" >Terms of Service</NavLink> and cookie usage policy.
                 </p>
             </div>
             <div className="loginFormLabel">Username</div>

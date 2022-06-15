@@ -4,7 +4,7 @@ import { FunctionComponent, useContext, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
 import DialogState from "../../commonComponents/dialog/DialogState";
 import MainState from "../../mobX/AllState";
-import { StoreContext } from "../../App";
+import { storeContext } from "../../App";
 import DialogFullscreen from "../../commonComponents/dialog/DialogFullscreen";
 import { ProposalUpdateDTO } from "../../types/dto/SnippetDTO";
 
@@ -15,7 +15,7 @@ type Props = {
 }
 
 const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
     const proposal = state.admin.editProposal
 
     useEffect(() => {

@@ -1,12 +1,12 @@
 import React from "react"
 import "./snippet.css"
 import SnippetCode from "./SnippetCode"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import { FunctionComponent, useContext, useEffect, useState,} from "react"
 import { NavLink, useSearchParams } from "react-router-dom"
 import MainState from "../../mobX/AllState"
 import { observer } from "mobx-react-lite"
-import { base64OfHex, bigintOfBase64, bigintOfHex, checkNonempty, nonprefixedHexOfPositiveBI } from "../../utils/StringUtils"
+import { checkNonempty } from "../../utils/StringUtils"
 import { idOf, isStateOK, stringOf } from "./utils/SnippetState"
 import { SnippetDTO } from "../../types/dto/SnippetDTO"
 import Dialog from "../../commonComponents/dialog/Dialog"
@@ -18,13 +18,10 @@ import KeyButton from "../../commonComponents/login/KeyButton"
 import UserButton from "../../commonComponents/login/UserButton"
 import HoverSelectCompact from "../../commonComponents/hoverSelect/HoverCompact"
 import SelectChoice from "../../types/SelectChoice"
-import SecureRemotePassword from "../../utils/SecureRemotePassword"
-import { rfc5054 } from "../../utils/Constants"
-import { processSignIn } from "../../utils/User"
 
 
 const SnippetPg: FunctionComponent = observer(({}: any) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
     const snippets = state.snip.snippets
     const lang1 = state.snip.l1
     const lang2 = state.snip.l2
@@ -94,142 +91,11 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         openProposalDialog()
     }
 
-    const fooRegister = async () => {
-        const userName = "Joe"
-        const password = "a6SWy$U8s7Y"
-
-        const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
-        try {
-            const saltHex = await clientSRP.generateRandomSalt()
-            const verifier = await clientSRP.generateVerifier(saltHex, userName, password)
-            const verifierHex = nonprefixedHexOfPositiveBI(verifier)
-            console.log("salt result = " + bigintOfHex(saltHex).toString())
-            console.log("verifier = " + verifier.toString())
-            console.log("g = " + rfc5054.g_base10.toString())
-
-            // base64
-            const handshakeResponse = await state.user.userRegister({ saltB64: base64OfHex(saltHex), verifierB64: base64OfHex(verifierHex), userName })
-            if (handshakeResponse.isOK === false) {
-                console.log("Handshake error " + handshakeResponse.errMsg)
-                return
-            }
-
-            const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
-            if (mbAM1.isOk === false) {
-                console.log(mbAM1.errMsg)
-                console.log("Handshake response was incorrect")
-                return
-            }
-
-            const {AB64, M1B64} = mbAM1.value
-
-            console.log("M1")
-            console.log(bigintOfBase64(M1B64).toString())
-            const M2Response = processSignIn(await state.user.userSignIn(AB64, M1B64, userName), "user")
-            console.log("M2")
-            console.log(M2Response)
-            if (M2Response.isOK === false) return
-
-            const result2 = await clientSRP.step2(M2Response.value.M2B64)
-            if (result2.isOk === false) return
-
-            const userId: number = M2Response.value.userId
-
-            const sessionKey = result2.value
-            console.log("userId = " + userId)
-            console.log("Session Key = " + sessionKey)
-        } catch (e) {
-            console.log(e)
-        }
-
-    }
-
-    const fooSignin = async () => {
-        const userName = "Joe"
-        const password = "a6SWy$U8s7Y"
-
-        const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
-        try {
-
-            const handshakeResponse = await state.user.userHandshake({ userName })
-            if (handshakeResponse.isOK === false) {
-                console.log("Handshake error " + handshakeResponse.errMsg)
-                return
-            }
-
-            const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
-            if (mbAM1.isOk === false) {
-                console.log(mbAM1.errMsg)
-                console.log("Handshake response was incorrect")
-                return
-            }
-
-            const {AB64, M1B64} = mbAM1.value
-
-            const M2Response = processSignIn(await state.user.userSignIn(AB64, M1B64, userName), "user")
-            if (M2Response.isOK === false) return
-
-            const result2 = await clientSRP.step2(M2Response.value.M2B64)
-            if (result2.isOk === false) return
-
-            const userId: number = M2Response.value.userId
-
-            const sessionKey = result2.value
-            console.log("userId = " + userId)
-            console.log("Session Key = " + sessionKey)
-        } catch (e) {
-            console.log(e)
-        }
-
-    }
-
-    const fooSigninFail = async () => {
-        const userName = "Joe"
-        const password = "a6SWy$U8s7Z"
-
-        const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
-        try {
-
-            const handshakeResponse = await state.user.userHandshake({ userName })
-            if (handshakeResponse.isOK === false) {
-                console.log("Handshake error " + handshakeResponse.errMsg)
-                return
-            }
-
-            const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
-            if (mbAM1.isOk === false) {
-                console.log(mbAM1.errMsg)
-                console.log("Handshake response was incorrect")
-                return
-            }
-
-            const {AB64, M1B64} = mbAM1.value
-
-            const M2Response = processSignIn(await state.user.userSignIn(AB64, M1B64, userName), "user")
-            if (M2Response.isOK === false) return
-
-            const result2 = await clientSRP.step2(M2Response.value.M2B64)
-            if (result2.isOk === false) return
-
-            const userId: number = M2Response.value.userId
-
-            const sessionKey = result2.value
-            console.log("userId = " + userId)
-            console.log("Session Key = " + sessionKey)
-        } catch (e) {
-            console.log(e)
-        }
-
-    }
-
     return (
     <div className="snippetsBody">
         <main className="snippetsContainer">
             <div className="snippetsHeader">
                 <div className="snippetLeftHeader">
-                    <button onClick={fooRegister}>Register</button>
-                    <button onClick={fooSignin}>Sign-in</button>
-                    <button onClick={fooSigninFail}>Fail signing in</button>
                     <div className="snippetHeading">
                         <span>{stringOf(lang1)}</span>
                         <span>

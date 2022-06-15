@@ -4,8 +4,8 @@ function KeyButton() {
   return (
 
         <svg width="30" height="30" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="15" cy="15" r="14" fill="transparent" stroke-width="1" />
-            <circle cx="15" cy="9" r="3.5" fill="transparent" stroke-width="1" />
+            <circle cx="15" cy="15" r="14" fill="transparent" strokeWidth="1" />
+            <circle cx="15" cy="9" r="3.5" fill="transparent" strokeWidth="1" />
             <path strokeWidth="1"
                 d="M 14 13.9
                    A 5 5 286 1 1 16 13.9"/>

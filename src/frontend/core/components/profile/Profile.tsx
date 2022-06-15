@@ -2,7 +2,7 @@ import React from "react"
 import "./profile.css"
 import { useContext, useEffect, useRef, useState } from "react"
 import MainState from "../../mobX/AllState"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import { SignInDTO, ChangePwDTO } from "../../types/dto/AuthDTO"
 import { observer } from "mobx-react-lite"
 import Login from "../../commonComponents/login/Login"
@@ -10,7 +10,7 @@ import { fmtDt } from "../../utils/DateUtils"
 
 
 const Profile: React.FunctionComponent = observer(() => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
     const [changePwMode, setChangePwMode] = useState(false)
 
     const profile = state.user.profile
@@ -68,11 +68,11 @@ const Profile: React.FunctionComponent = observer(() => {
     return (
         <div className="profileBackground">
             <div className="profileContainer">
-                ${(profile !== null && isUser === true && changePwMode === false)
+                {(profile !== null && isUser === true && changePwMode === false)
                     ?   <>
                             <div className="profileHeader">
                                 <div>
-                                    <h2>${state.user.acc !== null && state.user.acc.name}</h2>
+                                    <h2>{state.user.acc !== null && state.user.acc.name}</h2>
                                 </div>
                                 <div className="profileHeaderSubscript">
                                     <h5>User Profile</h5>

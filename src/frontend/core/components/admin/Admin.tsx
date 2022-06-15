@@ -4,7 +4,7 @@ import EditableList from "../../commonComponents/editableList/EditableList"
 import PATHS from "../../Path"
 import NewProposals from "./NewProposal"
 import { observer } from "mobx-react-lite"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import MainState from "../../mobX/AllState"
 import { Editability } from "../../commonComponents/editableList/utils/Editability"
 import AdminLogin from "./AdminLogin"
@@ -53,7 +53,7 @@ const editabilityLanguage: Editability<LanguageCUDTO>[] = [
 ]
 
 const Admin: FunctionComponent = observer(({}: any) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
     const [cookie, setCookie] = useCookies(["account"])
 
     const editabilityTask: Editability<TaskCUDTO>[] = [

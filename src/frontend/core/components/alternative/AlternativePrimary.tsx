@@ -7,7 +7,7 @@ import { fmtDt } from "../../utils/DateUtils"
 import { AlternativeDTO } from "../../types/dto/SnippetDTO"
 import { LanguageDTO, TaskDTO } from "../../types/dto/AuxDTO"
 import MainState from "../../mobX/AllState"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import { VoteDTO } from "../../types/dto/UserDTO"
 import Dialog from "../../commonComponents/dialog/Dialog"
 import DialogState from "../../commonComponents/dialog/DialogState"
@@ -22,7 +22,7 @@ type Props = {
 }
 
 const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternative, lang, task, tlId, }) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
     const isSignedIn = state.user.isUser.get()
     const voteHandler = (snId: number) => () => {
         const headers = state.user.headersGet()
@@ -36,7 +36,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
     const openProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: true })
     const closeProposalDialog = () => setProposalDialog({ ...proposalDialog, isOpen: false, })
 
-    const taskOrId = {type: "task", payload: task, }
+    const taskOrId:{type: "task", payload: TaskDTO, } | {type: "taskId", payload: number, } = {type: "task", payload: task, }
 
     return (
         <div className="alternativeHeader">
@@ -44,31 +44,31 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
                 <div className="alternativeHeaderMainLeft">
                     <div className="alternativeHeaderGridLeft"> Language:
                     </div>
-                    <div className="alternativeHeaderGridRight"> ${lang !== null && lang.name}
+                    <div className="alternativeHeaderGridRight"> {lang !== null && lang.name}
                     </div>
                     <div className="alternativeHeaderGridLeft">
                         Task:
                     </div>
                     <div className="alternativeHeaderGridRight">
-                        ${task.taskGroupName} / ${task.name}
+                        {task.taskGroupName} / {task.name}
                     </div>
                     <div className="alternativeHeaderGridLeft">
                         Description:
                     </div>
                     <div className="alternativeHeaderGridRight">
-                        ${task.description}
+                        {task.description}
                     </div>
                 </div>
                 <div className="alternativeHeaderMainRight">
                     <div className="alternativeHeaderMainRightCode">
-                        ${primaryAlternative !== null && primaryAlternative.content}
+                        {primaryAlternative !== null && primaryAlternative.content}
                     </div>
                 </div>
             </div>
             <div className="alternativeHeaderMainFooter">
-                <span>Upload date: ${primaryAlternative !== null && fmtDt(primaryAlternative.tsUpload)}</span>
-                <span>Score: ${primaryAlternative !== null && primaryAlternative.score}</span>
-                ${primaryAlternative.voteFlag
+                <span>Upload date: {primaryAlternative !== null && fmtDt(primaryAlternative.tsUpload)}</span>
+                <span>Score: {primaryAlternative !== null && primaryAlternative.score}</span>
+                {primaryAlternative.voteFlag
                     ?
                         <span className="alternativeFooterVoted">
                             Voted!
@@ -80,7 +80,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
                             </span>
                         )
                 }
-                ${(lang !== null && isSignedIn === true) && <span className="clickable alternativeOpenProposal" onClick={openProposalDialog}>
+                {(lang !== null && isSignedIn === true) && <span className="clickable alternativeOpenProposal" onClick={openProposalDialog}>
                     Propose a new snippet
                 </span>
                 }
@@ -89,7 +89,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
                                 leftCallback={() => state.snip.alternativesResort("byDate")} rightCallback={() => state.snip.alternativesResort("byScore")} />
                 </span>
             </div>
-            ${ lang !== null &&
+            { lang !== null &&
                     <Dialog state={proposalDialog} closeCallback={closeProposalDialog}>
                         <ProposalInput lang={{id: lang.id, name: lang.name, }} taskOrId={taskOrId} closeCallback={closeProposalDialog} />
                     </Dialog>

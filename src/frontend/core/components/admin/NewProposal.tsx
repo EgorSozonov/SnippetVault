@@ -3,7 +3,7 @@ import React from "react"
 import "./admin.css"
 import { observer } from "mobx-react-lite"
 import MainState from "../../mobX/AllState"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import DialogState from "../../commonComponents/dialog/DialogState"
 import { ProposalDTO } from "../../types/dto/SnippetDTO"
 import DialogConfirm from "../../commonComponents/dialog/DialogConfirm"
@@ -11,7 +11,7 @@ import EditProposalDialog from "./EditProposalDialog"
 
 
 const NewProposal: FunctionComponent = observer(() => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
 
     const [confirmationDialog, setConfirmationDialog] = useState<DialogState>({id: 0, title: "", isOpen: false})
     const openConfirmationDialog = (id: number) => setConfirmationDialog({title: "Are you sure you want to decline this proposal?", id: id, isOpen: true})

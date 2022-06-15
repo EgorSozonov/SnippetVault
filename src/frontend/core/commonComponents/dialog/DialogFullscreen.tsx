@@ -28,10 +28,10 @@ const DialogFullscreen: React.FunctionComponent<Props> = ({state, closeCallback,
     return (
         <div className={"dialogContainerFullscreen" + (state.isOpen === true ? " dialogActive" : " dialogInactive")} onKeyDown>
             <div className="dialogTitle">
-                <h3>${state.title}</h3>
+                <h3>{state.title}</h3>
             </div>
             <div className="dialogFullscreenChildren">
-                ${children}
+                {children}
             </div>
         </div>
     )

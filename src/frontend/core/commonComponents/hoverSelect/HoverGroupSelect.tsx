@@ -55,18 +55,18 @@ const HoverGroupSelect: React.FunctionComponent<Props> = observer(({choiceGroups
                 onMouseLeave={() => mainState.snip.openSelectSet("")}>
             <span className="search" onClick={onClickHeader}>
                 <span className="leftButton"></span>
-                <span className="rightLabel">${currValue.name}</span>
+                <span className="rightLabel">{currValue.name}</span>
             </span>
 
             <div className={(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>
                 <div className={"groupName" + (groupSelectMode === true ? " groupNameSelectMode": "")}
-                    onClick={onClickGroup}>[${selectedGroup.name}]</div>
+                    onClick={onClickGroup}>[{selectedGroup.name}]</div>
                 {groupSelectMode === true &&
                     <ul className="list">
                         <li>
                             <ul className="optgroup">
                                 {choiceGroups.map((c: SelectGroup, idx: number) => {
-                                    return <li key={idx} onClick={() => onSelectGroup(idx)}>${c.name}</li>
+                                    return <li key={idx} onClick={() => onSelectGroup(idx)}>{c.name}</li>
                                 })}
                             </ul>
                         </li>

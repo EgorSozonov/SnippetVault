@@ -21,15 +21,15 @@ function SnippetCode({content, isRight, langId, libraries, tlId, } : Props) {
         <div key={tlId}>
         <div>
             <pre className="snippetCode">
-                ${content}
+                {content}
             </pre>
         </div>
-        ${libraries &&
+        {libraries &&
 
                 <div>
                     Libraries:
                     <pre className="snippetCode">
-                        ${libraries}
+                        {libraries}
                     </pre>
                 </div>
 
@@ -52,16 +52,16 @@ function SnippetCode({content, isRight, langId, libraries, tlId, } : Props) {
                         <div className="commentButton" title="Copy code to clipboard" onClick={() => copyTextToClipboard(content)}>C</div>
                     </div>
                     <div className="snippetCodeLibraries">
-                        ${snippetContent}
+                        {snippetContent}
                     </div>
                 </>       )
             :
                 (<>
                     <div className="snippetCodeLibraries">
-                        ${snippetContent}
+                        {snippetContent}
                     </div>
                     <div className="snippetButtons snippetButtonsRight">
-                        ${alternativesLink}
+                        {alternativesLink}
                         <div className="commentButton" title="Copy code to clipboard" onClick={() => copyTextToClipboard(content)}>C</div>
                     </div>
                 </>)

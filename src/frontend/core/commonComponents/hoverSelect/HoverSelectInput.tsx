@@ -57,7 +57,7 @@ const HoverSelectInput: React.FunctionComponent<Props> = observer(({choices, ini
                     <div className={(isOpen ? "hoverSelectInputMenuActive" : "hoverSelectInputMenu")}>
                         <ul className={"hoverSelectInputFields"}>
                             {choices.map((c: SelectChoice, idx: number) => {
-                                    return <li key={idx} onClick={() => onSelect(c)} className="hoverSelectInputField">${c.name}</li>
+                                    return <li key={idx} onClick={() => onSelect(c)} className="hoverSelectInputField">{c.name}</li>
                                 }
                             )}
                         </ul>

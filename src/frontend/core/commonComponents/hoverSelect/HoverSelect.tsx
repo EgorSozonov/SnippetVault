@@ -36,7 +36,7 @@ const HoverSelect: React.FunctionComponent<Props> = observer(({choices, currValu
                 onMouseLeave={() => mainState.snip.openSelectSet("")}>
             <span className="search" onClick={onClickHeader}>
                 <span className="leftButton"></span>
-                <span className="rightLabel">${currValue.name}</span>
+                <span className="rightLabel">{currValue.name}</span>
             </span>
 
             <div className={(isOpen ? "hoverSelectMenuActive" : "hoverSelectMenu")}>

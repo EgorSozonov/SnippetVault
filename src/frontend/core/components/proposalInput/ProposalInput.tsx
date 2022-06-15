@@ -3,7 +3,7 @@ import "./proposalInput.css"
 import { FunctionComponent, useContext, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import MainState from "../../mobX/AllState"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import Login from "../../commonComponents/login/Login"
 import { TaskDTO } from "../../types/dto/AuxDTO"
 import { toast } from "react-toastify"
@@ -13,14 +13,14 @@ import SelectChoice from "../../types/SelectChoice"
 import { ProposalCreateDTO } from "../../types/dto/SnippetDTO"
 
 
-type Props = {
+export type Props = {
     lang: SelectChoice,
     taskOrId: {type: "task", payload: TaskDTO, } | {type: "taskId", payload: number, },
     closeCallback: () => void,
 }
 
 const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, closeCallback, } : Props) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
     const inputRef = useRef<HTMLTextAreaElement>(null)
     const inputLibRef = useRef<HTMLTextAreaElement>(null)
     const [taskFromBackend, setTaskFromBackend] = useState<TaskDTO | null>(null)
@@ -77,7 +77,7 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
         <div className="proposalInputContainer">
             {((mbTask !== null)
                 ?   <>
-                        <div className="proposalInputBlock">Propose a <span className="proposalInputLang">${lang !== null && lang.name}</span> solution for <span className="proposalInputTask">{mbTask.name}</span>
+                        <div className="proposalInputBlock">Propose a <span className="proposalInputLang">{lang !== null && lang.name}</span> solution for <span className="proposalInputTask">{mbTask.name}</span>
                         </div>
                         <div className="proposalInputBlock">Task description: {mbTask.description}</div>
                         <div className="proposalInputBlockText">

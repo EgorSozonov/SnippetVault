@@ -1,14 +1,14 @@
 import { FunctionComponent, useContext, useEffect, useRef } from "react"
 import React from "react"
 import { observer } from "mobx-react-lite"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import MainState from "../../mobX/AllState"
 import { SignInAdminDTO } from "../../types/dto/AuthDTO"
 import { useCookies } from "react-cookie"
 
 
 const AdminLogin: FunctionComponent = observer(({}: any) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
     const unameRef = useRef<HTMLInputElement>(null)
     const pw1Ref = useRef<HTMLInputElement>(null)
     const pw2Ref = useRef<HTMLInputElement>(null)

@@ -3,7 +3,7 @@ import React from "react"
 import { FunctionComponent, useContext } from "react"
 import { observer } from "mobx-react-lite"
 import MainState from "../../mobX/AllState"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import { AlternativeDTO } from "../../types/dto/SnippetDTO"
 import { VoteDTO } from "../../types/dto/UserDTO"
 import { fmtDt } from "../../utils/DateUtils"
@@ -16,7 +16,7 @@ type Props = {
 }
 
 const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, openDialog, }: Props) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
 
     const voteHandler = (snId: number) => () => {
         const headers = state.user.headersGet()
@@ -47,7 +47,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
                 <span>
                     Votes: {alternative.score}
                 </span>
-                ${alternative.voteFlag
+                {alternative.voteFlag
                     ?
                         <span className="alternativeFooterVoted">
                             Voted!
@@ -61,7 +61,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
                             </span>
                         )
                 }
-                ${isAdmin &&
+                {isAdmin &&
                     <span className="alternativeFooterPrimary" onClick={setPrimaryHandler(tlId, alternative.id)} title="Set as primary snippet">
                         <span className="alternativeItemButton">P</span>Primary
                     </span>

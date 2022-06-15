@@ -31,7 +31,7 @@ const Dialog: React.FunctionComponent<Props> = ({state, closeCallback, children,
             <div className="dialogContainer">
                 <div className="dialogHeader">
                     <span>
-                        <h4>${state.title}</h4>
+                        <h4>{state.title}</h4>
                     </span>
                     <span className="dialogHeaderRight" onClick={closeCallback}>[X]
                     </span>

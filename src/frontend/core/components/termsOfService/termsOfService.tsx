@@ -1,13 +1,13 @@
 import React from "react"
 import "./termsOfService.css"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import { FunctionComponent, useContext, } from "react"
 import MainState from "../../mobX/AllState"
 import { observer } from "mobx-react-lite"
 
 
 const TermsOfService: FunctionComponent = observer(({}: any) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
 
 
     return (

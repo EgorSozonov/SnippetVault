@@ -3,7 +3,7 @@ import React from "react"
 import { useParams } from "react-router";
 import { FunctionComponent, useContext, useEffect, useState } from "react"
 import MainState from "../../mobX/AllState"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import { observer } from "mobx-react-lite"
 import Alternative from "./Alternative"
 import AlternativePrimary from "./AlternativePrimary"
@@ -26,7 +26,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
 
     if (langIdNum < 0 || tlIdNum < 0) return empty
 
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
     const lang = state.snip.languages.find(x => x.id === langIdNum) || null
 
     const [commentDialog, setCommentDialog] = useState<BigDialogState>({id: -1, id2: -1, title: "", text: "", isOpen: false})

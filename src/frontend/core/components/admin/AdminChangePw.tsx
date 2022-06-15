@@ -1,7 +1,7 @@
 import { FunctionComponent, useContext, useRef } from "react"
 import React from "react"
 import { observer } from "mobx-react-lite"
-import { StoreContext } from "../../App"
+import { storeContext } from "../../App"
 import MainState from "../../mobX/AllState"
 import { ChangePwAdminDTO, SignInAdminDTO } from "../../types/dto/AuthDTO"
 
@@ -11,7 +11,7 @@ type Props = {
 }
 
 const AdminLogin: FunctionComponent<Props> = observer(({closeChangeAdminPwHandler,  }: Props) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
 
     const oldPw1Ref = useRef<HTMLInputElement>(null)
     const oldPw2Ref = useRef<HTMLInputElement>(null)

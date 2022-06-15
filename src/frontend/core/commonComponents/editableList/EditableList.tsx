@@ -56,7 +56,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                          .map((x: Editability<T>, idx: number) =>
                             <li key={idx} className="editableListEdit">
                                 <span className="editableListColumn">
-                                    <label>${x.field}</label>
+                                    <label>{x.field}</label>
                                 </span>
                                 <span className="editableListColumn">
                                     {x.fieldType === "choice"
@@ -85,7 +85,7 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                 {isOpenNew === true &&
                     <form onSubmit={newSaveHandler}>
                         <ul>
-                            ${editableInputs(values[0])}
+                            {editableInputs(values[0])}
                         </ul>
                         <div className="editableListAddButton">
                             <input type="submit" value="Save new" />
@@ -99,12 +99,12 @@ const EditableList = <T extends IStringKeyed & IHasName>({values, title, editabi
                         return (
                             <li key={idx} id={"elem" + idx} className="editableListRow">
                                 <div onClick={rowClickHandler(idx)} className={(openIdx === idx ? "editableListRowActive" : "")}>
-                                    <span className="editableListCell">${v.name}</span>
+                                    <span className="editableListCell">{v.name}</span>
                                 </div>
-                                ${openIdx === idx &&
+                                {openIdx === idx &&
                                     <form onSubmit={editSaveHandler(idx)}>
                                         <ul>
-                                            ${editableInputs(v)}
+                                            {editableInputs(v)}
                                         </ul>
                                         <div className="editableListSaveButton">
                                             <input type="submit" value="Save" />

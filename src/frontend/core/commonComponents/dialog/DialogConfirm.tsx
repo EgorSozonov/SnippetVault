@@ -15,10 +15,10 @@ const DialogConfirm: React.FunctionComponent<Props> = ({state, okHandler, cancel
         <div className={"dialogOverlay" + (state.isOpen === true ? " dialogActive" : " dialogInactive")}>
             <div className="dialogContainer">
                 <div className="dialogBody">
-                    ${state.title}
+                    {state.title}
                 </div>
                 <div>
-                    ${children}
+                    {children}
                 </div>
                 <div className="dialogButtons">
                     <div className="dialogButton" onClick={cancelHandler}>

@@ -6,7 +6,7 @@ import { fmtDt } from "../../utils/DateUtils";
 import { CommentCUDTO, CommentDTO } from "../../types/dto/UserDTO";
 import { BigDialogState } from "../../commonComponents/dialog/DialogState";
 import MainState from "../../mobX/AllState";
-import { StoreContext } from "../../App";
+import { storeContext } from "../../App";
 import DialogFullscreen from "../../commonComponents/dialog/DialogFullscreen";
 import Login from "../../commonComponents/login/Login";
 
@@ -17,7 +17,7 @@ type Props = {
 }
 
 const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCallback, }: Props) => {
-    const state = useContext<MainState>(StoreContext)
+    const state = useContext<MainState>(storeContext)
 
     useEffect(() => {
         if (dialogState.isOpen === false) return
@@ -42,7 +42,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
 
     return (
         <DialogFullscreen closeCallback={closeCallback} state={dialogState}>
-            <div className="alternativeItemCode">${dialogState.text}</div>
+            <div className="alternativeItemCode">{dialogState.text}</div>
             <ol>
                 {state.snip.comments.map((comm: CommentDTO, idx: number) => {
                     return <li key={idx} className="alternativeItemCommentsComment">
@@ -51,7 +51,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
                                 [{fmtDt(comm.tsUpload)}] <span className="alternativeItemCommentsSmall">by</span> <span className="alternativeDialogUsername">{comm.author}</span>
                             </span>
                         </div>
-                        <div className="alternativeItemCommentsText">${comm.content}</div>
+                        <div className="alternativeItemCommentsText">{comm.content}</div>
                     </li>
 
                 })}
