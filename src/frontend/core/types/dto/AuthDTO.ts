@@ -1,7 +1,5 @@
 
-export type SignInSuccessDTO = {
-    userId: number,
-}
+
 
 export type RegisterDTO = {
     userName: string;

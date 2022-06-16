@@ -19,18 +19,18 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
     const state = useContext<MainState>(storeContext)
 
     const voteHandler = (snId: number) => () => {
-        const headers = state.user.userIdGet()
-        if (headers === null) return
+        const mbUserId = state.user.userIdGet()
+        if (mbUserId === null) return
 
         const voteDTO: VoteDTO = {snId, tlId}
-        state.snip.userVote(voteDTO, headers)
+        state.snip.userVote(voteDTO, mbUserId)
     }
 
     const setPrimaryHandler = (tlId: number, snId: number) => () => {
-        const headers = state.user.userIdGet()
-        if (headers === null) return
+        const mbUserId = state.user.userIdGet()
+        if (mbUserId === null) return
 
-        state.snip.snippetMarkPrimary(tlId, snId, headers)
+        state.snip.snippetMarkPrimary(tlId, snId, mbUserId)
     }
 
     const isSignedIn = state.user.isUser.get()

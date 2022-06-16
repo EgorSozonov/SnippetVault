@@ -153,7 +153,11 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExch
                             if (x < 1) return Either.left("DB update error");
                             if (webEx == null) System.out.println("It's null");
                             System.out.println(accessToken);
-                            val newCookie = ResponseCookie.from("accessToken", accessToken).httpOnly(true).build();
+                            val newCookie = ResponseCookie.from("accessToken", accessToken)
+                                                          .httpOnly(true)
+                                                          .sameSite("None")
+                                                          .secure(false)
+                                                          .build();
                             webEx.getResponse().addCookie(newCookie);
                             return Either.right(new SignInResponse(M2B64, user.userId));
                         });

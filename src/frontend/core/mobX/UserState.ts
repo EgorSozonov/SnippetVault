@@ -1,4 +1,4 @@
-import { action, computed, makeAutoObservable } from "mobx"
+import { action, computed, makeAutoObservable, runInAction } from "mobx"
 import IClient from "../../ports/IClient"
 import { ChangePwAdminDTO, ChangePwDTO, HandshakeResponseDTO, SignInAdminDTO, SignInResponseDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
 import { ProfileDTO } from "../types/dto/UserDTO"
@@ -56,7 +56,7 @@ userRegister = action(async (userName: string, password: string) => {
 userSignIn = action(async (userName: string, password: string) => {
     const handshakeResponse = processHandshake(await this.client.userHandshake({ userName }), "user")
     const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
-    this.userFinishSignIn(handshakeResponse, userName, password, clientSRP)
+    runInAction(() => this.userFinishSignIn(handshakeResponse, userName, password, clientSRP))
 })
 
 userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResponseDTO>, userName: string, password: string, clientSRP: SecureRemotePassword) => {

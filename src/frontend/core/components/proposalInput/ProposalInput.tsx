@@ -44,15 +44,15 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
 
     const mbTask = taskOrId.type === "task" ? taskOrId.payload : taskFromBackend
     const saveProposalHandler = async () => {
-        const headers = state.user.userIdGet()
-        if (headers === null || mbTask === null) return
+        const mbUserId = state.user.userIdGet()
+        if (mbUserId === null || mbTask === null) return
 
         const task: TaskDTO = mbTask
 
         if (inputRef && inputRef.current && inputRef.current.value.length > 0) {
             const libraries = inputLibRef.current && inputLibRef.current.value ? inputLibRef.current.value : undefined
             const createDTO: ProposalCreateDTO = { content: inputRef.current.value, langId: lang.id, taskId: task.id, libraries, }
-            const response = await state.snip.proposalCreate(createDTO, headers)
+            const response = await state.snip.proposalCreate(createDTO, mbUserId)
             if (response.status === "OK") {
                 toast.success("Proposal saved", { autoClose: 2000 })
             } else {

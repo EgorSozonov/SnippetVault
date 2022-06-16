@@ -88,9 +88,9 @@ const Admin: FunctionComponent = observer(({}: any) => {
         state.admin.taskGroupCU(newValue, mbUserId)
     }
     const cuLanguageCallback = async (newValue: LanguageCUDTO) => {
-        const headers = state.user.userIdGet()
-        if (headers === null) return
-        state.admin.languageCU(newValue, headers)
+        const mbUserId = state.user.userIdGet()
+        if (mbUserId === null) return
+        state.admin.languageCU(newValue, mbUserId)
     }
 
     useEffect(() => {

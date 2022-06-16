@@ -46,12 +46,12 @@ export default class AdminState {
         this.editProposal = newValue[0]
     })
 
-    proposalUpdate = action(async (newValue: ProposalUpdateDTO, headers: SignInSuccessDTO) => {
-        await this.client.proposalUpdate(newValue, headers)
+    proposalUpdate = action(async (newValue: ProposalUpdateDTO, userId: number) => {
+        await this.client.proposalUpdate(newValue, userId)
     })
 
-    proposalApprove = action((pId: number, headers: SignInSuccessDTO) => {
-        this.client.proposalApprove(pId, headers)
+    proposalApprove = action((pId: number, userId: number) => {
+        this.client.proposalApprove(pId, userId)
             .then((r) => {
                 if (r.status === "OK") {
                     fetchFromClient(this.client.proposalsGet(), this.proposalsSet)
@@ -59,8 +59,8 @@ export default class AdminState {
             })
     })
 
-    proposalDecline = action((pId: number, headers: SignInSuccessDTO) => {
-        this.client.proposalDecline(pId, headers)
+    proposalDecline = action((pId: number, userId: number) => {
+        this.client.proposalDecline(pId, userId)
         .then((r) => {
                 if (r.status === "OK") {
                     fetchFromClient(this.client.proposalsGet(), this.proposalsSet)
@@ -80,8 +80,8 @@ export default class AdminState {
         this.tasks = observable.array(newValue)
     })
 
-    taskCU = action((newValue: TaskCUDTO, headers: SignInSuccessDTO) => {
-        this.client.taskCU(newValue, headers)
+    taskCU = action((newValue: TaskCUDTO, userId: number) => {
+        this.client.taskCU(newValue, userId)
     })
 
     taskGroupsGet = action(async () => {
@@ -112,8 +112,8 @@ export default class AdminState {
         this.languages = observable.array(newValue)
     })
 
-    languageCU = action((newValue: LanguageCUDTO, headers: SignInSuccessDTO) => {
-        this.client.languageCU(newValue, headers)
+    languageCU = action((newValue: LanguageCUDTO, userId: number) => {
+        this.client.languageCU(newValue, userId)
     })
 
     statsGet = action(async () => {

@@ -31,12 +31,12 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
         if (inputRef === null || !inputRef.current) return
         const text = inputRef.current.value.trim()
         if (text.trim().length < 1) return
-        const headers = state.user.userIdGet()
-        if (headers === null) return
+        const mbUserId = state.user.userIdGet()
+        if (mbUserId === null) return
 
         const dto: CommentCUDTO = {snId: dialogState.id, content: text}
 
-        state.snip.commentCreate(dto, headers, dialogState.id2)
+        state.snip.commentCreate(dto, mbUserId, dialogState.id2)
         closeCallback()
     }
 

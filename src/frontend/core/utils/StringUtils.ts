@@ -100,8 +100,10 @@ export function base64OfArray(inp: Uint8Array): string {
         result += BASE64[((inp[i*3] & 3) << 4) + (inp[i*3 + 1] >> 4)]
         result += BASE64[(inp[i*3 + 1] & 15) << 2]
     }
-    for (let j = 3 - extraBytes; j > 0; --j) {
-        result += "="
+    if (extraBytes > 0) {
+        for (let j = 3 - extraBytes; j > 0; --j) {
+            result += "="
+        }
     }
     return result
 }

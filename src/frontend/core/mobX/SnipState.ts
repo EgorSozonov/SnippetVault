@@ -103,8 +103,8 @@ export default class SnipState {
         this.tg = updateWithChoicesUrl(this.tg, newArr)
     })
 
-    proposalCreate = action(async (dto: ProposalCreateDTO, headers: SignInSuccessDTO) => {
-        return await this.client.proposalCreate(dto, headers)
+    proposalCreate = action(async (dto: ProposalCreateDTO, userId: number) => {
+        return await this.client.proposalCreate(dto, userId)
     })
 
     codesFromUrlSet = action((tgCode: string | null, l1Code: string | null, l2Code: string | null) => {
@@ -164,11 +164,11 @@ export default class SnipState {
         this.alternatives.rows = sorted
     })
 
-    snippetMarkPrimary = action((tlId: number, snId: number, headers: SignInSuccessDTO): void => {
-        this.client.snippetMarkPrimary(tlId, snId, headers)
+    snippetMarkPrimary = action((tlId: number, snId: number, userId: number): void => {
+        this.client.snippetMarkPrimary(tlId, snId, userId)
         .then((r) => {
                 if (r && r.status === "OK") {
-                    fetchFromClient2(this.client.alternativesForUserGet(tlId, headers.userId), this.alternativesSet)
+                    fetchFromClient2(this.client.alternativesForUserGet(tlId, userId), this.alternativesSet)
                 }
             })
     })
@@ -186,20 +186,20 @@ export default class SnipState {
         this.comments = observable.array(newValue.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1))
     })
 
-    commentCreate = action((dto: CommentCUDTO, headers: SignInSuccessDTO, id2: number) => {
-        this.client.commentCreate(dto, headers)
+    commentCreate = action((dto: CommentCUDTO, userId: number, id2: number) => {
+        this.client.commentCreate(dto, userId)
             .then((r) => {
                 if (r && r.status === "OK") {
-                    this.alternativesGetUser(id2, headers.userId)
+                    this.alternativesGetUser(id2, userId)
                 }
             })
     })
 
-    userVote = action((voteDto: VoteDTO, headers: SignInSuccessDTO) => {
-        this.client.userVote(voteDto, headers)
+    userVote = action((voteDto: VoteDTO, userId: number) => {
+        this.client.userVote(voteDto, userId)
             .then((r) => {
                 if (r && r.status === "OK") {
-                    fetchFromClient2(this.client.alternativesForUserGet(voteDto.tlId, headers.userId), this.alternativesSet)
+                    fetchFromClient2(this.client.alternativesForUserGet(voteDto.tlId, userId), this.alternativesSet)
                 }
             })
     })

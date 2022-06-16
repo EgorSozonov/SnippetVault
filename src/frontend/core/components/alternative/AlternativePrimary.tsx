@@ -26,11 +26,11 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
     const state = useContext<MainState>(storeContext)
     const isSignedIn = state.user.isUser.get()
     const voteHandler = (snId: number) => () => {
-        const headers = state.user.userIdGet()
-        if (headers === null) return
+        const mbUserId = state.user.userIdGet()
+        if (mbUserId === null) return
 
         const voteDTO: VoteDTO = {snId, tlId}
-        state.snip.userVote(voteDTO, headers)
+        state.snip.userVote(voteDTO, mbUserId)
 
     }
     const [proposalDialog, setProposalDialog] = useState<DialogState>({ isOpen: false, id: -1, title: "Post a proposal", })

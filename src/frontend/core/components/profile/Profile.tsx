@@ -28,18 +28,19 @@ const Profile: React.FunctionComponent = observer(() => {
     }
 
     const saveChangePwHandler = async () => {
-        const mbUserId = state.user.userIdGet()
-        if (mbUserId === null || state.user.acc === null) return
+        // TODO
+        // const mbUserId = state.user.userIdGet()
+        // if (mbUserId === null || state.user.acc === null) return
 
-        if (!oldPwRef.current || !newPwRef.current) return
-        const oldPw: string = oldPwRef.current.value
-        const newPw: string = newPwRef.current.value
+        // if (!oldPwRef.current || !newPwRef.current) return
+        // const oldPw: string = oldPwRef.current.value
+        // const newPw: string = newPwRef.current.value
 
-        const signInDTO: SignInDTO = {userName: state.user.acc?.name, password: oldPw, }
+        // const signInDTO: SignInDTO = {userName: state.user.acc?.name, password: oldPw, }
 
-        const dto: ChangePwDTO = { newPw: newPw, signIn: signInDTO, }
-        await state.user.changePw(dto, mbUserId)
-        setChangePwMode(false)
+        // const dto: ChangePwDTO = { newPw: newPw, signIn: signInDTO, }
+        // await state.user.changePw(dto)
+        // setChangePwMode(false)
     }
 
     useEffect(() => {
@@ -74,7 +75,7 @@ const Profile: React.FunctionComponent = observer(() => {
                                 <div>
                                     <h2>{state.user.acc !== null && state.user.acc.name}</h2>
                                 </div>
-                                <div className="profileHeaderSubscript">
+                                <div className="profilembUserIdubscript">
                                     <h5>User Profile</h5>
                                 </div>
                                 <div className="profileChangePasswordButton clickable" title="Change password" onClick={openChangePwHandler}>Pw

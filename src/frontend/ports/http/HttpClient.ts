@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios"
 import createClient from "./HttpConfig"
 import IClient from "../IClient"
 import ServerResponse from "../../core/types/ServerResponse"
-import { SignInAdminDTO, SignInDTO, SignInSuccessDTO as AuthorizeDTO, ChangePwAdminDTO, ChangePwDTO, HandshakeDTO, RegisterDTO, HandshakeResponseDTO, SignInResponseDTO } from "../../core/types/dto/AuthDTO"
+import { SignInAdminDTO, SignInDTO, ChangePwAdminDTO, ChangePwDTO, HandshakeDTO, RegisterDTO, HandshakeResponseDTO, SignInResponseDTO } from "../../core/types/dto/AuthDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageDTO, TaskGroupDTO,  TaskDTO, PostResponseDTO, LanguageCUDTO, TaskCUDTO, TaskGroupCUDTO } from "../../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO, BareSnippetDTO } from "../../core/types/dto/SnippetDTO"
@@ -43,84 +43,84 @@ class HttpClient implements IClient {
         return this.getRequestNoCreds<ServerEither<AlternativesDTO>>(`/alternativesForUser/${tlId}/${userId}`)
     }
 
-    proposalCreate(dto: ProposalCreateDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
-        return this.postRequest<ProposalCreateDTO>(`/secure/proposal/create`, dto, headers)
+    proposalCreate(dto: ProposalCreateDTO, mbUserId: number): Promise<PostResponseDTO> {
+        return this.postRequest<ProposalCreateDTO>(`/secure/proposal/create`, dto, mbUserId)
     }
 
     proposalGet(snId: number): Promise<ServerResponse<BareSnippetDTO[]>> {
         return this.getRequestNoCreds<BareSnippetDTO[]>(`/snippet/${snId}`)
     }
 
-    proposalUpdate(dto: ProposalUpdateDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
-        return this.postRequest<ProposalUpdateDTO>(`/admin/proposal/update`, dto, headers)
+    proposalUpdate(dto: ProposalUpdateDTO, mbUserId: number): Promise<PostResponseDTO> {
+        return this.postRequest<ProposalUpdateDTO>(`/admin/proposal/update`, dto, mbUserId)
     }
 
-    proposalApprove(snId: number, headers: AuthorizeDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/admin/snippet/approve/${snId}`, headers)
+    proposalApprove(snId: number, mbUserId: number): Promise<PostResponseDTO> {
+        return this.postRequestNoPayload(`/admin/snippet/approve/${snId}`, mbUserId)
     }
 
-    proposalDecline(snId: number, headers: AuthorizeDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/admin/snippet/decline/${snId}`, headers)
+    proposalDecline(snId: number, mbUserId: number): Promise<PostResponseDTO> {
+        return this.postRequestNoPayload(`/admin/snippet/decline/${snId}`, mbUserId)
     }
 
-    snippetMarkPrimary(tlId: number, snId: number, headers: AuthorizeDTO): Promise<PostResponseDTO> {
-        return this.postRequestNoPayload(`/admin/snippet/markPrimary/${tlId}/${snId}`, headers)
+    snippetMarkPrimary(tlId: number, snId: number, mbUserId: number): Promise<PostResponseDTO> {
+        return this.postRequestNoPayload(`/admin/snippet/markPrimary/${tlId}/${snId}`, mbUserId)
     }
 
     commentsGet(snId: number): Promise<ServerResponse<CommentDTO[]>> {
         return this.getRequestNoCreds<CommentDTO[]>(`/comments/${snId}`)
     }
 
-    commentCreate(dto: CommentCUDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
-        return this.postRequest("/secure/comment/cu", dto, headers)
+    commentCreate(dto: CommentCUDTO, mbUserId: number): Promise<PostResponseDTO> {
+        return this.postRequest("/secure/comment/cu", dto, mbUserId)
     }
 
-    languageCU(dto: LanguageCUDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
-        return this.postRequest(`/admin/language/cu`, dto, headers)
+    languageCU(dto: LanguageCUDTO, mbUserId: number): Promise<PostResponseDTO> {
+        return this.postRequest(`/admin/language/cu`, dto, mbUserId)
     }
 
-    taskCU(dto: TaskCUDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
-        return this.postRequest(`/admin/task/cu`, dto, headers)
+    taskCU(dto: TaskCUDTO, mbUserId: number): Promise<PostResponseDTO> {
+        return this.postRequest(`/admin/task/cu`, dto, mbUserId)
     }
 
     taskGet(taskId: number): Promise<ServerResponse<TaskDTO[]>> {
         return this.getRequestNoCreds(`/admin/task/${taskId}`)
     }
 
-    taskGroupCU(dto: TaskGroupCUDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
-        return this.postRequest(`/admin/taskGroup/cu`, dto, headers)
+    taskGroupCU(dto: TaskGroupCUDTO, mbUserId: number): Promise<PostResponseDTO> {
+        return this.postRequest(`/admin/taskGroup/cu`, dto, mbUserId)
     }
 
     userRegister(dto: RegisterDTO): Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>> {
-        return this.postRequestNoHeaders("/user/register", dto)
+        return this.postRequestNombUserId("/user/register", dto)
     }
 
     userHandshake(dto: HandshakeDTO): Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>> {
-        return this.postRequestNoHeaders("/user/handshake", dto)
+        return this.postRequestNombUserId("/user/handshake", dto)
     }
 
     userSignIn(dto: SignInDTO): Promise<ServerResponse<ServerEither<SignInResponseDTO>>> {
-        return this.postRequestNoHeaders("/user/signIn", dto)
+        return this.postRequestNombUserId("/user/signIn", dto)
     }
 
-    userVote(dto: VoteDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {
-        return this.postRequest("/secure/user/vote", dto, headers)
+    userVote(dto: VoteDTO, mbUserId: number): Promise<PostResponseDTO> {
+        return this.postRequest("/secure/user/vote", dto, mbUserId)
     }
 
-    userSignInAdmin(dto: SignInAdminDTO): Promise<ServerResponse<ServerEither<AuthorizeDTO>>> {
-        return this.postRequestNoHeaders("/user/signInAdmin", dto)
+    userSignInAdmin(dto: SignInAdminDTO): Promise<ServerResponse<ServerEither<number>>> {
+        return this.postRequestNombUserId("/user/signInAdmin", dto)
     }
 
-    userProfile(headers: AuthorizeDTO): Promise<ServerResponse<ProfileDTO[]>> {
-        return this.getRequest("/secure/user/profile", headers)
+    userProfile(mbUserId: number): Promise<ServerResponse<ProfileDTO[]>> {
+        return this.getRequest("/secure/user/profile", mbUserId)
     }
 
-    userChangePw(dto: ChangePwDTO): Promise<ServerResponse<ServerEither<AuthorizeDTO>>> {
-        return this.postRequestNoHeaders("/secure/user/changePw", dto)
+    userChangePw(dto: ChangePwDTO): Promise<ServerResponse<ServerEither<number>>> {
+        return this.postRequestNombUserId("/secure/user/changePw", dto)
     }
 
-    userChangeAdminPw(dto: ChangePwAdminDTO): Promise<ServerResponse<ServerEither<AuthorizeDTO>>> {
-        return this.postRequestNoHeaders("/admin/changeAdminPw", dto)
+    userChangeAdminPw(dto: ChangePwAdminDTO): Promise<ServerResponse<ServerEither<number>>> {
+        return this.postRequestNombUserId("/admin/changeAdminPw", dto)
     }
 
     // Admin
@@ -141,11 +141,11 @@ class HttpClient implements IClient {
         return this.getRequestNoCreds<StatsDTO[]>(`/admin/stats`)
     }
 
-    private async getRequest<T>(url: string, headers: AuthorizeDTO): Promise<ServerResponse<T>> {
+    private async getRequest<T>(url: string, userId: number): Promise<ServerResponse<T>> {
         // TODO handle error responses
         try {
             const r = await this.client.get<T>(
-                    url, { headers: { userId: headers.userId.toString() }, withCredentials: true, }
+                    url, { headers: { userId: userId.toString() }, withCredentials: true, }
                 );
             if (r.data) {
                 return { isOK: true, value: r.data, }
@@ -157,7 +157,7 @@ class HttpClient implements IClient {
         }
     }
 
-    private async getRequestNoCreds<T>(url: string, headers?: AuthorizeDTO): Promise<ServerResponse<T>> {
+    private async getRequestNoCreds<T>(url: string, mbUserId?: number): Promise<ServerResponse<T>> {
         try {
             const r = await this.client.get<T>(url);
             if (r.data) {
@@ -169,10 +169,10 @@ class HttpClient implements IClient {
             return { isOK: false, errMsg: e.toString() }
         }
     }
-    private async postRequest<T>(url: string, payload: T, headers: AuthorizeDTO): Promise<PostResponseDTO> {
+    private async postRequest<T>(url: string, payload: T, userId: number): Promise<PostResponseDTO> {
         try {
             const r = await this.client.post<PostResponseDTO>(url, payload,
-                { headers: { userId: headers.userId.toString() }, withCredentials: true, }
+                { headers: { userId: userId.toString() }, withCredentials: true, }
             )
             if (r.data && r.data.status === "OK") {
                 return r.data
@@ -184,10 +184,10 @@ class HttpClient implements IClient {
         }
     }
 
-    private async postRequestNoPayload(url: string, headers: AuthorizeDTO): Promise<PostResponseDTO> {
+    private async postRequestNoPayload(url: string, userId: number): Promise<PostResponseDTO> {
         try {
             const r = await this.client.post<PostResponseDTO>(url, undefined,
-                                                    { headers: { userId: headers.userId.toString() }, withCredentials: true, })
+                                                    { headers: { userId: userId.toString() }, withCredentials: true, })
             if (r.data && r.data.status === "OK") {
                 return r.data
             } else {
@@ -198,10 +198,10 @@ class HttpClient implements IClient {
         }
     }
 
-    private async postRequestWithResult<T, U>(url: string, payload: T, headers: AuthorizeDTO): Promise<ServerResponse<U>> {
+    private async postRequestWithResult<T, U>(url: string, payload: T, userId: number): Promise<ServerResponse<U>> {
         try {
             const r = await this.client.post<U>(
-                url, payload, { headers: { userId: headers.userId.toString() }, withCredentials: true,
+                url, payload, { headers: { userId: userId.toString() }, withCredentials: true,
             })
             return {isOK: true, value: r.data, }
         } catch(e: any) {
@@ -209,7 +209,7 @@ class HttpClient implements IClient {
         }
     }
 
-    private async postRequestNoHeaders<T, U>(url: string, payload: T): Promise<ServerResponse<U>> {
+    private async postRequestNombUserId<T, U>(url: string, payload: T): Promise<ServerResponse<U>> {
         try {
             const r = await this.client.post<U>(url, payload)
             return {isOK: true, value: r.data, }
@@ -217,7 +217,7 @@ class HttpClient implements IClient {
             return {isOK: false, errMsg: e, }
         }
     }
-    private async postRequestNoHeadersNoWrap<T, U>(url: string, payload: T): Promise<ServerResponse<U>> {
+    private async postRequestNombUserIdNoWrap<T, U>(url: string, payload: T): Promise<ServerResponse<U>> {
         try {
             const r = await this.client.post<U>(url, payload)
             return {isOK: true, value: r.data, }

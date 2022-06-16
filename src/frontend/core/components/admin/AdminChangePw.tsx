@@ -18,8 +18,8 @@ const AdminLogin: FunctionComponent<Props> = observer(({closeChangeAdminPwHandle
     const newPwRef = useRef<HTMLInputElement>(null)
 
     const saveChangeAdminPwHandler = async () => {
-        const headers = state.user.userIdGet()
-        if (headers === null || state.user.acc === null) return
+        const mbUserId = state.user.userIdGet()
+        if (mbUserId === null || state.user.acc === null) return
 
         if (!oldPw1Ref.current || !oldPw2Ref.current || !newPwRef.current) return
         const oldPw1: string = oldPw1Ref.current.value
@@ -30,7 +30,7 @@ const AdminLogin: FunctionComponent<Props> = observer(({closeChangeAdminPwHandle
 
         const dto: ChangePwAdminDTO = { newPw, signIn: signInDTO, }
 
-        await state.user.changeAdminPw(dto, headers)
+        await state.user.changeAdminPw(dto)
         closeChangeAdminPwHandler()
     }
 
