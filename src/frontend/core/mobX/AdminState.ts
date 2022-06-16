@@ -96,8 +96,8 @@ export default class AdminState {
         this.taskGroups = observable.array(newValue)
     })
 
-    taskGroupCU = action((newValue: TaskGroupCUDTO, headers: SignInSuccessDTO) => {
-        this.client.taskGroupCU(newValue, headers)
+    taskGroupCU = action((newValue: TaskGroupCUDTO, userId: number) => {
+        this.client.taskGroupCU(newValue, userId)
     })
 
     languagesGet = action(async () => {

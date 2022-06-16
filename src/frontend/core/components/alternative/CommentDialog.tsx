@@ -31,7 +31,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
         if (inputRef === null || !inputRef.current) return
         const text = inputRef.current.value.trim()
         if (text.trim().length < 1) return
-        const headers = state.user.headersGet()
+        const headers = state.user.userIdGet()
         if (headers === null) return
 
         const dto: CommentCUDTO = {snId: dialogState.id, content: text}

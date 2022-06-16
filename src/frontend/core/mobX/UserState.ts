@@ -141,15 +141,15 @@ accountSet = action((newValue: UserAccount): void => {
     this.acc = newValue
 })
 
-profileGet = action(async (headers: SignInSuccessDTO) => {
-    await fetchFromClient(this.client.userProfile(headers), this.profileSet)
+profileGet = action(async (userId: number) => {
+    await fetchFromClient(this.client.userProfile(userId), this.profileSet)
 })
 
 profileSet = action((newValue: ProfileDTO[]): void => {
     this.profile = newValue.length === 1 ? newValue[0] : null
 })
 
-headersGet = action((): number | null => {
+userIdGet = action((): number | null => {
     return this.acc?.userId ?? null
 })
 

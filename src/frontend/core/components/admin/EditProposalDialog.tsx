@@ -37,7 +37,7 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
         if (inputRef === null || !inputRef.current) return
         const text = inputRef.current.value.trim()
         if (text.trim().length < 1) return
-        const headers = state.user.headersGet()
+        const headers = state.user.userIdGet()
         if (headers === null) return
 
         const libraries = (inputLibRef !== null && inputLibRef.current !== null) ? inputLibRef.current?.value : undefined

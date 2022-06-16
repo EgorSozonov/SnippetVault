@@ -44,7 +44,7 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
 
     const mbTask = taskOrId.type === "task" ? taskOrId.payload : taskFromBackend
     const saveProposalHandler = async () => {
-        const headers = state.user.headersGet()
+        const headers = state.user.userIdGet()
         if (headers === null || mbTask === null) return
 
         const task: TaskDTO = mbTask

@@ -28,8 +28,8 @@ const Profile: React.FunctionComponent = observer(() => {
     }
 
     const saveChangePwHandler = async () => {
-        const headers = state.user.headersGet()
-        if (headers === null || state.user.acc === null) return
+        const mbUserId = state.user.userIdGet()
+        if (mbUserId === null || state.user.acc === null) return
 
         if (!oldPwRef.current || !newPwRef.current) return
         const oldPw: string = oldPwRef.current.value
@@ -38,15 +38,15 @@ const Profile: React.FunctionComponent = observer(() => {
         const signInDTO: SignInDTO = {userName: state.user.acc?.name, password: oldPw, }
 
         const dto: ChangePwDTO = { newPw: newPw, signIn: signInDTO, }
-        await state.user.changePw(dto, headers)
+        await state.user.changePw(dto, mbUserId)
         setChangePwMode(false)
     }
 
     useEffect(() => {
         state.user.trySignInFromLS()
-        const headers = state.user.headersGet()
-        if (headers === null) return
-        state.user.profileGet(headers)
+        const mbUserId = state.user.userIdGet()
+        if (mbUserId === null) return
+        state.user.profileGet(mbUserId)
     }, [state.user.acc])
 
     const isUser = state.user.isUser.get()

@@ -19,7 +19,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
     const state = useContext<MainState>(storeContext)
 
     const voteHandler = (snId: number) => () => {
-        const headers = state.user.headersGet()
+        const headers = state.user.userIdGet()
         if (headers === null) return
 
         const voteDTO: VoteDTO = {snId, tlId}
@@ -27,7 +27,7 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
     }
 
     const setPrimaryHandler = (tlId: number, snId: number) => () => {
-        const headers = state.user.headersGet()
+        const headers = state.user.userIdGet()
         if (headers === null) return
 
         state.snip.snippetMarkPrimary(tlId, snId, headers)

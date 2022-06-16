@@ -18,7 +18,7 @@ const NewProposal: FunctionComponent = observer(() => {
     const cancelDialog = () => setConfirmationDialog({...confirmationDialog, isOpen: false})
     const okDialog = () => {
         setConfirmationDialog({...confirmationDialog, isOpen: false})
-        const headers = state.user.headersGet()
+        const headers = state.user.userIdGet()
         if (headers === null) return
 
         state.admin.proposalDecline(confirmationDialog.id, headers)
@@ -38,7 +38,7 @@ const NewProposal: FunctionComponent = observer(() => {
     }, [])
 
     const approveHandler = (pId: number) => () => {
-        const headers = state.user.headersGet()
+        const headers = state.user.userIdGet()
         if (headers === null) return
 
         state.admin.proposalApprove(pId, headers)
