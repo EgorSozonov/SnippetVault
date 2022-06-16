@@ -12,8 +12,8 @@ type IClient = {
     languagesGet: () => Promise<ServerResponse<LanguageDTO[]>>
     taskGroupsGet: () => Promise<ServerResponse<TaskGroupDTO[]>>
 
-    alternativesGet: (tlId: number) => Promise<ServerResponse<AlternativesDTO[]>>
-    alternativesForUserGet: (tlId: number, userId: number) => Promise<ServerResponse<AlternativesDTO[]>>
+    alternativesGet: (tlId: number) => Promise<ServerResponse<ServerEither<AlternativesDTO>>>
+    alternativesForUserGet: (tlId: number, userId: number) => Promise<ServerResponse<ServerEither<AlternativesDTO>>>
 
     proposalCreate: (dto: ProposalCreateDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     proposalGet: (snId: number) => Promise<ServerResponse<BareSnippetDTO[]>>

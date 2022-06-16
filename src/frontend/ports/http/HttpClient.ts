@@ -35,12 +35,12 @@ class HttpClient implements IClient {
         return this.getRequestNoCreds<ProposalDTO[]>(`/proposals`)
     }
 
-    alternativesGet(tlId: number): Promise<ServerResponse<AlternativesDTO[]>> {
-        return this.getRequestNoCreds<AlternativesDTO[]>(`/alternatives/${tlId}`)
+    alternativesGet(tlId: number): Promise<ServerResponse<ServerEither<AlternativesDTO>>> {
+        return this.getRequestNoCreds<ServerEither<AlternativesDTO>>(`/alternatives/${tlId}`)
     }
 
-    alternativesForUserGet(tlId: number, userId: number): Promise<ServerResponse<AlternativesDTO[]>> {
-        return this.getRequestNoCreds<AlternativesDTO[]>(`/alternativesForUser/${tlId}/${userId}`)
+    alternativesForUserGet(tlId: number, userId: number): Promise<ServerResponse<ServerEither<AlternativesDTO>>> {
+        return this.getRequestNoCreds<ServerEither<AlternativesDTO>>(`/alternativesForUser/${tlId}/${userId}`)
     }
 
     proposalCreate(dto: ProposalCreateDTO, headers: AuthorizeDTO): Promise<PostResponseDTO> {

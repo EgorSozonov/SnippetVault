@@ -19,9 +19,10 @@ type Props = {
     lang: LanguageDTO | null,
     task: TaskDTO,
     tlId: number,
+    openDialog: (id: number, tlId: number, text: string) => () => void,
 }
 
-const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternative, lang, task, tlId, }) => {
+const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternative, lang, task, tlId, openDialog, }) => {
     const state = useContext<MainState>(storeContext)
     const isSignedIn = state.user.isUser.get()
     const voteHandler = (snId: number) => () => {
@@ -67,7 +68,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
             </div>
             <div className="alternativeHeaderMainFooter">
                 <span>Upload date: {primaryAlternative !== null && fmtDt(primaryAlternative.tsUpload)}</span>
-                <span>Score: {primaryAlternative !== null && primaryAlternative.score}</span>
+                <span>Votes: {primaryAlternative !== null && primaryAlternative.score}</span>
                 {primaryAlternative.voteFlag
                     ?
                         <span className="alternativeFooterVoted">

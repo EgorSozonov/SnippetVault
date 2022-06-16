@@ -1,12 +1,9 @@
 package tech.sozonov.SnippetVault.user;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
-
 import lombok.val;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import java.util.Base64;
-import java.util.HexFormat;
 import java.util.UUID;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -19,7 +16,6 @@ import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserSignInIntern;
 import tech.sozonov.SnippetVault.cmn.utils.Constants;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.cmn.utils.SecureRemotePassword;
-
 import org.springframework.util.MultiValueMap;
 import com.nimbusds.srp6.BigIntegerUtils;
 import com.nimbusds.srp6.SRP6Routines;
@@ -304,12 +300,6 @@ public Mono<Integer> userVote(Vote dto, int userId) {
 
 public Mono<Integer> commentCU(CommentCU dto, int userId) {
     return userStore.commentCU(dto, userId, LocalDateTime.now());
-}
-
-private String makeAccessToken() {
-    val uuid1 = UUID.randomUUID().toString();
-    val uuid2 = UUID.randomUUID().toString();
-    return (uuid1 + uuid2);
 }
 
 

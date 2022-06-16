@@ -8,7 +8,7 @@ import { CommentCUDTO, CommentDTO, StatsDTO, VoteDTO } from "../types/dto/UserDT
 import { AlternativesSort } from "../components/alternative/utils/Types"
 import { sortLanguages } from "../utils/Language"
 import ServerResponse from "../types/ServerResponse"
-import { fetchFromClient } from "./Utils"
+import { fetchFromClient, fetchFromClient2 } from "./Utils"
 import { SignInSuccessDTO } from "../types/dto/AuthDTO"
 
 
@@ -123,12 +123,16 @@ export default class SnipState {
         this.openSelect = newValue
     })
 
-    alternativesSet = action((newValue: AlternativesDTO[]): void => {
-        if (!newValue || newValue === null || newValue.length !== 1) {
+    alternativesSet = action((newValue: AlternativesDTO): void => {
+
+        console.log("alternativesSet")
+        if (!newValue || newValue === null) {
             this.alternatives = null
             return
         }
-        const alternativesNew = newValue[0]
+        const alternativesNew = {...newValue}
+
+        console.log(alternativesNew)
         const sorted = this.alternativesSort === "byDate"
             ? alternativesNew.rows.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1)
             : alternativesNew.rows.sort((x, y) => y.score - x.score)
@@ -141,11 +145,11 @@ export default class SnipState {
     })
 
     alternativesGet = action(async (tlIdNum: number) => {
-        await fetchFromClient(this.client.alternativesGet(tlIdNum), this.alternativesSet)
+        await fetchFromClient2(this.client.alternativesGet(tlIdNum), this.alternativesSet)
     })
 
     alternativesGetUser = action(async (tlIdNum: number, userId: number) => {
-        await fetchFromClient(this.client.alternativesForUserGet(tlIdNum, userId), this.alternativesSet)
+        await fetchFromClient2(this.client.alternativesForUserGet(tlIdNum, userId), this.alternativesSet)
     })
 
     alternativesResort = action((newValue: AlternativesSort): void => {
@@ -164,7 +168,7 @@ export default class SnipState {
         this.client.snippetMarkPrimary(tlId, snId, headers)
         .then((r) => {
                 if (r && r.status === "OK") {
-                    fetchFromClient(this.client.alternativesForUserGet(tlId, headers.userId), this.alternativesSet)
+                    fetchFromClient2(this.client.alternativesForUserGet(tlId, headers.userId), this.alternativesSet)
                 }
             })
     })
@@ -195,7 +199,7 @@ export default class SnipState {
         this.client.userVote(voteDto, headers)
             .then((r) => {
                 if (r && r.status === "OK") {
-                    fetchFromClient(this.client.alternativesForUserGet(voteDto.tlId, headers.userId), this.alternativesSet)
+                    fetchFromClient2(this.client.alternativesForUserGet(voteDto.tlId, headers.userId), this.alternativesSet)
                 }
             })
     })

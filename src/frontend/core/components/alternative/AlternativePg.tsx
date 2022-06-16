@@ -51,12 +51,13 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
     }, [])
 
     const alternatives = state.snip.alternatives
-
     if (alternatives === null) return empty
+
     const primaryAlternative = alternatives.primary
     const nonPrimaryAlternatives = alternatives.rows
 
-    return commentDialog.isOpen === false
+    return (
+        commentDialog.isOpen === false
         ?   <>
                 <div className="alternativeMargin" />
                 <div className="alternativeBody">
@@ -72,10 +73,8 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
 
                 </div>
             </>
-
-        :
-            <CommentDialog dialogState={commentDialog} closeCallback={closeDialog} />
-
+        : <CommentDialog dialogState={commentDialog} closeCallback={closeDialog} />
+    )
 })
 
 export default AlternativePg

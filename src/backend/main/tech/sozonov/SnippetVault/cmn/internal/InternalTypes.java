@@ -1,8 +1,6 @@
 package tech.sozonov.SnippetVault.cmn.internal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 public class InternalTypes {

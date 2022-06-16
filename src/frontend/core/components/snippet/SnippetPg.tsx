@@ -51,7 +51,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         const indLang = state.snip.languageChoices.findIndex(x => x.id === newValue.id)
         if (indLang < 0) return
 
-        setSearchParams(`lang1={state.snip.languageChoices[indLang].code}&lang2={lang2Code}&task={taskCode}`)
+        setSearchParams(`lang1=${state.snip.languageChoices[indLang].code}&lang2=${lang2Code}&task=${taskCode}`)
         state.snip.language1Chosen(newValue)
     }
 
@@ -59,7 +59,7 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         const indLang = state.snip.languageChoices.findIndex(x => x.id === newValue.id)
         if (indLang < 0) return
 
-        setSearchParams(`lang1={lang1Code}&lang2={state.snip.languageChoices[indLang].code}&task={taskCode}`)
+        setSearchParams(`lang1=${lang1Code}&lang2=${state.snip.languageChoices[indLang].code}&task=${taskCode}`)
         state.snip.language2Chosen(newValue)
     }
 
@@ -67,12 +67,12 @@ const SnippetPg: FunctionComponent = observer(({}: any) => {
         const indTg = state.snip.taskGroups.findIndex(x => x.id === newValue.id)
         if (indTg < 0) return
 
-        setSearchParams(`lang1={lang1Code}&lang2={lang2Code}&task={state.snip.taskGroups[indTg].code}`)
+        setSearchParams(`lang1=${lang1Code}&lang2=${lang2Code}&task=${state.snip.taskGroups[indTg].code}`)
         state.snip.taskGroupChosen(newValue)
     }
 
     if (nonEmptyParams.length < 3 && isStateOK([tg, lang1, lang2]) === true) {
-        setSearchParams(`lang1={lang1.code}&lang2={lang2.code}&task={tg.code}`)
+        setSearchParams(`lang1=${lang1.code}&lang2=${lang2.code}&task=${tg.code}`)
     }
     useEffect(() => {
         (async () => {
