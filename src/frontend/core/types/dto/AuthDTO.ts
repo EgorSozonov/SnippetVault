@@ -1,7 +1,6 @@
 
 export type SignInSuccessDTO = {
     userId: number,
-    sessionKey: string,
 }
 
 export type RegisterDTO = {
@@ -15,8 +14,8 @@ export type HandshakeDTO = {
 }
 
 export type HandshakeResponseDTO = {
-    saltB64: string;
-    BB64: string;
+    saltB64: string,
+    BB64: string,
 }
 
 export type SignInDTO = {

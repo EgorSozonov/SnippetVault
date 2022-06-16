@@ -107,7 +107,7 @@ class HttpClient implements IClient {
         return this.postRequest("/secure/user/vote", dto, headers)
     }
 
-    userSignInAdmin(dto: SignInAdminDTO): Promise<ServerResponse<AuthorizeDTO[]>> {
+    userSignInAdmin(dto: SignInAdminDTO): Promise<ServerResponse<ServerEither<AuthorizeDTO>>> {
         return this.postRequestNoHeaders("/user/signInAdmin", dto)
     }
 
@@ -115,12 +115,12 @@ class HttpClient implements IClient {
         return this.getRequest("/secure/user/profile", headers)
     }
 
-    userChangePw(dto: ChangePwDTO, headers: AuthorizeDTO): Promise<ServerResponse<AuthorizeDTO[]>> {
-        return this.postRequestWithResult("/secure/user/changePw", dto, headers)
+    userChangePw(dto: ChangePwDTO): Promise<ServerResponse<ServerEither<AuthorizeDTO>>> {
+        return this.postRequestNoHeaders("/secure/user/changePw", dto)
     }
 
-    userChangeAdminPw(dto: ChangePwAdminDTO, headers: AuthorizeDTO): Promise<ServerResponse<AuthorizeDTO[]>> {
-        return this.postRequestWithResult("/admin/changeAdminPw", dto, headers)
+    userChangeAdminPw(dto: ChangePwAdminDTO): Promise<ServerResponse<ServerEither<AuthorizeDTO>>> {
+        return this.postRequestNoHeaders("/admin/changeAdminPw", dto)
     }
 
     // Admin

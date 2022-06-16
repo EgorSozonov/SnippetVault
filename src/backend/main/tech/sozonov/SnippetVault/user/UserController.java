@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
@@ -38,8 +40,8 @@ public Mono<Either<String, HandshakeResponse>> userHandshake(@RequestBody Handsh
 }
 
 @PostMapping("user/signIn")
-public Mono<Either<String, SignInResponse>> userSignIn(@RequestBody SignIn dto, ServerHttpRequest req) {
-    return userService.userSignIn(dto, req.getCookies());
+public Mono<Either<String, SignInResponse>> userSignIn(@RequestBody SignIn dto, ServerWebExchange webEx) {
+    return userService.userSignIn(dto, webEx);
 }
 
 @PostMapping("user/signInAdmin")

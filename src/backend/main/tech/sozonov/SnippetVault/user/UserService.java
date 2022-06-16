@@ -4,7 +4,6 @@ import lombok.val;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 import java.util.Base64;
-import java.util.UUID;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -17,9 +16,11 @@ import tech.sozonov.SnippetVault.cmn.utils.Constants;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.cmn.utils.SecureRemotePassword;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.server.ServerWebExchange;
 import com.nimbusds.srp6.BigIntegerUtils;
 import com.nimbusds.srp6.SRP6Routines;
 import org.springframework.http.HttpCookie;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
 
@@ -51,16 +52,9 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
     byte[] verifier = dec.decode(dto.verifierB64);
     byte[] salt = dec.decode(dto.saltB64);
     BigInteger verifierNum = new BigInteger(1, verifier);
-    //BigInteger saltNum = new BigInteger(1, salt);
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
-
-    // System.out.println("v handshake = " + verifierNum.toString());
-    // System.out.println("b handshake = " + b.toString());
-    // System.out.println("B handshake = " + B.toString());
-    // System.out.println("salt handshake = " + saltNum.toString());
-
 
     byte[] bArr = b.toByteArray();
     val newUser = UserNewIntern.builder()
@@ -88,12 +82,8 @@ public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, Mult
 
     byte[] bArr = b.toByteArray();
     return userStore.userAuthentGet(dto.userName).flatMap(user -> {
-        // System.out.println("=== handshake ===");
         BigInteger verifierNum = new BigInteger(1, user.verifier);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
-        // System.out.println("b = " + LocalDateTime.now() + " " + b.toString());
-        // System.out.println("verifier = " + verifierNum.toString());
-        // System.out.println("=== /handshake ===");
 
         return userStore.userHandshake(dto, bArr)
                         .map(rowsUpdated -> {
@@ -106,10 +96,10 @@ public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, Mult
 }
 
 /**
- * Validate A, M1
- * If correct, update the session key and date of expiration
+ * Validates A, M1 which were received from the client.
+ * If correct, updates the session key and date of expiration in DB, and sets the cookie.
  */
-public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap<String, HttpCookie> cookies) {
+public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExchange webEx) {
     if (nullOrEmp(dto.userName)) return Mono.just(Either.left("Sign in error"));
 
     return userStore.userAuthentGet(dto.userName).flatMap(user -> {
@@ -125,20 +115,9 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
         BigInteger ADecoded = new BigInteger(1, dec.decode(dto.AB64));
         BigInteger M1Decoded = new BigInteger(1, dec.decode(dto.M1B64));
 
-        // System.out.println("A from client, decoded");
-        // System.out.println(ADecoded);
-        // System.out.println("M1 from client, decoded");
-        // System.out.println(M1Decoded);
-
 
         BigInteger b = new BigInteger(user.b);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
-        // System.out.println("=== sign-in ===");
-        // System.out.println("verifier = " + verifier.toString());
-        // System.out.println("b = " + LocalDateTime.now() + " " + b.toString());
-        // System.out.println("B = " + B.toString());
-        // System.out.println("=== /sign-in ===");
-
 
         String AConcatB = SecureRemotePassword.prependZeroToHex(ADecoded.toString(16)) + SecureRemotePassword.prependZeroToHex(B.toString(16));
 
@@ -147,41 +126,35 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, MultiValueMap
         val uBytes = hasher.digest();
 
         BigInteger u = BigIntegerUtils.bigIntegerFromBytes(uBytes);
-        // System.out.println("u server = " + u.toString());
 
         BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
 
-        BigInteger serverM1 = SecureRemotePassword.computeM1(hasher, ADecoded, B, S); //srp.computeClientEvidence(hasher, ADecoded, B, S);
+        BigInteger serverM1 = SecureRemotePassword.computeM1(hasher, ADecoded, B, S);
 
-        // System.out.println("Server M1");
-        // System.out.println(serverM1.toString());
-        // System.out.println("M1 from client");
-        // System.out.println(M1Decoded.toString());
         if (!serverM1.equals(M1Decoded)) {
             return Mono.just(Either.left("Authentication error"));
         }
+        String accessToken = enc.encodeToString(S.toByteArray());
+
         String inpM2 = ADecoded.toString(16) + serverM1.toString(16) + S.toString(16);
         hasher.update(inpM2.getBytes());
         BigInteger M2 = new BigInteger(hasher.digest());
-
-        // System.out.println("Server M2");
-        // System.out.println(M2);
-
         String M2B64 = Base64.getEncoder().encodeToString(M2.toByteArray());
-
-        //System.out.println("Session key = " + S.toString());
-
         UserSignInIntern updateUser = UserSignInIntern
             .builder()
             .userId(user.userId)
             .b(b.toByteArray())
-            .accessToken(enc.encodeToString(S.toByteArray()))
+            .accessToken(accessToken)
             .dtExpiration(LocalDate.now())
             .build();
 
         return userStore.userUpdate(updateUser)
                         .map(x -> {
                             if (x < 1) return Either.left("DB update error");
+                            if (webEx == null) System.out.println("It's null");
+                            System.out.println(accessToken);
+                            val newCookie = ResponseCookie.from("accessToken", accessToken).httpOnly(true).build();
+                            webEx.getResponse().addCookie(newCookie);
                             return Either.right(new SignInResponse(M2B64, user.userId));
                         });
     });

@@ -111,22 +111,18 @@ public async step1(identity: string, password: string, saltB64: string, serverBB
 
 /**
  * Second step of the login process
- * (client-side validation of M2 received from server)
+ * 1. client-side validation of M2 received from server
+ * 2. returns the session key
  */
-public async step2(serverM2B64: string): Promise<ValResult<string>> {
+public async step2(serverM2B64: string): Promise<ValResult<BI>> {
     const SHex = nonprefixedHexOfPositiveBI(this.S)
     const M2Buff = await this.hash(this.AHex + this.M1Hex + SHex)
     const clientM2Hex = hexOfBuff(M2Buff)
     const serverM2Hex = hexOfBase64(serverM2B64)
-    console.log("client M2")
-    console.log(BI.BigInt(prefixedHexOfBuff(M2Buff)).toString())
-
-    console.log("server M2")
-    console.log(bigintOfBase64(serverM2B64).toString())
 
     if (clientM2Hex !== serverM2Hex) return {isOk: false, errMsg: "Bad server credentials (M2)"}
 
-    return {isOk: true, value: SHex}
+    return {isOk: true, value: this.S}
 }
 
 

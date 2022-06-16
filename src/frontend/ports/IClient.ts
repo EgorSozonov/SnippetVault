@@ -34,9 +34,9 @@ type IClient = {
     userHandshake: (dto: HandshakeDTO) => Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>>
     userSignIn: (dto: SignInDTO) => Promise<ServerResponse<ServerEither<SignInResponseDTO>>>
 
-    userSignInAdmin: (dto: SignInAdminDTO) => Promise<ServerResponse<SignInSuccessDTO[]>>
-    userChangePw: (dto: ChangePwDTO, headers: SignInSuccessDTO) => Promise<ServerResponse<SignInSuccessDTO[]>>
-    userChangeAdminPw: (dto: ChangePwAdminDTO, headers: SignInSuccessDTO) => Promise<ServerResponse<SignInSuccessDTO[]>>
+    userSignInAdmin: (dto: SignInAdminDTO) => Promise<ServerResponse<ServerEither<SignInSuccessDTO>>>
+    userChangePw: (dto: ChangePwDTO) => Promise<ServerResponse<ServerEither<SignInSuccessDTO>>>
+    userChangeAdminPw: (dto: ChangePwAdminDTO) => Promise<ServerResponse<ServerEither<SignInSuccessDTO>>>
 
     userVote: (dto: VoteDTO, headers: SignInSuccessDTO) => Promise<PostResponseDTO>
     userProfile: (headers: SignInSuccessDTO) => Promise<ServerResponse<ProfileDTO[]>>

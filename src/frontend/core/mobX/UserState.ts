@@ -1,14 +1,14 @@
 import { action, computed, makeAutoObservable } from "mobx"
 import IClient from "../../ports/IClient"
-import { ChangePwAdminDTO, ChangePwDTO, HandshakeDTO, HandshakeResponseDTO, RegisterDTO, SignInAdminDTO, SignInDTO, SignInResponseDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
+import { ChangePwAdminDTO, ChangePwDTO, HandshakeResponseDTO, SignInAdminDTO, SignInResponseDTO, SignInSuccessDTO } from "../types/dto/AuthDTO"
 import { ProfileDTO } from "../types/dto/UserDTO"
 import ServerEither from "../types/ServerEither"
 import ServerResponse from "../types/ServerResponse"
 import { UserAccount } from "../types/UserAccount"
 import { rfc5054 } from "../utils/Constants"
-import { isSameDay } from "../utils/DateUtils"
+import { dateOfTS, isSameDay } from "../utils/DateUtils"
 import SecureRemotePassword from "../utils/SecureRemotePassword"
-import { base64OfHex, bigintOfBase64, bigintOfHex, nonprefixedHexOfPositiveBI } from "../utils/StringUtils"
+import { base64OfBigInt, base64OfHex, nonprefixedHexOfPositiveBI } from "../utils/StringUtils"
 import { processHandshake, processSignIn } from "../utils/User"
 import { fetchFromClient } from "./Utils"
 
@@ -74,25 +74,19 @@ userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResp
 
     const {AB64, M1B64} = mbAM1.value
 
-    console.log("M1")
-    console.log(bigintOfBase64(M1B64).toString())
     const M2Response = processSignIn(await this.client.userSignIn({AB64, M1B64, userName}), "user")
-    console.log("M2")
-    console.log(M2Response)
     if (M2Response.isOK === false) return
 
-    const result2 = await clientSRP.step2(M2Response.value.M2B64)
-    if (result2.isOk === false) return
+    const resultSessionKey = await clientSRP.step2(M2Response.value.M2B64)
+    if (resultSessionKey.isOk === false) return
 
-    const userId: number = M2Response.value.userId
-
-    const sessionKey = result2.value
-    console.log("userId = " + userId)
-    console.log("Session Key = " + sessionKey)
+    const sessionKey = base64OfBigInt(resultSessionKey.value)
+    this.acc = {userId: M2Response.value.userId, expiration: dateOfTS(new Date()), name: userName, status: "user", }
+    console.log("Session Key = " + sessionKey + ", userId = " + M2Response.value.userId)
 })
 
-changePw = action(async (dto: ChangePwDTO, headers: SignInSuccessDTO) => {
-    const response = await this.client.userChangePw(dto, headers)
+changePw = action(async (dto: ChangePwDTO) => {
+    const response = await this.client.userChangePw(dto)
     this.applySignInResponse(response, "user", dto.signIn.userName)
 })
 
@@ -101,16 +95,16 @@ signInAdmin = action(async (dto: SignInAdminDTO) => {
     this.applySignInResponse(response, "admin", dto.userName)
 })
 
-changeAdminPw = action(async (dto: ChangePwAdminDTO, headers: SignInSuccessDTO) => {
-    const response = await this.client.userChangeAdminPw(dto, headers)
+changeAdminPw = action(async (dto: ChangePwAdminDTO) => {
+    const response = await this.client.userChangeAdminPw(dto)
     this.applySignInResponse(response, "admin", dto.signIn.userName)
 })
 
 applySignInResponse = action((response: ServerResponse<ServerEither<SignInResponseDTO>>, status: "user" | "admin", userName: string) => {
     const mbAccount = processSignIn(response, status)
 
-    if (mbAccount !== null) {
-        this.acc = mbAccount
+    if (mbAccount.isOK) {
+        this.acc = { expiration: dateOfTS(new Date()), name: userName, status, userId: mbAccount.value.userId }
         localStorage.setItem("account", JSON.stringify(mbAccount))
     }
 })
@@ -155,8 +149,11 @@ profileSet = action((newValue: ProfileDTO[]): void => {
     this.profile = newValue.length === 1 ? newValue[0] : null
 })
 
-headersGet = action((): SignInSuccessDTO | null => {
-    if (this.acc === null) return null
-    return { userId: this.acc.userId }
+headersGet = action((): number | null => {
+    return this.acc?.userId ?? null
 })
+
 }
+
+// userName Yolo
+// password asdfasdf
