@@ -45,3 +45,7 @@ src/backend/main/tech/sozonov/SnippetVault/user/auth/*
 src/backend/resources/application.properties
 
 application.properties
+
+# Keystores
+*.p12
+application.properties

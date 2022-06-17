@@ -18,6 +18,7 @@ public void addCorsMappings(CorsRegistry registry) {
                 .allowedOrigins("null")
                 .allowedMethods("GET", "POST", "OPTIONS", "PUT")
                 .allowCredentials(true)
+                .allowedHeaders("*")
                 .maxAge(3600);
 }
 

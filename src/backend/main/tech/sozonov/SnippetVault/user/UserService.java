@@ -155,8 +155,8 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExch
                             System.out.println(accessToken);
                             val newCookie = ResponseCookie.from("accessToken", accessToken)
                                                           .httpOnly(true)
-                                                          .sameSite("None")
-                                                          .secure(false)
+                                                          .sameSite("Strict")
+                                                          .secure(true)
                                                           .build();
                             webEx.getResponse().addCookie(newCookie);
                             return Either.right(new SignInResponse(M2B64, user.userId));
