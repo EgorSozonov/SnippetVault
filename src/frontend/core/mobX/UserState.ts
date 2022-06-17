@@ -81,7 +81,10 @@ userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResp
     if (resultSessionKey.isOk === false) return
 
     const sessionKey = base64OfBigInt(resultSessionKey.value)
-    this.acc = {userId: M2Response.value.userId, expiration: dateOfTS(new Date()), name: userName, status: "user", }
+    console.log("p1")
+    runInAction(() => {
+        this.acc = {userId: M2Response.value.userId, expiration: dateOfTS(new Date()), name: userName, status: "user", }
+    })
     console.log("Session Key = " + sessionKey + ", userId = " + M2Response.value.userId)
 })
 

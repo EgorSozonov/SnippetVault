@@ -144,7 +144,7 @@ class HttpClient implements IClient {
     private async getRequest<T>(url: string, userId: number): Promise<ServerResponse<T>> {
 
         try {
-            console.log(`userId ${userId}`)
+
             const r = await this.client.get<T>(
                     url, { headers: { userId: userId.toString() }, withCredentials: true, }
                 );

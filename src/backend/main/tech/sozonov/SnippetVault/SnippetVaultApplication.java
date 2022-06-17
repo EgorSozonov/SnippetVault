@@ -28,7 +28,6 @@ public static void main(String[] args) {
 @Bean
 public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 	return args -> {
-		System.out.println("Application was started!");
 		// String[] beanNames = ctx.getBeanDefinitionNames();
 		// Arrays.sort(beanNames);
 		// for (String beanName : beanNames) {

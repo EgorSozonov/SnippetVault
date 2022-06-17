@@ -49,3 +49,6 @@ application.properties
 # Keystores
 *.p12
 application.properties
+*.pem
+*.crt
+*.key

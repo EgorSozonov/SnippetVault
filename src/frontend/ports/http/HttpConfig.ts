@@ -6,7 +6,7 @@ import { deserializeJSON } from '../../core/utils/Client'
 const API_PREFIX = API_PREFIX1
 
 const axiosConfig: AxiosRequestConfig = {
-    baseURL: BASE_URL + API_PREFIX,
+    baseURL: API_PREFIX,
     timeout: 10000,
     transformResponse: [deserializeJSON],
     withCredentials: true,

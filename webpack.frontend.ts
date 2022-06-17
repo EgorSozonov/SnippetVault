@@ -2,7 +2,7 @@ import webpack, { Configuration } from "webpack";
 import path from "path";
 import Copy from "copy-webpack-plugin";
 import CssMinimizer from "css-minimizer-webpack-plugin";
-import { WebpackManifestPlugin as Manifest } from 'webpack-manifest-plugin';
+import { WebpackManifestPlugin as Manifest } from "webpack-manifest-plugin";
 import Html from "html-webpack-plugin";
 import Terser from "terser-webpack-plugin";
 
@@ -10,9 +10,9 @@ import Terser from "terser-webpack-plugin";
 const webpackFrontend = (args: any): Configuration => {
 	const mode = (args && args["mode"] === "production") ? "production" : "development";
 
-	console.log('');
+	console.log("");
 	console.log(mode.toUpperCase() + " BUILD");
-	console.log('');
+	console.log("");
 
 	const config: Configuration = {
 		entry: {
@@ -59,20 +59,20 @@ const webpackFrontend = (args: any): Configuration => {
                 },
                 {
                     test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
-                    type: 'asset/inline',
+                    type: "asset/inline",
                 },
 				{
 					test: /app\.less$/i,
 					use: [
 						{
-							loader: 'file-loader',
+							loader: "file-loader",
 							options: {
-								name: 'styles/[name].css',
+								name: "styles/[name].css",
 							}
 
 						},
 						{
-							loader: 'less-loader',
+							loader: "less-loader",
 						}
 					]
 				},
@@ -87,16 +87,34 @@ const webpackFrontend = (args: any): Configuration => {
 
 		devServer: {
 			headers: {
-				'Access-Control-Allow-Origin': '*'
+				"Access-Control-Allow-Origin": "*"
 			},
-            static: "target/frontend",
-			compress: false,
-			port: 10200,
-			historyApiFallback:  {
-                index: '.'
+            https: {
+                ca: "./src/resources/rootCA.pem",
+                key: "./src/resources/server.key",
+                cert: "./src/resources/server.crt",
+                requestCert: true,
             },
-			hot: true,
-            magicHtml: true,
+            static: "target/frontend/sv",
+			compress: false,
+			port: 10201,
+			historyApiFallback:  {
+                index: "."
+            },
+			// hot: true,
+            // magicHtml: true,
+            proxy: {
+                "/api/**":{
+                    target: "https://localhost:10200/",
+                    changeOrigin: true,
+                    secure: false,
+                    logLevel: "info",
+                }
+                //'/api': 'http://[::1]:10200'
+                // "/api":{
+                //     target: "https://localhost:10200"
+                // }
+            }
 		},
 
 		plugins: [
