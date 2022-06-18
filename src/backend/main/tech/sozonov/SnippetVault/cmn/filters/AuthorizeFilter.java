@@ -28,6 +28,7 @@ public AuthorizeFilter(UserService _userService) {
 @Override
 public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterChain) {
     if (webExchange.getRequest().getMethod().equals(HttpMethod.OPTIONS)) return filterChain.filter(webExchange);
+
     val requestPath = webExchange.getRequest().getPath().pathWithinApplication();
     if (!pathPattern.matches(requestPath)) return filterChain.filter(webExchange);
 

@@ -152,8 +152,9 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExch
                         .map(x -> {
                             if (x < 1) return Either.left("DB update error");
                             val newCookie = ResponseCookie.from("accessToken", accessToken)
-                                                          .httpOnly(false)
-                                                          .sameSite("None")
+                                                          .httpOnly(true)
+                                                          .sameSite("Strict")
+                                                          .path("/sv/api/")
                                                           .secure(true)
                                                           .build();
                             webEx.getResponse().addCookie(newCookie);

@@ -101,20 +101,6 @@ const webpackFrontend = (args: any): Configuration => {
 			historyApiFallback:  {
                 index: "."
             },
-			// hot: true,
-            // magicHtml: true,
-            proxy: {
-                "/api/**":{
-                    target: "https://localhost:10200/",
-                    changeOrigin: true,
-                    secure: false,
-                    logLevel: "info",
-                }
-                //'/api': 'http://[::1]:10200'
-                // "/api":{
-                //     target: "https://localhost:10200"
-                // }
-            }
 		},
 
 		plugins: [

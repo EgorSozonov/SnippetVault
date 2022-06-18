@@ -11,16 +11,5 @@ public class WebConfig implements WebFluxConfigurer {
 //     http.csrf().disable();
 // }
 
-@Override
-public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**")
-                //.allowedOrigins("http://sozonov.tech", "https://sozonov.tech", "http://www.sozonov.tech", "https://www.sozonov.tech")
-                .allowedOrigins("null")
-                .allowedMethods("GET", "POST", "OPTIONS", "PUT")
-                .allowCredentials(true)
-                .allowedHeaders("*")
-                .maxAge(3600);
-}
-
 
 }
