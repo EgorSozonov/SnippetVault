@@ -37,15 +37,6 @@ public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterCha
     val accessToken = cookies.getFirst("accessToken");
 
     try {
-        System.out.println("Cookies:");
-        for (val a : cookies.toSingleValueMap().entrySet()) {
-            System.out.println("Key:");
-            System.out.println(a.getKey());
-            System.out.println(a.getValue());
-        }
-
-        System.out.println("userId = " + userIdStr);
-        System.out.println("accessToken = " + accessToken);
         int userId = Integer.parseInt(userIdStr);
         return userService.userAuthorize(userId, accessToken.getValue())
             .flatMap(authorized -> {

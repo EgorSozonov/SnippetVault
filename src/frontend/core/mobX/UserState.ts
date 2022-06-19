@@ -148,8 +148,8 @@ profileGet = action(async (userId: number) => {
     await fetchFromClient(this.client.userProfile(userId), this.profileSet)
 })
 
-profileSet = action((newValue: ProfileDTO[]): void => {
-    this.profile = newValue.length === 1 ? newValue[0] : null
+profileSet = action((newValue: ProfileDTO): void => {
+    this.profile = newValue ?? null
 })
 
 userIdGet = action((): number | null => {

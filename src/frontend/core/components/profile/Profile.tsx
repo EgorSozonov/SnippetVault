@@ -7,6 +7,7 @@ import { SignInDTO, ChangePwDTO } from "../../types/dto/AuthDTO"
 import { observer } from "mobx-react-lite"
 import Login from "../../commonComponents/login/Login"
 import { fmtDt } from "../../utils/DateUtils"
+import { ProfileDTO } from "../../types/dto/UserDTO"
 
 
 const Profile: React.FunctionComponent = observer(() => {
@@ -66,27 +67,30 @@ const Profile: React.FunctionComponent = observer(() => {
             </div>
         </div>
 
+    const profileView = (profile: ProfileDTO) =>
+        <>
+            <div className="profileHeader">
+                <div>
+                    <h2>{state.user.acc !== null && state.user.acc.name}</h2>
+                </div>
+                <div className="profilembUserIdubscript">
+                    <h5>User Profile</h5>
+                </div>
+                <div className="profileChangePasswordButton clickable" title="Change password" onClick={openChangePwHandler}>Pw
+                </div>
+            </div>
+            <div>Registration date: {fmtDt(profile.tsJoined)}</div>
+            <div>Total number of proposals: {profile.proposalCount}</div>
+            <div>Approved proposals: {profile.approvedCount}</div>
+            <div>Approved proposals selected as primary: {profile.primaryCount}</div>
+            <div onClick={signOutHandler} className="profileSignOut">Sign out</div>
+        </>
+
     return (
         <div className="profileBackground">
             <div className="profileContainer">
                 {(profile !== null && isUser === true && changePwMode === false)
-                    ?   <>
-                            <div className="profileHeader">
-                                <div>
-                                    <h2>{state.user.acc !== null && state.user.acc.name}</h2>
-                                </div>
-                                <div className="profilembUserIdubscript">
-                                    <h5>User Profile</h5>
-                                </div>
-                                <div className="profileChangePasswordButton clickable" title="Change password" onClick={openChangePwHandler}>Pw
-                                </div>
-                            </div>
-                            <div>Registration date: {fmtDt(profile.tsJoined)}</div>
-                            <div>Total number of proposals: {profile.proposalCount}</div>
-                            <div>Approved proposals: {profile.approvedCount}</div>
-                            <div>Approved proposals selected as primary: {profile.primaryCount}</div>
-                            <div onClick={signOutHandler} className="profileSignOut">Sign out</div>
-                        </>
+                    ?  profileView
                     : (changePwMode === true
                         ? changePwMenu
                         : <Login />)

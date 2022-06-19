@@ -39,7 +39,7 @@ type IClient = {
     userChangeAdminPw: (dto: ChangePwAdminDTO) => Promise<ServerResponse<ServerEither<SignInSuccessDTO>>>
 
     userVote: (dto: VoteDTO, userId: number) => Promise<PostResponseDTO>
-    userProfile: (userId: number) => Promise<ServerResponse<ProfileDTO[]>>
+    userProfile: (userId: number) => Promise<ServerResponse<ProfileDTO>>
 
 
     // Admin

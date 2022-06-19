@@ -52,3 +52,4 @@ application.properties
 *.pem
 *.crt
 *.key
+src/backend/resources/application.properties

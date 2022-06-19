@@ -111,7 +111,7 @@ class HttpClient implements IClient {
         return this.postRequestNouserId("/user/signInAdmin", dto)
     }
 
-    userProfile(userId: number): Promise<ServerResponse<ProfileDTO[]>> {
+    userProfile(userId: number): Promise<ServerResponse<ProfileDTO>> {
         return this.getRequest("/secure/user/profile", userId)
     }
 
