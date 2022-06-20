@@ -105,12 +105,12 @@ public Mono<HandshakeIntern> userHandshakeGet(String userName) {
              .one();
 }
 
-private static final String userUpdateQ = """
+private static final String userSignInQ = """
     UPDATE sv.user SET expiration = :dtExpiration, "accessToken" = :accessToken, b = :b
     WHERE id = :userId
 """;
-public Mono<Integer> userUpdate(UserSignInIntern user) {
-    return db.sql(userUpdateQ)
+public Mono<Integer> userSignIn(UserSignInIntern user) {
+    return db.sql(userSignInQ)
              .bind("dtExpiration", user.dtExpiration)
              .bind("b", user.b)
              .bind("accessToken", user.accessToken)

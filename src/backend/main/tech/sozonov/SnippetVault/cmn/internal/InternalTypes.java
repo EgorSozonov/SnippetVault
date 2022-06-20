@@ -52,6 +52,15 @@ public static class UserSignInIntern {
     public LocalDate dtExpiration;
 }
 
+@Builder
+public static class UserUpdatePwIntern {
+    public int userId;
+    public String accessToken;
+    public LocalDate dtExpiration;
+    public byte[] verifier;
+    public byte[] salt;
+}
+
 public static class TaskCUIntern {
     public int taskGroupId;
     public String taskGroupName;

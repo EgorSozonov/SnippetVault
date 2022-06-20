@@ -107,7 +107,7 @@ class HttpClient implements IClient {
         return this.postRequest("/secure/user/vote", dto, userId)
     }
 
-    userSignInAdmin(dto: SignInAdminDTO): Promise<ServerResponse<ServerEither<number>>> {
+    userSignInAdmin(dto: SignInAdminDTO): Promise<ServerResponse<ServerEither<SignInResponseDTO>>> {
         return this.postRequestNouserId("/user/signInAdmin", dto)
     }
 
@@ -115,12 +115,8 @@ class HttpClient implements IClient {
         return this.getRequest("/secure/user/profile", userId)
     }
 
-    userChangePw(dto: ChangePwDTO): Promise<ServerResponse<ServerEither<number>>> {
+    userChangePw(dto: ChangePwDTO): Promise<ServerResponse<ServerEither<SignInResponseDTO>>> {
         return this.postRequestNouserId("/secure/user/changePw", dto)
-    }
-
-    userChangeAdminPw(dto: ChangePwAdminDTO): Promise<ServerResponse<ServerEither<number>>> {
-        return this.postRequestNouserId("/admin/changeAdminPw", dto)
     }
 
     // Admin

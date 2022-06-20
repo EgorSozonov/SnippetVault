@@ -16,7 +16,8 @@ Mono<Integer> userHandshake(Handshake hshake, byte[] b);
 Mono<HandshakeIntern> userHandshakeGet(String userName);
 
 Mono<Integer> userRegister(UserNewIntern user);
-Mono<Integer> userUpdate(UserSignInIntern user);
+Mono<Integer> userSignIn(UserSignInIntern user);
+Mono<Integer> userUpdatePw(UserUpdatePwIntern user);
 Mono<Integer> userVote(int userId, int tlId, int snId);
 Mono<Profile> userProfile(int userId);
 Mono<User> userData(int userId);

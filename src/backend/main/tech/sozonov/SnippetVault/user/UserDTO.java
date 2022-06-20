@@ -75,18 +75,7 @@ public static class SignInResponse {
 }
 
 public static class ChangePw {
-    public SignIn signIn;
-    public String newPw;
-}
-
-public static class SignInAdmin {
-    public String userName;
-    public String password1;
-    public String password2;
-}
-
-public static class ChangePwAdmin {
-    public SignInAdmin signIn;
+    public Register register;
     public String newPw;
 }
 

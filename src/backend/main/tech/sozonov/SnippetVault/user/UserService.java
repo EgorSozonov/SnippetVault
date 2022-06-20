@@ -10,8 +10,10 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
+import tech.sozonov.SnippetVault.user.auth.AdminPasswordChecker;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserNewIntern;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserSignInIntern;
+import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserUpdatePwIntern;
 import tech.sozonov.SnippetVault.cmn.utils.Constants;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.cmn.utils.SecureRemotePassword;
@@ -147,14 +149,14 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExch
             .accessToken(accessToken)
             .dtExpiration(LocalDate.now())
             .build();
-
+        boolean isAdmin = dto.userName.equals(AdminPasswordChecker.adminName);
         return userStore.userUpdate(updateUser)
                         .map(x -> {
                             if (x < 1) return Either.left("DB update error");
                             val newCookie = ResponseCookie.from("accessToken", accessToken)
                                                           .httpOnly(true)
                                                           .sameSite("Strict")
-                                                          .path("/sv/api/")
+                                                          .path(isAdmin ? "sv/api/admin" : "/sv/api/secure")
                                                           .secure(true)
                                                           .build();
                             webEx.getResponse().addCookie(newCookie);
@@ -162,37 +164,6 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExch
                             return Either.right(new SignInResponse(M2B64, user.userId));
                         });
     });
-}
-
-public Mono<Either<String, SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto, MultiValueMap<String, HttpCookie> cookies) {
-    // TODO
-    return Mono.just(Either.left("TODO userAuthenticateAdmin"));
-    // if (dto.userName != AdminPasswordChecker.adminName) return err;
-    // val mbUserCreds = userStore.userAuthentGet(dto.userName).block();
-
-    // if (mbUserCreds instanceof Success<AuthenticateIntern> userAuthents && userAuthents.vals.Count == 1) {
-    //     val userAuthent = userAuthents.vals[0];
-    //     userAuthent.hash = EncodingUtils.convertToBcrypt(userAuthent.hash);
-    //     userAuthent.salt = EncodingUtils.convertToBcrypt(userAuthent.salt);
-
-    //     boolean authentic = AdminPasswordChecker.checkAdminPassword(userAuthent, dto);
-    //     if (!authentic) return err;
-
-    //     String accessToken = "";
-    //     if (userAuthent.expiration.Date != LocalDateTime.now()) {
-    //         accessToken = makeAccessToken();
-    //         userStore.userUpdateExpiration(userAuthent.userId, accessToken, LocalDateTime.Today).block();
-    //     } else {
-    //         accessToken = userAuthent.accessToken;
-    //     }
-    //     cookies.Append("accessToken", accessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
-    //     return new Success<SignInSuccess>(new List<SignInSuccess>() {
-    //             new SignInSuccess() { userId = userAuthent.userId, }
-    //         }
-    //     );
-    // } else {
-    //     return errResponse;
-    // }
 }
 
 public Mono<Boolean> userAuthorize(int userId, String accessToken) {
@@ -209,50 +180,31 @@ public Mono<Boolean> userAuthorizeAdmin(String accessToken) {
         );
 }
 
-public Mono<Either<String, SignInSuccess>> userUpdateAdminPw(ChangePwAdmin dto, MultiValueMap<String, HttpCookie> cookies) {
+public Mono<Integer> userUpdatePw(ChangePw dto, ServerWebExchange webEx) {
     // TODO
-    return Mono.just(Either.left("TODO userAuthenticateAdmin"));
-    // val authentResult = userAuthenticateAdmin(dto.signIn, cookies).block;
 
-    // if (authentResult instanceof Success<SignInSuccess> success) {
-    //     val response = success.vals[0];
-    //     String newSalt = "";
-    //     val newHashSalt = AdminPasswordChecker.makeHash(dto.newPw);
-    //     val newAccessToken = makeAccessToken();
-    //     val user = new UserNewIntern() {
-    //         userName = dto.signIn.userName, salt = newSalt,
-    //         hash = newHash, accessToken = newAccessToken, dtExpiration = DateOnly.FromDateTime(DateTime.Now),
-    //     };
-    //     val updateCount = userStore.userUpdate(user).block();
+    // recalc b, verif, salt, access token
+    // save em
+    // set the cookie
+    val dec = Base64.getDecoder();
+    byte[] verifier = dec.decode(dto.register.verifierB64);
+    byte[] salt = dec.decode(dto.register.saltB64);
+    BigInteger verifierNum = new BigInteger(1, verifier);
+    BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
+    byte[] bArr = b.toByteArray();
+    UserUpdatePwIntern updatePw = UserUpdatePwIntern.builder()
+                        .verifier(verifier)
+                        .salt(salt)
+                        .accessToken("f")
+                        .dtExpiration(LocalDate.now())
+                        .build();
+    return userStore.userUpdatePw(updatePw)
+                    .map(rowsUpdated -> {
+        if (rowsUpdated < 1) return Either.left("Registration error");
 
-    //     cookies.Append("accessToken", newAccessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
-    //     return HttpUtils.wrapSuccess(new SignInSuccessDTO() { userId = response.userId });
-    // } else {
-    //     return errResponse;
-    // }
-}
-
-public Mono<Either<String, SignInSuccess>> userUpdatePw(ChangePw dto, MultiValueMap<String, HttpCookie> cookies) {
-    // TODO
-    return Mono.just(Either.left("TODO userAuthenticateAdmin"));
-    // val authentResult = userAuthenticate(dto.signIn, cookies);
-
-    // if (authentResult is Success<SignInSuccess> success) {
-    //     val response = success.vals[0];
-    //     String newSalt = "";
-    //     val newHash = PasswordChecker.makeHash(dto.newPw, out newSalt);
-    //     val newAccessToken = makeAccessToken();
-    //     val user = new UserNewIntern() {
-    //         userName = dto.signIn.userName, salt = newSalt,
-    //         hash = newHash, accessToken = newAccessToken, dtExpiration = DateOnly.FromDateTime(DateTime.Now),
-    //     };
-    //     val updateCount = userStore.userUpdate(user);
-
-    //     cookies.Append("accessToken", newAccessToken, new CookieOptions { HttpOnly = true, SameSite = SameSiteMode.Strict, });
-    //     return HttpUtils.wrapSuccess(new SignInSuccessDTO() { userId = response.userId });
-    // } else {
-    //     return errResponse;
-    // }
+        HandshakeResponse handshakeResponse = new HandshakeResponse(enc.encodeToString(salt), enc.encodeToString(B.toByteArray()));
+        return Either.right(handshakeResponse);
+    });
 }
 
 public Mono<Profile> userProfile(int userId) {

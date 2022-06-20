@@ -93,16 +93,6 @@ changePw = action(async (dto: ChangePwDTO) => {
     this.applySignInResponse(response, "user", dto.signIn.userName)
 })
 
-signInAdmin = action(async (dto: SignInAdminDTO) => {
-    const response = await this.client.userSignInAdmin(dto)
-    this.applySignInResponse(response, "admin", dto.userName)
-})
-
-changeAdminPw = action(async (dto: ChangePwAdminDTO) => {
-    const response = await this.client.userChangeAdminPw(dto)
-    this.applySignInResponse(response, "admin", dto.signIn.userName)
-})
-
 applySignInResponse = action((response: ServerResponse<ServerEither<SignInResponseDTO>>, status: "user" | "admin", userName: string) => {
     const mbAccount = processSignIn(response, status)
 

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
+
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
@@ -28,8 +30,8 @@ public Mono<Profile> userProfile(@RequestHeader("userId") int userId) {
 }
 
 @PostMapping("user/changePw")
-public Mono<Either<String, SignInSuccess>> userChangePw(@RequestBody ChangePw dto, ServerHttpRequest request) {
-    return userService.userUpdatePw(dto, request.getCookies());
+public Mono<ResponseEntity<Void>> userChangePw(@RequestBody ChangePw dto, ServerWebExchange webEx) {
+    return wrapCUResponse(userService.userUpdatePw(dto, webEx));
 }
 
 @PostMapping("user/vote")
