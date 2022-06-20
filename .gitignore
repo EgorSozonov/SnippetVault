@@ -42,14 +42,12 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 src/backend/main/tech/sozonov/SnippetVault/user/auth/*
-src/backend/resources/application.properties
+*.properties
 
 application.properties
 
 # Keystores
 *.p12
-application.properties
 *.pem
 *.crt
 *.key
-src/backend/resources/application.properties
