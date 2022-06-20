@@ -90,7 +90,7 @@ const Profile: React.FunctionComponent = observer(() => {
         <div className="profileBackground">
             <div className="profileContainer">
                 {(profile !== null && isUser === true && changePwMode === false)
-                    ?  profileView
+                    ?  profileView(profile)
                     : (changePwMode === true
                         ? changePwMenu
                         : <Login />)

@@ -68,7 +68,6 @@ userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResp
     const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
     if (mbAM1.isOk === false) {
         console.log(mbAM1.errMsg)
-        console.log("Handshake response was incorrect")
         return
     }
 
@@ -81,9 +80,9 @@ userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResp
     if (resultSessionKey.isOk === false) return
 
     const sessionKey = base64OfBigInt(resultSessionKey.value)
-    console.log("p1")
     runInAction(() => {
         this.acc = {userId: M2Response.value.userId, expiration: dateOfTS(new Date()), name: userName, status: "user", }
+        localStorage.setItem("account", JSON.stringify(this.acc))
     })
     console.log("Session Key = " + sessionKey + ", userId = " + M2Response.value.userId)
 })

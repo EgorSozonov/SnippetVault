@@ -4,7 +4,6 @@ import Copy from "copy-webpack-plugin";
 import CssMinimizer from "css-minimizer-webpack-plugin";
 import { WebpackManifestPlugin as Manifest } from "webpack-manifest-plugin";
 import Html from "html-webpack-plugin";
-import Terser from "terser-webpack-plugin";
 
 
 const webpackFrontend = (args: any): Configuration => {
@@ -126,14 +125,6 @@ const webpackFrontend = (args: any): Configuration => {
                 title: "Snippet Vault",
                 template: "./src/frontend/resources/template.html"
             }),
-            // new CopyWebpackPlugin({
-            //     patterns: [
-            //         {
-            //             from: path.resolve("./target/"),
-            //             to: path.resolve("../backend/bin/StaticFiles/")
-            //         }
-            //     ]
-            // })
 	    ],
 	};
 
