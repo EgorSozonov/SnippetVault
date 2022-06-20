@@ -22,7 +22,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
     useEffect(() => {
         if (dialogState.isOpen === false) return
 
-        state.snip.commentsGet(dialogState.id)
+        state.user.commentsGet(dialogState.id)
     }, [dialogState])
 
     const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -34,7 +34,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
         const mbUserId = state.user.userIdGet()
         if (mbUserId === null) return
 
-        const dto: CommentCUDTO = {snId: dialogState.id, content: text}
+        const dto: CommentCUDTO = {snId: dialogState.id, content: text, isDeleted: false}
 
         state.snip.commentCreate(dto, mbUserId, dialogState.id2)
         closeCallback()
@@ -44,7 +44,7 @@ const CommentDialog: FunctionComponent<Props> = observer(({ dialogState, closeCa
         <DialogFullscreen closeCallback={closeCallback} state={dialogState}>
             <div className="alternativeItemCode">{dialogState.text}</div>
             <ol>
-                {state.snip.comments.map((comm: CommentDTO, idx: number) => {
+                {state.user.comments.map((comm: CommentDTO, idx: number) => {
                     return <li key={idx} className="alternativeItemCommentsComment">
                         <div className="alternativeItemCommentsHeader">
                             <span>

@@ -44,7 +44,7 @@ public static final class SelectChoice {
 }
 
 public static class CreateUpdate {
-    public int existingId;
+    public int existingId = -1;
     public boolean isDeleted;
 }
 

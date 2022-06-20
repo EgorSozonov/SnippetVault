@@ -9,6 +9,7 @@ export type CommentCUDTO = {
     snId: number,
     content: string,
     existingId?: number,
+    isDeleted: boolean,
 }
 
 export type ProfileDTO = {

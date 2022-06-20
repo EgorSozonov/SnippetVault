@@ -34,7 +34,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
         title: "Comments for snippet", text, id: id, id2: tlId, isOpen: true,
     })
     const closeDialog = () => {
-        state.snip.commentsSet([])
+        state.user.commentsSet([])
         setCommentDialog({...commentDialog, isOpen: false})
     }
 

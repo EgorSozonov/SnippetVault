@@ -1,7 +1,7 @@
-import { action, computed, makeAutoObservable, runInAction } from "mobx"
+import { action, computed, IObservableArray, makeAutoObservable, observable, runInAction } from "mobx"
 import IClient from "../../ports/IClient"
 import { ChangePwAdminDTO, ChangePwDTO, HandshakeResponseDTO, SignInAdminDTO, SignInResponseDTO } from "../types/dto/AuthDTO"
-import { ProfileDTO } from "../types/dto/UserDTO"
+import { CommentCUDTO, CommentDTO, ProfileDTO } from "../types/dto/UserDTO"
 import ServerEither from "../types/ServerEither"
 import ServerResponse from "../types/ServerResponse"
 import { UserAccount } from "../types/UserAccount"
@@ -17,6 +17,7 @@ export default class UserState {
 
 public acc: UserAccount | null = null
 public profile: ProfileDTO | null = null
+public comments: IObservableArray<CommentDTO> = observable.array([])
 client: IClient
 
 constructor(client: IClient) {
@@ -155,7 +156,18 @@ userIdGet = action((): number | null => {
     return this.acc?.userId ?? null
 })
 
-}
+commentsGet = action(async (snId: number) => {
+    await fetchFromClient(this.client.commentsGet(snId), this.commentsSet)
+})
 
-// userName Yolo
-// password asdfasdf
+commentsSet = action((newValue: CommentDTO[]): void => {
+    if (!newValue) {
+        this.comments = observable.array([])
+        return
+    }
+
+    this.comments = observable.array(newValue.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1))
+})
+
+
+}

@@ -164,12 +164,6 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExch
     });
 }
 
-
-private boolean validatePasswordComplexity(String newPw) {
-    return newPw != null && newPw.length() >= 8;
-}
-
-
 public Mono<Either<String, SignInSuccess>> userAuthenticateAdmin(SignInAdmin dto, MultiValueMap<String, HttpCookie> cookies) {
     // TODO
     return Mono.just(Either.left("TODO userAuthenticateAdmin"));

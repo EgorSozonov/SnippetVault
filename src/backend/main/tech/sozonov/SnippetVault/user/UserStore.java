@@ -196,11 +196,11 @@ public Mono<User> userData(int userId) {
 }
 
 private static final String commentCreateQ = """
-    INSERT INTO sv.comment("userId", "snippetId", content, "tsUpload")
-    VALUES (:userId, :snId, :content, :ts)
+    INSERT INTO sv.comment("userId", "snippetId", content, "tsUpload", "isDeleted")
+    VALUES (:userId, :snId, :content, :ts, false)
 """;
 private static final String commentUpdateQ = """
-    UPDATE sv.comment SET "userId" = :userId, "snippetId" = :snId, content = :content, "tsUpload" = :ts
+    UPDATE sv.comment SET "userId" = :userId, "snippetId" = :snId, content = :content, "tsUpload" = :ts, "isDeleted" = :isDeleted
     WHERE id = :existingId
 """;
 public Mono<Integer> commentCU(CommentCU dto, int userId, LocalDateTime ts) {
@@ -210,13 +210,6 @@ public Mono<Integer> commentCU(CommentCU dto, int userId, LocalDateTime ts) {
                       .bind("snId", dto.snId)
                       .bind("ts", ts);
     return createOrUpdate(commentCreateQ, commentUpdateQ, binder, dto, db);
-    // return db.sql(commentCreateQ)
-    //          .bind("userId", userId)
-    //          .bind("content", content)
-    //          .bind("snId", snId)
-    //          .bind("ts", ts)
-    //          .fetch()
-    //          .rowsUpdated();
 }
 
 private static final String commentDeleteQ = """
