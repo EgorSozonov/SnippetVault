@@ -9,7 +9,6 @@ import { AlternativesSort } from "../components/alternative/utils/Types"
 import { sortLanguages } from "../utils/Language"
 import ServerResponse from "../types/ServerResponse"
 import { fetchFromClient, fetchFromClient2 } from "./Utils"
-import { SignInSuccessDTO } from "../types/dto/AuthDTO"
 
 
 export default class SnipState {
@@ -196,9 +195,12 @@ export default class SnipState {
     })
 
     userVote = action((voteDto: VoteDTO, userId: number) => {
+        console.log("userVote")
         this.client.userVote(voteDto, userId)
             .then((r) => {
+                console.log(r)
                 if (r && r.status === "OK") {
+                    console.log("here")
                     fetchFromClient2(this.client.alternativesForUserGet(voteDto.tlId, userId), this.alternativesSet)
                 }
             })

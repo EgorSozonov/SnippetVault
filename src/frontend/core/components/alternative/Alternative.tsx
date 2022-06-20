@@ -55,7 +55,6 @@ const Alternative: FunctionComponent<Props> = observer(({alternative, tlId, open
 
                     :
                         (isSignedIn === true &&
-
                            <span className="alternativeFooterVote">
                                 <span className="alternativeItemButton" onClick={voteHandler(alternative.id)}>V</span>Vote
                             </span>

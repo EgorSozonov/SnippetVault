@@ -1,4 +1,5 @@
 export function deserializeJSON(v: any) {
+    if (!v) return {}
     const parsed = JSON.parse(v)
     const stack = [parsed]
     while (stack.length > 0) {

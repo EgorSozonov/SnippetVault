@@ -170,27 +170,29 @@ class HttpClient implements IClient {
             return { isOK: false, errMsg: e.toString() }
         }
     }
+
     private async postRequest<T>(url: string, payload: T, userId: number): Promise<PostResponseDTO> {
         try {
-            const r = await this.client.post<PostResponseDTO>(url, payload,
+            const r = await this.client.post(url, payload,
                 { headers: { userId: userId.toString() }, withCredentials: true, }
             )
-            if (r.data && r.data.status === "OK") {
-                return r.data
+            if (r.status === 200) {
+                return {status: "OK"}
             } else {
                 return {status: "Unknown error"}
             }
         } catch(e: any) {
+            console.log("en exc he")
             return {status: e}
         }
     }
 
     private async postRequestNoPayload(url: string, userId: number): Promise<PostResponseDTO> {
         try {
-            const r = await this.client.post<PostResponseDTO>(url, undefined,
+            const r = await this.client.post(url, undefined,
                                                     { headers: { userId: userId.toString() }, withCredentials: true, })
-            if (r.data && r.data.status === "OK") {
-                return r.data
+            if (r.status === 200) {
+                return {status: "OK"}
             } else {
                 return {status: "Unknown error"}
             }
@@ -213,7 +215,7 @@ class HttpClient implements IClient {
     private async postRequestNouserId<T, U>(url: string, payload: T): Promise<ServerResponse<U>> {
         try {
             const r = await this.client.post<U>(url, payload)
-            return {isOK: true, value: r.data, }
+            return { isOK: true, value: r.data, }
         } catch(e: any) {
             return {isOK: false, errMsg: e, }
         }
