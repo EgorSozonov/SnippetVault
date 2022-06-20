@@ -142,15 +142,15 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExch
         hasher.update(inpM2.getBytes());
         BigInteger M2 = new BigInteger(hasher.digest());
         String M2B64 = Base64.getEncoder().encodeToString(M2.toByteArray());
-        UserSignInIntern updateUser = UserSignInIntern
+        UserSignInIntern signIn = UserSignInIntern
             .builder()
             .userId(user.userId)
             .b(b.toByteArray())
             .accessToken(accessToken)
             .dtExpiration(LocalDate.now())
             .build();
-        boolean isAdmin = dto.userName.equals(AdminPasswordChecker.adminName);
-        return userStore.userUpdate(updateUser)
+        boolean isAdmin = AdminPasswordChecker.checkAdminName(dto.userName);
+        return userStore.userSignIn(signIn)
                         .map(x -> {
                             if (x < 1) return Either.left("DB update error");
                             val newCookie = ResponseCookie.from("accessToken", accessToken)
@@ -181,29 +181,29 @@ public Mono<Boolean> userAuthorizeAdmin(String accessToken) {
 }
 
 public Mono<Integer> userUpdatePw(ChangePw dto, ServerWebExchange webEx) {
-    // TODO
-
-    // recalc b, verif, salt, access token
-    // save em
-    // set the cookie
+    val enc = Base64.getEncoder();
     val dec = Base64.getDecoder();
     byte[] verifier = dec.decode(dto.register.verifierB64);
     byte[] salt = dec.decode(dto.register.saltB64);
-    BigInteger verifierNum = new BigInteger(1, verifier);
-    BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
-    byte[] bArr = b.toByteArray();
+    BigInteger randomSessionKey = srp.generatePrivateValue(Constants.N, secureRandom);
+    String sessionKey = enc.encodeToString(randomSessionKey.toByteArray());
     UserUpdatePwIntern updatePw = UserUpdatePwIntern.builder()
                         .verifier(verifier)
                         .salt(salt)
-                        .accessToken("f")
+                        .accessToken(sessionKey)
                         .dtExpiration(LocalDate.now())
                         .build();
-    return userStore.userUpdatePw(updatePw)
-                    .map(rowsUpdated -> {
-        if (rowsUpdated < 1) return Either.left("Registration error");
-
-        HandshakeResponse handshakeResponse = new HandshakeResponse(enc.encodeToString(salt), enc.encodeToString(B.toByteArray()));
-        return Either.right(handshakeResponse);
+    boolean isAdmin = AdminPasswordChecker.checkAdminName(dto.register.userName);
+    return userStore.userUpdatePw(updatePw).map(rowsUpdated -> {
+        if (rowsUpdated < 1) return -1;
+        ResponseCookie newCookie = ResponseCookie.from("accessToken", sessionKey)
+                                                          .httpOnly(true)
+                                                          .sameSite("Strict")
+                                                          .path(isAdmin ? "sv/api/admin" : "/sv/api/secure")
+                                                          .secure(true)
+                                                          .build();
+        webEx.getResponse().addCookie(newCookie);
+        return rowsUpdated;
     });
 }
 

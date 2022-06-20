@@ -119,6 +119,22 @@ public Mono<Integer> userSignIn(UserSignInIntern user) {
              .rowsUpdated();
 }
 
+
+private static final String userUpdatePwQ = """
+    UPDATE sv.user SET expiration = :dtExpiration, "accessToken" = :accessToken, verifier = :verifier, salt = :salt
+    WHERE id = :userId
+""";
+public Mono<Integer> userUpdatePw(UserUpdatePwIntern user) {
+    return db.sql(userUpdatePwQ)
+         .bind("dtExpiration", user.dtExpiration)
+         .bind("verifier", user.verifier)
+         .bind("salt", user.salt)
+         .bind("accessToken", user.accessToken)
+         .bind("userId", user.userId)
+         .fetch()
+         .rowsUpdated();
+}
+
 private static final String commentsGetQ = """
     SELECT c.content, c."tsUpload", c.id, u.name AS author
 	FROM sv.comment c

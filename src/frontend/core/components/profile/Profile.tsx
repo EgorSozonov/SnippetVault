@@ -3,11 +3,12 @@ import "./profile.css"
 import { useContext, useEffect, useRef, useState } from "react"
 import MainState from "../../mobX/AllState"
 import { storeContext } from "../../App"
-import { SignInDTO, ChangePwDTO } from "../../types/dto/AuthDTO"
+import { SignInDTO, ChangePwDTO, RegisterDTO } from "../../types/dto/AuthDTO"
 import { observer } from "mobx-react-lite"
 import Login from "../../commonComponents/login/Login"
 import { fmtDt } from "../../utils/DateUtils"
 import { ProfileDTO } from "../../types/dto/UserDTO"
+import { toast } from "react-toastify"
 
 
 const Profile: React.FunctionComponent = observer(() => {
@@ -30,18 +31,26 @@ const Profile: React.FunctionComponent = observer(() => {
 
     const saveChangePwHandler = async () => {
         // TODO
-        // const mbUserId = state.user.userIdGet()
-        // if (mbUserId === null || state.user.acc === null) return
+        const mbUserId = state.user.userIdGet()
+        if (mbUserId === null || state.user.acc === null) return
 
-        // if (!oldPwRef.current || !newPwRef.current) return
-        // const oldPw: string = oldPwRef.current.value
-        // const newPw: string = newPwRef.current.value
+        if (!newPwRefRepeat.current || !newPwRef.current) return
+        const newPwRepeat: string = newPwRefRepeat.current.value
+        const newPw: string = newPwRef.current.value
+        if (newPw.length < 8) {
+            toast.error("Password must be at least 8 symbols in length!" , { autoClose: 4000 })
+            return
+        }
+        if (newPw !== newPwRepeat) {
+            toast.error("Passwords don't match!" , { autoClose: 4000 })
+            return
+        }
 
-        // const signInDTO: SignInDTO = {userName: state.user.acc?.name, password: oldPw, }
+        const registerDTO: RegisterDTO = {userName: state.user.acc?.name, password: oldPw, }
 
-        // const dto: ChangePwDTO = { newPw: newPw, signIn: signInDTO, }
-        // await state.user.changePw(dto)
-        // setChangePwMode(false)
+        const dto: ChangePwDTO = { newPw: newPw, register: registerDTO }
+        await state.user.changePw(dto)
+        setChangePwMode(false)
     }
 
     useEffect(() => {
@@ -52,15 +61,15 @@ const Profile: React.FunctionComponent = observer(() => {
     }, [state.user.acc])
 
     const isUser = state.user.isUser.get()
-    const oldPwRef = useRef<HTMLInputElement>(null)
     const newPwRef = useRef<HTMLInputElement>(null)
+        const newPwRefRepeat = useRef<HTMLInputElement>(null)
 
     const changePwMenu =
         <div>
-            <div>Old password:</div>
-            <div><input type="password" ref={oldPwRef} /></div>
             <div>New password:</div>
             <div><input type="password" ref={newPwRef} /></div>
+            <div>New password again:</div>
+            <div><input type="password" ref={newPwRefRepeat} /></div>
             <div className="profileButtons">
                 <div className="clickable" onClick={closeChangePwHandler}>Cancel</div>
                 <div className="clickable" onClick={saveChangePwHandler}>Save</div>
