@@ -111,6 +111,7 @@ private static final String userSignInQ = """
 """;
 public Mono<Integer> userSignIn(UserSignInIntern user) {
     return db.sql(userSignInQ)
+             .bind("userId", user.userId)
              .bind("dtExpiration", user.dtExpiration)
              .bind("b", user.b)
              .bind("accessToken", user.accessToken)
@@ -122,7 +123,7 @@ public Mono<Integer> userSignIn(UserSignInIntern user) {
 
 private static final String userUpdatePwQ = """
     UPDATE sv.user SET expiration = :dtExpiration, "accessToken" = :accessToken, verifier = :verifier, salt = :salt
-    WHERE id = :userId
+    WHERE name = :userName
 """;
 public Mono<Integer> userUpdatePw(UserUpdatePwIntern user) {
     return db.sql(userUpdatePwQ)
@@ -130,7 +131,7 @@ public Mono<Integer> userUpdatePw(UserUpdatePwIntern user) {
              .bind("verifier", user.verifier)
              .bind("salt", user.salt)
              .bind("accessToken", user.accessToken)
-             .bind("userId", user.userId)
+             .bind("userName", user.userName)
              .fetch()
              .rowsUpdated();
 }

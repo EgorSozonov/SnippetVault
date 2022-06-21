@@ -111,8 +111,8 @@ class HttpClient implements IClient {
         return this.getRequest("/secure/user/profile", userName)
     }
 
-    userChangePw(dto: ChangePwDTO): Promise<ServerResponse<ServerEither<SignInResponseDTO>>> {
-        return this.postRequestNouserName("/secure/user/changePw", dto)
+    userChangePw(dto: ChangePwDTO, userName: string): Promise<ServerResponse<ServerEither<SignInResponseDTO>>> {
+        return this.postRequestWithResult("/secure/user/changePw", dto, userName)
     }
 
     // Admin

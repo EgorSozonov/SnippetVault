@@ -28,6 +28,7 @@ public Mono<Profile> userProfile(@RequestHeader("userName") String userName) {
 
 @PostMapping("user/changePw")
 public Mono<ResponseEntity<Void>> userChangePw(@RequestBody ChangePw dto, ServerWebExchange webEx) {
+    System.out.println("userChangePw");
     return wrapCUResponse(userService.userUpdatePw(dto, webEx));
 }
 

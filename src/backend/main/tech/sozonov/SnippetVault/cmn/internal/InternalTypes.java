@@ -54,7 +54,7 @@ public static class UserSignInIntern {
 
 @Builder
 public static class UserUpdatePwIntern {
-    public int userId;
+    public String userName;
     public String accessToken;
     public LocalDate dtExpiration;
     public byte[] verifier;

@@ -184,12 +184,9 @@ commentCreate = action((dto: CommentCUDTO, userName: string, id2: number) => {
 
 
 userVote = action((voteDto: VoteDTO, userName: string) => {
-    console.log("userVote")
     this.client.userVote(voteDto, userName)
         .then((r) => {
-            console.log(r)
             if (r && r.status === "OK") {
-                console.log("here")
                 fetchFromClient2(this.client.alternativesForUserGet(voteDto.tlId, userName), this.alternativesSet)
             }
         })

@@ -121,8 +121,10 @@ changePw = action(async (newPw: string) => {
     const saltHex = await clientSRP.generateRandomSalt()
     const verifier = await clientSRP.generateVerifier(saltHex, this.acc.userName, newPw)
     const verifierHex = nonprefixedHexOfPositiveBI(verifier)
-    const dto: ChangePwDTO = {AB64, M1B64, register: { userName: this.acc.userName, saltB64: saltHex, verifierB64: verifierHex,} }
-    const M2Response = processSignIn(await this.client.userChangePw(dto), "user")
+    const dto: ChangePwDTO = {AB64, M1B64, register: { userName: this.acc.userName, saltB64: base64OfHex(saltHex), verifierB64: base64OfHex(verifierHex), } }
+
+    const M2Response = processSignIn(await this.client.userChangePw(dto, this.acc.userName), "user")
+
     if (M2Response.isOK === false) {
         toast.error("Sign in error", { autoClose: 4000 })
         return

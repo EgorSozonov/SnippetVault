@@ -70,7 +70,8 @@ public static class SignInResponse {
 
 public static class ChangePw {
     public Register register;
-    public String newPw;
+    public String AB64;
+    public String M1B64;
 }
 
 

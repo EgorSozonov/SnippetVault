@@ -35,7 +35,6 @@ public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterCha
     val userName = webExchange.getRequest().getHeaders().getFirst("userName");
     val cookies = webExchange.getRequest().getCookies();
     val accessToken = cookies.getFirst("accessToken");
-
     try {
         return userService.userAuthorize(userName, accessToken.getValue())
             .flatMap(authorized -> {

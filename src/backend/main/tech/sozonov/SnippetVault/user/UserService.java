@@ -188,6 +188,7 @@ public Mono<Integer> userUpdatePw(ChangePw dto, ServerWebExchange webEx) {
     BigInteger randomSessionKey = srp.generatePrivateValue(Constants.N, secureRandom);
     String sessionKey = enc.encodeToString(randomSessionKey.toByteArray());
     UserUpdatePwIntern updatePw = UserUpdatePwIntern.builder()
+                        .userName(dto.register.userName)
                         .verifier(verifier)
                         .salt(salt)
                         .accessToken(sessionKey)
