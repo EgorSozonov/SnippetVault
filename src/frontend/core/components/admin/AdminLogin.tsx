@@ -9,18 +9,14 @@ import { SignInDTO } from "../../types/dto/AuthDTO"
 const AdminLogin: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(storeContext)
     const unameRef = useRef<HTMLInputElement>(null)
-    const pw1Ref = useRef<HTMLInputElement>(null)
-    const pw2Ref = useRef<HTMLInputElement>(null)
+    const pwRef = useRef<HTMLInputElement>(null)
 
-
-    const signInOrRegisterHandler = async () => {
-        if (!unameRef.current || !pw1Ref.current || !pw2Ref.current) return
+    const signInHandler = async () => {
+        if (!unameRef.current || !pwRef.current) return
         const uName: string = unameRef.current.value
-        const pw: string = pw1Ref.current.value
-        const dto: SignInDTO = {userName: uName, password: pw, }
+        const pw: string = pwRef.current.value
 
-        const mbAcc = state.user.signIn(dto)
-
+        await state.user.userSignIn(uName, pw, "admin")
     }
 
     return (
@@ -35,14 +31,11 @@ const AdminLogin: FunctionComponent = observer(({}: any) => {
             <div className="adminLoginLabel">Username</div>
             <input className="loginFormInput" ref={unameRef} type="text" />
 
-            <div className="adminLoginLabel">Password 1</div>
-            <input className="loginFormInput" type="password" ref={pw1Ref} />
-
-            <div className="adminLoginLabel">Password 2</div>
-            <input className="loginFormInput" type="password" ref={pw2Ref} />
+            <div className="adminLoginLabel">Password</div>
+            <input className="loginFormInput" type="password" ref={pwRef} />
 
             <div className="adminLoginButtons">
-                <button onClick={signInOrRegisterHandler}>Sign in</button>
+                <button onClick={signInHandler}>Sign in</button>
             </div>
         </div>
     )

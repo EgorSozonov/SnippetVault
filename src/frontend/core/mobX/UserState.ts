@@ -45,8 +45,7 @@ userRegister = action(async (userName: string, password: string) => {
                                             saltB64: base64OfHex(saltHex),
                                             verifierB64: base64OfHex(verifierHex),
                                             userName
-                                        }),
-                                        "user")
+                                        }))
 
         this.userFinishSignIn(handshakeResponse, userName, password, clientSRP)
     } catch (e) {
@@ -54,8 +53,10 @@ userRegister = action(async (userName: string, password: string) => {
     }
 })
 
-userSignIn = action(async (userName: string, password: string) => {
-    const handshakeResponse = processHandshake(await this.client.userHandshake({ userName }), "user")
+userSignIn = action(async (userName: string, password: string, mode: "user" | "admin") => {
+    const handshakeServerResponse = mode === "user" ? await this.client.userHandshake({ userName })
+                                                    : await this.client.userHandshakeAdmin({ userName })
+    const handshakeResponse = processHandshake(handshakeServerResponse)
     const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
     runInAction(() => this.userFinishSignIn(handshakeResponse, userName, password, clientSRP))
 })

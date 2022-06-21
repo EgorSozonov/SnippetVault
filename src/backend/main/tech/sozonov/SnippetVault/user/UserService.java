@@ -76,7 +76,12 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
     });
 }
 
-public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, MultiValueMap<String, HttpCookie> cookies) {
+public Mono<Either<String, HandshakeResponse>> handshakeAdmin(Handshake dto, MultiValueMap<String, HttpCookie> cookies) {
+    if (!AdminPasswordChecker.checkAdminName(dto.userName)) return Mono.just(Either.left("Incorrect user name"));
+    return handshake(dto, cookies);
+}
+
+public Mono<Either<String, HandshakeResponse>> handshake(Handshake dto, MultiValueMap<String, HttpCookie> cookies) {
     if (nullOrEmp(dto.userName)) return errResponse;
     val enc = Base64.getEncoder();
 
@@ -101,7 +106,7 @@ public Mono<Either<String, HandshakeResponse>> userHandshake(Handshake dto, Mult
  * Validates A, M1 which were received from the client.
  * If correct, updates the session key and date of expiration in DB, and sets the cookie.
  */
-public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExchange webEx) {
+public Mono<Either<String, SignInResponse>> signIn(SignIn dto, ServerWebExchange webEx) {
     if (nullOrEmp(dto.userName)) return Mono.just(Either.left("Sign in error"));
 
     return userStore.userAuthentGet(dto.userName).flatMap(user -> {
@@ -116,7 +121,6 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExch
 
         BigInteger ADecoded = new BigInteger(1, dec.decode(dto.AB64));
         BigInteger M1Decoded = new BigInteger(1, dec.decode(dto.M1B64));
-
 
         BigInteger b = new BigInteger(user.b);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
@@ -143,12 +147,12 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExch
         BigInteger M2 = new BigInteger(hasher.digest());
         String M2B64 = Base64.getEncoder().encodeToString(M2.toByteArray());
         UserSignInIntern signIn = UserSignInIntern
-            .builder()
-            .userId(user.userId)
-            .b(b.toByteArray())
-            .accessToken(accessToken)
-            .dtExpiration(LocalDate.now())
-            .build();
+                                    .builder()
+                                    .userId(user.userId)
+                                    .b(b.toByteArray())
+                                    .accessToken(accessToken)
+                                    .dtExpiration(LocalDate.now())
+                                    .build();
         boolean isAdmin = AdminPasswordChecker.checkAdminName(dto.userName);
         return userStore.userSignIn(signIn)
                         .map(x -> {

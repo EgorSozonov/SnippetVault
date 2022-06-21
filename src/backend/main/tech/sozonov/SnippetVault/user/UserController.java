@@ -34,14 +34,19 @@ public Mono<Either<String, HandshakeResponse>> userRegister(@RequestBody Registe
     return userService.userRegister(dto);
 }
 
+@PostMapping("user/handshakeAdmin")
+public Mono<Either<String, HandshakeResponse>> handshakeAdmin(@RequestBody Handshake dto, ServerHttpRequest req) {
+    return userService.handshake(dto, req.getCookies());
+}
+
 @PostMapping("user/handshake")
-public Mono<Either<String, HandshakeResponse>> userHandshake(@RequestBody Handshake dto, ServerHttpRequest req) {
-    return userService.userHandshake(dto, req.getCookies());
+public Mono<Either<String, HandshakeResponse>> handshake(@RequestBody Handshake dto, ServerHttpRequest req) {
+    return userService.handshake(dto, req.getCookies());
 }
 
 @PostMapping("user/signIn")
-public Mono<Either<String, SignInResponse>> userSignIn(@RequestBody SignIn dto, ServerWebExchange webEx) {
-    return userService.userSignIn(dto, webEx);
+public Mono<Either<String, SignInResponse>> signIn(@RequestBody SignIn dto, ServerWebExchange webEx) {
+    return userService.signIn(dto, webEx);
 }
 
 

@@ -5,7 +5,7 @@ import { UserAccount } from "../types/UserAccount"
 import { dateOfTS } from "./DateUtils"
 
 
-export function processHandshake(response: ServerResponse<ServerEither<HandshakeResponseDTO>>, status: "user" | "admin"): ServerResponse<HandshakeResponseDTO> {
+export function processHandshake(response: ServerResponse<ServerEither<HandshakeResponseDTO>>): ServerResponse<HandshakeResponseDTO> {
     if (response.isOK === false) {
         return response
     }
@@ -16,7 +16,7 @@ export function processHandshake(response: ServerResponse<ServerEither<Handshake
     return {isOK: true, value: response.value.value}
 }
 
-export function processSignIn(response: ServerResponse<ServerEither<SignInResponseDTO>>, status: "user" | "admin"): ServerResponse<SignInResponseDTO> {
+export function processSignIn(response: ServerResponse<ServerEither<SignInResponseDTO>>): ServerResponse<SignInResponseDTO> {
     if (response.isOK === false) {
         return response
     }

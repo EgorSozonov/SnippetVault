@@ -32,6 +32,7 @@ type IClient = {
 
     userRegister: (dto: RegisterDTO) => Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>>
     userHandshake: (dto: HandshakeDTO) => Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>>
+    userHandshakeAdmin: (dto: HandshakeDTO) => Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>>
     userSignIn: (dto: SignInDTO) => Promise<ServerResponse<ServerEither<SignInResponseDTO>>>
     userChangePw: (dto: ChangePwDTO, userName: string) => Promise<ServerResponse<ServerEither<SignInResponseDTO>>>
 

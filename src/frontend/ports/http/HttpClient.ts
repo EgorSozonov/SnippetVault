@@ -99,6 +99,10 @@ class HttpClient implements IClient {
         return this.postRequestNouserName("/user/handshake", dto)
     }
 
+    userHandshakeAdmin(dto: HandshakeDTO): Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>> {
+        return this.postRequestNouserName("/user/handshakeAdmin", dto)
+    }
+
     userSignIn(dto: SignInDTO): Promise<ServerResponse<ServerEither<SignInResponseDTO>>> {
         return this.postRequestNouserName("/user/signIn", dto)
     }
@@ -130,7 +134,7 @@ class HttpClient implements IClient {
     }
 
     adminStatsGet(): Promise<ServerResponse<StatsDTO[]>> {
-        return this.getRequestNoCreds<StatsDTO[]>(`/admin/stats`)
+        return this.getRequestNoCreds<StatsDTO[]>(`/adminStats`)
     }
 
     private async getRequest<T>(url: string, userName: string): Promise<ServerResponse<T>> {

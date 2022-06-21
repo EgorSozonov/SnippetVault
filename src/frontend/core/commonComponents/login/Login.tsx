@@ -4,7 +4,6 @@ import "./Login.css"
 import MainState from "../../mobX/AllState"
 import { storeContext } from "../../App"
 import {observer} from "mobx-react-lite"
-import { SignInDTO } from "../../types/dto/AuthDTO"
 import { NavLink } from "react-router-dom"
 import PATHS from "../../Path"
 
@@ -12,7 +11,6 @@ import PATHS from "../../Path"
 type Props = {
     closeCallback?: () => void,
 }
-
 
 const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
     const state = useContext<MainState>(storeContext)
@@ -25,9 +23,9 @@ const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
         const pw: string = pwRef.current.value
 
         if (mode === "signIn") {
-            state.user.userSignIn(uName, pw)
+            await state.user.userSignIn(uName, pw, "user")
         } else {
-            state.user.userRegister(uName, pw)
+            await state.user.userRegister(uName, pw)
         }
     }
 
