@@ -77,18 +77,18 @@ const Admin: FunctionComponent = observer(({}: any) => {
     ]
 
     const cuTaskCallback = async (newValue: TaskCUDTO) => {
-        const mbUserId = state.user.userIdGet()
+        const mbUserId = state.user.userNameGet()
         if (mbUserId === null) return
 
         state.admin.taskCU(newValue, mbUserId)
     }
     const cuTaskGroupCallback = async (newValue: TaskGroupCUDTO) => {
-        const mbUserId = state.user.userIdGet()
+        const mbUserId = state.user.userNameGet()
         if (mbUserId === null) return
         state.admin.taskGroupCU(newValue, mbUserId)
     }
     const cuLanguageCallback = async (newValue: LanguageCUDTO) => {
-        const mbUserId = state.user.userIdGet()
+        const mbUserId = state.user.userNameGet()
         if (mbUserId === null) return
         state.admin.languageCU(newValue, mbUserId)
     }

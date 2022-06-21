@@ -13,30 +13,30 @@ type IClient = {
     taskGroupsGet: () => Promise<ServerResponse<TaskGroupDTO[]>>
 
     alternativesGet: (tlId: number) => Promise<ServerResponse<ServerEither<AlternativesDTO>>>
-    alternativesForUserGet: (tlId: number, userId: number) => Promise<ServerResponse<ServerEither<AlternativesDTO>>>
+    alternativesForUserGet: (tlId: number, userName: string) => Promise<ServerResponse<ServerEither<AlternativesDTO>>>
 
-    proposalCreate: (dto: ProposalCreateDTO, userId: number) => Promise<PostResponseDTO>
+    proposalCreate: (dto: ProposalCreateDTO, userName: string) => Promise<PostResponseDTO>
     proposalGet: (snId: number) => Promise<ServerResponse<BareSnippetDTO[]>>
     proposalsGet: () => Promise<ServerResponse<ProposalDTO[]>>
-    proposalUpdate: (dto: ProposalUpdateDTO, userId: number) => Promise<PostResponseDTO>
-    proposalApprove: (snId: number, userId: number) => Promise<PostResponseDTO>
-    proposalDecline: (snId: number, userId: number) => Promise<PostResponseDTO>
-    snippetMarkPrimary: (tlId: number, snId: number, userId: number) => Promise<PostResponseDTO>
+    proposalUpdate: (dto: ProposalUpdateDTO, userName: string) => Promise<PostResponseDTO>
+    proposalApprove: (snId: number, userName: string) => Promise<PostResponseDTO>
+    proposalDecline: (snId: number, userName: string) => Promise<PostResponseDTO>
+    snippetMarkPrimary: (tlId: number, snId: number, userName: string) => Promise<PostResponseDTO>
     commentsGet: (snId: number) => Promise<ServerResponse<CommentDTO[]>>
-    commentCreate: (dto: CommentCUDTO, userId: number) => Promise<PostResponseDTO>
+    commentCreate: (dto: CommentCUDTO, userName: string) => Promise<PostResponseDTO>
 
-    languageCU: (dto: LanguageCUDTO, userId: number) => Promise<PostResponseDTO>
-    taskCU: (dto: TaskCUDTO, userId: number) => Promise<PostResponseDTO>
+    languageCU: (dto: LanguageCUDTO, userName: string) => Promise<PostResponseDTO>
+    taskCU: (dto: TaskCUDTO, userName: string) => Promise<PostResponseDTO>
     taskGet: (taskId: number) => Promise<ServerResponse<TaskDTO[]>>
-    taskGroupCU: (dto: TaskGroupCUDTO, userId: number) => Promise<PostResponseDTO>
+    taskGroupCU: (dto: TaskGroupCUDTO, userName: string) => Promise<PostResponseDTO>
 
     userRegister: (dto: RegisterDTO) => Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>>
     userHandshake: (dto: HandshakeDTO) => Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>>
     userSignIn: (dto: SignInDTO) => Promise<ServerResponse<ServerEither<SignInResponseDTO>>>
     userChangePw: (dto: ChangePwDTO) => Promise<ServerResponse<ServerEither<SignInResponseDTO>>>
 
-    userVote: (dto: VoteDTO, userId: number) => Promise<PostResponseDTO>
-    userProfile: (userId: number) => Promise<ServerResponse<ProfileDTO>>
+    userVote: (dto: VoteDTO, userName: string) => Promise<PostResponseDTO>
+    userProfile: (userName: string) => Promise<ServerResponse<ProfileDTO>>
 
 
     // Admin

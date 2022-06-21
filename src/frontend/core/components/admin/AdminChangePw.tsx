@@ -3,7 +3,7 @@ import React from "react"
 import { observer } from "mobx-react-lite"
 import { storeContext } from "../../App"
 import MainState from "../../mobX/AllState"
-import { ChangePwAdminDTO, SignInAdminDTO } from "../../types/dto/AuthDTO"
+import { ChangePwDTO, SignInDTO } from "../../types/dto/AuthDTO"
 
 
 type Props = {
@@ -18,7 +18,7 @@ const AdminLogin: FunctionComponent<Props> = observer(({closeChangeAdminPwHandle
     const newPwRef = useRef<HTMLInputElement>(null)
 
     const saveChangeAdminPwHandler = async () => {
-        const mbUserId = state.user.userIdGet()
+        const mbUserId = state.user.userNameGet()
         if (mbUserId === null || state.user.acc === null) return
 
         if (!oldPw1Ref.current || !oldPw2Ref.current || !newPwRef.current) return
@@ -26,11 +26,11 @@ const AdminLogin: FunctionComponent<Props> = observer(({closeChangeAdminPwHandle
         const oldPw2: string = oldPw2Ref.current.value
         const newPw: string = newPwRef.current.value
 
-        const signInDTO: SignInAdminDTO = {userName: state.user.acc?.name, password1: oldPw1, password2: oldPw2, }
+        const signInDTO: SignInDTO = {userName: state.user.acc?.userName,   }
 
-        const dto: ChangePwAdminDTO = { newPw, signIn: signInDTO, }
+        const dto: ChangePwDTO = { newPw, signIn: signInDTO, }
 
-        await state.user.changeAdminPw(dto)
+        await state.user.changePw(dto)
         closeChangeAdminPwHandler()
     }
 

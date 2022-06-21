@@ -31,10 +31,10 @@ const Profile: React.FunctionComponent = observer(() => {
 
     const saveChangePwHandler = async () => {
         // TODO
-        const mbUserId = state.user.userIdGet()
-        if (mbUserId === null || state.user.acc === null) return
+        if (state.user.acc === null) return
 
-        if (!newPwRefRepeat.current || !newPwRef.current) return
+        if (!oldPwRef.current || !newPwRefRepeat.current || !newPwRef.current) return
+        const oldPw: string = oldPwRef.current.value
         const newPwRepeat: string = newPwRefRepeat.current.value
         const newPw: string = newPwRef.current.value
         if (newPw.length < 8) {
@@ -46,26 +46,27 @@ const Profile: React.FunctionComponent = observer(() => {
             return
         }
 
-        const registerDTO: RegisterDTO = {userName: state.user.acc?.name, password: oldPw, }
-
-        const dto: ChangePwDTO = { newPw: newPw, register: registerDTO }
-        await state.user.changePw(dto)
+        await state.user.changePw(newPw)
         setChangePwMode(false)
     }
 
     useEffect(() => {
         state.user.trySignInFromLS()
-        const mbUserId = state.user.userIdGet()
+        const mbUserId = state.user.userNameGet()
         if (mbUserId === null) return
         state.user.profileGet(mbUserId)
     }, [state.user.acc])
 
     const isUser = state.user.isUser.get()
+    const oldPwRef = useRef<HTMLInputElement>(null)
     const newPwRef = useRef<HTMLInputElement>(null)
-        const newPwRefRepeat = useRef<HTMLInputElement>(null)
+    const newPwRefRepeat = useRef<HTMLInputElement>(null)
 
     const changePwMenu =
         <div>
+            <div>Old password:</div>
+            <div><input type="password" ref={oldPwRef} /></div>
+            <hr />
             <div>New password:</div>
             <div><input type="password" ref={newPwRef} /></div>
             <div>New password again:</div>

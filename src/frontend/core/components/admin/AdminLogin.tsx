@@ -3,7 +3,7 @@ import React from "react"
 import { observer } from "mobx-react-lite"
 import { storeContext } from "../../App"
 import MainState from "../../mobX/AllState"
-import { SignInAdminDTO } from "../../types/dto/AuthDTO"
+import { SignInDTO } from "../../types/dto/AuthDTO"
 import { useCookies } from "react-cookie"
 
 
@@ -19,9 +19,9 @@ const AdminLogin: FunctionComponent = observer(({}: any) => {
         const uName: string = unameRef.current.value
         const pw1: string = pw1Ref.current.value
         const pw2: string = pw2Ref.current.value
-        const dto: SignInAdminDTO = {userName: uName, password1: pw1, password2: pw2, }
+        const dto: SignInDTO = {userName: uName, password1: pw1, password2: pw2, }
 
-        const mbAcc = state.user.signInAdmin(dto)
+        const mbAcc = state.user.signIn(dto)
         if (mbAcc !== null) {
             setCookie("account", JSON.stringify(mbAcc), { sameSite: "strict", httpOnly: true, secure: true, })
         }

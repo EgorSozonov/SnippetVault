@@ -71,7 +71,6 @@ public static class SignIn {
 @AllArgsConstructor
 public static class SignInResponse {
     public String M2B64;
-    public int userId;
 }
 
 public static class ChangePw {

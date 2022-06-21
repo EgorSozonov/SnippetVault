@@ -1,7 +1,8 @@
 import { action, computed, IObservableArray, makeAutoObservable, observable, runInAction } from "mobx"
+import { toast } from "react-toastify"
 import IClient from "../../ports/IClient"
-import { ChangePwAdminDTO, ChangePwDTO, HandshakeResponseDTO, SignInAdminDTO, SignInResponseDTO } from "../types/dto/AuthDTO"
-import { CommentCUDTO, CommentDTO, ProfileDTO } from "../types/dto/UserDTO"
+import { HandshakeResponseDTO, RegisterDTO, SignInResponseDTO } from "../types/dto/AuthDTO"
+import { CommentDTO, ProfileDTO } from "../types/dto/UserDTO"
 import ServerEither from "../types/ServerEither"
 import ServerResponse from "../types/ServerResponse"
 import { UserAccount } from "../types/UserAccount"
@@ -82,29 +83,70 @@ userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResp
 
     const sessionKey = base64OfBigInt(resultSessionKey.value)
     runInAction(() => {
-        this.acc = {userId: M2Response.value.userId, expiration: dateOfTS(new Date()), name: userName, status: "user", }
+        this.acc = { expiration: dateOfTS(new Date()), userName, status: "user", }
         localStorage.setItem("account", JSON.stringify(this.acc))
     })
     console.log("Session Key = " + sessionKey + ", userId = " + M2Response.value.userId)
 })
 
-changePw = action(async (dto: ChangePwDTO) => {
-    const response = await this.client.userChangePw(dto)
-    this.applySignInResponse(response, "user", dto.signIn.userName)
+
+async generateDataForRegister(userName: string, password: string): Promise<RegisterDTO> {
+    const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
+
+
+    const saltHex = await clientSRP.generateRandomSalt()
+    const verifier = await clientSRP.generateVerifier(saltHex, userName, password)
+    const verifierHex = nonprefixedHexOfPositiveBI(verifier)
+
+    const result: RegisterDTO = {userName, saltB64: saltHex, verifierB64: verifierHex, }
+    return result
+}
+
+
+changePw = action(async (newPw: string) => {
+    const handshakeResponse = processHandshake(await this.client.userHandshake({ userName: this.acc?.userId }), "user")
+    const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
+
+    if (handshakeResponse.isOK === false) {
+        toast.error("Handshake error " + handshakeResponse.errMsg, { autoClose: 4000 })
+        return
+    }
+
+    const mbAM1 = await clientSRP.step1(dto.register.userName, dto.newPw, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
+    if (mbAM1.isOk === false) {
+        toast.error(mbAM1.errMsg, { autoClose: 4000 })
+        return
+    }
+
+    const {AB64, M1B64} = mbAM1.value
+
+    const M2Response = processSignIn(await this.client.userChangePw({AB64, M1B64, userName: dto.register.userName}), "user")
+    if (M2Response.isOK === false) {
+        toast.error("Sign in error", { autoClose: 4000 })
+        return
+    }
+
+    const resultSessionKey = await clientSRP.step2(M2Response.value.M2B64)
+    if (resultSessionKey.isOk === false) {
+        toast.error("Session key does not match the server, server may be compromised", { autoClose: 4000 })
+        return
+    }
+
+    this.applySignInResponse(response, "user", dto.register.userName)
 })
 
 applySignInResponse = action((response: ServerResponse<ServerEither<SignInResponseDTO>>, status: "user" | "admin", userName: string) => {
     const mbAccount = processSignIn(response, status)
 
     if (mbAccount.isOK) {
-        this.acc = { expiration: dateOfTS(new Date()), name: userName, status, userId: mbAccount.value.userId }
+        this.acc = { expiration: dateOfTS(new Date()), userName, status }
         localStorage.setItem("account", JSON.stringify(mbAccount))
     }
 })
 
 private accountsEq(a1: UserAccount | null, a2: UserAccount): boolean {
     if (a1 === null) return false
-    return (a1.userId === a2.userId
+    return (a1.userName === a2.userName
             && a1.expiration.year === a2.expiration.year
             && a1.expiration.month === a2.expiration.month
             && a1.expiration.day === a2.expiration.day);
@@ -116,7 +158,7 @@ trySignInFromLS = action(() => {
 
     const accFromLS: UserAccount = JSON.parse(fromLS)
 
-    if (accFromLS.userId && accFromLS.userId > -1
+    if (accFromLS.userName && accFromLS.userName.length > 0
           && (accFromLS.status === "admin" || accFromLS.status === "user")
           && isSameDay(new Date(), accFromLS.expiration) === true
           && this.accountsEq(this.acc, accFromLS) === false) {
@@ -134,16 +176,17 @@ accountSet = action((newValue: UserAccount): void => {
     this.acc = newValue
 })
 
-profileGet = action(async (userId: number) => {
-    await fetchFromClient(this.client.userProfile(userId), this.profileSet)
+profileGet = action(async () => {
+    if (this.acc === null) return
+    await fetchFromClient(this.client.userProfile(this.acc.userName), this.profileSet)
 })
 
 profileSet = action((newValue: ProfileDTO): void => {
     this.profile = newValue ?? null
 })
 
-userIdGet = action((): number | null => {
-    return this.acc?.userId ?? null
+userNameGet = action((): string | null => {
+    return this.acc?.userName ?? null
 })
 
 commentsGet = action(async (snId: number) => {

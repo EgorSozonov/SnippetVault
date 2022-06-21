@@ -7,8 +7,7 @@ export type UserStatus =
 
 
 export type UserAccount = {
-    name: string,
-    userId: number,
+    userName: string,
     expiration: DateOnly,
     status: UserStatus,
 }

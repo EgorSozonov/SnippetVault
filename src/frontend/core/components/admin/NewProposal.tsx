@@ -18,7 +18,7 @@ const NewProposal: FunctionComponent = observer(() => {
     const cancelDialog = () => setConfirmationDialog({...confirmationDialog, isOpen: false})
     const okDialog = () => {
         setConfirmationDialog({...confirmationDialog, isOpen: false})
-        const mbUserId = state.user.userIdGet()
+        const mbUserId = state.user.userNameGet()
         if (mbUserId === null) return
 
         state.admin.proposalDecline(confirmationDialog.id, mbUserId)
@@ -38,7 +38,7 @@ const NewProposal: FunctionComponent = observer(() => {
     }, [])
 
     const approveHandler = (pId: number) => () => {
-        const mbUserId = state.user.userIdGet()
+        const mbUserId = state.user.userNameGet()
         if (mbUserId === null) return
 
         state.admin.proposalApprove(pId, mbUserId)

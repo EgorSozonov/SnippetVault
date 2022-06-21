@@ -24,21 +24,11 @@ export type SignInDTO = {
 
 export type SignInResponseDTO = {
     M2B64: string,
-    userId: number,
 }
 
 export type ChangePwDTO = {
     register: RegisterDTO,
-    newPw: string,
-}
-
-export type SignInAdminDTO = {
-    userName: string,
-    password1: string,
-    password2: string,
-}
-
-export type ChangePwAdminDTO = {
-    signIn: SignInAdminDTO,
+    AB64: string,
+    M1B64: string,
     newPw: string,
 }

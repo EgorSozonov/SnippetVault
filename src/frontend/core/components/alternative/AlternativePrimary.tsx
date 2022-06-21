@@ -26,7 +26,7 @@ const AlternativePrimary: FunctionComponent<Props> = observer(({ primaryAlternat
     const state = useContext<MainState>(storeContext)
     const isSignedIn = state.user.isUser.get()
     const voteHandler = (snId: number) => () => {
-        const mbUserId = state.user.userIdGet()
+        const mbUserId = state.user.userNameGet()
         if (mbUserId === null) return
 
         const voteDTO: VoteDTO = {snId, tlId}
