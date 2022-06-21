@@ -161,13 +161,13 @@ public Mono<Either<String, SignInResponse>> userSignIn(SignIn dto, ServerWebExch
                                                           .build();
                             webEx.getResponse().addCookie(newCookie);
 
-                            return Either.right(new SignInResponse(M2B64, user.userId));
+                            return Either.right(new SignInResponse(M2B64));
                         });
     });
 }
 
-public Mono<Boolean> userAuthorize(int userId, String accessToken) {
-    return userStore.userAuthorizGet(userId)
+public Mono<Boolean> userAuthorize(String userName, String accessToken) {
+    return userStore.userAuthorizGet(userName)
                     .map(x -> x != null
                               && x.expiration.toLocalDate().isEqual(LocalDate.now())
                               && x.accessToken.equals(accessToken));
@@ -207,9 +207,9 @@ public Mono<Integer> userUpdatePw(ChangePw dto, ServerWebExchange webEx) {
     });
 }
 
-public Mono<Profile> userProfile(int userId) {
-    val profileIncomplete = userStore.userProfile(userId);
-    val userData = userStore.userData(userId);
+public Mono<Profile> userProfile(String userName) {
+    val profileIncomplete = userStore.userProfile(userName);
+    val userData = userStore.userData(userName);
 
     return profileIncomplete.zipWith(userData, (profile, usr) -> {
         profile.tsJoined = usr.tsJoined;
@@ -217,12 +217,12 @@ public Mono<Profile> userProfile(int userId) {
     });
 }
 
-public Mono<Integer> userVote(Vote dto, int userId) {
-    return userStore.userVote(userId, dto.tlId, dto.snId);
+public Mono<Integer> userVote(Vote dto, String userName) {
+    return userStore.userVote(userName, dto.tlId, dto.snId);
 }
 
-public Mono<Integer> commentCU(CommentCU dto, int userId) {
-    return userStore.commentCU(dto, userId, LocalDateTime.now());
+public Mono<Integer> commentCU(CommentCU dto, String userName) {
+    return userStore.commentCU(dto, userName, LocalDateTime.now());
 }
 
 

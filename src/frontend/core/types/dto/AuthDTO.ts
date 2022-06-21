@@ -30,5 +30,4 @@ export type ChangePwDTO = {
     register: RegisterDTO,
     AB64: string,
     M1B64: string,
-    newPw: string,
 }

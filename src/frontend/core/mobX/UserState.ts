@@ -1,9 +1,8 @@
 import { action, computed, IObservableArray, makeAutoObservable, observable, runInAction } from "mobx"
 import { toast } from "react-toastify"
 import IClient from "../../ports/IClient"
-import { HandshakeResponseDTO, RegisterDTO, SignInResponseDTO } from "../types/dto/AuthDTO"
+import { ChangePwDTO, HandshakeResponseDTO, RegisterDTO } from "../types/dto/AuthDTO"
 import { CommentDTO, ProfileDTO } from "../types/dto/UserDTO"
-import ServerEither from "../types/ServerEither"
 import ServerResponse from "../types/ServerResponse"
 import { UserAccount } from "../types/UserAccount"
 import { rfc5054 } from "../utils/Constants"
@@ -82,11 +81,9 @@ userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResp
     if (resultSessionKey.isOk === false) return
 
     const sessionKey = base64OfBigInt(resultSessionKey.value)
-    runInAction(() => {
-        this.acc = { expiration: dateOfTS(new Date()), userName, status: "user", }
-        localStorage.setItem("account", JSON.stringify(this.acc))
-    })
-    console.log("Session Key = " + sessionKey + ", userId = " + M2Response.value.userId)
+    console.log("Session Key = " + sessionKey)
+
+    runInAction(() => this.applySuccessfulSignIn("user", userName))
 })
 
 
@@ -104,7 +101,8 @@ async generateDataForRegister(userName: string, password: string): Promise<Regis
 
 
 changePw = action(async (newPw: string) => {
-    const handshakeResponse = processHandshake(await this.client.userHandshake({ userName: this.acc?.userId }), "user")
+    if (this.acc === null) return
+    const handshakeResponse = processHandshake(await this.client.userHandshake({ userName: this.acc?.userName }), "user")
     const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
 
     if (handshakeResponse.isOK === false) {
@@ -112,7 +110,7 @@ changePw = action(async (newPw: string) => {
         return
     }
 
-    const mbAM1 = await clientSRP.step1(dto.register.userName, dto.newPw, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
+    const mbAM1 = await clientSRP.step1(this.acc.userName, newPw, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
     if (mbAM1.isOk === false) {
         toast.error(mbAM1.errMsg, { autoClose: 4000 })
         return
@@ -120,7 +118,11 @@ changePw = action(async (newPw: string) => {
 
     const {AB64, M1B64} = mbAM1.value
 
-    const M2Response = processSignIn(await this.client.userChangePw({AB64, M1B64, userName: dto.register.userName}), "user")
+    const saltHex = await clientSRP.generateRandomSalt()
+    const verifier = await clientSRP.generateVerifier(saltHex, this.acc.userName, newPw)
+    const verifierHex = nonprefixedHexOfPositiveBI(verifier)
+    const dto: ChangePwDTO = {AB64, M1B64, register: { userName: this.acc.userName, saltB64: saltHex, verifierB64: verifierHex,} }
+    const M2Response = processSignIn(await this.client.userChangePw(dto), "user")
     if (M2Response.isOK === false) {
         toast.error("Sign in error", { autoClose: 4000 })
         return
@@ -132,16 +134,13 @@ changePw = action(async (newPw: string) => {
         return
     }
 
-    this.applySignInResponse(response, "user", dto.register.userName)
+    runInAction(() => this.applySuccessfulSignIn("user", this.acc!.userName))
 })
 
-applySignInResponse = action((response: ServerResponse<ServerEither<SignInResponseDTO>>, status: "user" | "admin", userName: string) => {
-    const mbAccount = processSignIn(response, status)
+applySuccessfulSignIn = action((status: "user" | "admin", userName: string) => {
+    this.acc = { expiration: dateOfTS(new Date()), userName, status }
+    localStorage.setItem("account", JSON.stringify(this.acc))
 
-    if (mbAccount.isOK) {
-        this.acc = { expiration: dateOfTS(new Date()), userName, status }
-        localStorage.setItem("account", JSON.stringify(mbAccount))
-    }
 })
 
 private accountsEq(a1: UserAccount | null, a2: UserAccount): boolean {
@@ -182,6 +181,7 @@ profileGet = action(async () => {
 })
 
 profileSet = action((newValue: ProfileDTO): void => {
+
     this.profile = newValue ?? null
 })
 

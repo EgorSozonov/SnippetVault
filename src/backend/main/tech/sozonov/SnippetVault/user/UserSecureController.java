@@ -22,8 +22,8 @@ public UserSecureController(UserService _userService) {
 }
 
 @GetMapping("user/profile")
-public Mono<Profile> userProfile(@RequestHeader("userId") int userId) {
-    return userService.userProfile(userId);
+public Mono<Profile> userProfile(@RequestHeader("userName") String userName) {
+    return userService.userProfile(userName);
 }
 
 @PostMapping("user/changePw")
@@ -32,13 +32,13 @@ public Mono<ResponseEntity<Void>> userChangePw(@RequestBody ChangePw dto, Server
 }
 
 @PostMapping("user/vote")
-public Mono<ResponseEntity<Void>> userVote(@RequestBody Vote dto, @RequestHeader("userId") int userId) {
-    return wrapCUResponse(userService.userVote(dto, userId));
+public Mono<ResponseEntity<Void>> userVote(@RequestBody Vote dto, @RequestHeader("userName") String userName) {
+    return wrapCUResponse(userService.userVote(dto, userName));
 }
 
 @PostMapping("comment/cu")
-public Mono<ResponseEntity<Void>> commentCU(@RequestBody CommentCU dto, @RequestHeader("userId") int userId) {
-    return wrapCUResponse(userService.commentCU(dto, userId));
+public Mono<ResponseEntity<Void>> commentCU(@RequestBody CommentCU dto, @RequestHeader("userName") String userName) {
+    return wrapCUResponse(userService.commentCU(dto, userName));
 }
 
 

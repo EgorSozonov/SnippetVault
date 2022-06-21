@@ -30,9 +30,6 @@ const Profile: React.FunctionComponent = observer(() => {
     }
 
     const saveChangePwHandler = async () => {
-        // TODO
-        if (state.user.acc === null) return
-
         if (!oldPwRef.current || !newPwRefRepeat.current || !newPwRef.current) return
         const oldPw: string = oldPwRef.current.value
         const newPwRepeat: string = newPwRefRepeat.current.value
@@ -54,7 +51,7 @@ const Profile: React.FunctionComponent = observer(() => {
         state.user.trySignInFromLS()
         const mbUserId = state.user.userNameGet()
         if (mbUserId === null) return
-        state.user.profileGet(mbUserId)
+        state.user.profileGet()
     }, [state.user.acc])
 
     const isUser = state.user.isUser.get()
@@ -81,7 +78,7 @@ const Profile: React.FunctionComponent = observer(() => {
         <>
             <div className="profileHeader">
                 <div>
-                    <h2>{state.user.acc !== null && state.user.acc.name}</h2>
+                    <h2>{state.user.acc !== null && state.user.acc.userName}</h2>
                 </div>
                 <div className="profilembUserIdubscript">
                     <h5>User Profile</h5>

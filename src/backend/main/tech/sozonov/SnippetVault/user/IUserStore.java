@@ -10,7 +10,7 @@ public interface IUserStore {
 
 Mono<AuthenticateIntern> userAuthentGet(String userName);
 
-Mono<AuthorizeIntern> userAuthorizGet(int userId);
+Mono<AuthorizeIntern> userAuthorizGet(String userName);
 Mono<AuthorizeIntern> userAdminAuthoriz();
 Mono<Integer> userHandshake(Handshake hshake, byte[] b);
 Mono<HandshakeIntern> userHandshakeGet(String userName);
@@ -18,10 +18,10 @@ Mono<HandshakeIntern> userHandshakeGet(String userName);
 Mono<Integer> userRegister(UserNewIntern user);
 Mono<Integer> userSignIn(UserSignInIntern user);
 Mono<Integer> userUpdatePw(UserUpdatePwIntern user);
-Mono<Integer> userVote(int userId, int tlId, int snId);
-Mono<Profile> userProfile(int userId);
-Mono<User> userData(int userId);
-Mono<Integer> commentCU(CommentCU dto, int userId, LocalDateTime ts);
+Mono<Integer> userVote(String userName, int tlId, int snId);
+Mono<Profile> userProfile(String userName);
+Mono<User> userData(String userName);
+Mono<Integer> commentCU(CommentCU dto, String userName, LocalDateTime ts);
 Flux<Comment> commentsGet(int snippetId);
 
 

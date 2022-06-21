@@ -32,13 +32,12 @@ public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterCha
     val requestPath = webExchange.getRequest().getPath().pathWithinApplication();
     if (!pathPattern.matches(requestPath)) return filterChain.filter(webExchange);
 
-    val userIdStr = webExchange.getRequest().getHeaders().getFirst("userId");
+    val userName = webExchange.getRequest().getHeaders().getFirst("userName");
     val cookies = webExchange.getRequest().getCookies();
     val accessToken = cookies.getFirst("accessToken");
 
     try {
-        int userId = Integer.parseInt(userIdStr);
-        return userService.userAuthorize(userId, accessToken.getValue())
+        return userService.userAuthorize(userName, accessToken.getValue())
             .flatMap(authorized -> {
                 if (authorized) return filterChain.filter(webExchange);
                 val response = webExchange.getResponse();

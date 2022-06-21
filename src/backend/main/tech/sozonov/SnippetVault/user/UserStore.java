@@ -39,12 +39,12 @@ public Mono<AuthenticateIntern> userAuthentGet(String userName) {
 
 private static final String userAuthorizGetQ = """
     SELECT "accessToken", expiration
-    FROM sv.user WHERE id = :id
+    FROM sv.user WHERE name = :userName
 """;
-public Mono<AuthorizeIntern> userAuthorizGet(int userId) {
+public Mono<AuthorizeIntern> userAuthorizGet(String userName) {
     val deserializer = new Deserializer<>(AuthorizeIntern.class, userAuthorizGetQ);
     return db.sql(deserializer.sqlSelectQuery)
-         .bind("id", userId)
+         .bind("userName", userName)
          .map(deserializer::unpackRow)
          .one();
 }
@@ -152,13 +152,15 @@ public Flux<Comment> commentsGet(int snippetId) {
 private static final String userVoteQ = """
     BEGIN;
     WITH existingVote AS (
-        SELECT uv."snippetId" FROM sv."userVote" uv
-        WHERE uv."userId"=:userId AND uv."taskLanguageId"=:tlId LIMIT 1
+        SELECT uv."snippetId",
+        FROM sv.user u
+        JOIN sv."userVote" uv ON uv."userId"=u.id
+        WHERE u.name=:userName AND uv."taskLanguageId"=:tlId LIMIT 1
     )
-    UPDATE sv.snippet SET score=score-1 WHERE id IN (SELECT "snippetId" FROM existingVote);
+    UPDATE sv.snippet SET score = score - 1 WHERE id IN (SELECT "snippetId" FROM existingVote);
 
     INSERT INTO sv."userVote"("userId", "taskLanguageId", "snippetId")
-    VALUES (:userId, :tlId, :snId)
+    VALUES ((SELECT id FROM sv.user WHERE name=:userName LIMIT 1), :tlId, :snId)
     ON CONFLICT("userId", "taskLanguageId")
     DO UPDATE SET "snippetId"=EXCLUDED."snippetId";
 
@@ -167,12 +169,12 @@ private static final String userVoteQ = """
 
     COMMIT;
 """;
-public Mono<Integer> userVote(int userId, int tlId, int snId) {
+public Mono<Integer> userVote(String userName, int tlId, int snId) {
     // We have to do this because the R2DBC driver for PostgresQL insists on making prepared statements,
     // and Postgres doesn't support prepared statements with multiple SQL commands and bindings at the same time.
     // Ideally I'd want an unprepared statement, but the library doesn't support that.
     // We are safe against SQL injection, though, since the params are all numeric.
-    String sqlSubstituted = userVoteQ.replaceAll(":userId", Integer.toString(userId))
+    String sqlSubstituted = userVoteQ.replaceAll(":userName", userName)
                                      .replaceAll(":tlId", Integer.toString(tlId))
                                      .replaceAll(":snId", Integer.toString(snId));
 
@@ -188,43 +190,44 @@ private static final String userProfileQ = """
     	SUM(CASE WHEN s.status = 3 AND tl.id IS NOT NULL THEN 1 ELSE 0 END) AS "primaryCount",
         (SELECT "dateJoined" FROM sv.user WHERE id=24 LIMIT 1) AS "tsJoined"
     FROM sv.snippet s
+    JOIN sv.user u ON u.id=s."authorId"
     LEFT JOIN sv."taskLanguage" tl ON tl."primarySnippetId" = s.id
-    WHERE "authorId" = :userId
+    WHERE u.name=:userName
 """;
-public  Mono<Profile> userProfile(int userId) {
+public  Mono<Profile> userProfile(String userName) {
     val deserializer = new Deserializer<>(Profile.class, userProfileQ);
-    System.out.println("deser " + deserializer.isOK);
     return db.sql(deserializer.sqlSelectQuery)
-             .bind("userId", userId)
+             .bind("userName", userName)
              .map(deserializer::unpackRow)
              .one();
 }
 
 private static final String userDataQ = """
-    SELECT name, "dateJoined" AS "tsJoined" FROM sv.user WHERE id = $1
+    SELECT name, "dateJoined" AS "tsJoined" FROM sv.user WHERE name = $1
 """;
-public Mono<User> userData(int userId) {
+public Mono<User> userData(String userName) {
     val deserializer = new Deserializer<>(User.class, userDataQ);
     return db.sql(deserializer.sqlSelectQuery)
-             .bind("$1", userId)
+             .bind("$1", userName)
              .map(deserializer::unpackRow)
              .one();
 }
 
 private static final String commentCreateQ = """
     INSERT INTO sv.comment("userId", "snippetId", content, "tsUpload", "isDeleted")
-    VALUES (:userId, :snId, :content, :ts, false)
+    VALUES ((SELECT id FROM sv.user WHERE name=:userName LIMIT 1), :snId, :content, :ts, false)
 """;
 private static final String commentUpdateQ = """
-    UPDATE sv.comment SET "userId" = :userId, "snippetId" = :snId, content = :content, "tsUpload" = :ts, "isDeleted" = :isDeleted
+    UPDATE sv.comment SET "userId" = (SELECT id FROM sv.user WHERE name=:userName LIMIT 1),
+                          "snippetId" = :snId, content = :content, "tsUpload" = :ts, "isDeleted" = :isDeleted
     WHERE id = :existingId
 """;
-public Mono<Integer> commentCU(CommentCU dto, int userId, LocalDateTime ts) {
+public Mono<Integer> commentCU(CommentCU dto, String userName, LocalDateTime ts) {
     BiFunction<GenericExecuteSpec, CommentCU, GenericExecuteSpec> binder =
-        (cmd, x) -> cmd.bind("userId", userId)
-                      .bind("content", dto.content)
-                      .bind("snId", dto.snId)
-                      .bind("ts", ts);
+        (cmd, x) -> cmd.bind("userName", userName)
+                       .bind("content", dto.content)
+                       .bind("snId", dto.snId)
+                       .bind("ts", ts);
     return createOrUpdate(commentCreateQ, commentUpdateQ, binder, dto, db);
 }
 
