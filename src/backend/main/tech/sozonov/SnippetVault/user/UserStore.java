@@ -126,13 +126,13 @@ private static final String userUpdatePwQ = """
 """;
 public Mono<Integer> userUpdatePw(UserUpdatePwIntern user) {
     return db.sql(userUpdatePwQ)
-         .bind("dtExpiration", user.dtExpiration)
-         .bind("verifier", user.verifier)
-         .bind("salt", user.salt)
-         .bind("accessToken", user.accessToken)
-         .bind("userId", user.userId)
-         .fetch()
-         .rowsUpdated();
+             .bind("dtExpiration", user.dtExpiration)
+             .bind("verifier", user.verifier)
+             .bind("salt", user.salt)
+             .bind("accessToken", user.accessToken)
+             .bind("userId", user.userId)
+             .fetch()
+             .rowsUpdated();
 }
 
 private static final String commentsGetQ = """
@@ -149,38 +149,47 @@ public Flux<Comment> commentsGet(int snippetId) {
              .all();
 }
 
+private static final String userVotePrelimQ = """
+    SELECT id FROM sv.user WHERE name = $1
+""";
 private static final String userVoteQ = """
     BEGIN;
     WITH existingVote AS (
-        SELECT uv."snippetId",
-        FROM sv.user u
-        JOIN sv."userVote" uv ON uv."userId"=u.id
-        WHERE u.name=:userName AND uv."taskLanguageId"=:tlId LIMIT 1
+        SELECT uv."snippetId"
+        FROM sv."userVote" uv
+        WHERE uv."userId"=:authorId AND uv."taskLanguageId"=:tlId LIMIT 1
     )
     UPDATE sv.snippet SET score = score - 1 WHERE id IN (SELECT "snippetId" FROM existingVote);
 
     INSERT INTO sv."userVote"("userId", "taskLanguageId", "snippetId")
-    VALUES ((SELECT id FROM sv.user WHERE name=:userName LIMIT 1), :tlId, :snId)
+    VALUES (:authorId, :tlId, :snId)
     ON CONFLICT("userId", "taskLanguageId")
-    DO UPDATE SET "snippetId"=EXCLUDED."snippetId";
+    DO UPDATE SET "snippetId" = EXCLUDED."snippetId";
 
     UPDATE sv.snippet
-    SET score=score + 1 WHERE id=:snId;
+    SET score=score + 1 WHERE id = :snId;
 
     COMMIT;
 """;
 public Mono<Integer> userVote(String userName, int tlId, int snId) {
-    // We have to do this because the R2DBC driver for PostgresQL insists on making prepared statements,
-    // and Postgres doesn't support prepared statements with multiple SQL commands and bindings at the same time.
-    // Ideally I'd want an unprepared statement, but the library doesn't support that.
-    // We are safe against SQL injection, though, since the params are all numeric.
-    String sqlSubstituted = userVoteQ.replaceAll(":userName", userName)
-                                     .replaceAll(":tlId", Integer.toString(tlId))
-                                     .replaceAll(":snId", Integer.toString(snId));
-
-    return db.sql(sqlSubstituted)
+    return db.sql(userVotePrelimQ)
+             .bind("$1", userName)
              .fetch()
-             .rowsUpdated();
+             .first()
+             .map(r -> (int) r.get("id"))
+             .flatMap(userId -> {
+                // We have to do this because the R2DBC driver for PostgresQL insists on making prepared statements,
+                // and Postgres doesn't support prepared statements with multiple SQL commands and bindings at the same time.
+                // Ideally I'd want an unprepared statement, but the library doesn't support that.
+                // We are safe against SQL injection, though, since the params are all numeric.
+                String sqlSubstituted = userVoteQ.replaceAll(":authorId", userId.toString())
+                                                 .replaceAll(":tlId", Integer.toString(tlId))
+                                                 .replaceAll(":snId", Integer.toString(snId));
+                return db.sql(sqlSubstituted)
+                         .fetch()
+                         .rowsUpdated();
+             });
+
 }
 
 private static final String userProfileQ = """

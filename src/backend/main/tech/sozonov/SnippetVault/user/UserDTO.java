@@ -38,11 +38,6 @@ public static class Vote {
 }
 
 @AllArgsConstructor
-public static class SignInSuccess {
-    public int userId;
-}
-
-@AllArgsConstructor
 public static class Register {
     public String userName;
     public String saltB64;

@@ -102,8 +102,8 @@ taskGroupsSet = action((newValue: TaskGroupDTO[]): void => {
     this.tg = updateWithChoicesUrl(this.tg, newArr)
 })
 
-proposalCreate = action(async (dto: ProposalCreateDTO, userId: number) => {
-    return await this.client.proposalCreate(dto, userId)
+proposalCreate = action(async (dto: ProposalCreateDTO, userName: string) => {
+    return await this.client.proposalCreate(dto, userName)
 })
 
 codesFromUrlSet = action((tgCode: string | null, l1Code: string | null, l2Code: string | null) => {
@@ -147,8 +147,8 @@ alternativesGet = action(async (tlIdNum: number) => {
     await fetchFromClient2(this.client.alternativesGet(tlIdNum), this.alternativesSet)
 })
 
-alternativesGetUser = action(async (tlIdNum: number, userId: number) => {
-    await fetchFromClient2(this.client.alternativesForUserGet(tlIdNum, userId), this.alternativesSet)
+alternativesGetUser = action(async (tlIdNum: number, userName: string) => {
+    await fetchFromClient2(this.client.alternativesForUserGet(tlIdNum, userName), this.alternativesSet)
 })
 
 alternativesResort = action((newValue: AlternativesSort): void => {
@@ -163,34 +163,34 @@ alternativesResort = action((newValue: AlternativesSort): void => {
     this.alternatives.rows = sorted
 })
 
-snippetMarkPrimary = action((tlId: number, snId: number, userId: number): void => {
-    this.client.snippetMarkPrimary(tlId, snId, userId)
+snippetMarkPrimary = action((tlId: number, snId: number, userName: string): void => {
+    this.client.snippetMarkPrimary(tlId, snId, userName)
     .then((r) => {
             if (r && r.status === "OK") {
-                fetchFromClient2(this.client.alternativesForUserGet(tlId, userId), this.alternativesSet)
+                fetchFromClient2(this.client.alternativesForUserGet(tlId, userName), this.alternativesSet)
             }
         })
 })
 
-commentCreate = action((dto: CommentCUDTO, userId: number, id2: number) => {
+commentCreate = action((dto: CommentCUDTO, userName: string, id2: number) => {
     console.log(dto)
-    this.client.commentCreate(dto, userId)
+    this.client.commentCreate(dto, userName)
         .then((r) => {
             if (r && r.status === "OK") {
-                this.alternativesGetUser(id2, userId)
+                this.alternativesGetUser(id2, userName)
             }
         })
 })
 
 
-userVote = action((voteDto: VoteDTO, userId: number) => {
+userVote = action((voteDto: VoteDTO, userName: string) => {
     console.log("userVote")
-    this.client.userVote(voteDto, userId)
+    this.client.userVote(voteDto, userName)
         .then((r) => {
             console.log(r)
             if (r && r.status === "OK") {
                 console.log("here")
-                fetchFromClient2(this.client.alternativesForUserGet(voteDto.tlId, userId), this.alternativesSet)
+                fetchFromClient2(this.client.alternativesForUserGet(voteDto.tlId, userName), this.alternativesSet)
             }
         })
 })

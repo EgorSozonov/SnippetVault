@@ -4,7 +4,6 @@ import { LanguageCUDTO,  TaskCUDTO, TaskGroupCUDTO, } from "../types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, BareSnippetDTO, ProposalUpdateDTO } from "../types/dto/SnippetDTO"
 import { StatsDTO } from "../types/dto/UserDTO"
 import { fetchFromClient } from "./Utils"
-import { SignInSuccessDTO } from "../types/dto/AuthDTO"
 
 
 export default class AdminState {
@@ -46,12 +45,12 @@ export default class AdminState {
         this.editProposal = newValue[0]
     })
 
-    proposalUpdate = action(async (newValue: ProposalUpdateDTO, userId: number) => {
-        await this.client.proposalUpdate(newValue, userId)
+    proposalUpdate = action(async (newValue: ProposalUpdateDTO, userName: string) => {
+        await this.client.proposalUpdate(newValue, userName)
     })
 
-    proposalApprove = action((pId: number, userId: number) => {
-        this.client.proposalApprove(pId, userId)
+    proposalApprove = action((pId: number, userName: string) => {
+        this.client.proposalApprove(pId, userName)
             .then((r) => {
                 if (r.status === "OK") {
                     fetchFromClient(this.client.proposalsGet(), this.proposalsSet)
@@ -59,8 +58,8 @@ export default class AdminState {
             })
     })
 
-    proposalDecline = action((pId: number, userId: number) => {
-        this.client.proposalDecline(pId, userId)
+    proposalDecline = action((pId: number, userName: string) => {
+        this.client.proposalDecline(pId, userName)
         .then((r) => {
                 if (r.status === "OK") {
                     fetchFromClient(this.client.proposalsGet(), this.proposalsSet)
@@ -80,8 +79,8 @@ export default class AdminState {
         this.tasks = observable.array(newValue)
     })
 
-    taskCU = action((newValue: TaskCUDTO, userId: number) => {
-        this.client.taskCU(newValue, userId)
+    taskCU = action((newValue: TaskCUDTO, userName: string) => {
+        this.client.taskCU(newValue, userName)
     })
 
     taskGroupsGet = action(async () => {
@@ -96,8 +95,8 @@ export default class AdminState {
         this.taskGroups = observable.array(newValue)
     })
 
-    taskGroupCU = action((newValue: TaskGroupCUDTO, userId: number) => {
-        this.client.taskGroupCU(newValue, userId)
+    taskGroupCU = action((newValue: TaskGroupCUDTO, userName: string) => {
+        this.client.taskGroupCU(newValue, userName)
     })
 
     languagesGet = action(async () => {
@@ -112,8 +111,8 @@ export default class AdminState {
         this.languages = observable.array(newValue)
     })
 
-    languageCU = action((newValue: LanguageCUDTO, userId: number) => {
-        this.client.languageCU(newValue, userId)
+    languageCU = action((newValue: LanguageCUDTO, userName: string) => {
+        this.client.languageCU(newValue, userName)
     })
 
     statsGet = action(async () => {

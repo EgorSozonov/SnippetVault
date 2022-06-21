@@ -23,8 +23,8 @@ public SnippetSecureController(SnippetService _snippetService) {
 }
 
 @PostMapping("proposal/create")
-public Mono<ResponseEntity<Void>> proposalCreate(@RequestBody ProposalCreate dto, @RequestHeader("userId") int userId) {
-    return wrapCUResponse(snippetService.proposalCreate(dto, userId));
+public Mono<ResponseEntity<Void>> proposalCreate(@RequestBody ProposalCreate dto, @RequestHeader("userName") String userName) {
+    return wrapCUResponse(snippetService.proposalCreate(dto, userName));
 }
 
 

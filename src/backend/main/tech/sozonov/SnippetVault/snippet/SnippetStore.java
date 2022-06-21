@@ -188,9 +188,10 @@ private static final String alternativesForUserGetQ = """
            sn.libraries
     FROM sv."taskLanguage" tl
     JOIN sv.snippet sn ON sn.id=tl."primarySnippetId"
-    LEFT JOIN sv."userVote" uv ON uv."userId" = $1 AND uv."snippetId" = sn.id
+    LEFT JOIN sv."userVote" uv ON uv."snippetId" = sn.id
+    LEFT JOIN sv.user u ON u.id = uv."userId"
     LEFT JOIN sv.comment c ON c."snippetId" = sn.id
-    WHERE tl.id = $2
+    WHERE tl.id = $2 AND (u.name IS NULL OR u.name = $1)
     GROUP BY sn.id, sn.content, sn."tsUpload", sn.score, "voteFlag"
 
     UNION ALL
@@ -200,15 +201,16 @@ private static final String alternativesForUserGetQ = """
            sn.libraries
     FROM sv.snippet sn
     LEFT JOIN sv.comment c ON c."snippetId" = sn.id
-    LEFT JOIN sv."userVote" uv ON uv."userId" = $1 AND uv."snippetId" = sn.id
-    WHERE sn."taskLanguageId" = $2 AND sn.status = 3
+    LEFT JOIN sv."userVote" uv ON uv."snippetId" = sn.id
+    LEFT JOIN sv.user u ON u.id = uv."userId"
+    WHERE sn."taskLanguageId" = $2 AND sn.status = 3 AND (u.name IS NULL OR u.name = $1)
     GROUP BY sn.id, sn.content, sn."tsUpload", sn.score, "voteFlag"
 """;
-public Flux<Alternative> alternativesForUserGet(int taskLanguageId, int userId) {
+public Flux<Alternative> alternativesForUserGet(int taskLanguageId, String userName) {
     val deserializer = new Deserializer<>(Alternative.class, alternativesForUserGetQ);
     return db.sql(alternativesForUserGetQ)
+             .bind("$1", userName)
              .bind("$2", taskLanguageId)
-             .bind("$1", userId)
              .map(deserializer::unpackRow)
              .all();
 }
@@ -249,9 +251,9 @@ private static final String taskLanguageCreateQ = """
 """;
 private static final String proposalCreateQ = """
     INSERT INTO sv.snippet("taskLanguageId", content, status, score, libraries, "tsUpload", "authorId")
-    VALUES (:tlId, :content, 1, 0, :libraries, :ts, :authorId)
+    VALUES (:tlId, :content, 1, 0, :libraries, :ts, (SELECT id FROM sv.user WHERE name = :authorName LIMIT 1))
 """;
-public Mono<Integer> proposalCreate(ProposalCreate dto, int authorId) {
+public Mono<Integer> proposalCreate(ProposalCreate dto, String authorName) {
     return db.sql(taskLanguageCreateQ)
              .bind("taskId", dto.taskId)
              .bind("langId", dto.langId)
@@ -264,7 +266,7 @@ public Mono<Integer> proposalCreate(ProposalCreate dto, int authorId) {
                          .bind("content", dto.content)
                          .bind("libraries", dto.libraries)
                          .bind("ts", LocalDateTime.now())
-                         .bind("authorId", authorId)
+                         .bind("authorName", authorName)
                          .fetch()
                          .rowsUpdated();
              });

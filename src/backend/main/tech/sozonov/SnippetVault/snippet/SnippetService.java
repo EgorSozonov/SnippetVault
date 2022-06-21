@@ -10,6 +10,7 @@ import tech.sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
+import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
 
 @Service
 public class SnippetService {
@@ -59,18 +60,18 @@ public Mono<BareSnippet> proposalGet(int snId) {
     return snippetIntern.map(x -> new BareSnippet(x.content, x.libraries));
 }
 
-public Mono<Integer> proposalCreate(ProposalCreate dto, int authorId) {
-    return snippetStore.proposalCreate(dto, authorId);
+public Mono<Integer> proposalCreate(ProposalCreate dto, String authorName) {
+    return snippetStore.proposalCreate(dto, authorName);
 }
 
 public Mono<SnippetIntern> snippetGet(int snId) {
     return snippetStore.snippetGet(snId);
 }
 
-public Mono<Either<String, Alternatives>> alternativesForTLGet(int taskLanguageId, Integer userId){
-    val allAlternatives = (userId == null
+public Mono<Either<String, Alternatives>> alternativesForTLGet(int taskLanguageId, String userName){
+    val allAlternatives = (nullOrEmp(userName)
                             ? snippetStore.alternativesForTLGet(taskLanguageId)
-                            : snippetStore.alternativesForUserGet(taskLanguageId, (int)userId)
+                            : snippetStore.alternativesForUserGet(taskLanguageId, userName)
                           ).collectList();
     val mbTask = snippetStore.taskForTLGet(taskLanguageId);
 

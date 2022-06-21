@@ -17,11 +17,11 @@ Flux<Proposal> proposalsGet();
 Flux<TaskGroup> taskGroupsForLangGet(int langId);
 Flux<TaskGroup> taskGroupsForLangsGet(int lang1, int lang2);
 Flux<Alternative> alternativesForTLGet(int taskLanguageId);
-Flux<Alternative> alternativesForUserGet(int taskLanguageId, int userId);
+Flux<Alternative> alternativesForUserGet(int taskLanguageId, String userName);
 
 Mono<Task> taskGet(int taskId);
 Mono<Task> taskForTLGet(int taskLanguageId);
-Mono<Integer> proposalCreate(ProposalCreate dto, int authorId);
+Mono<Integer> proposalCreate(ProposalCreate dto, String authorName);
 
 
 }

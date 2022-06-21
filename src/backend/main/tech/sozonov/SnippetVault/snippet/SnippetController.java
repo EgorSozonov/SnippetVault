@@ -76,9 +76,9 @@ public Mono<Either<String, Alternatives>> alternatives(@PathVariable("tlId") int
     return snippetService.alternativesForTLGet(tlId, null);
 }
 
-@GetMapping("alternativesForUser/{tlId}/{userId}")
-public Mono<Either<String, Alternatives>> alternativesForUser(@PathVariable("tlId") int tlId, @PathVariable("userId") int userId) {
-    return snippetService.alternativesForTLGet(tlId, userId);
+@GetMapping("alternativesForUser/{tlId}/{userName}")
+public Mono<Either<String, Alternatives>> alternativesForUser(@PathVariable("tlId") int tlId, @PathVariable("userName") String userName) {
+    return snippetService.alternativesForTLGet(tlId, userName);
 }
 
 @GetMapping("health")

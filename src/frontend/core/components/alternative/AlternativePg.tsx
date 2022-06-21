@@ -44,7 +44,7 @@ const AlternativePg: FunctionComponent = observer(({}: any) => {
             state.snip.languagesGet()
         }
         if (state.user.acc !== null) {
-            state.snip.alternativesGetUser(tlIdNum, state.user.acc.userId)
+            state.snip.alternativesGetUser(tlIdNum, state.user.acc.userName)
         } else {
             state.snip.alternativesGet(tlIdNum)
         }
