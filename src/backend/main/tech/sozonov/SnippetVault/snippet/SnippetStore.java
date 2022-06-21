@@ -261,14 +261,14 @@ public Mono<Integer> proposalCreate(ProposalCreate dto, String authorName) {
              .first()
              .map(r -> (int) r.get("id"))
              .flatMap(tlId -> {
-                return db.sql(proposalCreateQ)
+                val interm = db.sql(proposalCreateQ)
                          .bind("tlId", tlId)
                          .bind("content", dto.content)
-                         .bind("libraries", dto.libraries)
                          .bind("ts", LocalDateTime.now())
-                         .bind("authorName", authorName)
-                         .fetch()
-                         .rowsUpdated();
+                         .bind("authorName", authorName);
+                val next = dto.libraries != null ? interm.bind("libraries", dto.libraries) : interm.bindNull("libraries", String.class);
+                return next.fetch()
+                           .rowsUpdated();
              });
 }
 

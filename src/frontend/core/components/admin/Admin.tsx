@@ -10,7 +10,6 @@ import { Editability } from "../../commonComponents/editableList/utils/Editabili
 import AdminLogin from "./AdminLogin"
 import { LanguageCUDTO, TaskCUDTO, TaskGroupCUDTO,  } from "../../types/dto/AuxDTO"
 import AdminChangePw from "./AdminChangePw"
-import { useCookies } from "react-cookie"
 import React from "react"
 
 
@@ -54,7 +53,6 @@ const editabilityLanguage: Editability<LanguageCUDTO>[] = [
 
 const Admin: FunctionComponent = observer(({}: any) => {
     const state = useContext<MainState>(storeContext)
-    const [cookie, setCookie] = useCookies(["account"])
 
     const editabilityTask: Editability<TaskCUDTO>[] = [
         {
