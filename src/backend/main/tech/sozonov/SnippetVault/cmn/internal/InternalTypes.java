@@ -41,7 +41,7 @@ public static class UserNewIntern {
     public byte[] salt;
     public byte[] b;
     public String accessToken;
-    public LocalDate dtExpiration;
+    public LocalDateTime dtExpiration;
 }
 
 @Builder
@@ -49,14 +49,14 @@ public static class UserSignInIntern {
     public int userId;
     public byte[] b;
     public String accessToken;
-    public LocalDate dtExpiration;
+    public LocalDateTime dtExpiration;
 }
 
 @Builder
 public static class UserUpdatePwIntern {
     public String userName;
     public String accessToken;
-    public LocalDate dtExpiration;
+    public LocalDateTime dtExpiration;
     public byte[] verifier;
     public byte[] salt;
 }

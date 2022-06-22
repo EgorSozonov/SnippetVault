@@ -68,11 +68,5 @@ public static class SignInResponse {
     public String M2B64;
 }
 
-public static class ChangePw {
-    public Register register;
-    public String AB64;
-    public String M1B64;
-}
-
 
 }

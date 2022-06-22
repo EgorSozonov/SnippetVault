@@ -36,7 +36,7 @@ public Mono<Either<String, HandshakeResponse>> userRegister(@RequestBody Registe
 
 @PostMapping("user/handshakeAdmin")
 public Mono<Either<String, HandshakeResponse>> handshakeAdmin(@RequestBody Handshake dto, ServerHttpRequest req) {
-    return userService.handshake(dto, req.getCookies());
+    return userService.handshakeAdmin(dto, req.getCookies());
 }
 
 @PostMapping("user/handshake")

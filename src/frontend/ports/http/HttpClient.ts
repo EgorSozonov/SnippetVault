@@ -2,7 +2,7 @@ import { AxiosInstance } from "axios"
 import createClient from "./HttpConfig"
 import IClient from "../IClient"
 import ServerResponse from "../../core/types/ServerResponse"
-import { SignInDTO, ChangePwDTO, HandshakeDTO, RegisterDTO, HandshakeResponseDTO, SignInResponseDTO } from "../../core/types/dto/AuthDTO"
+import { SignInDTO, HandshakeDTO, RegisterDTO, HandshakeResponseDTO, SignInResponseDTO } from "../../core/types/dto/AuthDTO"
 import { CommentCUDTO, CommentDTO, ProfileDTO, StatsDTO, VoteDTO } from "../../core/types/dto/UserDTO"
 import { LanguageDTO, TaskGroupDTO,  TaskDTO, PostResponseDTO, LanguageCUDTO, TaskCUDTO, TaskGroupCUDTO } from "../../core/types/dto/AuxDTO"
 import { SnippetDTO, ProposalDTO, AlternativesDTO, ProposalCreateDTO, ProposalUpdateDTO, BareSnippetDTO } from "../../core/types/dto/SnippetDTO"
@@ -115,8 +115,12 @@ class HttpClient implements IClient {
         return this.getRequest("/secure/user/profile", userName)
     }
 
-    userChangePw(dto: ChangePwDTO, userName: string): Promise<ServerResponse<ServerEither<SignInResponseDTO>>> {
-        return this.postRequestWithResult("/secure/user/changePw", dto, userName)
+    userChangePw(dto: RegisterDTO): Promise<ServerResponse<ServerEither<SignInResponseDTO>>> {
+        return this.postRequestWithResult("/secure/user/changePw", dto, dto.userName)
+    }
+
+    adminChangePw(dto: RegisterDTO): Promise<ServerResponse<ServerEither<SignInResponseDTO>>> {
+        return this.postRequestWithResult("/admin/changePw", dto, dto.userName)
     }
 
     // Admin

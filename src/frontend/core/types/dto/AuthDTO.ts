@@ -25,9 +25,3 @@ export type SignInDTO = {
 export type SignInResponseDTO = {
     M2B64: string,
 }
-
-export type ChangePwDTO = {
-    register: RegisterDTO,
-    AB64: string,
-    M1B64: string,
-}

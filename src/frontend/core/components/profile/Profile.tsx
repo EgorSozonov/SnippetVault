@@ -3,12 +3,12 @@ import "./profile.css"
 import { useContext, useEffect, useRef, useState } from "react"
 import MainState from "../../mobX/AllState"
 import { storeContext } from "../../App"
-import { SignInDTO, ChangePwDTO, RegisterDTO } from "../../types/dto/AuthDTO"
 import { observer } from "mobx-react-lite"
 import Login from "../../commonComponents/login/Login"
 import { fmtDt } from "../../utils/DateUtils"
 import { ProfileDTO } from "../../types/dto/UserDTO"
 import { toast } from "react-toastify"
+import { validateChangePassword } from "../../utils/User"
 
 
 const Profile: React.FunctionComponent = observer(() => {
@@ -34,16 +34,13 @@ const Profile: React.FunctionComponent = observer(() => {
         const oldPw: string = oldPwRef.current.value
         const newPwRepeat: string = newPwRefRepeat.current.value
         const newPw: string = newPwRef.current.value
-        if (newPw.length < 8) {
-            toast.error("Password must be at least 8 symbols in length!" , { autoClose: 4000 })
-            return
-        }
-        if (newPw !== newPwRepeat) {
-            toast.error("Passwords don't match!" , { autoClose: 4000 })
-            return
-        }
+        const errMsg = validateChangePassword(newPw, newPwRepeat)
 
-        await state.user.changePw(newPw)
+        if (errMsg !== "") {
+            toast.error(errMsg , { autoClose: 4000 })
+            return
+        }
+        await state.user.changePw(oldPw, newPw, "user")
         setChangePwMode(false)
     }
 

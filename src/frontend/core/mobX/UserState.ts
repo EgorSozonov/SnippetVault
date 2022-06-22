@@ -1,7 +1,7 @@
 import { action, computed, IObservableArray, makeAutoObservable, observable, runInAction } from "mobx"
 import { toast } from "react-toastify"
 import IClient from "../../ports/IClient"
-import { ChangePwDTO, HandshakeResponseDTO, RegisterDTO } from "../types/dto/AuthDTO"
+import { HandshakeResponseDTO } from "../types/dto/AuthDTO"
 import { CommentDTO, ProfileDTO } from "../types/dto/UserDTO"
 import ServerResponse from "../types/ServerResponse"
 import { UserAccount } from "../types/UserAccount"
@@ -34,117 +34,85 @@ isAdmin = computed(() => {
 })
 
 userRegister = action(async (userName: string, password: string) => {
-    const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
-    try {
-        const saltHex = await clientSRP.generateRandomSalt()
-        const verifier = await clientSRP.generateVerifier(saltHex, userName, password)
-        const verifierHex = nonprefixedHexOfPositiveBI(verifier)
-
-        // base64
-        const handshakeResponse = processHandshake(await this.client.userRegister({
-                                            saltB64: base64OfHex(saltHex),
-                                            verifierB64: base64OfHex(verifierHex),
-                                            userName
-                                        }))
-
-        this.userFinishSignIn(handshakeResponse, userName, password, clientSRP, "user")
-    } catch (e) {
-        console.log(e)
+    const trySignIn = await this.registerWorker(userName, password)
+    if (trySignIn === "") {
+        runInAction(() => this.applySuccessfulSignIn("user", userName))
+    } else {
+        toast.error(trySignIn, { autoClose: 4000 })
     }
 })
 
 userSignIn = action(async (userName: string, password: string, mode: "user" | "admin") => {
-    const handshakeServerResponse = mode === "user" ? await this.client.userHandshake({ userName })
-                                                    : await this.client.userHandshakeAdmin({ userName })
-    const handshakeResponse = processHandshake(handshakeServerResponse)
-    const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
-    runInAction(() => this.userFinishSignIn(handshakeResponse, userName, password, clientSRP, mode))
+    const trySignIn = await this.signInWorker(userName, password, mode)
+    if (trySignIn === "") {
+        runInAction(() => this.applySuccessfulSignIn(mode, userName))
+    } else {
+        toast.error(trySignIn, { autoClose: 4000 })
+    }
 })
 
-userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResponseDTO>, userName: string, password: string, clientSRP: SecureRemotePassword, mode: "user" | "admin") => {
-    if (handshakeResponse.isOK === false) {
-        console.log("Handshake error " + handshakeResponse.errMsg)
-        return
-    }
-
-    const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
-    if (mbAM1.isOk === false) {
-        console.log(mbAM1.errMsg)
-        return
-    }
-
-    const {AB64, M1B64} = mbAM1.value
-
-    const M2Response = processSignIn(await this.client.userSignIn({AB64, M1B64, userName}))
-    if (M2Response.isOK === false) return
-
-    const resultSessionKey = await clientSRP.step2(M2Response.value.M2B64)
-    if (resultSessionKey.isOk === false) return
-
-    const sessionKey = base64OfBigInt(resultSessionKey.value)
-    console.log("Session Key = " + sessionKey)
-
-    runInAction(() => this.applySuccessfulSignIn(mode, userName))
-})
-
-
-async generateDataForRegister(userName: string, password: string): Promise<RegisterDTO> {
+private async registerWorker(userName: string, password: string): Promise<string> {
     const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
-
 
     const saltHex = await clientSRP.generateRandomSalt()
     const verifier = await clientSRP.generateVerifier(saltHex, userName, password)
     const verifierHex = nonprefixedHexOfPositiveBI(verifier)
 
-    const result: RegisterDTO = {userName, saltB64: saltHex, verifierB64: verifierHex, }
-    return result
+    const handshakeResponse = processHandshake(await this.client.userRegister({
+                                        saltB64: base64OfHex(saltHex),
+                                        verifierB64: base64OfHex(verifierHex),
+                                        userName
+                                    }))
+
+    return this.signInWorkerFinish(userName, password, handshakeResponse, clientSRP)
 }
 
-
-changePw = action(async (newPw: string, mode: "user" | "admin") => {
-    if (this.acc === null) return
-    // TODO Admin
-    const handshakeResponse = processHandshake(await this.client.userHandshake({ userName: this.acc?.userName }))
+private async signInWorker(userName: string, password: string, mode: "user" | "admin"): Promise<string> {
+    const handshakeServerResponse = mode === "user" ? await this.client.userHandshake({ userName })
+                                                : await this.client.userHandshakeAdmin({ userName })
+    const handshakeResponse = processHandshake(handshakeServerResponse)
     const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
+    return this.signInWorkerFinish(userName, password, handshakeResponse, clientSRP)
+}
 
-    if (handshakeResponse.isOK === false) {
-        toast.error("Handshake error " + handshakeResponse.errMsg, { autoClose: 4000 })
-        return
-    }
+private async signInWorkerFinish(userName: string, password: string, handshakeResponse: ServerResponse<HandshakeResponseDTO>, clientSRP: SecureRemotePassword): Promise<string> {
+    if (handshakeResponse.isOK === false) return "Handshake error " + handshakeResponse.errMsg
 
-    const mbAM1 = await clientSRP.step1(this.acc.userName, newPw, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
-    if (mbAM1.isOk === false) {
-        toast.error(mbAM1.errMsg, { autoClose: 4000 })
-        return
-    }
+    const mbAM1 = await clientSRP.step1(userName, password, handshakeResponse.value.saltB64, handshakeResponse.value.BB64)
+    if (mbAM1.isOk === false) return mbAM1.errMsg
 
     const {AB64, M1B64} = mbAM1.value
 
-    const saltHex = await clientSRP.generateRandomSalt()
-    const verifier = await clientSRP.generateVerifier(saltHex, this.acc.userName, newPw)
-    const verifierHex = nonprefixedHexOfPositiveBI(verifier)
-    const dto: ChangePwDTO = {AB64, M1B64, register: { userName: this.acc.userName, saltB64: base64OfHex(saltHex), verifierB64: base64OfHex(verifierHex), } }
-
-    const M2Response = processSignIn(await this.client.userChangePw(dto, this.acc.userName))
-
-    if (M2Response.isOK === false) {
-        toast.error("Sign in error", { autoClose: 4000 })
-        return
-    }
+    const M2Response = processSignIn(await this.client.userSignIn({AB64, M1B64, userName}))
+    if (M2Response.isOK === false) return "Sign-in error"
 
     const resultSessionKey = await clientSRP.step2(M2Response.value.M2B64)
-    if (resultSessionKey.isOk === false) {
-        toast.error("Session key does not match the server, server may be compromised", { autoClose: 4000 })
-        return
-    }
+    if (resultSessionKey.isOk === false) return "Session key doesn't match the server"
 
-    runInAction(() => this.applySuccessfulSignIn(mode, this.acc!.userName))
+    const sessionKey = base64OfBigInt(resultSessionKey.value)
+    console.log("Session Key = " + sessionKey)
+    return ""
+}
+
+changePw = action(async (oldPw: string, newPw: string, mode: "user" | "admin") => {
+    if (this.acc === null) return
+    const trySignIn = await this.signInWorker(this.acc.userName, oldPw, mode)
+    if (trySignIn === "") {
+        const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
+
+        const saltHex = await clientSRP.generateRandomSalt()
+        const verifier = await clientSRP.generateVerifier(saltHex, this.acc.userName, newPw)
+        const verifierHex = nonprefixedHexOfPositiveBI(verifier)
+        await this.client.userChangePw({ userName: this.acc.userName, saltB64: base64OfHex(saltHex), verifierB64: base64OfHex(verifierHex), })
+        runInAction(() => this.applySuccessfulSignIn(mode, this.acc!.userName))
+    } else {
+        toast.error(trySignIn, { autoClose: 4000 })
+    }
 })
 
 applySuccessfulSignIn = action((mode: "user" | "admin", userName: string) => {
     this.acc = { expiration: dateOfTS(new Date()), userName, status: mode }
     localStorage.setItem("account", JSON.stringify(this.acc))
-
 })
 
 private accountsEq(a1: UserAccount | null, a2: UserAccount): boolean {

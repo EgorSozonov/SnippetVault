@@ -6,9 +6,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.admin.AdminDTO.*;
 import tech.sozonov.SnippetVault.cmn.utils.Http;
+import tech.sozonov.SnippetVault.user.UserService;
+import tech.sozonov.SnippetVault.user.UserDTO.Register;
 
 import static tech.sozonov.SnippetVault.cmn.utils.Http.*;
 
@@ -18,10 +21,12 @@ public class AdminSecureController {
 
 
 private AdminService adminService;
+private UserService userService;
 
 @Autowired
-public AdminSecureController(AdminService _adminService) {
+public AdminSecureController(AdminService _adminService, UserService _userService) {
     adminService = _adminService;
+    userService = _userService;
 }
 
 @PostMapping("task/cu")
@@ -47,12 +52,10 @@ public Mono<ResponseEntity<Void>> proposalUpdate(@RequestBody ProposalUpdate dto
     return wrapCUResponse(adminService.proposalUpdate(dto));
 }
 
-
 @PostMapping("snippet/approve/{snId}")
 public Mono<ResponseEntity<Void>> snippetApprove(@PathVariable("snId") int snId) {
     return wrapCUResponse(adminService.snippetApprove(snId));
 }
-
 
 @PostMapping("snippet/decline/{snId}")
 public Mono<ResponseEntity<Void>> snippetDecline(@PathVariable("snId") int snId) {
@@ -62,6 +65,11 @@ public Mono<ResponseEntity<Void>> snippetDecline(@PathVariable("snId") int snId)
 @PostMapping("snippet/markPrimary/{tlId}/{snId}")
 public Mono<ResponseEntity<Void>> snippetMarkPrimary(@PathVariable("tlId") int tlId, @PathVariable("snId") int snId) {
     return wrapCUResponse(adminService.snippetMarkPrimary(tlId, snId));
+}
+
+@PostMapping("changePw")
+public Mono<ResponseEntity<Void>> changePw(@RequestBody Register dto, ServerWebExchange webEx) {
+    return wrapCUResponse(userService.updatePw(dto, webEx));
 }
 
 

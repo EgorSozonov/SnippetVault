@@ -1,8 +1,6 @@
 import { HandshakeResponseDTO, SignInResponseDTO } from "../types/dto/AuthDTO"
 import ServerEither from "../types/ServerEither"
 import ServerResponse from "../types/ServerResponse"
-import { UserAccount } from "../types/UserAccount"
-import { dateOfTS } from "./DateUtils"
 
 
 export function processHandshake(response: ServerResponse<ServerEither<HandshakeResponseDTO>>): ServerResponse<HandshakeResponseDTO> {
@@ -25,4 +23,21 @@ export function processSignIn(response: ServerResponse<ServerEither<SignInRespon
     }
 
     return {isOK: true, value: response.value.value}
+}
+
+
+export function validatePassword(newPw: string): string {
+    if (!newPw || newPw.length < 8) {
+            return "Password must be at least 8 symbols in length!"
+    }
+    return ""
+}
+
+export function validateChangePassword(newPw1: string, newPw2: string): string {
+    const errMsg = validatePassword(newPw1)
+    if (errMsg !== "") return errMsg
+    if (newPw1 !== newPw2) {
+        return "Passwords don't match!"
+    }
+    return ""
 }

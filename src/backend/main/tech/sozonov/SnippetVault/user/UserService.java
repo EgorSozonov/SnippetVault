@@ -9,6 +9,8 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.user.auth.AdminPasswordChecker;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserNewIntern;
@@ -65,7 +67,7 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
                         .salt(salt)
                         .b(bArr)
                         .accessToken("f")
-                        .dtExpiration(LocalDate.now())
+                        .dtExpiration(makeExpirationDate())
                         .build();
     return userStore.userRegister(newUser)
                     .map(rowsUpdated -> {
@@ -74,6 +76,10 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
         HandshakeResponse handshakeResponse = new HandshakeResponse(enc.encodeToString(salt), enc.encodeToString(B.toByteArray()));
         return Either.right(handshakeResponse);
     });
+}
+
+private LocalDateTime makeExpirationDate() {
+    return LocalDateTime.now().plusHours(24);
 }
 
 public Mono<Either<String, HandshakeResponse>> handshakeAdmin(Handshake dto, MultiValueMap<String, HttpCookie> cookies) {
@@ -151,7 +157,7 @@ public Mono<Either<String, SignInResponse>> signIn(SignIn dto, ServerWebExchange
                                     .userId(user.userId)
                                     .b(b.toByteArray())
                                     .accessToken(accessToken)
-                                    .dtExpiration(LocalDate.now())
+                                    .dtExpiration(makeExpirationDate())
                                     .build();
         return userStore.userSignIn(signIn)
                         .map(x -> {
@@ -187,24 +193,33 @@ public Mono<Boolean> userAuthorizeAdmin(String accessToken) {
         );
 }
 
-public Mono<Integer> userUpdatePw(ChangePw dto, ServerWebExchange webEx) {
+public Mono<Integer> updatePw(Register dto, ServerWebExchange webEx) {
     val enc = Base64.getEncoder();
     val dec = Base64.getDecoder();
-    byte[] verifier = dec.decode(dto.register.verifierB64);
-    byte[] salt = dec.decode(dto.register.saltB64);
+    byte[] verifier = dec.decode(dto.verifierB64);
+    byte[] salt = dec.decode(dto.saltB64);
     BigInteger randomSessionKey = srp.generatePrivateValue(Constants.N, secureRandom);
     String sessionKey = enc.encodeToString(randomSessionKey.toByteArray());
     UserUpdatePwIntern updatePw = UserUpdatePwIntern.builder()
-                        .userName(dto.register.userName)
+                        .userName(dto.userName)
                         .verifier(verifier)
                         .salt(salt)
                         .accessToken(sessionKey)
-                        .dtExpiration(LocalDate.now())
+                        .dtExpiration(makeExpirationDate())
                         .build();
-    return userStore.userUpdatePw(updatePw).map(rowsUpdated -> {
-        if (rowsUpdated < 1) return -1;
-        webEx.getResponse().addCookie(makeApiCookie(dto.register.userName, sessionKey));
-        return rowsUpdated;
+
+    return userStore.userAuthorizGet(dto.userName).flatMap(userData -> {
+        long timeToExpiration = ChronoUnit.MINUTES.between(LocalDateTime.now(), userData.expiration);
+
+        System.out.println("time to expiration " + timeToExpiration);
+
+        // We only allow changing the password no more than one minute after a fresh login
+        if (timeToExpiration < 1439) return Mono.just(-1);
+        return userStore.userUpdatePw(updatePw).map(rowsUpdated -> {
+            if (rowsUpdated < 1) return -1;
+            webEx.getResponse().addCookie(makeApiCookie(dto.userName, sessionKey));
+            return rowsUpdated;
+        });
     });
 }
 
