@@ -33,6 +33,7 @@ public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterCha
     if (!pathPattern.matches(requestPath)) return filterChain.filter(webExchange);
 
     val accessToken = webExchange.getRequest().getCookies().getFirst("accessToken");
+
     try {
         return userService.userAuthorizeAdmin(accessToken.getValue()).flatMap(authorized -> {
             if (authorized) return filterChain.filter(webExchange);

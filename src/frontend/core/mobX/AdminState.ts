@@ -40,9 +40,12 @@ export default class AdminState {
         await fetchFromClient(this.client.proposalGet(snId), this.editProposalSet)
     })
 
-    editProposalSet = action((newValue: BareSnippetDTO[]): void => {
-        if (!newValue || newValue.length !== 1) this.editProposal = null
-        this.editProposal = newValue[0]
+    editProposalSet = action((newValue: BareSnippetDTO): void => {
+        if (!newValue) {
+            this.editProposal = null
+        } else {
+            this.editProposal = newValue
+        }
     })
 
     proposalUpdate = action(async (newValue: ProposalUpdateDTO, userName: string) => {

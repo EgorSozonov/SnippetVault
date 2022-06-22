@@ -184,10 +184,13 @@ private static final String proposalUpdateQ = """
 """;
 public Mono<Integer> proposalUpdate(ProposalUpdate dto) {
     val newLibraries = dto.libraries != null && dto.libraries.length() > 0 ? dto.libraries : null;
-    return db.sql(proposalUpdateQ)
+    val interm = db.sql(proposalUpdateQ)
              .bind("snId", dto.existingId)
-             .bind("content", dto.content)
-             .bind("libraries", newLibraries)
+             .bind("content", dto.content);
+    val next = newLibraries == null
+                ? interm.bindNull("libraries", String.class)
+                : interm.bind("libraries", newLibraries);
+    return next
              .fetch()
              .rowsUpdated();
 }

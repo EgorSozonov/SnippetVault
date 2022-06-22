@@ -25,9 +25,7 @@ export type ProposalDTO = {
 }
 
 export type BareSnippetDTO = {
-    taskLanguageId: number,
     content: string,
-    score: number,
     libraries?: string,
 }
 

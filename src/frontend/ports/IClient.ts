@@ -16,7 +16,7 @@ type IClient = {
     alternativesForUserGet: (tlId: number, userName: string) => Promise<ServerResponse<ServerEither<AlternativesDTO>>>
 
     proposalCreate: (dto: ProposalCreateDTO, userName: string) => Promise<PostResponseDTO>
-    proposalGet: (snId: number) => Promise<ServerResponse<BareSnippetDTO[]>>
+    proposalGet: (snId: number) => Promise<ServerResponse<BareSnippetDTO>>
     proposalsGet: () => Promise<ServerResponse<ProposalDTO[]>>
     proposalUpdate: (dto: ProposalUpdateDTO, userName: string) => Promise<PostResponseDTO>
     proposalApprove: (snId: number, userName: string) => Promise<PostResponseDTO>

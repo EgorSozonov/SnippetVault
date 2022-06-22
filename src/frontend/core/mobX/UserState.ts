@@ -47,7 +47,7 @@ userRegister = action(async (userName: string, password: string) => {
                                             userName
                                         }))
 
-        this.userFinishSignIn(handshakeResponse, userName, password, clientSRP)
+        this.userFinishSignIn(handshakeResponse, userName, password, clientSRP, "user")
     } catch (e) {
         console.log(e)
     }
@@ -58,10 +58,10 @@ userSignIn = action(async (userName: string, password: string, mode: "user" | "a
                                                     : await this.client.userHandshakeAdmin({ userName })
     const handshakeResponse = processHandshake(handshakeServerResponse)
     const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
-    runInAction(() => this.userFinishSignIn(handshakeResponse, userName, password, clientSRP))
+    runInAction(() => this.userFinishSignIn(handshakeResponse, userName, password, clientSRP, mode))
 })
 
-userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResponseDTO>, userName: string, password: string, clientSRP: SecureRemotePassword) => {
+userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResponseDTO>, userName: string, password: string, clientSRP: SecureRemotePassword, mode: "user" | "admin") => {
     if (handshakeResponse.isOK === false) {
         console.log("Handshake error " + handshakeResponse.errMsg)
         return
@@ -75,7 +75,7 @@ userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResp
 
     const {AB64, M1B64} = mbAM1.value
 
-    const M2Response = processSignIn(await this.client.userSignIn({AB64, M1B64, userName}), "user")
+    const M2Response = processSignIn(await this.client.userSignIn({AB64, M1B64, userName}))
     if (M2Response.isOK === false) return
 
     const resultSessionKey = await clientSRP.step2(M2Response.value.M2B64)
@@ -84,7 +84,7 @@ userFinishSignIn = action(async (handshakeResponse: ServerResponse<HandshakeResp
     const sessionKey = base64OfBigInt(resultSessionKey.value)
     console.log("Session Key = " + sessionKey)
 
-    runInAction(() => this.applySuccessfulSignIn("user", userName))
+    runInAction(() => this.applySuccessfulSignIn(mode, userName))
 })
 
 
@@ -101,9 +101,10 @@ async generateDataForRegister(userName: string, password: string): Promise<Regis
 }
 
 
-changePw = action(async (newPw: string) => {
+changePw = action(async (newPw: string, mode: "user" | "admin") => {
     if (this.acc === null) return
-    const handshakeResponse = processHandshake(await this.client.userHandshake({ userName: this.acc?.userName }), "user")
+    // TODO Admin
+    const handshakeResponse = processHandshake(await this.client.userHandshake({ userName: this.acc?.userName }))
     const clientSRP = new SecureRemotePassword(rfc5054.N_base16, rfc5054.g_base10, rfc5054.k_base16)
 
     if (handshakeResponse.isOK === false) {
@@ -124,7 +125,7 @@ changePw = action(async (newPw: string) => {
     const verifierHex = nonprefixedHexOfPositiveBI(verifier)
     const dto: ChangePwDTO = {AB64, M1B64, register: { userName: this.acc.userName, saltB64: base64OfHex(saltHex), verifierB64: base64OfHex(verifierHex), } }
 
-    const M2Response = processSignIn(await this.client.userChangePw(dto, this.acc.userName), "user")
+    const M2Response = processSignIn(await this.client.userChangePw(dto, this.acc.userName))
 
     if (M2Response.isOK === false) {
         toast.error("Sign in error", { autoClose: 4000 })
@@ -137,11 +138,11 @@ changePw = action(async (newPw: string) => {
         return
     }
 
-    runInAction(() => this.applySuccessfulSignIn("user", this.acc!.userName))
+    runInAction(() => this.applySuccessfulSignIn(mode, this.acc!.userName))
 })
 
-applySuccessfulSignIn = action((status: "user" | "admin", userName: string) => {
-    this.acc = { expiration: dateOfTS(new Date()), userName, status }
+applySuccessfulSignIn = action((mode: "user" | "admin", userName: string) => {
+    this.acc = { expiration: dateOfTS(new Date()), userName, status: mode }
     localStorage.setItem("account", JSON.stringify(this.acc))
 
 })

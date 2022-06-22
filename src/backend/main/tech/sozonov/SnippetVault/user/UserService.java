@@ -153,21 +153,24 @@ public Mono<Either<String, SignInResponse>> signIn(SignIn dto, ServerWebExchange
                                     .accessToken(accessToken)
                                     .dtExpiration(LocalDate.now())
                                     .build();
-        boolean isAdmin = AdminPasswordChecker.checkAdminName(dto.userName);
         return userStore.userSignIn(signIn)
                         .map(x -> {
                             if (x < 1) return Either.left("DB update error");
-                            val newCookie = ResponseCookie.from("accessToken", accessToken)
-                                                          .httpOnly(true)
-                                                          .sameSite("Strict")
-                                                          .path(isAdmin ? "sv/api/admin" : "/sv/api/secure")
-                                                          .secure(true)
-                                                          .build();
-                            webEx.getResponse().addCookie(newCookie);
-
+                            webEx.getResponse().addCookie(makeApiCookie(dto.userName, accessToken));
                             return Either.right(new SignInResponse(M2B64));
                         });
     });
+}
+
+private ResponseCookie makeApiCookie(String userName, String accessToken) {
+    boolean isAdmin = AdminPasswordChecker.checkAdminName(userName);
+    String cookiePath = isAdmin ? "/sv/api/admin" : "/sv/api/secure";
+    return ResponseCookie.from("accessToken", accessToken)
+                         .httpOnly(true)
+                         .sameSite("Strict")
+                         .path(cookiePath)
+                         .secure(true)
+                         .build();
 }
 
 public Mono<Boolean> userAuthorize(String userName, String accessToken) {
@@ -198,16 +201,9 @@ public Mono<Integer> userUpdatePw(ChangePw dto, ServerWebExchange webEx) {
                         .accessToken(sessionKey)
                         .dtExpiration(LocalDate.now())
                         .build();
-    boolean isAdmin = AdminPasswordChecker.checkAdminName(dto.register.userName);
     return userStore.userUpdatePw(updatePw).map(rowsUpdated -> {
         if (rowsUpdated < 1) return -1;
-        ResponseCookie newCookie = ResponseCookie.from("accessToken", sessionKey)
-                                                          .httpOnly(true)
-                                                          .sameSite("Strict")
-                                                          .path(isAdmin ? "sv/api/admin" : "/sv/api/secure")
-                                                          .secure(true)
-                                                          .build();
-        webEx.getResponse().addCookie(newCookie);
+        webEx.getResponse().addCookie(makeApiCookie(dto.register.userName, sessionKey));
         return rowsUpdated;
     });
 }

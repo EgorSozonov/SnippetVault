@@ -18,6 +18,7 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
     const state = useContext<MainState>(storeContext)
     const proposal = state.admin.editProposal
 
+
     useEffect(() => {
         if (dialogState.isOpen === false) return
 
@@ -26,6 +27,7 @@ const EditProposalDialog: FunctionComponent<Props> = observer(({ dialogState, cl
 
     const inputRef = useRef<HTMLTextAreaElement>(null)
     const inputLibRef = useRef<HTMLTextAreaElement>(null)
+
     if (proposal !== null && inputRef !== null && inputRef.current !== null) {
         inputRef.current.value = proposal.content
         if (proposal.libraries && inputLibRef !== null && inputLibRef.current !== null) {

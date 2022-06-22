@@ -47,8 +47,8 @@ class HttpClient implements IClient {
         return this.postRequest<ProposalCreateDTO>(`/secure/proposal/create`, dto, userName)
     }
 
-    proposalGet(snId: number): Promise<ServerResponse<BareSnippetDTO[]>> {
-        return this.getRequestNoCreds<BareSnippetDTO[]>(`/snippet/${snId}`)
+    proposalGet(snId: number): Promise<ServerResponse<BareSnippetDTO>> {
+        return this.getRequestNoCreds<BareSnippetDTO>(`/snippet/${snId}`)
     }
 
     proposalUpdate(dto: ProposalUpdateDTO, userName: string): Promise<PostResponseDTO> {
