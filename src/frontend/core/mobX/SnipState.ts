@@ -123,15 +123,12 @@ openSelectSet = action((newValue: string): void => {
 })
 
 alternativesSet = action((newValue: AlternativesDTO): void => {
-
-    console.log("alternativesSet")
     if (!newValue || newValue === null) {
         this.alternatives = null
         return
     }
     const alternativesNew = {...newValue}
 
-    console.log(alternativesNew)
     const sorted = this.alternativesSort === "byDate"
         ? alternativesNew.rows.sort((x, y) => x.tsUpload < y.tsUpload ? 1 : -1)
         : alternativesNew.rows.sort((x, y) => y.score - x.score)

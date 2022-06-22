@@ -146,8 +146,6 @@ public Mono<Either<String, SignInResponse>> signIn(SignIn dto, ServerWebExchange
         BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
 
         BigInteger serverM1 = SecureRemotePassword.computeM1(hasher, ADecoded, B, S);
-        System.out.println("client M1 = " + M1Decoded.toString());
-        System.out.println("server M1 = " + serverM1.toString());
         if (!serverM1.equals(M1Decoded)) {
             return Mono.just(Either.left("Authentication error"));
         }
@@ -157,7 +155,6 @@ public Mono<Either<String, SignInResponse>> signIn(SignIn dto, ServerWebExchange
         hasher.update(inpM2.getBytes());
         BigInteger M2 = new BigInteger(1, hasher.digest());
 
-        System.out.println("server M2 = " + M2.toString());
         String M2B64 = Base64.getEncoder().encodeToString(M2.toByteArray());
         UserSignInIntern signIn = UserSignInIntern
                                     .builder()
@@ -174,7 +171,7 @@ public Mono<Either<String, SignInResponse>> signIn(SignIn dto, ServerWebExchange
                         });
     });
 }
-// asdfasdf
+
 private ResponseCookie makeApiCookie(String userName, String accessToken) {
     boolean isAdmin = AdminPasswordChecker.checkAdminName(userName);
     String cookiePath = isAdmin ? "/sv/api/admin" : "/sv/api/secure";

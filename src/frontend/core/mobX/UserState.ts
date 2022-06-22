@@ -82,18 +82,11 @@ private async signInWorkerFinish(userName: string, password: string, handshakeRe
     if (mbAM1.isOk === false) return mbAM1.errMsg
 
     const {AB64, M1B64} = mbAM1.value
-
     const M2Response = processSignIn(await this.client.userSignIn({AB64, M1B64, userName}))
-    console.log("M2Response asdfasdf")
-    console.log(M2Response)
     if (M2Response.isOK === false) return "Sign-in error"
 
     const resultSessionKey = await clientSRP.step2(M2Response.value.M2B64)
-    if (resultSessionKey.isOk === false) return "Session key doesn't match the server"
-
-    const sessionKey = base64OfBigInt(resultSessionKey.value)
-    console.log("Session Key = " + sessionKey)
-    return ""
+    return (resultSessionKey.isOk === true) ? "" : "Session key doesn't match the server"
 }
 
 changePw = action(async (oldPw: string, newPw: string, mode: "user" | "admin") => {

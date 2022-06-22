@@ -18,10 +18,7 @@ export function processSignIn(response: ServerResponse<ServerEither<SignInRespon
     if (response.isOK === false) {
         return response
     }
-    if (response.value.isRight === false) {
-        console.log("isRight false")
-        return {isOK: false, errMsg: response.value.errMsg}
-    }
+    if (response.value.isRight === false) return {isOK: false, errMsg: response.value.errMsg}
 
     return {isOK: true, value: response.value.value}
 }

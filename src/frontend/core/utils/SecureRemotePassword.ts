@@ -93,9 +93,6 @@ public async step1(identity: string, password: string, saltB64: string, serverBB
 
     this.verifier = modPow(this.g, x, this.N)
 
-    const vu = modPow(this.verifier, u, this.N);
-    const Avu = BI.multiply(vu, ANum);
-
     this.S = this.computeSessionKey(x, u, a)
 
     const sStr = nonprefixedHexOfPositiveBI(this.S)
@@ -119,8 +116,6 @@ public async step2(serverM2B64: string): Promise<ValResult<BI>> {
     const M2Buff = await this.hash(this.AHex + this.M1Hex + SHex)
     const clientM2Hex = hexOfBuff(M2Buff)
     const serverM2Hex = hexOfBase64(serverM2B64)
-    console.log("client M2 " + BI.BigInt(prefixedHexOfBuff(M2Buff)).toString())
-    // asdfasdf
     if (clientM2Hex !== serverM2Hex) return {isOk: false, errMsg: "Bad server credentials (M2)"}
 
     return {isOk: true, value: this.S}

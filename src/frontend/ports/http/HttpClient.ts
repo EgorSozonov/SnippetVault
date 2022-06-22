@@ -182,7 +182,6 @@ class HttpClient implements IClient {
                 return {status: "Unknown error"}
             }
         } catch(e: any) {
-            console.log("en exc he")
             return {status: e}
         }
     }
