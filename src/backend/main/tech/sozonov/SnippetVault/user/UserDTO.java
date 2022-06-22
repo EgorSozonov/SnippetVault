@@ -1,6 +1,5 @@
 package tech.sozonov.SnippetVault.user;
-import java.time.LocalDateTime;
-
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import tech.sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
@@ -10,13 +9,13 @@ public class UserDTO {
 
 public static class User {
     public String name;
-    public LocalDateTime tsJoined;
+    public Instant tsJoined;
 }
 
 public static class Comment {
     public int id;
     public String author;
-    public LocalDateTime tsUpload;
+    public Instant tsUpload;
     public String content;
 }
 
@@ -29,7 +28,7 @@ public static class Profile {
     public int proposalCount;
     public int approvedCount;
     public int primaryCount;
-    public LocalDateTime tsJoined;
+    public Instant tsJoined;
 }
 
 public static class Vote {

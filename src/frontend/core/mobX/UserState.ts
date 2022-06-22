@@ -84,6 +84,8 @@ private async signInWorkerFinish(userName: string, password: string, handshakeRe
     const {AB64, M1B64} = mbAM1.value
 
     const M2Response = processSignIn(await this.client.userSignIn({AB64, M1B64, userName}))
+    console.log("M2Response asdfasdf")
+    console.log(M2Response)
     if (M2Response.isOK === false) return "Sign-in error"
 
     const resultSessionKey = await clientSRP.step2(M2Response.value.M2B64)
@@ -103,7 +105,10 @@ changePw = action(async (oldPw: string, newPw: string, mode: "user" | "admin") =
         const saltHex = await clientSRP.generateRandomSalt()
         const verifier = await clientSRP.generateVerifier(saltHex, this.acc.userName, newPw)
         const verifierHex = nonprefixedHexOfPositiveBI(verifier)
-        await this.client.userChangePw({ userName: this.acc.userName, saltB64: base64OfHex(saltHex), verifierB64: base64OfHex(verifierHex), })
+        await (mode === "user"
+                ? this.client.userChangePw({ userName: this.acc.userName, saltB64: base64OfHex(saltHex), verifierB64: base64OfHex(verifierHex), })
+                : this.client.adminChangePw({ userName: this.acc.userName, saltB64: base64OfHex(saltHex), verifierB64: base64OfHex(verifierHex), })
+            )
         runInAction(() => this.applySuccessfulSignIn(mode, this.acc!.userName))
     } else {
         toast.error(trySignIn, { autoClose: 4000 })

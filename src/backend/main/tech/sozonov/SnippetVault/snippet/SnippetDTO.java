@@ -1,10 +1,7 @@
 package tech.sozonov.SnippetVault.snippet;
-
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
-
 public class SnippetDTO {
 
 
@@ -34,7 +31,7 @@ public static final class Proposal {
     public String author;
     public String taskName;
     public String languageName;
-    public LocalDateTime tsUpload;
+    public Instant tsUpload;
     public String libraries;
 }
 
@@ -75,7 +72,7 @@ public static final class Alternative {
     public int id;
     public String content;
     public int score;
-    public LocalDateTime tsUpload;
+    public Instant tsUpload;
     public int commentCount;
     public boolean voteFlag;
     public String libraries;

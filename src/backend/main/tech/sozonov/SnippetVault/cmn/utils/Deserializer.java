@@ -1,7 +1,7 @@
 package tech.sozonov.SnippetVault.cmn.utils;
 import java.lang.invoke.MethodHandles;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +64,7 @@ public T unpackRow(Row dbRow) {
                 val newVal = dbRow.get(j, LocalDate.class);
                 if (newVal != null) setters.get(tgt.indexSetter).set(result, newVal);
             } else if (tgt.propType == ValueType.timestampe) {
-                val newVal = dbRow.get(j, LocalDateTime.class);
+                val newVal = dbRow.get(j, Instant.class);
                 if (newVal != null) setters.get(tgt.indexSetter).set(result, newVal);
             } else if (tgt.propType == ValueType.binar) {
                 val newVal = dbRow.get(j, byte[].class);
@@ -253,7 +253,7 @@ private void determineTypeProperties(List<String> queryColumns) {
                 setters.add(lookup.findVarHandle(qlass, tp.fst, LocalDate.class));
                 columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.datee);
             } else if (tp.snd == ValueType.timestampe) {
-                setters.add(lookup.findVarHandle(qlass, tp.fst, LocalDateTime.class));
+                setters.add(lookup.findVarHandle(qlass, tp.fst, Instant.class));
                 columnTargets[i] = new PropTarget(setters.size() - 1, ValueType.timestampe);
             } else if (tp.snd == ValueType.binar) {
                 setters.add(lookup.findVarHandle(qlass, tp.fst, byte[].class));
@@ -298,7 +298,7 @@ private Map<String, Pair<String, ValueType>> readDTOFields() {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.boole));
         } else if (theType == LocalDate.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.datee));
-        } else if (theType == LocalDateTime.class) {
+        } else if (theType == Instant.class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.timestampe));
         } else if (theType == byte[].class) {
             result.put(normalizedName, new Pair<>(field.getName(), ValueType.binar));

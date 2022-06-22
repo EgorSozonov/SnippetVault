@@ -33,6 +33,7 @@ const AdminLogin: FunctionComponent<Props> = observer(({closeChangeAdminPwHandle
             toast.error(errMsg , { autoClose: 4000 })
             return
         }
+
         await state.user.changePw(oldPw, newPw, "admin")
         closeChangeAdminPwHandler()
     }

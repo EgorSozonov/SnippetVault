@@ -1,6 +1,5 @@
 package tech.sozonov.SnippetVault.cmn.internal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.Builder;
 
 public class InternalTypes {
@@ -11,7 +10,7 @@ public static class AuthenticateIntern {
     public byte[] salt;
     public byte[] verifier;
     public byte[] b;
-    public LocalDate expiration;
+    public Instant expiration;
     public String accessToken;
 }
 
@@ -23,7 +22,7 @@ public static class HandshakeIntern {
 
 public static class AuthorizeIntern {
     public String accessToken;
-    public LocalDateTime expiration;
+    public Instant expiration;
 }
 
 public static class SnippetIntern {
@@ -41,7 +40,7 @@ public static class UserNewIntern {
     public byte[] salt;
     public byte[] b;
     public String accessToken;
-    public LocalDateTime dtExpiration;
+    public Instant dtExpiration;
 }
 
 @Builder
@@ -49,14 +48,14 @@ public static class UserSignInIntern {
     public int userId;
     public byte[] b;
     public String accessToken;
-    public LocalDateTime dtExpiration;
+    public Instant dtExpiration;
 }
 
 @Builder
 public static class UserUpdatePwIntern {
     public String userName;
     public String accessToken;
-    public LocalDateTime dtExpiration;
+    public Instant dtExpiration;
     public byte[] verifier;
     public byte[] salt;
 }

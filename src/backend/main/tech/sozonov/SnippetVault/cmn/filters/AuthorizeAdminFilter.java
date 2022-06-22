@@ -32,10 +32,11 @@ public Mono<Void> filter(ServerWebExchange webExchange, WebFilterChain filterCha
 
     if (!pathPattern.matches(requestPath)) return filterChain.filter(webExchange);
 
-    val accessToken = webExchange.getRequest().getCookies().getFirst("accessToken");
+    val cookies = webExchange.getRequest().getCookies();
 
     try {
-        return userService.userAuthorizeAdmin(accessToken.getValue()).flatMap(authorized -> {
+        val accessToken = cookies.getFirst("accessToken").getValue();
+        return userService.userAuthorizeAdmin(accessToken).flatMap(authorized -> {
             if (authorized) return filterChain.filter(webExchange);
             val response = webExchange.getResponse();
             response.setStatusCode(HttpStatus.UNAUTHORIZED);

@@ -119,7 +119,8 @@ public async step2(serverM2B64: string): Promise<ValResult<BI>> {
     const M2Buff = await this.hash(this.AHex + this.M1Hex + SHex)
     const clientM2Hex = hexOfBuff(M2Buff)
     const serverM2Hex = hexOfBase64(serverM2B64)
-
+    console.log("client M2 " + BI.BigInt(prefixedHexOfBuff(M2Buff)).toString())
+    // asdfasdf
     if (clientM2Hex !== serverM2Hex) return {isOk: false, errMsg: "Bad server credentials (M2)"}
 
     return {isOk: true, value: this.S}
@@ -140,20 +141,9 @@ private async randomA(): Promise<BI> {
     return r
 }
 
-// final int minBits = Math.max(256, N.bitLength());
-
-// BigInteger r = BigInteger.ZERO;
-
-// while( BigInteger.ZERO.equals(r)){
-// 	r = (new BigInteger(minBits, random)).mod(N);
-// }
-
-// return r;
-
-
 // Server columns: salt (64 bytes), verifier (256 bytes), b (256 bytes)
 /**
- * Compute the scrambler value. If it's zero, process is aborted
+ * Compute the scrambler value "u". If it's zero, process is aborted
  */
 private async computeU(AHex: string, BHex: string): Promise<BI | undefined> {
     const output = prefixedHexOfBuff(await this.hash(AHex + BHex))

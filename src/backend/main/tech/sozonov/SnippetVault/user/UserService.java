@@ -7,10 +7,10 @@ import java.util.Base64;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.user.auth.AdminPasswordChecker;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserNewIntern;
@@ -78,8 +78,12 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
     });
 }
 
-private LocalDateTime makeExpirationDate() {
-    return LocalDateTime.now().plusHours(24);
+private Instant makeExpirationDate() {
+    return LocalDateTime.now().plusHours(24).atZone(ZoneId.systemDefault()).toInstant();
+}
+
+private Instant getNow() {
+    return LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
 }
 
 public Mono<Either<String, HandshakeResponse>> handshakeAdmin(Handshake dto, MultiValueMap<String, HttpCookie> cookies) {
@@ -128,7 +132,7 @@ public Mono<Either<String, SignInResponse>> signIn(SignIn dto, ServerWebExchange
         BigInteger ADecoded = new BigInteger(1, dec.decode(dto.AB64));
         BigInteger M1Decoded = new BigInteger(1, dec.decode(dto.M1B64));
 
-        BigInteger b = new BigInteger(user.b);
+        BigInteger b = new BigInteger(1, user.b);
         BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifier, b);
 
         String AConcatB = SecureRemotePassword.prependZeroToHex(ADecoded.toString(16)) + SecureRemotePassword.prependZeroToHex(B.toString(16));
@@ -142,7 +146,8 @@ public Mono<Either<String, SignInResponse>> signIn(SignIn dto, ServerWebExchange
         BigInteger S = srp.computeSessionKey(Constants.N, verifier, u, ADecoded, b);
 
         BigInteger serverM1 = SecureRemotePassword.computeM1(hasher, ADecoded, B, S);
-
+        System.out.println("client M1 = " + M1Decoded.toString());
+        System.out.println("server M1 = " + serverM1.toString());
         if (!serverM1.equals(M1Decoded)) {
             return Mono.just(Either.left("Authentication error"));
         }
@@ -150,7 +155,9 @@ public Mono<Either<String, SignInResponse>> signIn(SignIn dto, ServerWebExchange
 
         String inpM2 = ADecoded.toString(16) + serverM1.toString(16) + S.toString(16);
         hasher.update(inpM2.getBytes());
-        BigInteger M2 = new BigInteger(hasher.digest());
+        BigInteger M2 = new BigInteger(1, hasher.digest());
+
+        System.out.println("server M2 = " + M2.toString());
         String M2B64 = Base64.getEncoder().encodeToString(M2.toByteArray());
         UserSignInIntern signIn = UserSignInIntern
                                     .builder()
@@ -167,7 +174,7 @@ public Mono<Either<String, SignInResponse>> signIn(SignIn dto, ServerWebExchange
                         });
     });
 }
-
+// asdfasdf
 private ResponseCookie makeApiCookie(String userName, String accessToken) {
     boolean isAdmin = AdminPasswordChecker.checkAdminName(userName);
     String cookiePath = isAdmin ? "/sv/api/admin" : "/sv/api/secure";
@@ -182,13 +189,13 @@ private ResponseCookie makeApiCookie(String userName, String accessToken) {
 public Mono<Boolean> userAuthorize(String userName, String accessToken) {
     return userStore.userAuthorizGet(userName)
                     .map(x -> x != null
-                              && x.expiration.toLocalDate().isEqual(LocalDate.now())
+                              && x.expiration.isAfter(getNow())
                               && x.accessToken.equals(accessToken));
 }
 
 public Mono<Boolean> userAuthorizeAdmin(String accessToken) {
     return userStore.userAdminAuthoriz().map(userAuthor -> ((userAuthor != null)
-                ? userAuthor.expiration.toLocalDate().isEqual(LocalDate.now()) && userAuthor.accessToken.equals(accessToken)
+                ? userAuthor.expiration.isAfter(getNow()) && userAuthor.accessToken.equals(accessToken)
                 : false)
         );
 }
@@ -209,9 +216,7 @@ public Mono<Integer> updatePw(Register dto, ServerWebExchange webEx) {
                         .build();
 
     return userStore.userAuthorizGet(dto.userName).flatMap(userData -> {
-        long timeToExpiration = ChronoUnit.MINUTES.between(LocalDateTime.now(), userData.expiration);
-
-        System.out.println("time to expiration " + timeToExpiration);
+        long timeToExpiration = ChronoUnit.MINUTES.between(getNow(), userData.expiration);
 
         // We only allow changing the password no more than one minute after a fresh login
         if (timeToExpiration < 1439) return Mono.just(-1);
