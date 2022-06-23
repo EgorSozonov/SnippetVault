@@ -175,7 +175,6 @@ private static final String alternativesForTLGetQ = """
 """;
 public Flux<Alternative> alternativesForTLGet(int taskLanguageId) {
     val deserializer = new Deserializer<>(Alternative.class, alternativesForTLGetQ);
-    System.out.println(deserializer.isOK);
     return db.sql(alternativesForTLGetQ)
              .bind("$1", taskLanguageId)
              .map(deserializer::unpackRow)
@@ -222,7 +221,6 @@ private static final String taskGetQ = """
 """;
 public Mono<Task> taskGet(int taskId) {
     val deserializer = new Deserializer<>(Task.class, taskGetQ);
-    System.out.println(deserializer.isOK);
     return db.sql(taskGetQ)
              .bind("$1", taskId)
              .map(deserializer::unpackRow)
