@@ -201,11 +201,18 @@ export function nonprefixedHexOfPositiveBI(inp: BI): string {
     return (str.length % 2 === 0) ? str : (str.startsWith("0") ? str.substring(1) : ("0" + str))
 }
 
+/**
+ * "a" -> "0a"
+ * "ab" -> "ab"
+ */
+function padZeroPrefix(inp: string): string {
+    return inp.length === 1 ? "0" + inp : inp
+}
 
 export function hexOfArray(inp: Uint8Array): string {
     let result = ""
     for (let i = 0; i < inp.length; ++i) {
-        result = result + inp[i].toString(16).padStart(2, "0")
+        result = result + padZeroPrefix(inp[i].toString(16))
     }
     return result
 }
