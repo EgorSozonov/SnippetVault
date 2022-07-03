@@ -1,0 +1,3 @@
+{
+    "DBConnectionString": "host=localhost;port=5432;database=mydb;username=sv_user;password=shY7x8e*w0e9D2L;pooling=true"
+}

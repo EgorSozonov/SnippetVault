@@ -18,7 +18,7 @@ const webpackFrontend = (args: any): Configuration => {
 			"snippetVault": path.resolve("./src/frontend/core/App.tsx"),
 		},
 		output: {
-			path: path.resolve("./target/frontend/sv"),
+			path: path.resolve("./.bin/frontend/sv"),
             publicPath: ".",
 		},
 		target: "web",
@@ -115,7 +115,7 @@ const webpackFrontend = (args: any): Configuration => {
 					// static files to the site root folder (index and robots)
 					{
 						from: "**/*",
-						to: path.resolve("./target/"),
+						to: path.resolve("./.bin/"),
 						context: "./src/frontend/resources/",
                         noErrorOnMissing: true
 					},

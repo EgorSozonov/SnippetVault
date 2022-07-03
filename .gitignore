@@ -6,6 +6,7 @@ bin/*
 obj/*
 src/frontend/node_modules/*
 node_modules/*
+.nodeModules/*
 **/.vscode/*
 src/**/.DS_Store
 src/frontend/dist/*
