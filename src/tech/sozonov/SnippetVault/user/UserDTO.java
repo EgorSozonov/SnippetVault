@@ -1,8 +1,8 @@
-package src.tech.sozonov.SnippetVault.user;
+package tech.sozonov.SnippetVault.user;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
+import tech.sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
 
 public class UserDTO {
 

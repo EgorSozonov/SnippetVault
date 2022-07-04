@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault.cmn.internal;
+package tech.sozonov.SnippetVault.cmn.internal;
 import java.time.Instant;
 import lombok.Builder;
 

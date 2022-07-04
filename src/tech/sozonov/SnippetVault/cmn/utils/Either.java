@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault.cmn.utils;
+package tech.sozonov.SnippetVault.cmn.utils;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;

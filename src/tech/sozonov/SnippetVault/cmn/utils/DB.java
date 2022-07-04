@@ -1,7 +1,7 @@
-package src.tech.sozonov.SnippetVault.cmn.utils;
+package tech.sozonov.SnippetVault.cmn.utils;
 import lombok.val;
 import reactor.core.publisher.Mono;
-import sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
+import tech.sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
 
 import java.util.function.BiFunction;
 import org.springframework.r2dbc.core.DatabaseClient;

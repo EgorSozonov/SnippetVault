@@ -1,6 +1,5 @@
-package src.tech.sozonov.SnippetVault.admin;
-import static sozonov.SnippetVault.cmn.utils.Http.*;
-
+package tech.sozonov.SnippetVault.admin;
+import static tech.sozonov.SnippetVault.cmn.utils.Http.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import sozonov.SnippetVault.cmn.utils.Http;
-import src.tech.sozonov.SnippetVault.admin.AdminDTO.*;
-import src.tech.sozonov.SnippetVault.user.UserService;
-import src.tech.sozonov.SnippetVault.user.UserDTO.Register;
+import tech.sozonov.SnippetVault.cmn.utils.Http;
+import tech.sozonov.SnippetVault.admin.AdminDTO.*;
+import tech.sozonov.SnippetVault.user.UserService;
+import tech.sozonov.SnippetVault.user.UserDTO.Register;
 
 @RestController
 @RequestMapping("/api/admin")

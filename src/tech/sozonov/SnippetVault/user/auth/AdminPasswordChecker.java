@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault.user.auth;
+package tech.sozonov.SnippetVault.user.auth;
 
 public final class AdminPasswordChecker {
 

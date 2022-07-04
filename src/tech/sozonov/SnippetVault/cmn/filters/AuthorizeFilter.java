@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault.cmn.filters;
+package tech.sozonov.SnippetVault.cmn.filters;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -10,7 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import src.tech.sozonov.SnippetVault.user.UserService;
+import tech.sozonov.SnippetVault.user.UserService;
 
 @Component
 public class AuthorizeFilter implements WebFilter {

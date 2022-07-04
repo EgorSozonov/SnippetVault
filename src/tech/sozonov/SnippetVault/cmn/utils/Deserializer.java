@@ -1,5 +1,5 @@
-package src.tech.sozonov.SnippetVault.cmn.utils;
-import static sozonov.SnippetVault.cmn.utils.Strings.*;
+package tech.sozonov.SnippetVault.cmn.utils;
+import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
 
 import java.lang.invoke.MethodHandles;
 import java.time.Instant;
@@ -11,7 +11,7 @@ import java.util.Map;
 import io.r2dbc.spi.Row;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import sozonov.SnippetVault.cmn.utils.Types.Pair;
+import tech.sozonov.SnippetVault.cmn.utils.Types.Pair;
 
 import java.lang.invoke.VarHandle;
 import java.text.CharacterIterator;

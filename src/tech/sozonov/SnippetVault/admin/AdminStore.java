@@ -1,18 +1,16 @@
-package src.tech.sozonov.SnippetVault.admin;
+package tech.sozonov.SnippetVault.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.DatabaseClient.GenericExecuteSpec;
 import org.springframework.stereotype.Component;
 import lombok.val;
-
-import static sozonov.SnippetVault.cmn.utils.DB.*;
-
+import static tech.sozonov.SnippetVault.cmn.utils.DB.*;
 import java.time.LocalDateTime;
 import java.util.function.BiFunction;
 import reactor.core.publisher.Mono;
-import sozonov.SnippetVault.cmn.internal.InternalTypes.TaskCUIntern;
-import sozonov.SnippetVault.cmn.utils.Deserializer;
-import src.tech.sozonov.SnippetVault.admin.AdminDTO.*;
+import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.TaskCUIntern;
+import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
+import tech.sozonov.SnippetVault.admin.AdminDTO.*;
 import reactor.core.publisher.Flux;
 
 @Component

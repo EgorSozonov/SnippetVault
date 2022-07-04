@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault.cmn.config;
+package tech.sozonov.SnippetVault.cmn.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

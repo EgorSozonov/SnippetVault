@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault.cmn.utils;
+package tech.sozonov.SnippetVault.cmn.utils;
 import java.io.IOException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;

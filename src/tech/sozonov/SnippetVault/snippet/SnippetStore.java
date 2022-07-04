@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault.snippet;
+package tech.sozonov.SnippetVault.snippet;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.r2dbc.core.DatabaseClient;
@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
-import sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
-import sozonov.SnippetVault.cmn.utils.Deserializer;
-import src.tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
+import tech.sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
+import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
+import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
+import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 
 @Service
 public class SnippetStore implements ISnippetStore {

@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault;
+package tech.sozonov.SnippetVault;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 

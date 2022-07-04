@@ -1,9 +1,7 @@
 package tech.sozonov.SnippetVault;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 

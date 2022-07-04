@@ -1,5 +1,5 @@
-package src.tech.sozonov.SnippetVault.user;
-import static sozonov.SnippetVault.cmn.utils.DB.*;
+package tech.sozonov.SnippetVault.user;
+import static tech.sozonov.SnippetVault.cmn.utils.DB.*;
 
 import java.time.LocalDateTime;
 import java.util.function.BiFunction;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import sozonov.SnippetVault.cmn.internal.InternalTypes.*;
-import sozonov.SnippetVault.cmn.utils.Deserializer;
-import src.tech.sozonov.SnippetVault.user.UserDTO.*;
-import src.tech.sozonov.SnippetVault.user.auth.AdminPasswordChecker;
+import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.*;
+import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
+import tech.sozonov.SnippetVault.user.UserDTO.*;
+import tech.sozonov.SnippetVault.user.auth.AdminPasswordChecker;
 
 @Component
 public class UserStore implements IUserStore {

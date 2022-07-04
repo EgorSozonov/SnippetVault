@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault.cmn.utils;
+package tech.sozonov.SnippetVault.cmn.utils;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 

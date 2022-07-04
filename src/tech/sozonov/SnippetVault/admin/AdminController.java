@@ -1,11 +1,11 @@
-package src.tech.sozonov.SnippetVault.admin;
+package tech.sozonov.SnippetVault.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import src.tech.sozonov.SnippetVault.admin.AdminDTO.*;
+import tech.sozonov.SnippetVault.admin.AdminDTO.*;
 
 @RestController
 @RequestMapping("/api")

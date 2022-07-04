@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault.cmn.dto;
+package tech.sozonov.SnippetVault.cmn.dto;
 
 public class CommonDTO {
 

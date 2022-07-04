@@ -1,4 +1,4 @@
-package src.tech.sozonov.SnippetVault.user;
+package tech.sozonov.SnippetVault.user;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,8 +10,8 @@ import org.springframework.web.server.ServerWebExchange;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import sozonov.SnippetVault.cmn.utils.Either;
-import src.tech.sozonov.SnippetVault.user.UserDTO.*;
+import tech.sozonov.SnippetVault.cmn.utils.Either;
+import tech.sozonov.SnippetVault.user.UserDTO.*;
 
 @RestController
 @RequestMapping("/api")
