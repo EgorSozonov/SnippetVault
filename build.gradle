@@ -44,7 +44,7 @@ dependencies {
 
     implementation "com.nimbusds:srp6a:2.1.0"
 }
-buildDir = '.bin'
+buildDir = './.bin'
 
 // compileJava {
 //     options.compilerArgs << "-s"

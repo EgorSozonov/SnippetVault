@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { API_PREFIX1, BASE_URL } from '../../../config/Url'
+import { API_PREFIX1 } from '../../config/Url'
 import { deserializeJSON } from '../../core/utils/Client'
 
 

@@ -15,10 +15,10 @@ const webpackFrontend = (args: any): Configuration => {
 
 	const config: Configuration = {
 		entry: {
-			"snippetVault": path.resolve("./src/frontend/core/App.tsx"),
+			"snippetVault": path.resolve("./core/App.tsx"),
 		},
 		output: {
-			path: path.resolve("./.bin/frontend/sv"),
+			path: path.resolve("../.bin/frontend/sv"),
             publicPath: ".",
 		},
 		target: "web",
@@ -39,7 +39,6 @@ const webpackFrontend = (args: any): Configuration => {
 		},
 		resolve: {
 			extensions: [".tsx", ".ts", ".js", ".html", ".json"],
-            modules: ["../.nodeModules"],
 		},
 		module: {
 			rules: [
@@ -85,24 +84,6 @@ const webpackFrontend = (args: any): Configuration => {
 			poll: 300
 		},
 
-		devServer: {
-			headers: {
-				"Access-Control-Allow-Origin": "*"
-			},
-            https: {
-                ca: "./src/resources/rootCA.pem",
-                key: "./src/resources/server.key",
-                cert: "./src/resources/server.crt",
-                requestCert: true,
-            },
-            static: "target/frontend/sv",
-			compress: false,
-			port: 10201,
-			historyApiFallback:  {
-                index: "."
-            },
-		},
-
 		plugins: [
 			new webpack.EnvironmentPlugin({
 				NODE_ENV: mode,
@@ -116,15 +97,15 @@ const webpackFrontend = (args: any): Configuration => {
 					// static files to the site root folder (index and robots)
 					{
 						from: "**/*",
-						to: path.resolve("./.bin/"),
-						context: "./src/frontend/resources/",
+						to: path.resolve("../.bin/frontend"),
+						context: "./resources/",
                         noErrorOnMissing: true
 					},
 				]
 			}),
             new Html({
                 title: "Snippet Vault",
-                template: "./src/frontend/resources/template.html"
+                template: "./resources/template.html"
             }),
 	    ],
 	};

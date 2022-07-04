@@ -21,7 +21,7 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "typeRoots": ["./frontend/core/@types", "./.nodeModules/@types", "/frontend/types"],
+        "typeRoots": ["./core/@types", "../node_modules/@types", "/types"],
     },
     "ts-node": {
         "compilerOptions": {
@@ -29,9 +29,8 @@
         }
     },
     "include": [
-        "frontend/**/*.ts",
-        "frontend/webpack.backend.ts",
-        "frontend/webpack.frontend.ts",
+        "./**/*.ts",
+        "./webpack.config.ts",
 
     ]
 }
