@@ -39,6 +39,7 @@ const webpackFrontend = (args: any): Configuration => {
 		},
 		resolve: {
 			extensions: [".tsx", ".ts", ".js", ".html", ".json"],
+            modules: ["../.nodeModules"],
 		},
 		module: {
 			rules: [
