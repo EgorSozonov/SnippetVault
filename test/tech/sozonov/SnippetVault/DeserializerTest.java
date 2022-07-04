@@ -1,9 +1,11 @@
-package tech.sozonov.SnippetVault;
+package test.tech.sozonov.SnippetVault;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import sozonov.SnippetVault.cmn.utils.Deserializer;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
-import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
 
 @DisplayName("Deserializer tests")
 public class DeserializerTest {

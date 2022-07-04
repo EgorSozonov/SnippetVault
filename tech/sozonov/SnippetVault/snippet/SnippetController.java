@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
-import tech.sozonov.SnippetVault.cmn.utils.Either;
+import sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
+import sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 
 @RestController

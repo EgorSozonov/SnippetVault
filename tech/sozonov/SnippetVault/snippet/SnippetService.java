@@ -1,4 +1,6 @@
 package tech.sozonov.SnippetVault.snippet;
+import static sozonov.SnippetVault.cmn.utils.Strings.*;
+
 import java.util.HashSet;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,11 +8,10 @@ import org.springframework.stereotype.Service;
 import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
-import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
-import tech.sozonov.SnippetVault.cmn.utils.Either;
+import sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
+import sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
+import sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
-import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
 
 @Service
 public class SnippetService {

@@ -2,8 +2,8 @@ package tech.sozonov.SnippetVault.admin;
 import java.time.LocalDateTime;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import sozonov.SnippetVault.cmn.internal.InternalTypes.*;
 import tech.sozonov.SnippetVault.admin.AdminDTO.*;
-import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.*;
 
 public interface IAdminStore {
 

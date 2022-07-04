@@ -2,7 +2,7 @@ package tech.sozonov.SnippetVault.user;
 import java.time.LocalDateTime;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.*;
+import sozonov.SnippetVault.cmn.internal.InternalTypes.*;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 
 public interface IUserStore {

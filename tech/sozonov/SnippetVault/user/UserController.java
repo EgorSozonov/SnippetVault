@@ -10,7 +10,7 @@ import org.springframework.web.server.ServerWebExchange;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.cmn.utils.Either;
+import sozonov.SnippetVault.cmn.utils.Either;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 
 @RestController

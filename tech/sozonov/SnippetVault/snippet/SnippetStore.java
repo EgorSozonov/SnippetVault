@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import lombok.val;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import tech.sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
-import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
-import tech.sozonov.SnippetVault.cmn.utils.Deserializer;
+import sozonov.SnippetVault.cmn.dto.CommonDTO.TaskGroup;
+import sozonov.SnippetVault.cmn.internal.InternalTypes.SnippetIntern;
+import sozonov.SnippetVault.cmn.utils.Deserializer;
 import tech.sozonov.SnippetVault.snippet.SnippetDTO.*;
 
 @Service

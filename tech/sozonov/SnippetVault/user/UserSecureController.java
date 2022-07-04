@@ -1,4 +1,6 @@
 package tech.sozonov.SnippetVault.user;
+import static sozonov.SnippetVault.cmn.utils.Http.*;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
-import static tech.sozonov.SnippetVault.cmn.utils.Http.*;
 
 @RestController
 @RequestMapping("/api/secure")

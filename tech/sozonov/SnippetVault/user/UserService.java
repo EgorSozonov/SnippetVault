@@ -2,8 +2,17 @@ package tech.sozonov.SnippetVault.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
 import reactor.core.publisher.Mono;
+import sozonov.SnippetVault.cmn.internal.InternalTypes.UserNewIntern;
+import sozonov.SnippetVault.cmn.internal.InternalTypes.UserSignInIntern;
+import sozonov.SnippetVault.cmn.internal.InternalTypes.UserUpdatePwIntern;
+import sozonov.SnippetVault.cmn.utils.Constants;
+import sozonov.SnippetVault.cmn.utils.Either;
+import sozonov.SnippetVault.cmn.utils.SecureRemotePassword;
 import reactor.core.publisher.Flux;
 import java.util.Base64;
+
+import static sozonov.SnippetVault.cmn.utils.Strings.*;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -13,12 +22,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.user.auth.AdminPasswordChecker;
-import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserNewIntern;
-import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserSignInIntern;
-import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserUpdatePwIntern;
-import tech.sozonov.SnippetVault.cmn.utils.Constants;
-import tech.sozonov.SnippetVault.cmn.utils.Either;
-import tech.sozonov.SnippetVault.cmn.utils.SecureRemotePassword;
+
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import com.nimbusds.srp6.BigIntegerUtils;
@@ -26,7 +30,6 @@ import com.nimbusds.srp6.SRP6Routines;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
-import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
 
 @Service
 public class UserService {

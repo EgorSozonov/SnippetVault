@@ -1,7 +1,7 @@
 
 package tech.sozonov.SnippetVault.admin;
-import tech.sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
-import tech.sozonov.SnippetVault.cmn.utils.Types.SelectChoice;
+import sozonov.SnippetVault.cmn.utils.Types.CreateUpdate;
+import sozonov.SnippetVault.cmn.utils.Types.SelectChoice;
 
 public class AdminDTO {
 
