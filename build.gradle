@@ -58,7 +58,7 @@ buildDir = '.bin'
 sourceSets {
     main {
         java {
-            srcDirs= ["."]
+            srcDirs= ["tech"]
         }
         resources {
             srcDirs= ["resources"]
