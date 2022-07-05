@@ -61,7 +61,7 @@ sourceSets {
             srcDirs= ["src"]
         }
         resources {
-            srcDirs= ["resources"]
+            srcDirs= ["src/tech/sozonov/SnippetVault/resources"]
         }
     }
     test {
