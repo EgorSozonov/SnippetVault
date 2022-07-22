@@ -30,6 +30,7 @@ Src/.DS_Store?
 .VSCodeCounter/*
 
 .bin/*
+_bin/*
 .gradle/*
 gradle/*
 # Ignore Gradle GUI config

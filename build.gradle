@@ -21,8 +21,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly "org.projectlombok:lombok"
-    annotationProcessor "org.projectlombok:lombok"
+    compileOnly "org.projectlombok:lombok:1.18.24"
+    annotationProcessor "org.projectlombok:lombok:1.18.24"
 	developmentOnly "org.springframework.boot:spring-boot-devtools"
 
 	implementation "org.springframework.boot:spring-boot-starter-webflux"
@@ -40,17 +40,8 @@ dependencies {
 
     implementation "com.nimbusds:srp6a:2.1.0"
 }
-buildDir = './.bin'
+buildDir = './_bin'
 
-// compileJava {
-//     options.compilerArgs << "-s"
-//     options.compilerArgs << "$projectDir/.bin"
-
-//     doFirst {
-//         // make sure that directory exists
-//         file(new File(projectDir, "/.bin")).mkdirs()
-//     }
-// }
 sourceSets {
     main {
         java {
