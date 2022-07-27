@@ -38,7 +38,8 @@ CREATE TABLE sv.comment (
     "userId" integer NOT NULL,
     "snippetId" integer NOT NULL,
     content text NOT NULL,
-    "tsUpload" timestamp with time zone NOT NULL
+    "tsUpload" timestamp with time zone NOT NULL,
+    "isDeleted" boolean DEFAULT false NOT NULL
 );
 
 
@@ -65,9 +66,9 @@ ALTER TABLE sv.comment ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 CREATE TABLE sv.language (
     id integer NOT NULL,
     name character varying(64) NOT NULL,
-    "isDeleted" bit(1) DEFAULT (0)::bit(1) NOT NULL,
     "sortingOrder" smallint DEFAULT 1 NOT NULL,
-    code character varying(4) DEFAULT ''::character varying NOT NULL
+    code character varying(4) DEFAULT ''::character varying NOT NULL,
+    "isDeleted" boolean DEFAULT false NOT NULL
 );
 
 
@@ -88,11 +89,40 @@ ALTER TABLE sv.language ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: snippet; Type: TABLE; Schema: sv; Owner: sv_user
+-- Name: log; Type: TABLE; Schema: sv; Owner: sv_user
 --
+
+CREATE TABLE sv.log (
+    id integer NOT NULL,
+    ts timestamp with time zone NOT NULL,
+    type smallint DEFAULT 1 NOT NULL,
+    code character varying(16) NOT NULL,
+    msg text NOT NULL
+);
+
+
+ALTER TABLE sv.log OWNER TO sv_user;
+
+--
+-- Name: log_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_user
+--
+
+ALTER TABLE sv.log ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME sv.log_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
 INSERT INTO sv."snippetStatus"(
 	id, code)
 	VALUES (1, 'Proposed'), (2, 'Declined'), (3, 'Approved') ;
+
+--
+-- Name: snippet; Type: TABLE; Schema: sv; Owner: sv_user
+--
 
 CREATE TABLE sv.snippet (
     id integer NOT NULL,
@@ -143,7 +173,7 @@ CREATE TABLE sv.task (
     name character varying(128) NOT NULL,
     "taskGroupId" integer NOT NULL,
     description character varying(256) DEFAULT ''::character varying NOT NULL,
-    "isDeleted" bit(1) DEFAULT (0)::bit(1) NOT NULL
+    "isDeleted" boolean DEFAULT false NOT NULL
 );
 
 
@@ -156,8 +186,8 @@ ALTER TABLE sv.task OWNER TO sv_user;
 CREATE TABLE sv."taskGroup" (
     id integer NOT NULL,
     name character varying(128) NOT NULL,
-    "isDeleted" bit(1) DEFAULT (0)::bit(1) NOT NULL,
-    code character varying(16) DEFAULT ''::character varying NOT NULL
+    code character varying(16) DEFAULT ''::character varying NOT NULL,
+    "isDeleted" boolean DEFAULT false NOT NULL
 );
 
 
@@ -227,12 +257,16 @@ CREATE TABLE sv."user" (
     id integer NOT NULL,
     name character varying(64) NOT NULL,
     "dateJoined" timestamp with time zone NOT NULL,
-    expiration date DEFAULT '2021-09-01'::date NOT NULL,
-    "accessToken" character varying(72) DEFAULT 'a'::character varying NOT NULL,
-    hash bytea NOT NULL,
-    salt bytea NOT NULL,
-    "isDeleted" bit(1) DEFAULT (0)::bit(1) NOT NULL
+    expiration timestamp with time zone DEFAULT '2021-09-01'::date NOT NULL,
+    "accessToken" text DEFAULT 'a'::character varying NOT NULL,
+    verifier bytea DEFAULT '\x00'::bytea NOT NULL,
+    salt bytea DEFAULT '\x00'::bytea NOT NULL,
+    "isDeleted" boolean DEFAULT false NOT NULL,
+    b bytea DEFAULT '\x00'::bytea NOT NULL
 );
+ALTER TABLE ONLY sv."user" ALTER COLUMN verifier SET STORAGE EXTERNAL;
+ALTER TABLE ONLY sv."user" ALTER COLUMN salt SET STORAGE EXTERNAL;
+ALTER TABLE ONLY sv."user" ALTER COLUMN b SET STORAGE EXTERNAL;
 
 
 ALTER TABLE sv."user" OWNER TO sv_user;
@@ -262,6 +296,7 @@ ALTER TABLE sv."user" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
     NO MAXVALUE
     CACHE 1
 );
+
 
 
 --
@@ -294,6 +329,14 @@ ALTER TABLE ONLY sv.comment
 
 ALTER TABLE ONLY sv.language
     ADD CONSTRAINT language_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log log_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_user
+--
+
+ALTER TABLE ONLY sv.log
+    ADD CONSTRAINT log_pkey PRIMARY KEY (id);
 
 
 --
@@ -535,11 +578,6 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."user" TO sv_role;
 --
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."userVote" TO sv_role;
-
-
---
--- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: sv; Owner: zrx
---
 
 
 --
