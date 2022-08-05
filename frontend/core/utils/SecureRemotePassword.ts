@@ -2,7 +2,8 @@
 import BI from "jsbi"
 import { SHA256 } from "crypto-js"
 import { HEX_DIGITS } from "./Constants"
-import { arrayOfBase64, base64OfArray, base64OfHex, bigintOfBase64, hexOfArray as nonprefixedHexOfArray, hexOfBase64, hexOfBuff, nonprefixedHexOfPositiveBI, prefixedHexOfArray, prefixedHexOfBuff } from "./StringUtils"
+import { arrayOfBase64, base64OfArray, base64OfHex, bigintOfBase64, hexOfArray as nonprefixedHexOfArray, hexOfBase64,
+         hexOfBuff, nonprefixedHexOfPositiveBI, prefixedHexOfArray, prefixedHexOfBuff } from "./StringUtils"
 import { modPow, ONE, ZERO } from "./ModularArithmetic"
 
 /**

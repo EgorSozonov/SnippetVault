@@ -56,3 +56,5 @@ application.properties
 *.pem
 *.crt
 *.key
+
+deploy/README.txt

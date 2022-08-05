@@ -17,20 +17,20 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: sv; Type: SCHEMA; Schema: -; Owner: sv_role
+-- Name: sv; Type: SCHEMA; Schema: -; Owner: sv_dba
 --
 
 CREATE SCHEMA sv;
 
 
-ALTER SCHEMA sv OWNER TO sv_role;
+ALTER SCHEMA sv OWNER TO sv_dba;
 
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: comment; Type: TABLE; Schema: sv; Owner: sv_role
+-- Name: comment; Type: TABLE; Schema: sv; Owner: sv_dba
 --
 
 CREATE TABLE sv.comment (
@@ -43,10 +43,10 @@ CREATE TABLE sv.comment (
 );
 
 
-ALTER TABLE sv.comment OWNER TO sv_role;
+ALTER TABLE sv.comment OWNER TO sv_dba;
 
 --
--- Name: comment_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_role
+-- Name: comment_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE sv.comment ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -60,7 +60,7 @@ ALTER TABLE sv.comment ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: language; Type: TABLE; Schema: sv; Owner: sv_role
+-- Name: language; Type: TABLE; Schema: sv; Owner: sv_dba
 --
 
 CREATE TABLE sv.language (
@@ -72,10 +72,10 @@ CREATE TABLE sv.language (
 );
 
 
-ALTER TABLE sv.language OWNER TO sv_role;
+ALTER TABLE sv.language OWNER TO sv_dba;
 
 --
--- Name: language_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_role
+-- Name: language_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE sv.language ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -89,7 +89,7 @@ ALTER TABLE sv.language ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: log; Type: TABLE; Schema: sv; Owner: sv_role
+-- Name: log; Type: TABLE; Schema: sv; Owner: sv_dba
 --
 
 CREATE TABLE sv.log (
@@ -101,10 +101,10 @@ CREATE TABLE sv.log (
 );
 
 
-ALTER TABLE sv.log OWNER TO sv_role;
+ALTER TABLE sv.log OWNER TO sv_dba;
 
 --
--- Name: log_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_role
+-- Name: log_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE sv.log ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -126,14 +126,14 @@ CREATE TABLE sv."snippetStatus" (
 );
 
 
-ALTER TABLE sv."snippetStatus" OWNER TO sv_role;
+ALTER TABLE sv."snippetStatus" OWNER TO sv_dba;
 
 INSERT INTO sv."snippetStatus"(
 	id, code)
 	VALUES (1, 'Proposed'), (2, 'Declined'), (3, 'Approved') ;
 
 --
--- Name: snippet; Type: TABLE; Schema: sv; Owner: sv_role
+-- Name: snippet; Type: TABLE; Schema: sv; Owner: sv_dba
 --
 
 CREATE TABLE sv.snippet (
@@ -148,12 +148,12 @@ CREATE TABLE sv.snippet (
 );
 
 
-ALTER TABLE sv.snippet OWNER TO sv_role;
+ALTER TABLE sv.snippet OWNER TO sv_dba;
 
 
 
 --
--- Name: snippet_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_role
+-- Name: snippet_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE sv.snippet ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -167,7 +167,7 @@ ALTER TABLE sv.snippet ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: task; Type: TABLE; Schema: sv; Owner: sv_role
+-- Name: task; Type: TABLE; Schema: sv; Owner: sv_dba
 --
 
 CREATE TABLE sv.task (
@@ -179,10 +179,10 @@ CREATE TABLE sv.task (
 );
 
 
-ALTER TABLE sv.task OWNER TO sv_role;
+ALTER TABLE sv.task OWNER TO sv_dba;
 
 --
--- Name: taskGroup; Type: TABLE; Schema: sv; Owner: sv_role
+-- Name: taskGroup; Type: TABLE; Schema: sv; Owner: sv_dba
 --
 
 CREATE TABLE sv."taskGroup" (
@@ -193,10 +193,10 @@ CREATE TABLE sv."taskGroup" (
 );
 
 
-ALTER TABLE sv."taskGroup" OWNER TO sv_role;
+ALTER TABLE sv."taskGroup" OWNER TO sv_dba;
 
 --
--- Name: taskGroup_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_role
+-- Name: taskGroup_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE sv."taskGroup" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -210,7 +210,7 @@ ALTER TABLE sv."taskGroup" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: taskLanguage; Type: TABLE; Schema: sv; Owner: sv_role
+-- Name: taskLanguage; Type: TABLE; Schema: sv; Owner: sv_dba
 --
 
 CREATE TABLE sv."taskLanguage" (
@@ -221,10 +221,10 @@ CREATE TABLE sv."taskLanguage" (
 );
 
 
-ALTER TABLE sv."taskLanguage" OWNER TO sv_role;
+ALTER TABLE sv."taskLanguage" OWNER TO sv_dba;
 
 --
--- Name: taskLanguage_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_role
+-- Name: taskLanguage_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE sv."taskLanguage" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -238,7 +238,7 @@ ALTER TABLE sv."taskLanguage" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: task_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_role
+-- Name: task_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE sv.task ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -252,7 +252,7 @@ ALTER TABLE sv.task ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: user; Type: TABLE; Schema: sv; Owner: sv_role
+-- Name: user; Type: TABLE; Schema: sv; Owner: sv_dba
 --
 
 CREATE TABLE sv."user" (
@@ -271,10 +271,10 @@ ALTER TABLE ONLY sv."user" ALTER COLUMN salt SET STORAGE EXTERNAL;
 ALTER TABLE ONLY sv."user" ALTER COLUMN b SET STORAGE EXTERNAL;
 
 
-ALTER TABLE sv."user" OWNER TO sv_role;
+ALTER TABLE sv."user" OWNER TO sv_dba;
 
 --
--- Name: userVote; Type: TABLE; Schema: sv; Owner: sv_role
+-- Name: userVote; Type: TABLE; Schema: sv; Owner: sv_dba
 --
 
 CREATE TABLE sv."userVote" (
@@ -284,10 +284,10 @@ CREATE TABLE sv."userVote" (
 );
 
 
-ALTER TABLE sv."userVote" OWNER TO sv_role;
+ALTER TABLE sv."userVote" OWNER TO sv_dba;
 
 --
--- Name: user_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_role
+-- Name: user_id_seq; Type: SEQUENCE; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE sv."user" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
@@ -302,7 +302,7 @@ ALTER TABLE sv."user" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: language Code_Unique; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: language Code_Unique; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.language
@@ -310,7 +310,7 @@ ALTER TABLE ONLY sv.language
 
 
 --
--- Name: userVote Unique_User_TL; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: userVote Unique_User_TL; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."userVote"
@@ -318,7 +318,7 @@ ALTER TABLE ONLY sv."userVote"
 
 
 --
--- Name: comment comment_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: comment comment_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.comment
@@ -326,7 +326,7 @@ ALTER TABLE ONLY sv.comment
 
 
 --
--- Name: language language_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: language language_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.language
@@ -334,7 +334,7 @@ ALTER TABLE ONLY sv.language
 
 
 --
--- Name: log log_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: log log_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.log
@@ -350,7 +350,7 @@ ALTER TABLE ONLY sv."snippetStatus"
 
 
 --
--- Name: snippet snippet_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: snippet snippet_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.snippet
@@ -358,7 +358,7 @@ ALTER TABLE ONLY sv.snippet
 
 
 --
--- Name: taskGroup taskGroup_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: taskGroup taskGroup_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."taskGroup"
@@ -366,7 +366,7 @@ ALTER TABLE ONLY sv."taskGroup"
 
 
 --
--- Name: taskLanguage taskLanguage_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: taskLanguage taskLanguage_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."taskLanguage"
@@ -374,7 +374,7 @@ ALTER TABLE ONLY sv."taskLanguage"
 
 
 --
--- Name: taskLanguage taskLanguage_task_language_UNIQ; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: taskLanguage taskLanguage_task_language_UNIQ; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."taskLanguage"
@@ -382,7 +382,7 @@ ALTER TABLE ONLY sv."taskLanguage"
 
 
 --
--- Name: task task_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: task task_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.task
@@ -390,7 +390,7 @@ ALTER TABLE ONLY sv.task
 
 
 --
--- Name: userVote userVote_PK; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: userVote userVote_PK; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."userVote"
@@ -398,7 +398,7 @@ ALTER TABLE ONLY sv."userVote"
 
 
 --
--- Name: user user_name_UNIQ; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: user user_name_UNIQ; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."user"
@@ -406,7 +406,7 @@ ALTER TABLE ONLY sv."user"
 
 
 --
--- Name: user user_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."user"
@@ -414,7 +414,7 @@ ALTER TABLE ONLY sv."user"
 
 
 --
--- Name: snippet author_user_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: snippet author_user_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.snippet
@@ -422,7 +422,7 @@ ALTER TABLE ONLY sv.snippet
 
 
 --
--- Name: comment comment_snippet_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: comment comment_snippet_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.comment
@@ -430,7 +430,7 @@ ALTER TABLE ONLY sv.comment
 
 
 --
--- Name: comment comment_user_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: comment comment_user_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.comment
@@ -438,7 +438,7 @@ ALTER TABLE ONLY sv.comment
 
 
 --
--- Name: snippet snippet_snippetStatus_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: snippet snippet_snippetStatus_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.snippet
@@ -446,7 +446,7 @@ ALTER TABLE ONLY sv.snippet
 
 
 --
--- Name: snippet snippet_taskLanguage_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: snippet snippet_taskLanguage_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.snippet
@@ -454,7 +454,7 @@ ALTER TABLE ONLY sv.snippet
 
 
 --
--- Name: taskLanguage taskLanguage_language_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: taskLanguage taskLanguage_language_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."taskLanguage"
@@ -462,7 +462,7 @@ ALTER TABLE ONLY sv."taskLanguage"
 
 
 --
--- Name: taskLanguage taskLanguage_snippet_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: taskLanguage taskLanguage_snippet_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."taskLanguage"
@@ -470,7 +470,7 @@ ALTER TABLE ONLY sv."taskLanguage"
 
 
 --
--- Name: taskLanguage taskLanguage_task_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: taskLanguage taskLanguage_task_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."taskLanguage"
@@ -478,7 +478,7 @@ ALTER TABLE ONLY sv."taskLanguage"
 
 
 --
--- Name: task task_taskGroupId_fkey; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: task task_taskGroupId_fkey; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv.task
@@ -486,7 +486,7 @@ ALTER TABLE ONLY sv.task
 
 
 --
--- Name: userVote userVote_snippet_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: userVote userVote_snippet_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."userVote"
@@ -494,7 +494,7 @@ ALTER TABLE ONLY sv."userVote"
 
 
 --
--- Name: userVote userVote_taskLanguage_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: userVote userVote_taskLanguage_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."userVote"
@@ -502,7 +502,7 @@ ALTER TABLE ONLY sv."userVote"
 
 
 --
--- Name: userVote userVote_user_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_role
+-- Name: userVote userVote_user_FK; Type: FK CONSTRAINT; Schema: sv; Owner: sv_dba
 --
 
 ALTER TABLE ONLY sv."userVote"
@@ -510,75 +510,76 @@ ALTER TABLE ONLY sv."userVote"
 
 
 --
--- Name: SCHEMA sv; Type: ACL; Schema: -; Owner: sv_role
+-- Name: SCHEMA sv; Type: ACL; Schema: -; Owner: sv_dba
 --
 
-GRANT USAGE ON SCHEMA sv TO sv_role;
+GRANT USAGE ON SCHEMA sv TO sv_dba;
 GRANT ALL ON SCHEMA sv TO postgres;
 
 
 --
--- Name: TABLE comment; Type: ACL; Schema: sv; Owner: sv_role
+-- Name: TABLE comment; Type: ACL; Schema: sv; Owner: sv_dba
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv.comment TO sv_role;
-
-
---
--- Name: TABLE language; Type: ACL; Schema: sv; Owner: sv_role
---
-
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv.language TO sv_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv.comment TO sv_dba;
 
 
 --
--- Name: TABLE snippet; Type: ACL; Schema: sv; Owner: sv_role
+-- Name: TABLE language; Type: ACL; Schema: sv; Owner: sv_dba
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv.snippet TO sv_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv.language TO sv_dba;
+
+
+--
+-- Name: TABLE snippet; Type: ACL; Schema: sv; Owner: sv_dba
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv.snippet TO sv_dba;
 
 
 --
 -- Name: TABLE "snippetStatus"; Type: ACL; Schema: sv; Owner: postgres
 --
 
-GRANT ALL ON TABLE sv."snippetStatus" TO sv_role;
+GRANT ALL ON TABLE sv."snippetStatus" TO sv_dba;
 
 
 --
--- Name: TABLE task; Type: ACL; Schema: sv; Owner: sv_role
+-- Name: TABLE task; Type: ACL; Schema: sv; Owner: sv_dba
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv.task TO sv_role;
-
-
---
--- Name: TABLE "taskGroup"; Type: ACL; Schema: sv; Owner: sv_role
---
-
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."taskGroup" TO sv_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv.task TO sv_dba;
 
 
 --
--- Name: TABLE "taskLanguage"; Type: ACL; Schema: sv; Owner: sv_role
+-- Name: TABLE "taskGroup"; Type: ACL; Schema: sv; Owner: sv_dba
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."taskLanguage" TO sv_role;
-
-
---
--- Name: TABLE "user"; Type: ACL; Schema: sv; Owner: sv_role
---
-
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."user" TO sv_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."taskGroup" TO sv_dba;
 
 
 --
--- Name: TABLE "userVote"; Type: ACL; Schema: sv; Owner: sv_role
+-- Name: TABLE "taskLanguage"; Type: ACL; Schema: sv; Owner: sv_dba
 --
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."userVote" TO sv_role;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."taskLanguage" TO sv_dba;
 
+
+--
+-- Name: TABLE "user"; Type: ACL; Schema: sv; Owner: sv_dba
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."user" TO sv_dba;
+
+
+--
+-- Name: TABLE "userVote"; Type: ACL; Schema: sv; Owner: sv_dba
+--
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE sv."userVote" TO sv_dba;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA sv TO sv_app;
 
 --
 -- PostgreSQL database dump complete

@@ -246,5 +246,9 @@ public Mono<Integer> commentCU(CommentCU dto, String userName) {
     return userStore.commentCU(dto, userName, LocalDateTime.now());
 }
 
+public void addFirstUser() {
+
+}
+
 
 }
