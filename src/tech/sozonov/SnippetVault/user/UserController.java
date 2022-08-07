@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.cmn.utils.Either;
@@ -36,12 +35,12 @@ public Mono<Either<String, HandshakeResponse>> userRegister(@RequestBody Registe
 
 @PostMapping("user/handshakeAdmin")
 public Mono<Either<String, HandshakeResponse>> handshakeAdmin(@RequestBody Handshake dto, ServerHttpRequest req) {
-    return userService.handshakeAdmin(dto, req.getCookies());
+    return userService.handshakeAdmin(dto);
 }
 
 @PostMapping("user/handshake")
 public Mono<Either<String, HandshakeResponse>> handshake(@RequestBody Handshake dto, ServerHttpRequest req) {
-    return userService.handshake(dto, req.getCookies());
+    return userService.handshake(dto);
 }
 
 @PostMapping("user/signIn")

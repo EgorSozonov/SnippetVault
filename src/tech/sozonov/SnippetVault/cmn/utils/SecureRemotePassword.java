@@ -1,11 +1,9 @@
 package tech.sozonov.SnippetVault.cmn.utils;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.time.LocalDate;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HexFormat;
-
 import lombok.val;
 
 public class SecureRemotePassword {
@@ -23,21 +21,35 @@ public static String prependZeroToHex(String hex) {
     return hex.length() % 2 == 0 ? hex : "0" + hex;
 }
 
-public static String generateRandomSalt(MessageDigest hasher) {
-    String s = randomHex(32);
-    String inp = (LocalDateTime.now().toString()) + ":" + "serverSalt" + ":" + s;
+public static byte[] generateRandomSalt(MessageDigest hasher) {
+    val random = new SecureRandom();
+    byte seed[] = random.generateSeed(16);
+    String inp = (LocalDateTime.now().toString()) + ":" + "serverSalt" + ":" + hexOfArray(seed);
     hasher.reset();
     hasher.update(inp.getBytes());
-    val hash = hasher.digest();
-    return hexOfArray(hash);
+    return hasher.digest();
+}
+
+public static byte[] generateVerifier(byte[] salt, String identity, String password, MessageDigest hasher) {
+    val x = generateX(hexOfArray(salt), identity, password, hasher);
+    val verifierNum = Constants.g.modPow(x, Constants.N);
+    return verifierNum.toByteArray();
+}
+
+private static BigInteger generateX(String saltHex, String identity, String pw, MessageDigest hasher) {
+    //const hash1 = hexOfBuff(await this.hash(identity + ":" + pw))
+    hasher.reset();
+    hasher.update((identity + ":" + pw).getBytes());
+    String hash1 = hexOfArray(hasher.digest());
+    String concat = (saltHex + hash1).toUpperCase();
+    hasher.reset();
+    hasher.update(concat.getBytes());
+    val hashNum = new BigInteger(1, hasher.digest());
+    return hashNum.remainder(Constants.N);
 }
 
 private static String hexOfArray(byte[] inp) {
     return HexFormat.of().formatHex(inp);
-}
-
-private static String padZeroPrefix(String inp) {
-    return inp.length() == 1 ? "0" + inp : inp;
 }
 
 /*
@@ -58,14 +70,6 @@ export function nonprefixedHexOfPositiveBI(inp: BI): string {
         return (str.length % 2 === 0) ? str : (str.startsWith("0") ? str.substring(1) : ("0" + str))
 }
 
-private async generateX(saltHex: string, identity: string, pw: string): Promise<BI> {
-    const hash1 = hexOfBuff(await this.hash(identity + ":" + pw))
-
-    const concat = (saltHex + hash1).toUpperCase()
-    const hashHex = prefixedHexOfBuff(await this.hash(concat))
-
-    return BI.remainder(BI.BigInt(hashHex), this.N)
-}
 
 export function prefixedHexOfBuff(inp: ArrayBuffer): string {
     return "0x" + (Array.from(new Uint8Array(inp)))
@@ -89,3 +93,5 @@ export function hexOfArray(inp: Uint8Array): string {
     return result
 }
  */
+
+}

@@ -58,7 +58,22 @@ public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
 
     byte[] verifier = dec.decode(dto.verifierB64);
     byte[] salt = dec.decode(dto.saltB64);
+
+
+    // temp code
+    MessageDigest hasher = null;
+    try {
+        hasher = MessageDigest.getInstance("SHA-256");
+    } catch (Exception e) {
+    }
+    byte[] backendVerifier = SecureRemotePassword.generateVerifier(salt, dto.userName, "password", hasher);
+    BigInteger backendVerifierNum = new BigInteger(1, backendVerifier);
+
+
+
     BigInteger verifierNum = new BigInteger(1, verifier);
+
+    System.out.println("From frontend " + verifierNum + ", from backend " + backendVerifierNum);
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
@@ -89,12 +104,12 @@ private Instant getNow() {
     return LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
 }
 
-public Mono<Either<String, HandshakeResponse>> handshakeAdmin(Handshake dto, MultiValueMap<String, HttpCookie> cookies) {
+public Mono<Either<String, HandshakeResponse>> handshakeAdmin(Handshake dto) {
     if (!AdminPasswordChecker.checkAdminName(dto.userName)) return Mono.just(Either.left("Incorrect user name"));
-    return handshake(dto, cookies);
+    return handshake(dto);
 }
 
-public Mono<Either<String, HandshakeResponse>> handshake(Handshake dto, MultiValueMap<String, HttpCookie> cookies) {
+public Mono<Either<String, HandshakeResponse>> handshake(Handshake dto) {
     if (nullOrEmp(dto.userName)) return errResponse;
     val enc = Base64.getEncoder();
 
