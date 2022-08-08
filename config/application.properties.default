@@ -1,6 +1,6 @@
 server.port=
-spring.r2dbc.username=sv_app
-spring.r2dbc.password=
+db.username=sv_app
+db.password=
 spring.r2dbc.url=r2dbc:postgresql://localhost/mydb?schema=sv
 spring.r2dbc.pool.enabled=true
 spring.r2dbc.pool.initial-size=50
@@ -10,5 +10,6 @@ logging.level.root=WARN
 logging.level.org.springframework.web=WARN
 db.host=localhost
 db.dbname=mydb
+db.schema=sv
 db.port=5432
 startingAdminPassword=

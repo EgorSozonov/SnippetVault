@@ -18,7 +18,7 @@ const webpackFrontend = (args: any): Configuration => {
 			"snippetVault": path.resolve("./core/App.tsx"),
 		},
 		output: {
-			path: path.resolve("../.bin/frontend/sv"),
+			path: path.resolve("../_bin/frontend/sv"),
             publicPath: ".",
 		},
 		target: "web",
@@ -92,17 +92,17 @@ const webpackFrontend = (args: any): Configuration => {
             new Manifest({
                 fileName: "manifest.json",
             }),
-			new Copy({
-				patterns: [
-					// static files to the site root folder (index and robots)
-					{
-						from: "**/*",
-						to: path.resolve("../.bin/frontend"),
-						context: "./resources/",
-                        noErrorOnMissing: true
-					},
-				]
-			}),
+			// new Copy({
+			// 	patterns: [
+			// 		// static files to the site root folder (index and robots)
+			// 		{
+			// 			from: "**/*",
+			// 			to: path.resolve("../_bin/frontend"),
+			// 			context: "./resources/",
+            //             noErrorOnMissing: true
+			// 		},
+			// 	]
+			// }),
             new Html({
                 title: "Snippet Vault",
                 template: "./resources/template.html"
