@@ -3,6 +3,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import tech.sozonov.SnippetVault.user.UserService;
+import lombok.val;
 
 @Component
 public class Startup implements ApplicationRunner {
@@ -15,5 +16,6 @@ public class Startup implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         userService.addFirstUser();
+
     }
 }

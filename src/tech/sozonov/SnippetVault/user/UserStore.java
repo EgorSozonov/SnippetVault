@@ -252,5 +252,17 @@ public Mono<Integer> commentDelete(int commentId) {
              .rowsUpdated();
 }
 
+private static final String userCountQ = """
+SELECT
+    COUNT(id) AS cnt
+FROM sv.user u
+""";
+public Mono<Long> userCount() {
+    return db.sql(userCountQ)
+            .fetch()
+            .first()
+            .map(r -> (long) r.get("cnt"));
+}
+
 
 }

@@ -51,49 +51,52 @@ public Flux<Comment> commentsGet(int snippetId) {
     return userStore.commentsGet(snippetId);
 }
 
-public Mono<Either<String, HandshakeResponse>> userRegister(Register dto) {
+public Mono<Either<String, HandshakeResponse>> register(Register dto) {
     if (nullOrEmp(dto.userName)) return errResponse;
-    val enc = Base64.getEncoder();
+
     val dec = Base64.getDecoder();
 
     byte[] verifier = dec.decode(dto.verifierB64);
     byte[] salt = dec.decode(dto.saltB64);
 
+    return createUser(salt, verifier, dto.userName);
+}
 
-    // temp code
-    MessageDigest hasher = null;
-    try {
-        hasher = MessageDigest.getInstance("SHA-256");
-    } catch (Exception e) {
-    }
-    byte[] backendVerifier = SecureRemotePassword.generateVerifier(salt, dto.userName, "password", hasher);
-    BigInteger backendVerifierNum = new BigInteger(1, backendVerifier);
-
-
-
+private Mono<Either<String, HandshakeResponse>> createUser(byte[] salt, byte[] verifier, String userName) {
+    val enc = Base64.getEncoder();
     BigInteger verifierNum = new BigInteger(1, verifier);
 
-    System.out.println("From frontend " + verifierNum + ", from backend " + backendVerifierNum);
+    // temp code
+//    MessageDigest hasher = null;
+//    try {
+//        hasher = MessageDigest.getInstance("SHA-256");
+//    } catch (Exception e) {
+//    }
+//    byte[] backendVerifier = SecureRemotePassword.generateVerifier(salt, dto.userName, "password", hasher);
+//    BigInteger backendVerifierNum = new BigInteger(1, backendVerifier);
+
+//    System.out.println("Verifier from frontend " + verifierNum);
+//    System.out.println("Verifier from backend " + backendVerifierNum);
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
 
     byte[] bArr = b.toByteArray();
     val newUser = UserNewIntern.builder()
-                        .userName(dto.userName)
-                        .verifier(verifier)
-                        .salt(salt)
-                        .b(bArr)
-                        .accessToken("f")
-                        .dtExpiration(makeExpirationDate())
-                        .build();
+            .userName(userName)
+            .verifier(verifier)
+            .salt(salt)
+            .b(bArr)
+            .accessToken("f")
+            .dtExpiration(makeExpirationDate())
+            .build();
     return userStore.userRegister(newUser)
-                    .map(rowsUpdated -> {
-        if (rowsUpdated < 1) return Either.left("Registration error");
+            .map(rowsUpdated -> {
+                if (rowsUpdated < 1) return Either.left("Registration error");
 
-        HandshakeResponse handshakeResponse = new HandshakeResponse(enc.encodeToString(salt), enc.encodeToString(B.toByteArray()));
-        return Either.right(handshakeResponse);
-    });
+                HandshakeResponse handshakeResponse = new HandshakeResponse(enc.encodeToString(salt), enc.encodeToString(B.toByteArray()));
+                return Either.right(handshakeResponse);
+            });
 }
 
 private Instant makeExpirationDate() {
@@ -262,6 +265,29 @@ public Mono<Integer> commentCU(CommentCU dto, String userName) {
 }
 
 public void addFirstUser() {
+    System.out.println("checking users");
+    final String firstUserName = "JoeRogan";
+    val result = userStore.userCount().flatMap((Long cnt) -> {
+        if (cnt == 0) {
+
+            MessageDigest hasher = null;
+
+            try {
+                hasher = MessageDigest.getInstance("SHA-256");
+            } catch (Exception e) {
+            }
+            System.out.println("adding first user");
+            byte[] salt = SecureRemotePassword.generateRandomSalt(hasher);
+            System.out.println("salt " + salt.length);
+            byte[] backendVerifier = SecureRemotePassword.generateVerifier(salt, firstUserName, "RoganJoe", hasher);
+            System.out.println("verif " + backendVerifier.length);
+            return createUser(salt, backendVerifier, firstUserName);
+        }
+        return Mono.just(Either.left("OK"));
+    });
+    result.block();
+    System.out.println("asdf");
+    // if usercount is 0, add user JoeRogan with password RoganJoe
 
 }
 

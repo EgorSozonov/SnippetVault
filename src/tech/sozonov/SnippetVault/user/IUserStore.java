@@ -23,6 +23,7 @@ Mono<Profile> userProfile(String userName);
 Mono<User> userData(String userName);
 Mono<Integer> commentCU(CommentCU dto, String userName, LocalDateTime ts);
 Flux<Comment> commentsGet(int snippetId);
+Mono<Long> userCount();
 
 
 }

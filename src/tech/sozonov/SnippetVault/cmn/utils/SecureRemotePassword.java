@@ -1,5 +1,6 @@
 package tech.sozonov.SnippetVault.cmn.utils;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -32,21 +33,24 @@ public static byte[] generateRandomSalt(MessageDigest hasher) {
 
 public static byte[] generateVerifier(byte[] salt, String identity, String password, MessageDigest hasher) {
     val x = generateX(hexOfArray(salt), identity, password, hasher);
+
     val verifierNum = Constants.g.modPow(x, Constants.N);
     return verifierNum.toByteArray();
 }
 
 private static BigInteger generateX(String saltHex, String identity, String pw, MessageDigest hasher) {
-    //const hash1 = hexOfBuff(await this.hash(identity + ":" + pw))
     hasher.reset();
-    hasher.update((identity + ":" + pw).getBytes());
+    hasher.update((identity + ":" + pw).getBytes(StandardCharsets.UTF_8));
     String hash1 = hexOfArray(hasher.digest());
     String concat = (saltHex + hash1).toUpperCase();
     hasher.reset();
+
     hasher.update(concat.getBytes());
-    val hashNum = new BigInteger(1, hasher.digest());
+    val concatBytes = hasher.digest();
+    val hashNum = new BigInteger(1, concatBytes);
     return hashNum.remainder(Constants.N);
 }
+
 
 private static String hexOfArray(byte[] inp) {
     return HexFormat.of().formatHex(inp);

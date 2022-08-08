@@ -30,7 +30,7 @@ public Flux<Comment> comments(@PathVariable("snId") int snId) {
 
 @PostMapping("user/register")
 public Mono<Either<String, HandshakeResponse>> userRegister(@RequestBody Register dto) {
-    return userService.userRegister(dto);
+    return userService.register(dto);
 }
 
 @PostMapping("user/handshakeAdmin")

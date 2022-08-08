@@ -4,6 +4,7 @@ import ServerResponse from "../types/ServerResponse"
 
 
 export function processHandshake(response: ServerResponse<ServerEither<HandshakeResponseDTO>>): ServerResponse<HandshakeResponseDTO> {
+    console.dir(response)
     if (response.isOK === false) {
         return response
     }
