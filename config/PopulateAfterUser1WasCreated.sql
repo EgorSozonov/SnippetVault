@@ -3,92 +3,92 @@
 -- Languages
 ---------------------------
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (1, 'CS', 'C#', 0::bit, 1)
-ON CONFLICT (id) DO UPDATE SET code='CS', name='C#', "isDeleted" = 0::bit, "sortingOrder" = 1;
+OVERRIDING SYSTEM VALUE	VALUES (1, 'CS', 'C#', FALSE, 1)
+ON CONFLICT (id) DO UPDATE SET code='CS', name='C#', "isDeleted" = FALSE, "sortingOrder" = 1;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (2, 'Rust', 'Rust', 0::bit, 1)
-ON CONFLICT (id) DO UPDATE SET code='Rust', name='Rust', "isDeleted" = 0::bit, "sortingOrder" = 1;
+OVERRIDING SYSTEM VALUE	VALUES (2, 'Rust', 'Rust', FALSE, 1)
+ON CONFLICT (id) DO UPDATE SET code='Rust', name='Rust', "isDeleted" = FALSE, "sortingOrder" = 1;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (3, 'Cpp', 'C++', 0::bit, 1)
-ON CONFLICT (id) DO UPDATE SET code='Cpp', name='C++', "isDeleted" = 0::bit, "sortingOrder" = 1;
+OVERRIDING SYSTEM VALUE	VALUES (3, 'Cpp', 'C++', FALSE, 1)
+ON CONFLICT (id) DO UPDATE SET code='Cpp', name='C++', "isDeleted" = FALSE, "sortingOrder" = 1;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (4, 'Pyth', 'Python', 0::bit, 2)
-ON CONFLICT (id) DO UPDATE SET code='Pyth', name='Python', "isDeleted" = 0::bit, "sortingOrder" = 2;
+OVERRIDING SYSTEM VALUE	VALUES (4, 'Pyth', 'Python', FALSE, 2)
+ON CONFLICT (id) DO UPDATE SET code='Pyth', name='Python', "isDeleted" = FALSE, "sortingOrder" = 2;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (5, 'TS', 'Typescript', 0::bit, 2)
-ON CONFLICT (id) DO UPDATE SET code='TS', name='Typescript', "isDeleted" = 0::bit, "sortingOrder" = 2;
+OVERRIDING SYSTEM VALUE	VALUES (5, 'TS', 'Typescript', FALSE, 2)
+ON CONFLICT (id) DO UPDATE SET code='TS', name='Typescript', "isDeleted" = FALSE, "sortingOrder" = 2;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (6, 'MSQL', 'MySQL', 0::bit, 3)
-ON CONFLICT (id) DO UPDATE SET code='MSQL', name='MySQL', "isDeleted" = 0::bit, "sortingOrder" = 3;
+OVERRIDING SYSTEM VALUE	VALUES (6, 'MSQL', 'MySQL', FALSE, 3)
+ON CONFLICT (id) DO UPDATE SET code='MSQL', name='MySQL', "isDeleted" = FALSE, "sortingOrder" = 3;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (7, 'TSQL', 'T-SQL', 0::bit, 3)
-ON CONFLICT (id) DO UPDATE SET code='TSQL', name='T-SQL', "isDeleted" = 0::bit, "sortingOrder" = 3;
+OVERRIDING SYSTEM VALUE	VALUES (7, 'TSQL', 'T-SQL', FALSE, 3)
+ON CONFLICT (id) DO UPDATE SET code='TSQL', name='T-SQL', "isDeleted" = FALSE, "sortingOrder" = 3;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (8, 'PSQL', 'PostgreSQL', 0::bit, 3)
-ON CONFLICT (id) DO UPDATE SET code='PSQL', name='PostgreSQL', "isDeleted" = 0::bit, "sortingOrder" = 3;
+OVERRIDING SYSTEM VALUE	VALUES (8, 'PSQL', 'PostgreSQL', FALSE, 3)
+ON CONFLICT (id) DO UPDATE SET code='PSQL', name='PostgreSQL', "isDeleted" = FALSE, "sortingOrder" = 3;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (9, 'Kotl', 'Kotlin', 0::bit, 1)
-ON CONFLICT (id) DO UPDATE SET code='Kotl', name='Kotlin', "isDeleted" = 0::bit, "sortingOrder" = 1;
+OVERRIDING SYSTEM VALUE	VALUES (9, 'Kotl', 'Kotlin', FALSE, 1)
+ON CONFLICT (id) DO UPDATE SET code='Kotl', name='Kotlin', "isDeleted" = FALSE, "sortingOrder" = 1;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (10, 'Lua', 'Lua', 0::bit, 2)
-ON CONFLICT (id) DO UPDATE SET code='Lua', name='Lua', "isDeleted" = 0::bit, "sortingOrder" = 2;
+OVERRIDING SYSTEM VALUE	VALUES (10, 'Lua', 'Lua', FALSE, 2)
+ON CONFLICT (id) DO UPDATE SET code='Lua', name='Lua', "isDeleted" = FALSE, "sortingOrder" = 2;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (11, 'Swif', 'Swift', 0::bit, 1)
-ON CONFLICT (id) DO UPDATE SET code='Swif', name='Swift', "isDeleted" = 0::bit, "sortingOrder" = 1;
+OVERRIDING SYSTEM VALUE	VALUES (11, 'Swif', 'Swift', FALSE, 1)
+ON CONFLICT (id) DO UPDATE SET code='Swif', name='Swift', "isDeleted" = FALSE, "sortingOrder" = 1;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (12, 'Java', 'Java', 0::bit, 1)
-ON CONFLICT (id) DO UPDATE SET code='Java', name='Java', "isDeleted" = 0::bit, "sortingOrder" = 1;
+OVERRIDING SYSTEM VALUE	VALUES (12, 'Java', 'Java', FALSE, 1)
+ON CONFLICT (id) DO UPDATE SET code='Java', name='Java', "isDeleted" = FALSE, "sortingOrder" = 1;
 
 INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
-OVERRIDING SYSTEM VALUE	VALUES (13, 'Dart', 'Dart', 0::bit, 1)
-ON CONFLICT (id) DO UPDATE SET code='Dart', name='Dart', "isDeleted" = 0::bit, "sortingOrder" = 1;
+OVERRIDING SYSTEM VALUE	VALUES (13, 'Dart', 'Dart', FALSE, 1)
+ON CONFLICT (id) DO UPDATE SET code='Dart', name='Dart', "isDeleted" = FALSE, "sortingOrder" = 1;
 
 ---------------------------
 -- Task groups
 ---------------------------
 
 INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
-OVERRIDING SYSTEM VALUE	VALUES (1, 'SYNTAX', 'Basic syntax', 0::bit)
-ON CONFLICT (id) DO UPDATE SET code='SYNTAX', name='Basic syntax', "isDeleted" = 0::bit;
+OVERRIDING SYSTEM VALUE	VALUES (1, 'SYNTAX', 'Basic syntax', FALSE)
+ON CONFLICT (id) DO UPDATE SET code='SYNTAX', name='Basic syntax', "isDeleted" = FALSE;
 
 INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
-OVERRIDING SYSTEM VALUE	VALUES (2, 'MATH', 'Math & arithmetic', 0::bit)
-ON CONFLICT (id) DO UPDATE SET code='MATH', name='Math & arithmetic', "isDeleted" = 0::bit;
+OVERRIDING SYSTEM VALUE	VALUES (2, 'MATH', 'Math & arithmetic', FALSE)
+ON CONFLICT (id) DO UPDATE SET code='MATH', name='Math & arithmetic', "isDeleted" = FALSE;
 
 INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
-OVERRIDING SYSTEM VALUE	VALUES (3, 'STRINGS', 'Strings', 0::bit)
-ON CONFLICT (id) DO UPDATE SET code='STRINGS', name='Strings', "isDeleted" = 0::bit;
+OVERRIDING SYSTEM VALUE	VALUES (3, 'STRINGS', 'Strings', FALSE)
+ON CONFLICT (id) DO UPDATE SET code='STRINGS', name='Strings', "isDeleted" = FALSE;
 
 INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
-OVERRIDING SYSTEM VALUE	VALUES (4, 'IO', 'Basic input & output', 0::bit)
-ON CONFLICT (id) DO UPDATE SET code='IO', name='Basic input & output', "isDeleted" = 0::bit;
+OVERRIDING SYSTEM VALUE	VALUES (4, 'IO', 'Basic input & output', FALSE)
+ON CONFLICT (id) DO UPDATE SET code='IO', name='Basic input & output', "isDeleted" = FALSE;
 
 INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
-OVERRIDING SYSTEM VALUE	VALUES (5, 'FILES', 'File system', 0::bit)
-ON CONFLICT (id) DO UPDATE SET code='FILES', name='File system', "isDeleted" = 0::bit;
+OVERRIDING SYSTEM VALUE	VALUES (5, 'FILES', 'File system', FALSE)
+ON CONFLICT (id) DO UPDATE SET code='FILES', name='File system', "isDeleted" = FALSE;
 
 INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
-OVERRIDING SYSTEM VALUE	VALUES (6, 'SORTING', 'Sorting algorithms', 0::bit)
-ON CONFLICT (id) DO UPDATE SET code='SORTING', name='Sorting algorithms', "isDeleted" = 0::bit;
+OVERRIDING SYSTEM VALUE	VALUES (6, 'SORTING', 'Sorting algorithms', FALSE)
+ON CONFLICT (id) DO UPDATE SET code='SORTING', name='Sorting algorithms', "isDeleted" = FALSE;
 
 INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
-OVERRIDING SYSTEM VALUE	VALUES (7, 'TREES', 'Tree algorithms', 0::bit)
-ON CONFLICT (id) DO UPDATE SET code='TREES', name='Tree algorithms', "isDeleted" = 0::bit;
+OVERRIDING SYSTEM VALUE	VALUES (7, 'TREES', 'Tree algorithms', FALSE)
+ON CONFLICT (id) DO UPDATE SET code='TREES', name='Tree algorithms', "isDeleted" = FALSE;
 
 INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
-OVERRIDING SYSTEM VALUE	VALUES (8, 'GRAPH', 'Graph algorithms', 0::bit)
-ON CONFLICT (id) DO UPDATE SET code='GRAPH', name='Graph algorithms', "isDeleted" = 0::bit;
+OVERRIDING SYSTEM VALUE	VALUES (8, 'GRAPH', 'Graph algorithms', FALSE)
+ON CONFLICT (id) DO UPDATE SET code='GRAPH', name='Graph algorithms', "isDeleted" = FALSE;
 
 ---------------------------
 -- Tasks
@@ -118,7 +118,6 @@ SET name = 'Square root', description = 'Calculation of a square root respective
 INSERT INTO sv.task(id, name, description, "taskGroupId")
 OVERRIDING SYSTEM VALUE	VALUES (6, 'Power', 'Arithmetic power expression', 2)
 ON CONFLICT (id) DO UPDATE SET name = 'Power', description = 'Arithmetic power expression', "taskGroupId" = 2;
-
 
 INSERT INTO sv.task(id, name, description, "taskGroupId")
 OVERRIDING SYSTEM VALUE	VALUES (7, 'Substring', 'Substring of a string starting at index x and having length n', 3)
@@ -259,10 +258,6 @@ ON CONFLICT (id) DO UPDATE SET "taskId" = 6, "languageId" = 2, "primarySnippetId
 ---------------------------
 -- Snippets
 ---------------------------
-
-INSERT INTO sv."user"(
-	name, "dateJoined", expiration, "accessToken", hash, salt, "isDeleted")
-	VALUES ('John Wick', '2022-02-15', '2022-03-15', 'asdf', bytea '\xDEADBEEF', bytea '\xDEADBEEF', 0::bit);
 
 INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)

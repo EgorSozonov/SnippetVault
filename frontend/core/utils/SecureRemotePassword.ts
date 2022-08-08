@@ -161,7 +161,7 @@ private randomHex(l: number): string {
 
 
 private async generateX(saltHex: string, identity: string, pw: string): Promise<BI> {
-    const hash1 = hexOfBuff(await this.hash(identity + ":" + pw, true))
+    const hash1 = hexOfBuff(await this.hash(identity + ":" + pw))
     console.log(`hash1 ${hash1}`)
     const concat = (saltHex + hash1).toUpperCase()
     const hashHex = prefixedHexOfBuff(await this.hash(concat))
@@ -189,17 +189,11 @@ private posMod(inp: BI, N: BI): BI {
 
 private async hash(x: string, printOut?: boolean): Promise<ArrayBuffer> {
     const encoded = new TextEncoder().encode(x)
-    console.log(x)
-    if (printOut) {
-    for (let i = 0; i < encoded.byteLength; ++i) {
-        const bt: number = encoded[i]
-        console.debug(bt.toString())        
-    }
-    console.log('\n')
-}
+    
     const resultArr = await crypto.subtle.digest("SHA-256", encoded)
     return resultArr;
 }
+
 
 }
 

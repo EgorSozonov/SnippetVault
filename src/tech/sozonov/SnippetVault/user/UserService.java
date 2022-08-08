@@ -67,16 +67,16 @@ private Mono<Either<String, HandshakeResponse>> createUser(byte[] salt, byte[] v
     BigInteger verifierNum = new BigInteger(1, verifier);
 
     // temp code
-//    MessageDigest hasher = null;
-//    try {
-//        hasher = MessageDigest.getInstance("SHA-256");
-//    } catch (Exception e) {
-//    }
-//    byte[] backendVerifier = SecureRemotePassword.generateVerifier(salt, dto.userName, "password", hasher);
-//    BigInteger backendVerifierNum = new BigInteger(1, backendVerifier);
+    MessageDigest hasher = null;
+    try {
+        hasher = MessageDigest.getInstance("SHA-256");
+    } catch (Exception e) {
+    }
+    byte[] backendVerifier = SecureRemotePassword.generateVerifier(salt, userName, "password", hasher);
+    BigInteger backendVerifierNum = new BigInteger(1, backendVerifier);
 
-//    System.out.println("Verifier from frontend " + verifierNum);
-//    System.out.println("Verifier from backend " + backendVerifierNum);
+    System.out.println("Verifier from frontend " + verifierNum);
+    System.out.println("Verifier from backend " + backendVerifierNum);
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);

@@ -1,0 +1,3 @@
+DROP DATABASE mydb;
+DROP ROLE sv_dba;
+DROP ROLE sv_app;
