@@ -24,6 +24,7 @@ Mono<User> userData(String userName);
 Mono<Integer> commentCU(CommentCU dto, String userName, LocalDateTime ts);
 Flux<Comment> commentsGet(int snippetId);
 Mono<Long> userCount();
+Mono<Integer> initPopulate(String sqlScript);
 
 
 }

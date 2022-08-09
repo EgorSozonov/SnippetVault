@@ -1,6 +1,7 @@
 package tech.sozonov.SnippetVault.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import reactor.core.publisher.Mono;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserNewIntern;
 import tech.sozonov.SnippetVault.cmn.internal.InternalTypes.UserSignInIntern;
@@ -11,6 +12,9 @@ import tech.sozonov.SnippetVault.cmn.utils.SecureRemotePassword;
 import tech.sozonov.SnippetVault.user.UserDTO.*;
 import tech.sozonov.SnippetVault.user.auth.AdminPasswordChecker;
 import reactor.core.publisher.Flux;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Base64;
 
 import static tech.sozonov.SnippetVault.cmn.utils.Strings.*;
@@ -22,6 +26,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
@@ -39,6 +45,8 @@ private final IUserStore userStore;
 private final SRP6Routines srp;
 private final SecureRandom secureRandom;
 private static final Mono<Either<String, HandshakeResponse>> errResponse = Mono.just(Either.left("Authentication error"));
+@Value("${startingAdminPassword}")
+private String adminPassword;
 
 @Autowired
 public UserService(IUserStore _userStore) {
@@ -65,18 +73,6 @@ public Mono<Either<String, HandshakeResponse>> register(Register dto) {
 private Mono<Either<String, HandshakeResponse>> createUser(byte[] salt, byte[] verifier, String userName) {
     val enc = Base64.getEncoder();
     BigInteger verifierNum = new BigInteger(1, verifier);
-
-    // temp code
-    MessageDigest hasher = null;
-    try {
-        hasher = MessageDigest.getInstance("SHA-256");
-    } catch (Exception e) {
-    }
-    byte[] backendVerifier = SecureRemotePassword.generateVerifier(salt, userName, "password", hasher);
-    BigInteger backendVerifierNum = new BigInteger(1, backendVerifier);
-
-    System.out.println("Verifier from frontend " + verifierNum);
-    System.out.println("Verifier from backend " + backendVerifierNum);
 
     BigInteger b = srp.generatePrivateValue(Constants.N, secureRandom);
     BigInteger B = srp.computePublicServerValue(Constants.N, Constants.g, Constants.k, verifierNum, b);
@@ -264,32 +260,58 @@ public Mono<Integer> commentCU(CommentCU dto, String userName) {
     return userStore.commentCU(dto, userName, LocalDateTime.now());
 }
 
+private Mono<Either<String, HandshakeResponse>> createUserBackend(String userName, String pw) {
+    MessageDigest hasher = null;
+
+    try {
+        hasher = MessageDigest.getInstance("SHA-256");
+    } catch (Exception e) {
+    }
+    System.out.println("adding " + userName);
+    byte[] salt = SecureRemotePassword.generateRandomSalt(hasher);
+    System.out.println("salt " + salt.length);
+    byte[] backendVerifier = SecureRemotePassword.generateVerifier(salt, userName, pw, hasher);
+    System.out.println("verif " + backendVerifier.length);
+    return createUser(salt, backendVerifier, userName);
+}
+
+/**
+ * The first deployment method to add first two users and then populate the DB with default data.
+ */
 public void addFirstUser() {
     System.out.println("checking users");
     final String firstUserName = "JoeRogan";
+    final String adminName = "adminosaurus";
+    val resource = getClass().getClassLoader().getResourceAsStream("PopulateAfterUser1WasCreated.sql");
+    val sqlScript = new BufferedReader(new InputStreamReader(resource))
+                                    .lines().collect(Collectors.joining("\n"));
+    System.out.println(sqlScript);
     val result = userStore.userCount().flatMap((Long cnt) -> {
-        if (cnt == 0) {
+        if (cnt > 0) return Mono.just(Optional.of("Skipping user creation"));
 
-            MessageDigest hasher = null;
-
-            try {
-                hasher = MessageDigest.getInstance("SHA-256");
-            } catch (Exception e) {
+        return createUserBackend(firstUserName, "RoganJoe").flatMap(resultFirstUser -> {
+            if (resultFirstUser.isLeft()) {
+                System.out.println("Error adding first user: " + resultFirstUser.getLeft());
+                return Mono.just(Optional.of(resultFirstUser.getLeft()));
             }
-            System.out.println("adding first user");
-            byte[] salt = SecureRemotePassword.generateRandomSalt(hasher);
-            System.out.println("salt " + salt.length);
-            byte[] backendVerifier = SecureRemotePassword.generateVerifier(salt, firstUserName, "RoganJoe", hasher);
-            System.out.println("verif " + backendVerifier.length);
-            return createUser(salt, backendVerifier, firstUserName);
-        }
-        return Mono.just(Either.left("OK"));
+
+            return createUserBackend(adminName, adminPassword).flatMap(resultAdmin -> {
+                if (resultAdmin.isLeft()) {
+                    System.out.println("Error adding admin: " + resultAdmin.getLeft());
+                    return Mono.just(Optional.of(resultAdmin.getLeft()));
+                }
+                return userStore.initPopulate(sqlScript).map(rowsUpdated -> {
+                    if (rowsUpdated < 1) {
+                        return Mono.just(Optional.of("Could not populate with init data"));
+                    }
+                    return Mono.just(Optional.empty());
+                });
+            });
+        });
     });
     result.block();
-    System.out.println("asdf");
-    // if usercount is 0, add user JoeRogan with password RoganJoe
-
 }
+
 
 
 }

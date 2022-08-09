@@ -265,4 +265,9 @@ public Mono<Long> userCount() {
 }
 
 
+public Mono<Integer> initPopulate(String sqlScript) {
+    return db.sql(sqlScript)
+            .fetch().rowsUpdated();
+}
+
 }

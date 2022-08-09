@@ -42,13 +42,11 @@ private static BigInteger generateX(String saltHex, String identity, String pw, 
     hasher.reset();
     hasher.update((identity + ":" + pw).getBytes(StandardCharsets.UTF_8));
     String hash1 = hexOfArray(hasher.digest());
-    System.out.println("hash1 " + hash1);
     String concat = (saltHex + hash1).toUpperCase();
     hasher.reset();
 
     hasher.update(concat.getBytes());
     val concatBytes = hasher.digest();
-    System.out.println("hashHex " + hexOfArray(concatBytes));
     val hashNum = new BigInteger(1, concatBytes);
     return hashNum.remainder(Constants.N);
 }

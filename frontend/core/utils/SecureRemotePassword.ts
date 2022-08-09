@@ -162,10 +162,9 @@ private randomHex(l: number): string {
 
 private async generateX(saltHex: string, identity: string, pw: string): Promise<BI> {
     const hash1 = hexOfBuff(await this.hash(identity + ":" + pw))
-    console.log(`hash1 ${hash1}`)
     const concat = (saltHex + hash1).toUpperCase()
     const hashHex = prefixedHexOfBuff(await this.hash(concat))
-    console.log(`hashHex ${hashHex}`)
+
     return BI.remainder(BI.BigInt(hashHex), this.N)
 }
 
