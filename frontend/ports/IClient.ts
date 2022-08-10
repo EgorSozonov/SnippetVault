@@ -27,7 +27,7 @@ type IClient = {
 
     languageCU: (dto: LanguageCUDTO, userName: string) => Promise<PostResponseDTO>
     taskCU: (dto: TaskCUDTO, userName: string) => Promise<PostResponseDTO>
-    taskGet: (taskId: number) => Promise<ServerResponse<TaskDTO[]>>
+    taskGet: (taskId: number) => Promise<ServerResponse<TaskDTO>>
     taskGroupCU: (dto: TaskGroupCUDTO, userName: string) => Promise<PostResponseDTO>
 
     userRegister: (dto: RegisterDTO) => Promise<ServerResponse<ServerEither<HandshakeResponseDTO>>>

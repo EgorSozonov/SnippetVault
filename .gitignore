@@ -58,3 +58,4 @@ application.properties
 *.key
 
 deploy/README.txt
+fr.sh

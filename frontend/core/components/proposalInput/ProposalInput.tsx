@@ -35,8 +35,8 @@ const ProposalInput: FunctionComponent<Props> = observer(({ lang, taskOrId, clos
         (async () => {
             if (taskOrId.type === "taskId") {
                 const response = await state.snip.taskGet(taskOrId.payload)
-                if (response.isOK === true && response.value && response.value.length === 1) {
-                    setTaskFromBackend(response.value[0])
+                if (response.isOK === true && response.value) {
+                    setTaskFromBackend(response.value)
                 }
             }
         })()

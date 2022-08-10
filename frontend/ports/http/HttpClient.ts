@@ -83,8 +83,8 @@ class HttpClient implements IClient {
         return this.postRequest(`/admin/task/cu`, dto, userName)
     }
 
-    taskGet(taskId: number): Promise<ServerResponse<TaskDTO[]>> {
-        return this.getRequestNoCreds(`/admin/task/${taskId}`)
+    taskGet(taskId: number): Promise<ServerResponse<TaskDTO>> {
+        return this.getRequestNoCreds(`/task/${taskId}`)
     }
 
     taskGroupCU(dto: TaskGroupCUDTO, userName: string): Promise<PostResponseDTO> {
