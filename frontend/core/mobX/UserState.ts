@@ -57,7 +57,6 @@ private async registerWorker(userName: string, password: string): Promise<string
     const saltHex = await clientSRP.generateRandomSalt()
     const verifier = await clientSRP.generateVerifier(saltHex, userName, password)
     const verifierHex = nonprefixedHexOfPositiveBI(verifier)
-
     const handshakeResponse = processHandshake(await this.client.userRegister({
                                         saltB64: base64OfHex(saltHex),
                                         verifierB64: base64OfHex(verifierHex),

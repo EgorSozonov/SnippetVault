@@ -24,7 +24,7 @@ const Content: React.FunctionComponent = () => {
                             <Route path={PATHS["termsOfService"].url} element={<TermsOfService />} />
                         </Routes>
                     </div>
-                    <div className="contentFooter">SnippetVault by <a href="https://www.sozonov.tech">Egor Sozonov</a>. This website uses cookies for identification of signed in users.
+                    <div className="contentFooter">SnippetVault by <a href="https://www.sozonov.site">Egor Sozonov</a>. This website uses cookies for identification of signed in users.
                     By using this site you are agreeing to our <NavLink to={PATHS["termsOfService"].url} title="Terms of Service">Terms of Service</NavLink> and cookie policy.</div>
                 </HashRouter>
              <ToastContainer autoClose={2000} hideProgressBar />

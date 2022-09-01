@@ -27,6 +27,7 @@ const Login: React.FunctionComponent<Props> = observer(({ closeCallback }) => {
         } else {
             await state.user.userRegister(uName, pw)
         }
+
     }
 
     return (
