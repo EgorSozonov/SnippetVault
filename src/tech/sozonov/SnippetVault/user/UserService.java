@@ -285,7 +285,6 @@ public void addFirstUser() {
     val resource = getClass().getClassLoader().getResourceAsStream("PopulateAfterUser1WasCreated.sql");
     val sqlScript = new BufferedReader(new InputStreamReader(resource))
                                     .lines().collect(Collectors.joining("\n"));
-    System.out.println(sqlScript);
     val result = userStore.userCount().flatMap((Long cnt) -> {
         if (cnt > 0) return Mono.just(Optional.of("Skipping user creation"));
 

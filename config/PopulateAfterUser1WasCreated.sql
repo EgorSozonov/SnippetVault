@@ -54,6 +54,8 @@ INSERT INTO sv.language(id, code, name, "isDeleted", "sortingOrder")
 OVERRIDING SYSTEM VALUE	VALUES (13, 'Dart', 'Dart', FALSE, 1)
 ON CONFLICT (id) DO UPDATE SET code='Dart', name='Dart', "isDeleted" = FALSE, "sortingOrder" = 1;
 
+ALTER TABLE sv.language ALTER COLUMN id RESTART WITH 14;
+
 ---------------------------
 -- Task groups
 ---------------------------
@@ -90,6 +92,8 @@ INSERT INTO sv."taskGroup"(id, code, name, "isDeleted")
 OVERRIDING SYSTEM VALUE	VALUES (8, 'GRAPH', 'Graph algorithms', FALSE)
 ON CONFLICT (id) DO UPDATE SET code='GRAPH', name='Graph algorithms', "isDeleted" = FALSE;
 
+ALTER TABLE sv."taskGroup" ALTER COLUMN id RESTART WITH 9;
+
 ---------------------------
 -- Tasks
 ---------------------------
@@ -123,11 +127,9 @@ INSERT INTO sv.task(id, name, description, "taskGroupId")
 OVERRIDING SYSTEM VALUE	VALUES (7, 'Substring', 'Substring of a string starting at index x and having length n', 3)
 ON CONFLICT (id) DO UPDATE SET name='Substring', description = 'Substring of a string starting at index x and having length n', "taskGroupId" = 3;
 
-
 INSERT INTO sv.task(id, name, description, "taskGroupId")
 OVERRIDING SYSTEM VALUE	VALUES (8, 'Index of substring', 'Find index of substring sub within string str', 3)
 ON CONFLICT (id) DO UPDATE SET name='Index of substring', description = 'Find index of substring sub within string str', "taskGroupId" = 3;
-
 
 INSERT INTO sv.task(id, name, description, "taskGroupId")
 OVERRIDING SYSTEM VALUE	VALUES (9, 'Index of substring from back', 'Find index of substring sub within string str, starting from the back', 3)
@@ -202,6 +204,7 @@ INSERT INTO sv.task(id, name, description, "taskGroupId")
 OVERRIDING SYSTEM VALUE	VALUES (26, 'Breadth-first search', 'Perform a breadth-first search for an equatable generic T in a graph represented as arrays of nodes and edges', 8)
 ON CONFLICT (id) DO UPDATE SET name = 'Breadth-first search', description = 'Perform a breadth-first search for an equatable generic T in a graph represented as arrays of nodes and edges', "taskGroupId" = 8;
 
+ALTER TABLE sv.task ALTER COLUMN id RESTART WITH 27;
 
 ---------------------------
 -- Task Languages
@@ -254,6 +257,8 @@ ON CONFLICT (id) DO UPDATE SET "taskId" = 5, "languageId" = 2, "primarySnippetId
 INSERT INTO sv."taskLanguage"(id, "taskId", "languageId", "primarySnippetId")
 OVERRIDING SYSTEM VALUE	VALUES (12, 6, 2, NULL)
 ON CONFLICT (id) DO UPDATE SET "taskId" = 6, "languageId" = 2, "primarySnippetId" = NULL;
+
+ALTER TABLE sv."taskLanguage" ALTER COLUMN id RESTART WITH 13;
 
 ---------------------------
 -- Snippets
@@ -342,6 +347,8 @@ INSERT INTO sv.snippet(
 	id, "taskLanguageId", content, score, "tsUpload", "authorId", status)
 OVERRIDING SYSTEM VALUE	VALUES (12, 12, 'let sixteen = f64::checked_pow(2, 4);', 1, '20220120', 1, 3)
 ON CONFLICT (id) DO UPDATE SET "taskLanguageId" = 6, content = 'let sixteen = f64::checked_pow(2, 4);', score = 1, "tsUpload" = '20220120', "authorId" = 1, status = 3;
+
+ALTER TABLE sv."snippet" ALTER COLUMN id RESTART WITH 13;
 
 ---------------------------
 -- Primary snippets
